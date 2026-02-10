@@ -61,8 +61,8 @@ func TestChildParentDependencies_NoBadDeps(t *testing.T) {
 		CREATE TABLE issues (id TEXT PRIMARY KEY);
 		CREATE TABLE dependencies (issue_id TEXT, depends_on_id TEXT, type TEXT);
 		CREATE TABLE dirty_issues (issue_id TEXT PRIMARY KEY);
-		INSERT INTO issues (id) VALUES ('bd-abc'), ('bd-abc.1'), ('bd-xyz');
-		INSERT INTO dependencies (issue_id, depends_on_id, type) VALUES ('bd-abc.1', 'bd-xyz', 'blocks');
+		INSERT INTO issues (id) VALUES ('fbd-abc'), ('fbd-abc.1'), ('fbd-xyz');
+		INSERT INTO dependencies (issue_id, depends_on_id, type) VALUES ('fbd-abc.1', 'fbd-xyz', 'blocks');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -104,11 +104,11 @@ func TestChildParentDependencies_FixesBadDeps(t *testing.T) {
 		CREATE TABLE issues (id TEXT PRIMARY KEY);
 		CREATE TABLE dependencies (issue_id TEXT, depends_on_id TEXT, type TEXT);
 		CREATE TABLE dirty_issues (issue_id TEXT PRIMARY KEY);
-		INSERT INTO issues (id) VALUES ('bd-abc'), ('bd-abc.1'), ('bd-abc.1.2');
+		INSERT INTO issues (id) VALUES ('fbd-abc'), ('fbd-abc.1'), ('fbd-abc.1.2');
 		INSERT INTO dependencies (issue_id, depends_on_id, type) VALUES
-			('bd-abc.1', 'bd-abc', 'blocks'),
-			('bd-abc.1.2', 'bd-abc', 'blocks'),
-			('bd-abc.1.2', 'bd-abc.1', 'blocks');
+			('fbd-abc.1', 'fbd-abc', 'blocks'),
+			('fbd-abc.1.2', 'fbd-abc', 'blocks'),
+			('fbd-abc.1.2', 'fbd-abc.1', 'blocks');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -131,7 +131,7 @@ func TestChildParentDependencies_FixesBadDeps(t *testing.T) {
 	}
 
 	// Verify dirty_issues was updated for affected issues
-	// Note: 2 unique issue_ids (bd-abc.1 appears once, bd-abc.1.2 appears twice but INSERT OR IGNORE dedupes)
+	// Note: 2 unique issue_ids (fbd-abc.1 appears once, fbd-abc.1.2 appears twice but INSERT OR IGNORE dedupes)
 	var dirtyCount int
 	db.QueryRow("SELECT COUNT(*) FROM dirty_issues").Scan(&dirtyCount)
 	if dirtyCount != 2 {
@@ -161,11 +161,11 @@ func TestChildParentDependencies_PreservesParentChildType(t *testing.T) {
 		CREATE TABLE issues (id TEXT PRIMARY KEY);
 		CREATE TABLE dependencies (issue_id TEXT, depends_on_id TEXT, type TEXT);
 		CREATE TABLE dirty_issues (issue_id TEXT PRIMARY KEY);
-		INSERT INTO issues (id) VALUES ('bd-abc'), ('bd-abc.1'), ('bd-abc.2');
+		INSERT INTO issues (id) VALUES ('fbd-abc'), ('fbd-abc.1'), ('fbd-abc.2');
 		INSERT INTO dependencies (issue_id, depends_on_id, type) VALUES
-			('bd-abc.1', 'bd-abc', 'parent-child'),
-			('bd-abc.2', 'bd-abc', 'parent-child'),
-			('bd-abc.1', 'bd-abc', 'blocks');
+			('fbd-abc.1', 'fbd-abc', 'parent-child'),
+			('fbd-abc.2', 'fbd-abc', 'parent-child'),
+			('fbd-abc.1', 'fbd-abc', 'blocks');
 	`)
 	if err != nil {
 		t.Fatal(err)

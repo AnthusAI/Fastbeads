@@ -13,7 +13,7 @@ import (
 	"github.com/steveyegge/fastbeads/internal/types"
 )
 
-// TestMultiWorkspaceDeletionSync simulates the bd-hv01 bug scenario:
+// TestMultiWorkspaceDeletionSync simulates the fbd-hv01 bug scenario:
 // Clone A deletes an issue, Clone B still has it, and after sync it should stay deleted
 func TestMultiWorkspaceDeletionSync(t *testing.T) {
 	// Setup two separate workspaces simulating two git clones
@@ -51,7 +51,7 @@ func TestMultiWorkspaceDeletionSync(t *testing.T) {
 
 	// Step 1: Both clones start with the same two issues
 	issueToDelete := &types.Issue{
-		ID:          "bd-delete-me",
+		ID:          "fbd-delete-me",
 		Title:       "Issue to be deleted",
 		Description: "This will be deleted in clone A",
 		Status:      types.StatusOpen,
@@ -60,7 +60,7 @@ func TestMultiWorkspaceDeletionSync(t *testing.T) {
 	}
 
 	issueToKeep := &types.Issue{
-		ID:          "bd-keep-me",
+		ID:          "fbd-keep-me",
 		Title:       "Issue to keep",
 		Description: "This should remain",
 		Status:      types.StatusOpen,
@@ -100,7 +100,7 @@ func TestMultiWorkspaceDeletionSync(t *testing.T) {
 	}
 
 	// Step 2: Clone A deletes the issue
-	if err := storeA.DeleteIssue(ctx, "bd-delete-me"); err != nil {
+	if err := storeA.DeleteIssue(ctx, "fbd-delete-me"); err != nil {
 		t.Fatalf("Failed to delete issue in store A: %v", err)
 	}
 
@@ -133,7 +133,7 @@ func TestMultiWorkspaceDeletionSync(t *testing.T) {
 	}
 
 	// Step 6: Clone B applies 3-way merge and prunes deletions
-	// This is the key fix - it should detect that bd-delete-me was deleted remotely
+	// This is the key fix - it should detect that fbd-delete-me was deleted remotely
 	merged, err := merge3WayAndPruneDeletions(ctx, storeB, cloneBJSONL)
 	if err != nil {
 		t.Fatalf("Failed to apply deletions from merge: %v", err)
@@ -144,15 +144,15 @@ func TestMultiWorkspaceDeletionSync(t *testing.T) {
 	}
 
 	// Step 7: Verify the deletion was applied to Clone B's database
-	deletedIssue, err := storeB.GetIssue(ctx, "bd-delete-me")
+	deletedIssue, err := storeB.GetIssue(ctx, "fbd-delete-me")
 	if err == nil && deletedIssue != nil {
-		t.Errorf("Issue bd-delete-me should have been deleted from Clone B, but still exists")
+		t.Errorf("Issue fbd-delete-me should have been deleted from Clone B, but still exists")
 	}
 
 	// Verify the kept issue still exists
-	keptIssue, err := storeB.GetIssue(ctx, "bd-keep-me")
+	keptIssue, err := storeB.GetIssue(ctx, "fbd-keep-me")
 	if err != nil || keptIssue == nil {
-		t.Errorf("Issue bd-keep-me should still exist in Clone B")
+		t.Errorf("Issue fbd-keep-me should still exist in Clone B")
 	}
 
 	// Verify Clone A still has only one issue
@@ -195,7 +195,7 @@ func TestDeletionWithLocalModification(t *testing.T) {
 
 	// Create an issue
 	issue := &types.Issue{
-		ID:          "bd-conflict",
+		ID:          "fbd-conflict",
 		Title:       "Original title",
 		Description: "Original description",
 		Status:      types.StatusOpen,
@@ -219,7 +219,7 @@ func TestDeletionWithLocalModification(t *testing.T) {
 	updates := map[string]interface{}{
 		"title": "Modified title locally",
 	}
-	if err := store.UpdateIssue(ctx, "bd-conflict", updates, "test"); err != nil {
+	if err := store.UpdateIssue(ctx, "fbd-conflict", updates, "test"); err != nil {
 		t.Fatalf("Failed to update issue: %v", err)
 	}
 
@@ -236,7 +236,7 @@ func TestDeletionWithLocalModification(t *testing.T) {
 		t.Fatalf("Failed to simulate remote deletion: %v", err)
 	}
 
-	// Try to merge - deletion now wins over modification (bd-pq5k)
+	// Try to merge - deletion now wins over modification (fbd-pq5k)
 	// This should succeed and delete the issue
 	_, err = merge3WayAndPruneDeletions(ctx, store, jsonlPath)
 	if err != nil {
@@ -244,7 +244,7 @@ func TestDeletionWithLocalModification(t *testing.T) {
 	}
 
 	// The issue should be deleted (deletion wins over modification)
-	conflictIssue, err := store.GetIssue(ctx, "bd-conflict")
+	conflictIssue, err := store.GetIssue(ctx, "fbd-conflict")
 	if err == nil && conflictIssue != nil {
 		t.Error("Issue should be deleted after merge (deletion wins)")
 	}
@@ -260,17 +260,17 @@ func TestComputeAcceptedDeletions(t *testing.T) {
 	mergedPath := filepath.Join(dir, "merged.jsonl")
 
 	// Base has 3 issues
-	baseContent := `{"id":"bd-1","title":"Issue 1"}
-{"id":"bd-2","title":"Issue 2"}
-{"id":"bd-3","title":"Issue 3"}
+	baseContent := `{"id":"fbd-1","title":"Issue 1"}
+{"id":"fbd-2","title":"Issue 2"}
+{"id":"fbd-3","title":"Issue 3"}
 `
 
 	// Left has 3 issues (unchanged from base)
 	leftContent := baseContent
 
-	// Merged has only 2 issues (bd-2 was deleted remotely)
-	mergedContent := `{"id":"bd-1","title":"Issue 1"}
-{"id":"bd-3","title":"Issue 3"}
+	// Merged has only 2 issues (fbd-2 was deleted remotely)
+	mergedContent := `{"id":"fbd-1","title":"Issue 1"}
+{"id":"fbd-3","title":"Issue 3"}
 `
 
 	if err := os.WriteFile(basePath, []byte(baseContent), 0644); err != nil {
@@ -292,12 +292,12 @@ func TestComputeAcceptedDeletions(t *testing.T) {
 		t.Errorf("Expected 1 deletion, got %d", len(deletions))
 	}
 
-	if len(deletions) > 0 && deletions[0] != "bd-2" {
-		t.Errorf("Expected deletion of bd-2, got %s", deletions[0])
+	if len(deletions) > 0 && deletions[0] != "fbd-2" {
+		t.Errorf("Expected deletion of fbd-2, got %s", deletions[0])
 	}
 }
 
-// TestComputeAcceptedDeletions_LocallyModified tests that deletion wins even for locally modified issues (bd-pq5k)
+// TestComputeAcceptedDeletions_LocallyModified tests that deletion wins even for locally modified issues (fbd-pq5k)
 func TestComputeAcceptedDeletions_LocallyModified(t *testing.T) {
 	dir := t.TempDir()
 
@@ -307,17 +307,17 @@ func TestComputeAcceptedDeletions_LocallyModified(t *testing.T) {
 	mergedPath := filepath.Join(dir, "merged.jsonl")
 
 	// Base has 2 issues
-	baseContent := `{"id":"bd-1","title":"Original 1"}
-{"id":"bd-2","title":"Original 2"}
+	baseContent := `{"id":"fbd-1","title":"Original 1"}
+{"id":"fbd-2","title":"Original 2"}
 `
 
-	// Left has bd-2 modified locally
-	leftContent := `{"id":"bd-1","title":"Original 1"}
-{"id":"bd-2","title":"Modified locally"}
+	// Left has fbd-2 modified locally
+	leftContent := `{"id":"fbd-1","title":"Original 1"}
+{"id":"fbd-2","title":"Modified locally"}
 `
 
-	// Merged has only bd-1 (bd-2 deleted remotely, we modified it locally, but deletion wins per bd-pq5k)
-	mergedContent := `{"id":"bd-1","title":"Original 1"}
+	// Merged has only fbd-1 (fbd-2 deleted remotely, we modified it locally, but deletion wins per fbd-pq5k)
+	mergedContent := `{"id":"fbd-1","title":"Original 1"}
 `
 
 	if err := os.WriteFile(basePath, []byte(baseContent), 0644); err != nil {
@@ -335,12 +335,12 @@ func TestComputeAcceptedDeletions_LocallyModified(t *testing.T) {
 		t.Fatalf("Failed to compute deletions: %v", err)
 	}
 
-	// bd-pq5k: bd-2 SHOULD be in accepted deletions even though modified locally (deletion wins)
+	// fbd-pq5k: fbd-2 SHOULD be in accepted deletions even though modified locally (deletion wins)
 	if len(deletions) != 1 {
 		t.Errorf("Expected 1 deletion (deletion wins over local modification), got %d: %v", len(deletions), deletions)
 	}
-	if len(deletions) == 1 && deletions[0] != "bd-2" {
-		t.Errorf("Expected deletion of bd-2, got %v", deletions)
+	if len(deletions) == 1 && deletions[0] != "fbd-2" {
+		t.Errorf("Expected deletion of fbd-2, got %v", deletions)
 	}
 }
 
@@ -350,7 +350,7 @@ func TestSnapshotManagement(t *testing.T) {
 	jsonlPath := filepath.Join(dir, "issues.jsonl")
 
 	// Write initial JSONL
-	content := `{"id":"bd-1","title":"Test"}
+	content := `{"id":"fbd-1","title":"Test"}
 `
 	if err := os.WriteFile(jsonlPath, []byte(content), 0644); err != nil {
 		t.Fatalf("Failed to write JSONL: %v", err)
@@ -397,7 +397,7 @@ func TestSnapshotManagement(t *testing.T) {
 }
 
 // TestMultiRepoDeletionTracking tests deletion tracking with multi-repo mode
-// This is the test for bd-4oob: snapshot files need to be created per-JSONL file
+// This is the test for fbd-4oob: snapshot files need to be created per-JSONL file
 func TestMultiRepoDeletionTracking(t *testing.T) {
 	initConfigForTest(t)
 	// Setup workspace directories
@@ -438,7 +438,7 @@ func TestMultiRepoDeletionTracking(t *testing.T) {
 
 	// Create issues in different repos
 	primaryIssue := &types.Issue{
-		ID:          "bd-primary",
+		ID:          "fbd-primary",
 		Title:       "Primary repo issue",
 		Description: "This belongs to primary",
 		Status:      types.StatusOpen,
@@ -448,7 +448,7 @@ func TestMultiRepoDeletionTracking(t *testing.T) {
 	}
 
 	additionalIssue := &types.Issue{
-		ID:          "bd-additional",
+		ID:          "fbd-additional",
 		Title:       "Additional repo issue",
 		Description: "This belongs to additional",
 		Status:      types.StatusOpen,
@@ -538,7 +538,7 @@ func TestMultiRepoDeletionTracking(t *testing.T) {
 	}
 
 	// Now apply deletion tracking for additional repo
-	// This should detect that bd-additional was deleted remotely and remove it from DB
+	// This should detect that fbd-additional was deleted remotely and remove it from DB
 	merged, err := merge3WayAndPruneDeletions(ctx, store, additionalJSONL)
 	if err != nil {
 		t.Fatalf("merge3WayAndPruneDeletions failed for additional repo: %v", err)
@@ -548,16 +548,16 @@ func TestMultiRepoDeletionTracking(t *testing.T) {
 	}
 
 	// Verify the issue was deleted from the database
-	issue, err := store.GetIssue(ctx, "bd-additional")
+	issue, err := store.GetIssue(ctx, "fbd-additional")
 	if err != nil {
 		t.Errorf("Unexpected error getting issue: %v", err)
 	}
 	if issue != nil {
-		t.Errorf("Expected bd-additional to be deleted from database, but it still exists: %+v", issue)
+		t.Errorf("Expected fbd-additional to be deleted from database, but it still exists: %+v", issue)
 	}
 
 	// Verify primary issue still exists
-	primaryResult, err := store.GetIssue(ctx, "bd-primary")
+	primaryResult, err := store.GetIssue(ctx, "fbd-primary")
 	if err != nil {
 		t.Errorf("Primary issue should still exist: %v", err)
 	}
@@ -745,11 +745,11 @@ func TestMultiRepoSnapshotIsolation(t *testing.T) {
 
 	// Write test issues
 	issue1 := map[string]interface{}{
-		"id":    "bd-repo1-issue",
+		"id":    "fbd-repo1-issue",
 		"title": "Repo 1 Issue",
 	}
 	issue2 := map[string]interface{}{
-		"id":    "bd-repo2-issue",
+		"id":    "fbd-repo2-issue",
 		"title": "Repo 2 Issue",
 	}
 
@@ -798,18 +798,18 @@ func TestMultiRepoSnapshotIsolation(t *testing.T) {
 		t.Fatalf("Failed to read repo2 base snapshot: %v", err)
 	}
 
-	if !repo1IDs["bd-repo1-issue"] {
-		t.Error("Repo1 snapshot should contain bd-repo1-issue")
+	if !repo1IDs["fbd-repo1-issue"] {
+		t.Error("Repo1 snapshot should contain fbd-repo1-issue")
 	}
-	if repo1IDs["bd-repo2-issue"] {
-		t.Error("Repo1 snapshot should NOT contain bd-repo2-issue")
+	if repo1IDs["fbd-repo2-issue"] {
+		t.Error("Repo1 snapshot should NOT contain fbd-repo2-issue")
 	}
 
-	if !repo2IDs["bd-repo2-issue"] {
-		t.Error("Repo2 snapshot should contain bd-repo2-issue")
+	if !repo2IDs["fbd-repo2-issue"] {
+		t.Error("Repo2 snapshot should contain fbd-repo2-issue")
 	}
-	if repo2IDs["bd-repo1-issue"] {
-		t.Error("Repo2 snapshot should NOT contain bd-repo1-issue")
+	if repo2IDs["fbd-repo1-issue"] {
+		t.Error("Repo2 snapshot should NOT contain fbd-repo1-issue")
 	}
 
 	// Capture left snapshots for both
@@ -834,10 +834,10 @@ func TestMultiRepoSnapshotIsolation(t *testing.T) {
 		t.Fatalf("Failed to read repo2 left snapshot: %v", err)
 	}
 
-	if !repo1LeftIDs["bd-repo1-issue"] || repo1LeftIDs["bd-repo2-issue"] {
+	if !repo1LeftIDs["fbd-repo1-issue"] || repo1LeftIDs["fbd-repo2-issue"] {
 		t.Error("Repo1 left snapshot has wrong issues")
 	}
-	if !repo2LeftIDs["bd-repo2-issue"] || repo2LeftIDs["bd-repo1-issue"] {
+	if !repo2LeftIDs["fbd-repo2-issue"] || repo2LeftIDs["fbd-repo1-issue"] {
 		t.Error("Repo2 left snapshot has wrong issues")
 	}
 }

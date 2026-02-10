@@ -101,8 +101,8 @@ func isForkOfBeads(gitRoot string) bool {
 		return false // No remotes or git error - not a fork
 	}
 
-	// If any remote URL contains steveyegge/beads, this is a beads-related repo
-	return strings.Contains(string(out), "steveyegge/beads")
+	remotes := string(out)
+	return strings.Contains(remotes, "steveyegge/beads") || strings.Contains(remotes, "steveyegge/fastbeads")
 }
 
 // isForkProtectionDisabled checks if fork protection is disabled via git config.

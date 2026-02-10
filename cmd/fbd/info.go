@@ -237,6 +237,8 @@ var versionChanges = []VersionChange{
 		Date:    "2026-02-08",
 		Changes: []string{
 			"REVERT: Embedded Dolt mode restored (removal was only intended for Gas Town, not Beads)",
+			"CHANGE: CLI renamed to fbd (bd shim removed)",
+			"CHANGE: Default storage uses file/jsonl backends (SQLite no longer required for core workflows)",
 		},
 	},
 	{

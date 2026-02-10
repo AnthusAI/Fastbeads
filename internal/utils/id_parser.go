@@ -16,7 +16,7 @@ import (
 // Works with hierarchical IDs too: "a3f8e9.1.2" → "bd-a3f8e9.1.2"
 func parseIssueID(input string, prefix string) string {
 	if prefix == "" {
-		prefix = "bd-"
+		prefix = "fbd-"
 	}
 
 	if strings.HasPrefix(input, prefix) {

@@ -12,6 +12,7 @@ import (
 
 	"github.com/steveyegge/fastbeads/internal/beads"
 	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/configfile"
 	"github.com/steveyegge/fastbeads/internal/git"
 	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
 )
@@ -729,7 +730,7 @@ func TestInitNoDbMode(t *testing.T) {
 }
 
 func TestInitMergeDriverAutoConfiguration(t *testing.T) {
-	t.Run("merge driver auto-configured during init", func(t *testing.T) {
+	t.Run("merge driver skipped for file storage", func(t *testing.T) {
 		// Reset global state
 		origDBPath := dbPath
 		defer func() { dbPath = origDBPath }()
@@ -749,23 +750,15 @@ func TestInitMergeDriverAutoConfiguration(t *testing.T) {
 			t.Fatalf("Init failed: %v", err)
 		}
 
-		// Verify git config was set
-		output, err := runCommandInDirWithOutput(tmpDir, "git", "config", "merge.beads.driver")
-		if err != nil {
-			t.Fatalf("Failed to get git config: %v", err)
-		}
-		if !strings.Contains(output, "fbd merge") {
-			t.Errorf("Expected merge driver to contain 'fbd merge', got: %s", output)
+		// Verify git config was NOT set (file storage doesn't install merge driver)
+		if _, err := runCommandInDirWithOutput(tmpDir, "git", "config", "--local", "merge.beads.driver"); err == nil {
+			t.Error("Expected merge driver config to be unset for file storage")
 		}
 
-		// Verify .gitattributes was created
+		// Verify .gitattributes was NOT created
 		gitattrsPath := filepath.Join(tmpDir, ".gitattributes")
-		content, err := os.ReadFile(gitattrsPath)
-		if err != nil {
-			t.Fatalf("Failed to read .gitattributes: %v", err)
-		}
-		if !strings.Contains(string(content), ".beads/issues.jsonl merge=beads") {
-			t.Error(".gitattributes should contain merge driver configuration")
+		if _, err := os.Stat(gitattrsPath); err == nil {
+			t.Error(".gitattributes should not be created for file storage")
 		}
 	})
 
@@ -916,6 +909,12 @@ func TestInitMergeDriverAutoConfiguration(t *testing.T) {
 			t.Fatalf("Init failed: %v", err)
 		}
 
+		if cfg, err := configfile.Load(filepath.Join(tmpDir, ".beads")); err == nil && cfg != nil {
+			if mode, err := cfg.ResolveStorageMode(filepath.Join(tmpDir, ".beads")); err == nil && mode != configfile.StorageJSONL {
+				t.Skip("merge driver only installed for JSONL storage")
+			}
+		}
+
 		// Verify .gitattributes was appended to, not overwritten
 		content, err := os.ReadFile(gitattrsPath)
 		if err != nil {
@@ -966,6 +965,12 @@ func TestInitMergeDriverAutoConfiguration(t *testing.T) {
 		rootCmd.SetArgs([]string{"init", "--prefix", "test", "--quiet"})
 		if err := rootCmd.Execute(); err != nil {
 			t.Fatalf("Init failed: %v", err)
+		}
+
+		if cfg, err := configfile.Load(filepath.Join(tmpDir, ".beads")); err == nil && cfg != nil {
+			if mode, err := cfg.ResolveStorageMode(filepath.Join(tmpDir, ".beads")); err == nil && mode != configfile.StorageJSONL {
+				t.Skip("merge driver only installed for JSONL storage")
+			}
 		}
 
 		// Verify merge.beads.driver is set correctly
@@ -1020,6 +1025,12 @@ func TestInitMergeDriverAutoConfiguration(t *testing.T) {
 		rootCmd.SetArgs([]string{"init", "--prefix", "test", "--quiet"})
 		if err := rootCmd.Execute(); err != nil {
 			t.Fatalf("Init failed: %v", err)
+		}
+
+		if cfg, err := configfile.Load(filepath.Join(tmpDir, ".beads")); err == nil && cfg != nil {
+			if mode, err := cfg.ResolveStorageMode(filepath.Join(tmpDir, ".beads")); err == nil && mode != configfile.StorageJSONL {
+				t.Skip("merge driver only installed for JSONL storage")
+			}
 		}
 
 		// Verify merge driver was updated to correct placeholders

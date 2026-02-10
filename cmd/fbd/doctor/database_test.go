@@ -409,8 +409,8 @@ func TestCountJSONLIssues_NonexistentFile(t *testing.T) {
 func TestCountJSONLIssues_ExtractsPrefixes(t *testing.T) {
 	tmpDir := t.TempDir()
 	jsonlPath := filepath.Join(tmpDir, "issues.jsonl")
-	content := `{"id":"bd-123","title":"Test 1"}
-{"id":"bd-456","title":"Test 2"}
+	content := `{"id":"fbd-123","title":"Test 1"}
+{"id":"fbd-456","title":"Test 2"}
 {"id":"proj-789","title":"Test 3"}
 `
 	if err := os.WriteFile(jsonlPath, []byte(content), 0600); err != nil {
@@ -979,9 +979,9 @@ func TestCheckDatabaseJSONLSync_MoleculePrefix(t *testing.T) {
 		{
 			name:     "mixed valid variants do not warn",
 			dbPrefix: "fbd",
-			jsonlContent: `{"id":"bd-mol-001","title":"Mol Issue"}
-{"id":"bd-wisp-001","title":"Wisp Issue"}
-{"id":"bd-001","title":"Regular Issue"}
+			jsonlContent: `{"id":"fbd-mol-001","title":"Mol Issue"}
+{"id":"fbd-wisp-001","title":"Wisp Issue"}
+{"id":"fbd-001","title":"Regular Issue"}
 `,
 			expectWarning:  false, // All are valid variants of "fbd"
 			warningMessage: "",

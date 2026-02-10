@@ -16,9 +16,9 @@ func TestExtractIssuePrefix(t *testing.T) {
 		issueID  string
 		expected string
 	}{
-		{"standard ID", "bd-123", "fbd"},
+		{"standard ID", "fbd-123", "fbd"},
 		{"custom prefix", "myproject-456", "myproject"},
-		{"hash ID", "bd-abc123def", "fbd"},
+		{"hash ID", "fbd-abc123def", "fbd"},
 		{"multi-part prefix with numeric suffix", "alpha-beta-1", "alpha-beta"},
 		{"multi-part non-numeric suffix", "vc-baseline-test", "vc"}, // Falls back to first hyphen
 		{"beads-vscode style", "beads-vscode-42", "beads-vscode"},
@@ -41,10 +41,10 @@ func TestLoadIssuesFromJSONL(t *testing.T) {
 	jsonlPath := filepath.Join(tempDir, "test.jsonl")
 
 	// Create test JSONL file
-	content := `{"id":"bd-1","title":"Test Issue 1","description":"Test"}
-{"id":"bd-2","title":"Test Issue 2","description":"Another test"}
+	content := `{"id":"fbd-1","title":"Test Issue 1","description":"Test"}
+{"id":"fbd-2","title":"Test Issue 2","description":"Another test"}
 
-{"id":"bd-3","title":"Test Issue 3","description":"Third test"}
+{"id":"fbd-3","title":"Test Issue 3","description":"Third test"}
 `
 	if err := os.WriteFile(jsonlPath, []byte(content), 0o600); err != nil {
 		t.Fatalf("Failed to write test file: %v", err)
@@ -59,13 +59,13 @@ func TestLoadIssuesFromJSONL(t *testing.T) {
 		t.Errorf("Expected 3 issues, got %d", len(issues))
 	}
 
-	if issues[0].ID != "bd-1" || issues[0].Title != "Test Issue 1" {
+	if issues[0].ID != "fbd-1" || issues[0].Title != "Test Issue 1" {
 		t.Errorf("First issue mismatch: %+v", issues[0])
 	}
-	if issues[1].ID != "bd-2" {
+	if issues[1].ID != "fbd-2" {
 		t.Errorf("Second issue ID mismatch: %s", issues[1].ID)
 	}
-	if issues[2].ID != "bd-3" {
+	if issues[2].ID != "fbd-3" {
 		t.Errorf("Third issue ID mismatch: %s", issues[2].ID)
 	}
 }
@@ -74,9 +74,9 @@ func TestLoadIssuesFromJSONL_InvalidJSON(t *testing.T) {
 	tempDir := t.TempDir()
 	jsonlPath := filepath.Join(tempDir, "invalid.jsonl")
 
-	content := `{"id":"bd-1","title":"Valid"}
+	content := `{"id":"fbd-1","title":"Valid"}
 invalid json here
-{"id":"bd-2","title":"Another valid"}
+{"id":"fbd-2","title":"Another valid"}
 `
 	if err := os.WriteFile(jsonlPath, []byte(content), 0o600); err != nil {
 		t.Fatalf("Failed to write test file: %v", err)
@@ -230,7 +230,7 @@ func TestInitializeNoDbMode_SetsStoreActive(t *testing.T) {
 
 	// Create a minimal JSONL file with one issue
 	jsonlPath := filepath.Join(beadsDir, "issues.jsonl")
-	content := `{"id":"bd-1","title":"Test Issue","status":"open"}
+	content := `{"id":"fbd-1","title":"Test Issue","status":"open"}
 `
 	if err := os.WriteFile(jsonlPath, []byte(content), 0o600); err != nil {
 		t.Fatalf("Failed to write JSONL: %v", err)
@@ -284,7 +284,7 @@ func TestInitializeNoDbMode_SetsStoreActive(t *testing.T) {
 
 	// Verify comments work (this was the failing case)
 	ctx := rootCtx
-	comment, err := s.AddIssueComment(ctx, "bd-1", "testuser", "Test comment")
+	comment, err := s.AddIssueComment(ctx, "fbd-1", "testuser", "Test comment")
 	if err != nil {
 		t.Fatalf("AddIssueComment failed: %v", err)
 	}
@@ -292,7 +292,7 @@ func TestInitializeNoDbMode_SetsStoreActive(t *testing.T) {
 		t.Errorf("Expected 'Test comment', got %s", comment.Text)
 	}
 
-	comments, err := s.GetIssueComments(ctx, "bd-1")
+	comments, err := s.GetIssueComments(ctx, "fbd-1")
 	if err != nil {
 		t.Fatalf("GetIssueComments failed: %v", err)
 	}
@@ -376,9 +376,9 @@ func TestWriteIssuesToJSONL(t *testing.T) {
 	memStore := memory.New(filepath.Join(beadsDir, "issues.jsonl"))
 
 	issues := []*types.Issue{
-		{ID: "bd-1", Title: "Test Issue 1", Description: "Desc 1"},
-		{ID: "bd-2", Title: "Test Issue 2", Description: "Desc 2", Ephemeral: true},
-		{ID: "bd-3", Title: "Regular", Description: "Persistent"},
+		{ID: "fbd-1", Title: "Test Issue 1", Description: "Desc 1"},
+		{ID: "fbd-2", Title: "Test Issue 2", Description: "Desc 2", Ephemeral: true},
+		{ID: "fbd-3", Title: "Regular", Description: "Persistent"},
 	}
 	if err := memStore.LoadFromIssues(issues); err != nil {
 		t.Fatalf("Failed to load issues: %v", err)

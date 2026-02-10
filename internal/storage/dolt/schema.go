@@ -1,4 +1,4 @@
-//go:build cgo
+//go:build cgo && dolt
 package dolt
 
 // schema defines the MySQL-compatible database schema for Dolt.

@@ -17,7 +17,7 @@ func TestIsValidBranchName(t *testing.T) {
 		{"valid with dash", "my-branch", true},
 		{"valid with underscore", "my_branch", true},
 		{"valid with dot", "v1.0", true},
-		{"valid complex", "feature/bd-123-add-thing", true},
+		{"valid complex", "feature/fbd-123-add-thing", true},
 
 		{"empty", "", false},
 		{"starts with dash", "-branch", false},
@@ -457,7 +457,7 @@ func TestCheckConfigValuesDbPath(t *testing.T) {
 		}
 	})
 
-	// Test routing + hydration consistency (bd-fix-routing)
+	// Test routing + hydration consistency (fbd-fix-routing)
 	t.Run("routing.mode=auto without hydration", func(t *testing.T) {
 		configContent := `routing:
   mode: auto

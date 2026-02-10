@@ -56,7 +56,7 @@ func commitFile(t *testing.T, dir, name, content, msg string) {
 
 func TestCheckGitWorkingTree(t *testing.T) {
 	t.Run("not a git repo", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-nt-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-nt-*")
 		check := CheckGitWorkingTree(dir)
 		if check.Status != StatusOK {
 			t.Fatalf("status=%q want %q", check.Status, StatusOK)
@@ -67,7 +67,7 @@ func TestCheckGitWorkingTree(t *testing.T) {
 	})
 
 	t.Run("clean", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-clean-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-clean-*")
 		initRepo(t, dir, "main")
 		commitFile(t, dir, "README.md", "# test\n", "initial")
 
@@ -78,7 +78,7 @@ func TestCheckGitWorkingTree(t *testing.T) {
 	})
 
 	t.Run("dirty", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-dirty-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-dirty-*")
 		initRepo(t, dir, "main")
 		commitFile(t, dir, "README.md", "# test\n", "initial")
 		if err := os.WriteFile(filepath.Join(dir, "dirty.txt"), []byte("x"), 0644); err != nil {
@@ -94,7 +94,7 @@ func TestCheckGitWorkingTree(t *testing.T) {
 
 func TestCheckGitUpstream(t *testing.T) {
 	t.Run("no upstream", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-up-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-up-*")
 		initRepo(t, dir, "main")
 		commitFile(t, dir, "README.md", "# test\n", "initial")
 
@@ -108,8 +108,8 @@ func TestCheckGitUpstream(t *testing.T) {
 	})
 
 	t.Run("up to date", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-up2-*")
-		remote := mkTmpDirInTmp(t, "bd-git-remote-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-up2-*")
+		remote := mkTmpDirInTmp(t, "fbd-git-remote-*")
 		runGit(t, remote, "init", "--bare", "--initial-branch=main")
 
 		initRepo(t, dir, "main")
@@ -124,8 +124,8 @@ func TestCheckGitUpstream(t *testing.T) {
 	})
 
 	t.Run("ahead of upstream", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-ahead-*")
-		remote := mkTmpDirInTmp(t, "bd-git-remote2-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-ahead-*")
+		remote := mkTmpDirInTmp(t, "fbd-git-remote2-*")
 		runGit(t, remote, "init", "--bare", "--initial-branch=main")
 
 		initRepo(t, dir, "main")
@@ -145,8 +145,8 @@ func TestCheckGitUpstream(t *testing.T) {
 	})
 
 	t.Run("behind upstream", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-git-behind-*")
-		remote := mkTmpDirInTmp(t, "bd-git-remote3-*")
+		dir := mkTmpDirInTmp(t, "fbd-git-behind-*")
+		remote := mkTmpDirInTmp(t, "fbd-git-remote3-*")
 		runGit(t, remote, "init", "--bare", "--initial-branch=main")
 
 		initRepo(t, dir, "main")
@@ -155,7 +155,7 @@ func TestCheckGitUpstream(t *testing.T) {
 		runGit(t, dir, "push", "-u", "origin", "main")
 
 		// Advance remote via another clone.
-		clone := mkTmpDirInTmp(t, "bd-git-clone-*")
+		clone := mkTmpDirInTmp(t, "fbd-git-clone-*")
 		runGit(t, clone, "clone", remote, ".")
 		runGit(t, clone, "config", "user.email", "test@test.com")
 		runGit(t, clone, "config", "user.name", "Test User")

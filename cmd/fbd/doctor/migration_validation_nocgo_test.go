@@ -1,4 +1,4 @@
-//go:build !cgo
+//go:build !dolt
 
 package doctor
 
@@ -13,8 +13,8 @@ func TestCheckMigrationReadiness_NoCGO(t *testing.T) {
 		t.Errorf("status = %q, want %q", check.Status, StatusOK)
 	}
 
-	if check.Message != "N/A (requires CGO for Dolt)" {
-		t.Errorf("message = %q, want %q", check.Message, "N/A (requires CGO for Dolt)")
+	if check.Message != "N/A (requires dolt build tag)" {
+		t.Errorf("message = %q, want %q", check.Message, "N/A (requires dolt build tag)")
 	}
 
 	if result.Ready {
@@ -45,8 +45,8 @@ func TestCheckDoltLocks_NoCGO(t *testing.T) {
 		t.Errorf("status = %q, want %q", check.Status, StatusOK)
 	}
 
-	if check.Message != "N/A (requires CGO for Dolt)" {
-		t.Errorf("message = %q, want %q", check.Message, "N/A (requires CGO for Dolt)")
+	if check.Message != "N/A (requires dolt build tag)" {
+		t.Errorf("message = %q, want %q", check.Message, "N/A (requires dolt build tag)")
 	}
 }
 

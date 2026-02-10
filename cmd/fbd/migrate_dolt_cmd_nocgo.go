@@ -1,4 +1,4 @@
-//go:build !cgo
+//go:build !dolt
 
 package main
 
@@ -12,17 +12,17 @@ import (
 var migrateDoltCmd = &cobra.Command{
 	Use:   "dolt",
 	Short: "Migrate from SQLite to Dolt backend",
-	Long:  `Migrate the current beads installation from SQLite to Dolt backend. (Requires CGO)`,
+	Long:  `Migrate the current beads installation from SQLite to Dolt backend. (Requires dolt build tag and CGO)`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if jsonOutput {
 			outputJSON(map[string]interface{}{
 				"error":   "dolt_not_available",
-				"message": "Dolt backend requires CGO. This binary was built without CGO support.",
+				"message": "Dolt backend requires the dolt build tag (and CGO). This binary was built without Dolt support.",
 			})
 		} else {
-			fmt.Fprintf(os.Stderr, "Error: Dolt backend requires CGO\n")
-			fmt.Fprintf(os.Stderr, "This binary was built without CGO support.\n")
-			fmt.Fprintf(os.Stderr, "To use Dolt, rebuild with: CGO_ENABLED=1 go build\n")
+			fmt.Fprintf(os.Stderr, "Error: Dolt backend requires the dolt build tag (and CGO)\n")
+			fmt.Fprintf(os.Stderr, "This binary was built without Dolt support.\n")
+			fmt.Fprintf(os.Stderr, "To use Dolt, rebuild with: CGO_ENABLED=1 go build -tags dolt\n")
 		}
 		os.Exit(1)
 	},

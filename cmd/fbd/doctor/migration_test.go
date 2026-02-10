@@ -38,7 +38,7 @@ func TestCheckPendingMigrations(t *testing.T) {
 					t.Fatalf("failed to create .beads: %v", err)
 				}
 				// Create deletions.jsonl with an entry
-				content := `{"id":"bd-test","ts":"2024-01-01T00:00:00Z","by":"test"}`
+				content := `{"id":"fbd-test","ts":"2024-01-01T00:00:00Z","by":"test"}`
 				if err := os.WriteFile(filepath.Join(beadsDir, "deletions.jsonl"), []byte(content), 0644); err != nil {
 					t.Fatalf("failed to create deletions.jsonl: %v", err)
 				}
@@ -50,7 +50,7 @@ func TestCheckPendingMigrations(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+			tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 			if err != nil {
 				t.Fatalf("failed to create temp dir: %v", err)
 			}
@@ -77,7 +77,7 @@ func TestCheckPendingMigrations(t *testing.T) {
 
 func TestDetectPendingMigrations(t *testing.T) {
 	t.Run("no beads directory returns empty", func(t *testing.T) {
-		tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+		tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 		if err != nil {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
@@ -90,7 +90,7 @@ func TestDetectPendingMigrations(t *testing.T) {
 	})
 
 	t.Run("empty beads directory returns empty", func(t *testing.T) {
-		tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+		tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 		if err != nil {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
@@ -107,7 +107,7 @@ func TestDetectPendingMigrations(t *testing.T) {
 	})
 
 	t.Run("deletions.jsonl triggers tombstones migration", func(t *testing.T) {
-		tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+		tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 		if err != nil {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
@@ -119,7 +119,7 @@ func TestDetectPendingMigrations(t *testing.T) {
 		}
 
 		// Create deletions.jsonl with an entry
-		content := `{"id":"bd-test","ts":"2024-01-01T00:00:00Z","by":"test"}`
+		content := `{"id":"fbd-test","ts":"2024-01-01T00:00:00Z","by":"test"}`
 		if err := os.WriteFile(filepath.Join(beadsDir, "deletions.jsonl"), []byte(content), 0644); err != nil {
 			t.Fatalf("failed to create deletions.jsonl: %v", err)
 		}
@@ -142,7 +142,7 @@ func TestDetectPendingMigrations(t *testing.T) {
 
 func TestNeedsTombstonesMigration(t *testing.T) {
 	t.Run("no deletions.jsonl returns false", func(t *testing.T) {
-		tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+		tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 		if err != nil {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
@@ -154,7 +154,7 @@ func TestNeedsTombstonesMigration(t *testing.T) {
 	})
 
 	t.Run("empty deletions.jsonl returns false", func(t *testing.T) {
-		tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+		tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 		if err != nil {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
@@ -170,13 +170,13 @@ func TestNeedsTombstonesMigration(t *testing.T) {
 	})
 
 	t.Run("deletions.jsonl with entries returns true", func(t *testing.T) {
-		tmpDir, err := os.MkdirTemp("", "bd-doctor-migration-*")
+		tmpDir, err := os.MkdirTemp("", "fbd-doctor-migration-*")
 		if err != nil {
 			t.Fatalf("failed to create temp dir: %v", err)
 		}
 		defer os.RemoveAll(tmpDir)
 
-		content := `{"id":"bd-test","ts":"2024-01-01T00:00:00Z","by":"test"}`
+		content := `{"id":"fbd-test","ts":"2024-01-01T00:00:00Z","by":"test"}`
 		if err := os.WriteFile(filepath.Join(tmpDir, "deletions.jsonl"), []byte(content), 0644); err != nil {
 			t.Fatalf("failed to create deletions.jsonl: %v", err)
 		}

@@ -136,13 +136,13 @@ func TestCheckParentConsistency_OrphanedDeps(t *testing.T) {
 	}
 
 	// Insert an issue
-	_, err = db.Exec(`INSERT INTO issues (id, title, status) VALUES ('bd-1', 'Test Issue', 'open')`)
+	_, err = db.Exec(`INSERT INTO issues (id, title, status) VALUES ('fbd-1', 'Test Issue', 'open')`)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	// Insert a parent-child dep pointing to non-existent parent
-	_, err = db.Exec(`INSERT INTO dependencies (issue_id, depends_on_id, type) VALUES ('bd-1', 'bd-missing', 'parent-child')`)
+	_, err = db.Exec(`INSERT INTO dependencies (issue_id, depends_on_id, type) VALUES ('fbd-1', 'fbd-missing', 'parent-child')`)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -39,7 +39,7 @@ func TestExtractPrefix(t *testing.T) {
 		input    string
 		expected string
 	}{
-		{"bd-123", "fbd"},
+		{"fbd-123", "fbd"},
 		{"custom-1", "custom"},
 		{"TEST-999", "TEST"},
 		{"no-number", "no"}, // Has hyphen, suffix not numeric, first hyphen
@@ -48,7 +48,7 @@ func TestExtractPrefix(t *testing.T) {
 		// Multi-part non-numeric suffixes (bd-fasa regression tests)
 		{"vc-baseline-test", "vc"},
 		{"vc-92cl-gate-test", "vc"},
-		{"bd-multi-part-id", "fbd"},
+		{"fbd-multi-part-id", "fbd"},
 		{"prefix-a-b-c-d", "prefix"},
 		// Multi-part prefixes with numeric suffixes
 		{"beads-vscode-1", "beads-vscode"},

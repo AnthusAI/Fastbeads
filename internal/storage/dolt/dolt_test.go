@@ -1,3 +1,5 @@
+//go:build cgo && dolt
+
 package dolt
 
 import (

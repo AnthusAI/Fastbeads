@@ -17,9 +17,9 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 	}{
 		{
 			name: "single prefix",
-			content: `{"id":"bd-1","title":"Issue 1"}
-{"id":"bd-2","title":"Issue 2"}
-{"id":"bd-3","title":"Issue 3"}
+			content: `{"id":"fbd-1","title":"Issue 1"}
+{"id":"fbd-2","title":"Issue 2"}
+{"id":"fbd-3","title":"Issue 3"}
 `,
 			expectedCount: 3,
 			expectedPrefixes: map[string]int{
@@ -28,9 +28,9 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 		},
 		{
 			name: "two prefixes evenly distributed",
-			content: `{"id":"bd-1","title":"Issue 1"}
+			content: `{"id":"fbd-1","title":"Issue 1"}
 {"id":"proj-2","title":"Issue 2"}
-{"id":"bd-3","title":"Issue 3"}
+{"id":"fbd-3","title":"Issue 3"}
 {"id":"proj-4","title":"Issue 4"}
 `,
 			expectedCount: 4,
@@ -41,10 +41,10 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 		},
 		{
 			name: "three prefixes after merge",
-			content: `{"id":"bd-1","title":"Issue 1"}
+			content: `{"id":"fbd-1","title":"Issue 1"}
 {"id":"proj-2","title":"Issue 2"}
 {"id":"beads-3","title":"Issue 3"}
-{"id":"bd-4","title":"Issue 4"}
+{"id":"fbd-4","title":"Issue 4"}
 {"id":"proj-5","title":"Issue 5"}
 `,
 			expectedCount: 5,
@@ -56,13 +56,13 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 		},
 		{
 			name: "multiple prefixes with clear majority",
-			content: `{"id":"bd-1","title":"Issue 1"}
-{"id":"bd-2","title":"Issue 2"}
-{"id":"bd-3","title":"Issue 3"}
-{"id":"bd-4","title":"Issue 4"}
-{"id":"bd-5","title":"Issue 5"}
-{"id":"bd-6","title":"Issue 6"}
-{"id":"bd-7","title":"Issue 7"}
+			content: `{"id":"fbd-1","title":"Issue 1"}
+{"id":"fbd-2","title":"Issue 2"}
+{"id":"fbd-3","title":"Issue 3"}
+{"id":"fbd-4","title":"Issue 4"}
+{"id":"fbd-5","title":"Issue 5"}
+{"id":"fbd-6","title":"Issue 6"}
+{"id":"fbd-7","title":"Issue 7"}
 {"id":"proj-8","title":"Issue 8"}
 {"id":"beads-9","title":"Issue 9"}
 `,
@@ -91,10 +91,10 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 			name: "legacy and new prefixes mixed",
 			content: `{"id":"beads-1","title":"Old prefix"}
 {"id":"beads-2","title":"Old prefix"}
-{"id":"bd-3","title":"New prefix"}
-{"id":"bd-4","title":"New prefix"}
-{"id":"bd-5","title":"New prefix"}
-{"id":"bd-6","title":"New prefix"}
+{"id":"fbd-3","title":"New prefix"}
+{"id":"fbd-4","title":"New prefix"}
+{"id":"fbd-5","title":"New prefix"}
+{"id":"fbd-6","title":"New prefix"}
 `,
 			expectedCount: 6,
 			expectedPrefixes: map[string]int{
@@ -118,7 +118,7 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 			name: "issue IDs without dashes",
 			content: `{"id":"abc123","title":"No dash ID"}
 {"id":"def456","title":"No dash ID"}
-{"id":"bd-1","title":"Normal ID"}
+{"id":"fbd-1","title":"Normal ID"}
 `,
 			expectedCount: 3,
 			expectedPrefixes: map[string]int{
@@ -129,9 +129,9 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 		},
 		{
 			name: "empty lines and whitespace",
-			content: `{"id":"bd-1","title":"Issue 1"}
+			content: `{"id":"fbd-1","title":"Issue 1"}
 
-{"id":"bd-2","title":"Issue 2"}
+{"id":"fbd-2","title":"Issue 2"}
 
 {"id":"proj-3","title":"Issue 3"}
 `,
@@ -143,10 +143,10 @@ func TestPrefixDetection_MultiplePrefixes(t *testing.T) {
 		},
 		{
 			name: "tombstones mixed with regular issues",
-			content: `{"id":"bd-1","title":"Issue 1","status":"open"}
-{"id":"bd-2","title":"Issue 2","status":"tombstone"}
+			content: `{"id":"fbd-1","title":"Issue 1","status":"open"}
+{"id":"fbd-2","title":"Issue 2","status":"tombstone"}
 {"id":"proj-3","title":"Issue 3","status":"closed"}
-{"id":"bd-4","title":"Issue 4","status":"tombstone"}
+{"id":"fbd-4","title":"Issue 4","status":"tombstone"}
 `,
 			expectedCount: 4,
 			expectedPrefixes: map[string]int{
@@ -201,9 +201,9 @@ func TestPrefixDetection_MalformedJSON(t *testing.T) {
 	}{
 		{
 			name: "some invalid lines",
-			content: `{"id":"bd-1","title":"Valid"}
+			content: `{"id":"fbd-1","title":"Valid"}
 invalid json line
-{"id":"bd-2","title":"Valid"}
+{"id":"fbd-2","title":"Valid"}
 not-json
 {"id":"proj-3","title":"Valid"}
 `,
@@ -212,27 +212,27 @@ not-json
 		},
 		{
 			name: "missing id field",
-			content: `{"id":"bd-1","title":"Valid"}
+			content: `{"id":"fbd-1","title":"Valid"}
 {"title":"No ID field"}
-{"id":"bd-2","title":"Valid"}
+{"id":"fbd-2","title":"Valid"}
 `,
 			expectedCount: 2,
 			expectError:   false,
 		},
 		{
 			name: "id field is not string",
-			content: `{"id":"bd-1","title":"Valid"}
+			content: `{"id":"fbd-1","title":"Valid"}
 {"id":123,"title":"Numeric ID"}
-{"id":"bd-2","title":"Valid"}
+{"id":"fbd-2","title":"Valid"}
 `,
 			expectedCount: 2,
 			expectError:   false,
 		},
 		{
 			name: "empty id field",
-			content: `{"id":"bd-1","title":"Valid"}
+			content: `{"id":"fbd-1","title":"Valid"}
 {"id":"","title":"Empty ID"}
-{"id":"bd-2","title":"Valid"}
+{"id":"fbd-2","title":"Valid"}
 `,
 			expectedCount: 2,
 			expectError:   false,
@@ -273,10 +273,10 @@ func TestPrefixDetection_MostCommonPrefix(t *testing.T) {
 	}{
 		{
 			name: "clear majority",
-			content: `{"id":"bd-1"}
-{"id":"bd-2"}
-{"id":"bd-3"}
-{"id":"bd-4"}
+			content: `{"id":"fbd-1"}
+{"id":"fbd-2"}
+{"id":"fbd-3"}
+{"id":"fbd-4"}
 {"id":"proj-5"}
 `,
 			expectedMostCommon:      "fbd",
@@ -362,9 +362,9 @@ func TestPrefixMismatchDetection(t *testing.T) {
 	}{
 		{
 			name: "perfect match",
-			jsonlContent: `{"id":"bd-1"}
-{"id":"bd-2"}
-{"id":"bd-3"}
+			jsonlContent: `{"id":"fbd-1"}
+{"id":"fbd-2"}
+{"id":"fbd-3"}
 `,
 			dbPrefix:    "fbd",
 			shouldWarn:  false,
@@ -386,7 +386,7 @@ func TestPrefixMismatchDetection(t *testing.T) {
 {"id":"proj-2"}
 {"id":"proj-3"}
 {"id":"proj-4"}
-{"id":"bd-5"}
+{"id":"fbd-5"}
 `,
 			dbPrefix:    "fbd",
 			shouldWarn:  true,
@@ -394,10 +394,10 @@ func TestPrefixMismatchDetection(t *testing.T) {
 		},
 		{
 			name: "minority mismatch",
-			jsonlContent: `{"id":"bd-1"}
-{"id":"bd-2"}
-{"id":"bd-3"}
-{"id":"bd-4"}
+			jsonlContent: `{"id":"fbd-1"}
+{"id":"fbd-2"}
+{"id":"fbd-3"}
+{"id":"fbd-4"}
 {"id":"proj-5"}
 `,
 			dbPrefix:    "fbd",
@@ -406,8 +406,8 @@ func TestPrefixMismatchDetection(t *testing.T) {
 		},
 		{
 			name: "exactly half mismatch",
-			jsonlContent: `{"id":"bd-1"}
-{"id":"bd-2"}
+			jsonlContent: `{"id":"fbd-1"}
+{"id":"fbd-2"}
 {"id":"proj-3"}
 {"id":"proj-4"}
 `,
@@ -417,8 +417,8 @@ func TestPrefixMismatchDetection(t *testing.T) {
 		},
 		{
 			name: "just over majority threshold",
-			jsonlContent: `{"id":"bd-1"}
-{"id":"bd-2"}
+			jsonlContent: `{"id":"fbd-1"}
+{"id":"fbd-2"}
 {"id":"proj-3"}
 {"id":"proj-4"}
 {"id":"proj-5"}
@@ -432,7 +432,7 @@ func TestPrefixMismatchDetection(t *testing.T) {
 			jsonlContent: `{"id":"proj-1"}
 {"id":"feature-2"}
 {"id":"hotfix-3"}
-{"id":"bd-4"}
+{"id":"fbd-4"}
 `,
 			dbPrefix:    "fbd",
 			shouldWarn:  false, // no single prefix has majority, so no warning
@@ -552,7 +552,7 @@ func TestPrefixExtraction_EdgeCases(t *testing.T) {
 	}{
 		{
 			name:           "standard format",
-			issueID:        "bd-123",
+			issueID:        "fbd-123",
 			expectedPrefix: "fbd",
 		},
 		{
@@ -567,7 +567,7 @@ func TestPrefixExtraction_EdgeCases(t *testing.T) {
 		},
 		{
 			name:           "trailing dash",
-			issueID:        "bd-",
+			issueID:        "fbd-",
 			expectedPrefix: "fbd",
 		},
 		{
@@ -577,8 +577,8 @@ func TestPrefixExtraction_EdgeCases(t *testing.T) {
 		},
 		{
 			name:           "multiple consecutive dashes",
-			issueID:        "bd--123",
-			expectedPrefix: "bd-",
+			issueID:        "fbd--123",
+			expectedPrefix: "fbd-",
 		},
 		{
 			name:           "numeric prefix",
@@ -631,7 +631,7 @@ func TestPrefixDetection_LargeScale(t *testing.T) {
 		defer f.Close()
 
 		for i := 1; i <= 1000; i++ {
-			fmt.Fprintf(f, `{"id":"bd-%d","title":"Issue"}`+"\n", i)
+			fmt.Fprintf(f, `{"id":"fbd-%d","title":"Issue"}`+"\n", i)
 		}
 
 		count, prefixes, err := CountJSONLIssues(jsonlPath)
@@ -659,7 +659,7 @@ func TestPrefixDetection_LargeScale(t *testing.T) {
 		defer f.Close()
 
 		for i := 1; i <= 700; i++ {
-			fmt.Fprintf(f, `{"id":"bd-%d"}`+"\n", i)
+			fmt.Fprintf(f, `{"id":"fbd-%d"}`+"\n", i)
 		}
 		for i := 1; i <= 200; i++ {
 			fmt.Fprintf(f, `{"id":"proj-%d"}`+"\n", i)

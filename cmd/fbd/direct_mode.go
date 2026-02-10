@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"path/filepath"
 	"strings"
 
 	"github.com/steveyegge/fastbeads/internal/beads"
@@ -25,6 +24,8 @@ func ensureDirectMode(_ string) error {
 // fallbackToDirectMode ensures a local store is ready.
 // With the daemon removed, this simply ensures the store is active.
 func fallbackToDirectMode(_ string) error {
+	daemonClient = nil
+	daemonStatus = DaemonStatus{}
 	return ensureStoreActive()
 }
 

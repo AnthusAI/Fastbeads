@@ -31,7 +31,7 @@ func TestUpdateMetadataInlineJSON(t *testing.T) {
 
 	// Create an issue
 	issue := &types.Issue{
-		ID:        "bd-test1",
+		ID:        "fbd-test1",
 		Title:     "Test Issue",
 		Status:    "open",
 		IssueType: "task",
@@ -45,12 +45,12 @@ func TestUpdateMetadataInlineJSON(t *testing.T) {
 	updates := map[string]interface{}{
 		"metadata": json.RawMessage(metadata),
 	}
-	if err := store.UpdateIssue(ctx, "bd-test1", updates, "test-actor"); err != nil {
+	if err := store.UpdateIssue(ctx, "fbd-test1", updates, "test-actor"); err != nil {
 		t.Fatalf("failed to update issue with metadata: %v", err)
 	}
 
 	// Verify the metadata was stored
-	updated, err := store.GetIssue(ctx, "bd-test1")
+	updated, err := store.GetIssue(ctx, "fbd-test1")
 	if err != nil {
 		t.Fatalf("failed to get issue: %v", err)
 	}
@@ -171,7 +171,7 @@ func TestUpdateMetadataRPCRoundtrip(t *testing.T) {
 	}
 
 	args := testUpdateArgs{
-		ID:       "bd-123",
+		ID:       "fbd-123",
 		Metadata: &metadata,
 	}
 

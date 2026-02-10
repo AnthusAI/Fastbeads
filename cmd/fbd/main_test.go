@@ -1,3 +1,5 @@
+//go:build jsonl_sync
+
 package main
 
 import (

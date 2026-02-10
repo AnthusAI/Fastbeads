@@ -9,7 +9,7 @@ import (
 )
 
 // TestDatabaseConfigFix_JSONLMismatch tests that DatabaseConfig fixes JSONL mismatches.
-// bd-6xd: Verify auto-fix for metadata.json jsonl_export mismatch
+// fbd-6xd: Verify auto-fix for metadata.json jsonl_export mismatch
 func TestDatabaseConfigFix_JSONLMismatch(t *testing.T) {
 	// Create temporary directory
 	tmpDir := t.TempDir()
@@ -50,7 +50,7 @@ func TestDatabaseConfigFix_JSONLMismatch(t *testing.T) {
 }
 
 // TestDatabaseConfigFix_PrefersIssuesJSONL tests that DatabaseConfig prefers issues.jsonl over beads.jsonl.
-// bd-6xd: issues.jsonl is the canonical filename
+// fbd-6xd: issues.jsonl is the canonical filename
 func TestDatabaseConfigFix_PrefersIssuesJSONL(t *testing.T) {
 	// Create temporary directory
 	tmpDir := t.TempDir()
@@ -96,7 +96,7 @@ func TestDatabaseConfigFix_PrefersIssuesJSONL(t *testing.T) {
 }
 
 // TestFindActualJSONLFile_SkipsBackups tests that backup files are skipped.
-// bd-6xd: issues.jsonl is the canonical filename
+// fbd-6xd: issues.jsonl is the canonical filename
 func TestFindActualJSONLFile_SkipsBackups(t *testing.T) {
 	// Create temporary directory
 	tmpDir := t.TempDir()
@@ -126,7 +126,7 @@ func TestFindActualJSONLFile_SkipsBackups(t *testing.T) {
 }
 
 // TestLegacyJSONLConfig_MigratesBeadsToIssues tests migration from beads.jsonl to issues.jsonl.
-// bd-6xd: issues.jsonl is the canonical filename
+// fbd-6xd: issues.jsonl is the canonical filename
 func TestLegacyJSONLConfig_MigratesBeadsToIssues(t *testing.T) {
 	// Create temporary directory
 	tmpDir := t.TempDir()

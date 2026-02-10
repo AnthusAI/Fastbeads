@@ -902,7 +902,7 @@ func TestCheckOrphanedIssues_OpenIssueNotInCommits(t *testing.T) {
 		CREATE TABLE config (key TEXT PRIMARY KEY, value TEXT);
 		CREATE TABLE issues (id TEXT PRIMARY KEY, status TEXT);
 		INSERT INTO config (key, value) VALUES ('issue_prefix', 'fbd');
-		INSERT INTO issues (id, status) VALUES ('bd-abc', 'open');
+		INSERT INTO issues (id, status) VALUES ('fbd-abc', 'open');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -952,7 +952,7 @@ func TestCheckOrphanedIssues_OpenIssueInCommit(t *testing.T) {
 		CREATE TABLE config (key TEXT PRIMARY KEY, value TEXT);
 		CREATE TABLE issues (id TEXT PRIMARY KEY, status TEXT);
 		INSERT INTO config (key, value) VALUES ('issue_prefix', 'fbd');
-		INSERT INTO issues (id, status) VALUES ('bd-abc', 'open');
+		INSERT INTO issues (id, status) VALUES ('fbd-abc', 'open');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -967,7 +967,7 @@ func TestCheckOrphanedIssues_OpenIssueInCommit(t *testing.T) {
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
 	_ = cmd.Run()
-	cmd = exec.Command("git", "commit", "-m", "Fix bug (bd-abc)")
+	cmd = exec.Command("git", "commit", "-m", "Fix bug (fbd-abc)")
 	cmd.Dir = tmpDir
 	_ = cmd.Run()
 
@@ -979,8 +979,8 @@ func TestCheckOrphanedIssues_OpenIssueInCommit(t *testing.T) {
 	if !strings.Contains(check.Message, "1 issue(s) referenced") {
 		t.Errorf("expected message about 1 issue referenced, got %q", check.Message)
 	}
-	if !strings.Contains(check.Detail, "bd-abc") {
-		t.Errorf("expected detail to contain bd-abc, got %q", check.Detail)
+	if !strings.Contains(check.Detail, "fbd-abc") {
+		t.Errorf("expected detail to contain fbd-abc, got %q", check.Detail)
 	}
 }
 
@@ -1005,7 +1005,7 @@ func TestCheckOrphanedIssues_ClosedIssueInCommit(t *testing.T) {
 		CREATE TABLE config (key TEXT PRIMARY KEY, value TEXT);
 		CREATE TABLE issues (id TEXT PRIMARY KEY, status TEXT);
 		INSERT INTO config (key, value) VALUES ('issue_prefix', 'fbd');
-		INSERT INTO issues (id, status) VALUES ('bd-abc', 'closed');
+		INSERT INTO issues (id, status) VALUES ('fbd-abc', 'closed');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -1020,7 +1020,7 @@ func TestCheckOrphanedIssues_ClosedIssueInCommit(t *testing.T) {
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
 	_ = cmd.Run()
-	cmd = exec.Command("git", "commit", "-m", "Fix bug (bd-abc)")
+	cmd = exec.Command("git", "commit", "-m", "Fix bug (fbd-abc)")
 	cmd.Dir = tmpDir
 	_ = cmd.Run()
 
@@ -1053,7 +1053,7 @@ func TestCheckOrphanedIssues_HierarchicalIssueID(t *testing.T) {
 		CREATE TABLE config (key TEXT PRIMARY KEY, value TEXT);
 		CREATE TABLE issues (id TEXT PRIMARY KEY, status TEXT);
 		INSERT INTO config (key, value) VALUES ('issue_prefix', 'fbd');
-		INSERT INTO issues (id, status) VALUES ('bd-abc.1', 'open');
+		INSERT INTO issues (id, status) VALUES ('fbd-abc.1', 'open');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -1068,7 +1068,7 @@ func TestCheckOrphanedIssues_HierarchicalIssueID(t *testing.T) {
 	cmd := exec.Command("git", "add", "README.md")
 	cmd.Dir = tmpDir
 	_ = cmd.Run()
-	cmd = exec.Command("git", "commit", "-m", "Fix subtask (bd-abc.1)")
+	cmd = exec.Command("git", "commit", "-m", "Fix subtask (fbd-abc.1)")
 	cmd.Dir = tmpDir
 	_ = cmd.Run()
 
@@ -1077,7 +1077,7 @@ func TestCheckOrphanedIssues_HierarchicalIssueID(t *testing.T) {
 	if check.Status != StatusWarning {
 		t.Errorf("expected status %q, got %q (message: %s)", StatusWarning, check.Status, check.Message)
 	}
-	if !strings.Contains(check.Detail, "bd-abc.1") {
-		t.Errorf("expected detail to contain bd-abc.1, got %q", check.Detail)
+	if !strings.Contains(check.Detail, "fbd-abc.1") {
+		t.Errorf("expected detail to contain fbd-abc.1, got %q", check.Detail)
 	}
 }

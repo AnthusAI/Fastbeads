@@ -92,18 +92,18 @@ func TestFindOrphanedIssues_WithMockProvider(t *testing.T) {
 		"UT-01: Basic orphan detection": {
 			provider: &mockIssueProvider{
 				issues: []*types.Issue{
-					{ID: "bd-abc", Title: "Test issue", Status: types.StatusOpen},
+					{ID: "fbd-abc", Title: "Test issue", Status: types.StatusOpen},
 				},
 				prefix: "fbd",
 			},
-			commits:  []string{"Initial commit", "Fix bug (bd-abc)"},
+			commits:  []string{"Initial commit", "Fix bug (fbd-abc)"},
 			expected: 1,
-			issueID:  "bd-abc",
+			issueID:  "fbd-abc",
 		},
 		"UT-02: No orphans when no matching commits": {
 			provider: &mockIssueProvider{
 				issues: []*types.Issue{
-					{ID: "bd-xyz", Title: "Test issue", Status: types.StatusOpen},
+					{ID: "fbd-xyz", Title: "Test issue", Status: types.StatusOpen},
 				},
 				prefix: "fbd",
 			},
@@ -124,44 +124,44 @@ func TestFindOrphanedIssues_WithMockProvider(t *testing.T) {
 		"UT-04: Multiple orphans": {
 			provider: &mockIssueProvider{
 				issues: []*types.Issue{
-					{ID: "bd-aaa", Title: "Issue A", Status: types.StatusOpen},
-					{ID: "bd-bbb", Title: "Issue B", Status: types.StatusOpen},
-					{ID: "bd-ccc", Title: "Issue C", Status: types.StatusOpen},
+					{ID: "fbd-aaa", Title: "Issue A", Status: types.StatusOpen},
+					{ID: "fbd-bbb", Title: "Issue B", Status: types.StatusOpen},
+					{ID: "fbd-ccc", Title: "Issue C", Status: types.StatusOpen},
 				},
 				prefix: "fbd",
 			},
-			commits:  []string{"Initial commit", "Fix (bd-aaa)", "Fix (bd-ccc)"},
+			commits:  []string{"Initial commit", "Fix (fbd-aaa)", "Fix (fbd-ccc)"},
 			expected: 2,
 		},
 		"UT-06: In-progress issues included": {
 			provider: &mockIssueProvider{
 				issues: []*types.Issue{
-					{ID: "bd-wip", Title: "Work in progress", Status: types.StatusInProgress},
+					{ID: "fbd-wip", Title: "Work in progress", Status: types.StatusInProgress},
 				},
 				prefix: "fbd",
 			},
-			commits:  []string{"Initial commit", "WIP (bd-wip)"},
+			commits:  []string{"Initial commit", "WIP (fbd-wip)"},
 			expected: 1,
-			issueID:  "bd-wip",
+			issueID:  "fbd-wip",
 		},
 		"UT-08: Empty provider returns empty slice": {
 			provider: &mockIssueProvider{
 				issues: []*types.Issue{},
 				prefix: "fbd",
 			},
-			commits:  []string{"Initial commit", "Some change (bd-xxx)"},
+			commits:  []string{"Initial commit", "Some change (fbd-xxx)"},
 			expected: 0,
 		},
 		"UT-09: Hierarchical IDs": {
 			provider: &mockIssueProvider{
 				issues: []*types.Issue{
-					{ID: "bd-abc.1", Title: "Subtask", Status: types.StatusOpen},
+					{ID: "fbd-abc.1", Title: "Subtask", Status: types.StatusOpen},
 				},
 				prefix: "fbd",
 			},
-			commits:  []string{"Initial commit", "Fix subtask (bd-abc.1)"},
+			commits:  []string{"Initial commit", "Fix subtask (fbd-abc.1)"},
 			expected: 1,
-			issueID:  "bd-abc.1",
+			issueID:  "fbd-abc.1",
 		},
 	}
 
@@ -309,7 +309,7 @@ func TestFindOrphanedIssues_LocalProvider(t *testing.T) {
 		CREATE TABLE config (key TEXT PRIMARY KEY, value TEXT);
 		CREATE TABLE issues (id TEXT PRIMARY KEY, status TEXT, title TEXT);
 		INSERT INTO config (key, value) VALUES ('issue_prefix', 'fbd');
-		INSERT INTO issues (id, status, title) VALUES ('bd-local', 'open', 'Local test');
+		INSERT INTO issues (id, status, title) VALUES ('fbd-local', 'open', 'Local test');
 	`)
 	if err != nil {
 		t.Fatal(err)
@@ -324,7 +324,7 @@ func TestFindOrphanedIssues_LocalProvider(t *testing.T) {
 	cmd = exec.Command("git", "add", "test.txt")
 	cmd.Dir = dir
 	_ = cmd.Run()
-	cmd = exec.Command("git", "commit", "-m", "Fix (bd-local)")
+	cmd = exec.Command("git", "commit", "-m", "Fix (fbd-local)")
 	cmd.Dir = dir
 	_ = cmd.Run()
 
@@ -338,15 +338,15 @@ func TestFindOrphanedIssues_LocalProvider(t *testing.T) {
 		t.Errorf("expected 1 orphan, got %d", len(orphans))
 	}
 
-	if len(orphans) > 0 && orphans[0].IssueID != "bd-local" {
-		t.Errorf("expected orphan ID bd-local, got %s", orphans[0].IssueID)
+	if len(orphans) > 0 && orphans[0].IssueID != "fbd-local" {
+		t.Errorf("expected orphan ID fbd-local, got %s", orphans[0].IssueID)
 	}
 }
 
 // TestFindOrphanedIssues_ProviderError tests error handling (UT-07).
 // When provider returns an error, FindOrphanedIssues should return empty slice.
 func TestFindOrphanedIssues_ProviderError(t *testing.T) {
-	gitDir := setupTestGitRepo(t, []string{"Initial commit", "Fix (bd-abc)"})
+	gitDir := setupTestGitRepo(t, []string{"Initial commit", "Fix (fbd-abc)"})
 
 	provider := &mockIssueProvider{
 		err: errors.New("provider error: database unavailable"),
@@ -369,7 +369,7 @@ func TestFindOrphanedIssues_NotGitRepo(t *testing.T) {
 
 	provider := &mockIssueProvider{
 		issues: []*types.Issue{
-			{ID: "bd-test", Title: "Test", Status: types.StatusOpen},
+			{ID: "fbd-test", Title: "Test", Status: types.StatusOpen},
 		},
 		prefix: "fbd",
 	}

@@ -13,7 +13,7 @@ import (
 
 func TestCheckSyncDivergence(t *testing.T) {
 	t.Run("not a git repo", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-sync-div-*")
+		dir := mkTmpDirInTmp(t, "fbd-sync-div-*")
 		check := CheckSyncDivergence(dir)
 		if check.Status != StatusOK {
 			t.Errorf("status=%q want %q", check.Status, StatusOK)
@@ -24,7 +24,7 @@ func TestCheckSyncDivergence(t *testing.T) {
 	})
 
 	t.Run("no beads directory", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-sync-div-nb-*")
+		dir := mkTmpDirInTmp(t, "fbd-sync-div-nb-*")
 		// Don't use initRepo which creates .beads
 		runGit(t, dir, "init", "-b", "main")
 		runGit(t, dir, "config", "user.email", "test@test.com")
@@ -41,7 +41,7 @@ func TestCheckSyncDivergence(t *testing.T) {
 	})
 
 	t.Run("all synced", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-sync-div-ok-*")
+		dir := mkTmpDirInTmp(t, "fbd-sync-div-ok-*")
 		initRepo(t, dir, "main")
 
 		// Create .beads with JSONL
@@ -65,7 +65,7 @@ func TestCheckSyncDivergence(t *testing.T) {
 	})
 
 	t.Run("uncommitted beads changes", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-sync-div-unc-*")
+		dir := mkTmpDirInTmp(t, "fbd-sync-div-unc-*")
 		initRepo(t, dir, "main")
 
 		// Create .beads with JSONL and commit it
@@ -95,7 +95,7 @@ func TestCheckSyncDivergence(t *testing.T) {
 	})
 
 	t.Run("JSONL differs from git HEAD", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-sync-div-diff-*")
+		dir := mkTmpDirInTmp(t, "fbd-sync-div-diff-*")
 		initRepo(t, dir, "main")
 
 		// Create .beads with JSONL and commit it
@@ -137,7 +137,7 @@ func TestCheckSyncDivergence(t *testing.T) {
 			_ = config.Initialize()
 		}()
 
-		dir := mkTmpDirInTmp(t, "bd-sync-div-dolt-*")
+		dir := mkTmpDirInTmp(t, "fbd-sync-div-dolt-*")
 		initRepo(t, dir, "main")
 
 		// Create .beads with JSONL and commit it
@@ -171,7 +171,7 @@ func TestCheckSyncDivergence(t *testing.T) {
 
 func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 	t.Run("no database", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-mtime-nodb-*")
+		dir := mkTmpDirInTmp(t, "fbd-mtime-nodb-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -184,7 +184,7 @@ func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 	})
 
 	t.Run("no JSONL", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-mtime-nojsonl-*")
+		dir := mkTmpDirInTmp(t, "fbd-mtime-nojsonl-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -207,7 +207,7 @@ func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 	})
 
 	t.Run("no last_import_time", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-mtime-noimport-*")
+		dir := mkTmpDirInTmp(t, "fbd-mtime-noimport-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -238,7 +238,7 @@ func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 	})
 
 	t.Run("times match", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-mtime-match-*")
+		dir := mkTmpDirInTmp(t, "fbd-mtime-match-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -273,7 +273,7 @@ func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 	})
 
 	t.Run("JSONL newer than import", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-mtime-newer-*")
+		dir := mkTmpDirInTmp(t, "fbd-mtime-newer-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -315,7 +315,7 @@ func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 	// The sync code writes to metadata, so doctor must read from there.
 	// This catches the bug where doctor queried 'config' instead of 'metadata'.
 	t.Run("reads from metadata table not config", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-mtime-table-*")
+		dir := mkTmpDirInTmp(t, "fbd-mtime-table-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -355,7 +355,7 @@ func TestCheckSQLiteMtimeDivergence(t *testing.T) {
 
 func TestCheckUncommittedBeadsChanges(t *testing.T) {
 	t.Run("no uncommitted changes", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-uncommit-clean-*")
+		dir := mkTmpDirInTmp(t, "fbd-uncommit-clean-*")
 		initRepo(t, dir, "main")
 
 		beadsDir := filepath.Join(dir, ".beads")
@@ -373,7 +373,7 @@ func TestCheckUncommittedBeadsChanges(t *testing.T) {
 	})
 
 	t.Run("uncommitted changes present", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-uncommit-dirty-*")
+		dir := mkTmpDirInTmp(t, "fbd-uncommit-dirty-*")
 		initRepo(t, dir, "main")
 
 		beadsDir := filepath.Join(dir, ".beads")
@@ -407,7 +407,7 @@ func TestCheckUncommittedBeadsChanges(t *testing.T) {
 
 func TestFindJSONLFile(t *testing.T) {
 	t.Run("issues.jsonl", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-findjsonl-*")
+		dir := mkTmpDirInTmp(t, "fbd-findjsonl-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -425,7 +425,7 @@ func TestFindJSONLFile(t *testing.T) {
 	})
 
 	t.Run("beads.jsonl", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-findjsonl2-*")
+		dir := mkTmpDirInTmp(t, "fbd-findjsonl2-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)
@@ -443,7 +443,7 @@ func TestFindJSONLFile(t *testing.T) {
 	})
 
 	t.Run("no jsonl", func(t *testing.T) {
-		dir := mkTmpDirInTmp(t, "bd-findjsonl3-*")
+		dir := mkTmpDirInTmp(t, "fbd-findjsonl3-*")
 		beadsDir := filepath.Join(dir, ".beads")
 		if err := os.MkdirAll(beadsDir, 0755); err != nil {
 			t.Fatal(err)

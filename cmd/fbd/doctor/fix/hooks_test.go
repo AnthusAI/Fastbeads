@@ -312,9 +312,9 @@ func TestCheckHuskyBdIntegration(t *testing.T) {
 		{
 			name: "all hooks with fbd",
 			hooks: map[string]string{
-				"pre-commit": "#!/bin/sh\nbd hooks run pre-commit\n",
-				"post-merge": "#!/bin/sh\nbd hooks run post-merge\n",
-				"pre-push":   "#!/bin/sh\nbd hooks run pre-push\n",
+				"pre-commit": "#!/bin/sh\nfbd hooks run pre-commit\n",
+				"post-merge": "#!/bin/sh\nfbd hooks run post-merge\n",
+				"pre-push":   "#!/bin/sh\nfbd hooks run pre-push\n",
 			},
 			expectConfigured:  true,
 			expectHooksWithBd: []string{"pre-commit", "post-merge", "pre-push"},
@@ -322,7 +322,7 @@ func TestCheckHuskyBdIntegration(t *testing.T) {
 		{
 			name: "partial fbd integration",
 			hooks: map[string]string{
-				"pre-commit": "#!/bin/sh\nbd hooks run pre-commit\n",
+				"pre-commit": "#!/bin/sh\nfbd hooks run pre-commit\n",
 				"post-merge": "#!/bin/sh\necho 'no fbd'\n",
 			},
 			expectConfigured:     true,
@@ -407,15 +407,15 @@ func TestCheckPrecommitBdIntegration(t *testing.T) {
 			configContent: `repos:
   - repo: local
     hooks:
-      - id: bd-pre-commit
+      - id: fbd-pre-commit
         entry: fbd hooks run pre-commit
         language: system
         stages: [pre-commit]
-      - id: bd-post-merge
+      - id: fbd-post-merge
         entry: fbd hooks run post-merge
         language: system
         stages: [post-merge]
-      - id: bd-pre-push
+      - id: fbd-pre-push
         entry: fbd hooks run pre-push
         language: system
         stages: [pre-push]
@@ -428,7 +428,7 @@ func TestCheckPrecommitBdIntegration(t *testing.T) {
 			configContent: `repos:
   - repo: local
     hooks:
-      - id: bd-pre-commit
+      - id: fbd-pre-commit
         entry: fbd hooks run pre-commit
         language: system
 `,
@@ -441,11 +441,11 @@ func TestCheckPrecommitBdIntegration(t *testing.T) {
 			configContent: `repos:
   - repo: local
     hooks:
-      - id: bd-commit
+      - id: fbd-commit
         entry: fbd hooks run pre-commit
         language: system
         stages: [commit]
-      - id: bd-push
+      - id: fbd-push
         entry: fbd hooks run pre-push
         language: system
         stages: [push]
@@ -475,7 +475,7 @@ func TestCheckPrecommitBdIntegration(t *testing.T) {
       - id: trailing-whitespace
   - repo: local
     hooks:
-      - id: bd-pre-commit
+      - id: fbd-pre-commit
         entry: fbd hooks run pre-commit
         language: system
 `,
@@ -547,7 +547,7 @@ func TestBdHookPatternMatching(t *testing.T) {
 		{"if command -v fbd; then fbd hooks run pre-commit; fi", true},
 		{"# fbd hooks run is recommended", true},
 		// Word boundary tests - should NOT match partial words
-		{"kbd hooks runner", false}, // 'kbd' contains 'fbd' but is different word
+		{"kfbd hooks runner", false}, // 'kbd' contains 'fbd' but is different word
 		{"bd_hooks_run", false},     // underscores make different tokens
 		{"fbd sync", false},
 		{"fbd export", false},
@@ -800,7 +800,7 @@ func TestCheckExternalHookManagerIntegration(t *testing.T) {
 				if err := os.MkdirAll(huskyDir, 0755); err != nil {
 					return err
 				}
-				return os.WriteFile(filepath.Join(huskyDir, "pre-commit"), []byte("#!/bin/sh\nbd hooks run pre-commit\n"), 0755)
+				return os.WriteFile(filepath.Join(huskyDir, "pre-commit"), []byte("#!/bin/sh\nfbd hooks run pre-commit\n"), 0755)
 			},
 			expectNil:           false,
 			expectManager:       "husky",
@@ -823,7 +823,7 @@ func TestCheckExternalHookManagerIntegration(t *testing.T) {
 				config := `repos:
   - repo: local
     hooks:
-      - id: bd-pre-commit
+      - id: fbd-pre-commit
         entry: fbd hooks run pre-commit
         language: system
 `
@@ -919,7 +919,7 @@ func TestMultipleManagersDetected(t *testing.T) {
 				if err := os.MkdirAll(huskyDir, 0755); err != nil {
 					return err
 				}
-				return os.WriteFile(filepath.Join(huskyDir, "pre-commit"), []byte("#!/bin/sh\nbd hooks run pre-commit\n"), 0755)
+				return os.WriteFile(filepath.Join(huskyDir, "pre-commit"), []byte("#!/bin/sh\nfbd hooks run pre-commit\n"), 0755)
 			},
 			expectManager: "lefthook",
 		},
@@ -930,7 +930,7 @@ func TestMultipleManagersDetected(t *testing.T) {
 				if err := os.MkdirAll(huskyDir, 0755); err != nil {
 					return err
 				}
-				return os.WriteFile(filepath.Join(huskyDir, "pre-commit"), []byte("#!/bin/sh\nbd hooks run pre-commit\n"), 0755)
+				return os.WriteFile(filepath.Join(huskyDir, "pre-commit"), []byte("#!/bin/sh\nfbd hooks run pre-commit\n"), 0755)
 			},
 			expectManager: "husky",
 		},

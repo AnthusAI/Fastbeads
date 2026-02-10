@@ -641,9 +641,9 @@ func TestCountJSONLIssues(t *testing.T) {
 		jsonlPath := filepath.Join(dir, ".beads", "issues.jsonl")
 
 		// Create JSONL with 3 issues
-		jsonl := []byte(`{"id":"bd-1","title":"First"}
-{"id":"bd-2","title":"Second"}
-{"id":"bd-3","title":"Third"}
+		jsonl := []byte(`{"id":"fbd-1","title":"First"}
+{"id":"fbd-2","title":"Second"}
+{"id":"fbd-3","title":"Third"}
 `)
 		if err := os.WriteFile(jsonlPath, jsonl, 0644); err != nil {
 			t.Fatalf("failed to create JSONL: %v", err)
@@ -663,9 +663,9 @@ func TestCountJSONLIssues(t *testing.T) {
 		jsonlPath := filepath.Join(dir, ".beads", "issues.jsonl")
 
 		// Create JSONL with 2 valid and some invalid lines
-		jsonl := []byte(`{"id":"bd-1","title":"First"}
+		jsonl := []byte(`{"id":"fbd-1","title":"First"}
 invalid json line
-{"id":"bd-2","title":"Second"}
+{"id":"fbd-2","title":"Second"}
 {"title":"No ID"}
 `)
 		if err := os.WriteFile(jsonlPath, jsonl, 0644); err != nil {

@@ -1475,7 +1475,7 @@ func TestCheckLastTouchedNotTracked_FileExistsNotTracked(t *testing.T) {
 		t.Fatal(err)
 	}
 	lastTouchedPath := filepath.Join(beadsDir, "last-touched")
-	if err := os.WriteFile(lastTouchedPath, []byte("bd-test1"), 0600); err != nil {
+	if err := os.WriteFile(lastTouchedPath, []byte("fbd-test1"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1526,7 +1526,7 @@ func TestCheckLastTouchedNotTracked_FileTracked(t *testing.T) {
 		t.Fatal(err)
 	}
 	lastTouchedPath := filepath.Join(beadsDir, "last-touched")
-	if err := os.WriteFile(lastTouchedPath, []byte("bd-test1"), 0600); err != nil {
+	if err := os.WriteFile(lastTouchedPath, []byte("fbd-test1"), 0600); err != nil {
 		t.Fatal(err)
 	}
 
@@ -1586,7 +1586,7 @@ func TestFixLastTouchedTracking(t *testing.T) {
 		t.Fatal(err)
 	}
 	lastTouchedPath := filepath.Join(beadsDir, "last-touched")
-	if err := os.WriteFile(lastTouchedPath, []byte("bd-test1"), 0600); err != nil {
+	if err := os.WriteFile(lastTouchedPath, []byte("fbd-test1"), 0600); err != nil {
 		t.Fatal(err)
 	}
 

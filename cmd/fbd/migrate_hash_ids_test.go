@@ -30,9 +30,9 @@ func TestMigrateHashIDs(t *testing.T) {
 
 	// Create test issues with sequential IDs
 	issue1 := &types.Issue{
-		ID:          "bd-1",
+		ID:          "fbd-1",
 		Title:       "First issue",
-		Description: "This is issue bd-1",
+		Description: "This is issue fbd-1",
 		Status:      types.StatusOpen,
 		Priority:    1,
 		IssueType:   types.TypeTask,
@@ -42,9 +42,9 @@ func TestMigrateHashIDs(t *testing.T) {
 	}
 
 	issue2 := &types.Issue{
-		ID:          "bd-2",
+		ID:          "fbd-2",
 		Title:       "Second issue",
-		Description: "This is issue bd-2 which references bd-1",
+		Description: "This is issue fbd-2 which references fbd-1",
 		Status:      types.StatusOpen,
 		Priority:    1,
 		IssueType:   types.TypeTask,
@@ -55,8 +55,8 @@ func TestMigrateHashIDs(t *testing.T) {
 
 	// Create a dependency
 	dep := &types.Dependency{
-		IssueID:     "bd-2",
-		DependsOnID: "bd-1",
+		IssueID:     "fbd-2",
+		DependsOnID: "fbd-1",
 		Type:        types.DepBlocks,
 	}
 	if err := store.AddDependency(ctx, dep, "test"); err != nil {
@@ -87,11 +87,11 @@ func TestMigrateHashIDs(t *testing.T) {
 	}
 
 	// Check mapping contains both IDs
-	if _, ok := mapping["bd-1"]; !ok {
-		t.Error("Mapping missing bd-1")
+	if _, ok := mapping["fbd-1"]; !ok {
+		t.Error("Mapping missing fbd-1")
 	}
-	if _, ok := mapping["bd-2"]; !ok {
-		t.Error("Mapping missing bd-2")
+	if _, ok := mapping["fbd-2"]; !ok {
+		t.Error("Mapping missing fbd-2")
 	}
 
 	// Verify new IDs are hash-based
@@ -121,8 +121,8 @@ func TestMigrateHashIDs(t *testing.T) {
 	}
 
 	// Verify migration
-	newID1 := mapping["bd-1"]
-	newID2 := mapping["bd-2"]
+	newID1 := mapping["fbd-1"]
+	newID2 := mapping["fbd-2"]
 
 	// Get migrated issues
 	migratedIssue1, err := store.GetIssue(ctx, newID1)
@@ -187,7 +187,7 @@ func TestMigrateHashIDsWithParentChild(t *testing.T) {
 
 	// Create epic (parent)
 	epic := &types.Issue{
-		ID:          "bd-1",
+		ID:          "fbd-1",
 		Title:       "Epic issue",
 		Description: "This is an epic",
 		Status:      types.StatusOpen,
@@ -200,9 +200,9 @@ func TestMigrateHashIDsWithParentChild(t *testing.T) {
 
 	// Create child issue
 	child := &types.Issue{
-		ID:          "bd-2",
+		ID:          "fbd-2",
 		Title:       "Child issue",
-		Description: "This is a child of bd-1",
+		Description: "This is a child of fbd-1",
 		Status:      types.StatusOpen,
 		Priority:    1,
 		IssueType:   types.TypeTask,
@@ -213,8 +213,8 @@ func TestMigrateHashIDsWithParentChild(t *testing.T) {
 
 	// Create parent-child dependency
 	dep := &types.Dependency{
-		IssueID:     "bd-2",
-		DependsOnID: "bd-1",
+		IssueID:     "fbd-2",
+		DependsOnID: "fbd-1",
 		Type:        types.DepParentChild,
 	}
 	if err := store.AddDependency(ctx, dep, "test"); err != nil {
@@ -233,13 +233,13 @@ func TestMigrateHashIDsWithParentChild(t *testing.T) {
 	}
 
 	// Verify parent got hash ID
-	newEpicID := mapping["bd-1"]
+	newEpicID := mapping["fbd-1"]
 	if !isHashID(newEpicID) {
 		t.Errorf("Epic ID is not a hash ID: %s", newEpicID)
 	}
 
 	// Verify child got hierarchical ID (parent.1)
-	newChildID := mapping["bd-2"]
+	newChildID := mapping["fbd-2"]
 	expectedChildID := newEpicID + ".1"
 	if newChildID != expectedChildID {
 		t.Errorf("Child ID should be %s, got %s", expectedChildID, newChildID)
@@ -252,40 +252,40 @@ func TestIsHashID(t *testing.T) {
 		expected bool
 	}{
 		// Sequential IDs (numeric only, short)
-		{"bd-1", false},
-		{"bd-123", false},
-		{"bd-9999", false},
+		{"fbd-1", false},
+		{"fbd-123", false},
+		{"fbd-9999", false},
 
 		// Hash IDs with letters
-		{"bd-a3f8e9a2", true},
-		{"bd-abc123", true},
-		{"bd-123abc", true},
-		{"bd-a3f8e9a2.1", true},
-		{"bd-a3f8e9a2.1.2", true},
+		{"fbd-a3f8e9a2", true},
+		{"fbd-abc123", true},
+		{"fbd-123abc", true},
+		{"fbd-a3f8e9a2.1", true},
+		{"fbd-a3f8e9a2.1.2", true},
 		// Hash IDs that are numeric but 5+ characters (likely hash)
-		{"bd-12345", true},
-		{"bd-0088", false}, // 4 chars, all numeric - ambiguous, defaults to false
-		{"bd-00880", true}, // 5+ chars, likely hash
+		{"fbd-12345", true},
+		{"fbd-0088", false}, // 4 chars, all numeric - ambiguous, defaults to false
+		{"fbd-00880", true}, // 5+ chars, likely hash
 
 		// Base36 hash IDs with letters
-		{"bd-5n3", true},
-		{"bd-65w", true},
-		{"bd-jmx", true},
-		{"bd-4rt", true},
+		{"fbd-5n3", true},
+		{"fbd-65w", true},
+		{"fbd-jmx", true},
+		{"fbd-4rt", true},
 
 		// Edge cases
-		{"bd-", false},     // Empty suffix
+		{"fbd-", false},     // Empty suffix
 		{"invalid", false}, // No dash
-		{"bd-0", false},    // Single digit
+		{"fbd-0", false},    // Single digit
 
 		// Hyphenated prefixes
-		{"bd-beads-1", false},
-		{"bd-beads-123", false},
-		{"bd-beads-a3f8e9a2", true},
-		{"bd-beads-abc123", true},
-		{"bd-beads-123abc", true},
-		{"bd-beads-a3f8e9a2.1", true},
-		{"bd-beads-a3f8e9a2.1.2", true},
+		{"fbd-beads-1", false},
+		{"fbd-beads-123", false},
+		{"fbd-beads-a3f8e9a2", true},
+		{"fbd-beads-abc123", true},
+		{"fbd-beads-123abc", true},
+		{"fbd-beads-a3f8e9a2.1", true},
+		{"fbd-beads-a3f8e9a2.1.2", true},
 	}
 
 	for _, tt := range tests {

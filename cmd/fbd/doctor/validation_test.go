@@ -12,7 +12,7 @@ import (
 )
 
 // TestCheckDuplicateIssues_ClosedIssuesExcluded verifies that closed issues
-// are not flagged as duplicates (bug fix: bd-sali).
+// are not flagged as duplicates (bug fix: fbd-sali).
 // Previously, doctor used title+description only and included closed issues,
 // while fbd duplicates excluded closed issues and used full content hash.
 func TestCheckDuplicateIssues_ClosedIssuesExcluded(t *testing.T) {

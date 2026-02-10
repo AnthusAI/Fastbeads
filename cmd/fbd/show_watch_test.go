@@ -47,7 +47,11 @@ func TestWatchIssueInitialization(t *testing.T) {
 	// Verify we're in the right directory
 	cwd, _ := os.Getwd()
 	if cwd != tempDir {
-		t.Errorf("Working directory should be tempDir, got %s", cwd)
+		cwdReal, err1 := filepath.EvalSymlinks(cwd)
+		tempReal, err2 := filepath.EvalSymlinks(tempDir)
+		if err1 != nil || err2 != nil || cwdReal != tempReal {
+			t.Errorf("Working directory should be tempDir, got %s", cwd)
+		}
 	}
 }
 

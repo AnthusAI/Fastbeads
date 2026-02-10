@@ -1,4 +1,4 @@
-//go:build cgo
+//go:build cgo && dolt
 
 package doctor
 
@@ -46,21 +46,21 @@ func TestValidateJSONLForMigration(t *testing.T) {
 	}{
 		{
 			name:          "valid JSONL",
-			content:       `{"id":"bd-001","title":"Test 1"}` + "\n" + `{"id":"bd-002","title":"Test 2"}`,
+			content:       `{"id":"fbd-001","title":"Test 1"}` + "\n" + `{"id":"fbd-002","title":"Test 2"}`,
 			wantCount:     2,
 			wantMalformed: 0,
 			wantErr:       false,
 		},
 		{
 			name:          "JSONL with malformed lines",
-			content:       `{"id":"bd-001","title":"Test 1"}` + "\n" + `invalid json` + "\n" + `{"id":"bd-002","title":"Test 2"}`,
+			content:       `{"id":"fbd-001","title":"Test 1"}` + "\n" + `invalid json` + "\n" + `{"id":"fbd-002","title":"Test 2"}`,
 			wantCount:     2,
 			wantMalformed: 1,
 			wantErr:       false,
 		},
 		{
 			name:          "JSONL with missing ID",
-			content:       `{"id":"bd-001","title":"Test 1"}` + "\n" + `{"title":"No ID"}`,
+			content:       `{"id":"fbd-001","title":"Test 1"}` + "\n" + `{"title":"No ID"}`,
 			wantCount:     1,
 			wantMalformed: 1,
 			wantErr:       false,
@@ -81,7 +81,7 @@ func TestValidateJSONLForMigration(t *testing.T) {
 		},
 		{
 			name:          "JSONL with empty lines",
-			content:       `{"id":"bd-001","title":"Test 1"}` + "\n\n" + `{"id":"bd-002","title":"Test 2"}` + "\n",
+			content:       `{"id":"fbd-001","title":"Test 1"}` + "\n\n" + `{"id":"fbd-002","title":"Test 2"}` + "\n",
 			wantCount:     2,
 			wantMalformed: 0,
 			wantErr:       false,
@@ -90,7 +90,7 @@ func TestValidateJSONLForMigration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+			tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 			if err != nil {
 				t.Fatalf("failed to create temp dir: %v", err)
 			}
@@ -130,7 +130,7 @@ func TestValidateJSONLForMigration_FileNotFound(t *testing.T) {
 }
 
 func TestGetSQLiteDBPath(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -150,7 +150,7 @@ func TestGetSQLiteDBPath(t *testing.T) {
 }
 
 func TestCheckMigrationReadinessResult_NoBeadsDir(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -172,7 +172,7 @@ func TestCheckMigrationReadinessResult_NoBeadsDir(t *testing.T) {
 }
 
 func TestCheckMigrationReadinessResult_NoJSONL(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -195,7 +195,7 @@ func TestCheckMigrationReadinessResult_NoJSONL(t *testing.T) {
 }
 
 func TestCheckMigrationReadinessResult_ValidJSONL(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -207,7 +207,7 @@ func TestCheckMigrationReadinessResult_ValidJSONL(t *testing.T) {
 	}
 
 	// Create valid JSONL
-	jsonl := `{"id":"bd-001","title":"Test 1"}` + "\n" + `{"id":"bd-002","title":"Test 2"}`
+	jsonl := `{"id":"fbd-001","title":"Test 1"}` + "\n" + `{"id":"fbd-002","title":"Test 2"}`
 	if err := os.WriteFile(filepath.Join(beadsDir, "issues.jsonl"), []byte(jsonl), 0644); err != nil {
 		t.Fatalf("failed to create JSONL: %v", err)
 	}
@@ -229,7 +229,7 @@ func TestCheckMigrationReadinessResult_ValidJSONL(t *testing.T) {
 }
 
 func TestCheckMigrationCompletionResult_NoBeadsDir(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -251,7 +251,7 @@ func TestCheckMigrationCompletionResult_NoBeadsDir(t *testing.T) {
 }
 
 func TestCheckMigrationCompletionResult_NotDoltBackend(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -263,7 +263,7 @@ func TestCheckMigrationCompletionResult_NotDoltBackend(t *testing.T) {
 	}
 
 	// Create JSONL (SQLite backend by default)
-	jsonl := `{"id":"bd-001","title":"Test 1"}`
+	jsonl := `{"id":"fbd-001","title":"Test 1"}`
 	if err := os.WriteFile(filepath.Join(beadsDir, "issues.jsonl"), []byte(jsonl), 0644); err != nil {
 		t.Fatalf("failed to create JSONL: %v", err)
 	}
@@ -284,7 +284,7 @@ func TestCheckMigrationCompletionResult_NotDoltBackend(t *testing.T) {
 }
 
 func TestCheckDoltLocks_NotDoltBackend(t *testing.T) {
-	tmpDir, err := os.MkdirTemp("", "bd-migration-validation-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-migration-validation-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -340,7 +340,7 @@ func TestMigrationValidationResult_JSONSerialization(t *testing.T) {
 
 func TestCategorizeDoltExtras_AllForeign(t *testing.T) {
 	ctx := context.Background()
-	tmpDir, err := os.MkdirTemp("", "bd-categorize-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-categorize-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -359,7 +359,7 @@ func TestCategorizeDoltExtras_AllForeign(t *testing.T) {
 	}
 
 	// Create local issues via store
-	for _, id := range []string{"bd-001", "bd-002"} {
+	for _, id := range []string{"fbd-001", "fbd-002"} {
 		if err := store.CreateIssue(ctx, newTestIssue(id), "test"); err != nil {
 			t.Fatalf("failed to create issue %s: %v", id, err)
 		}
@@ -369,8 +369,8 @@ func TestCategorizeDoltExtras_AllForeign(t *testing.T) {
 		insertIssueDirectly(t, store, id)
 	}
 
-	// JSONL contains only the bd-* issues
-	jsonlIDs := map[string]bool{"bd-001": true, "bd-002": true}
+	// JSONL contains only the fbd-* issues
+	jsonlIDs := map[string]bool{"fbd-001": true, "fbd-002": true}
 
 	foreignCount, foreignPrefixes, ephemeralCount := categorizeDoltExtras(ctx, store, jsonlIDs)
 
@@ -390,7 +390,7 @@ func TestCategorizeDoltExtras_AllForeign(t *testing.T) {
 
 func TestCategorizeDoltExtras_MixedEphemeralAndForeign(t *testing.T) {
 	ctx := context.Background()
-	tmpDir, err := os.MkdirTemp("", "bd-categorize-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-categorize-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -408,7 +408,7 @@ func TestCategorizeDoltExtras_MixedEphemeralAndForeign(t *testing.T) {
 	}
 
 	// Create local issues via store
-	for _, id := range []string{"bd-001", "bd-003"} {
+	for _, id := range []string{"fbd-001", "fbd-003"} {
 		if err := store.CreateIssue(ctx, newTestIssue(id), "test"); err != nil {
 			t.Fatalf("failed to create issue %s: %v", id, err)
 		}
@@ -416,7 +416,7 @@ func TestCategorizeDoltExtras_MixedEphemeralAndForeign(t *testing.T) {
 	// Insert foreign-prefix issue directly
 	insertIssueDirectly(t, store, "gt-abc")
 
-	jsonlIDs := map[string]bool{"bd-001": true}
+	jsonlIDs := map[string]bool{"fbd-001": true}
 
 	foreignCount, foreignPrefixes, ephemeralCount := categorizeDoltExtras(ctx, store, jsonlIDs)
 
@@ -433,7 +433,7 @@ func TestCategorizeDoltExtras_MixedEphemeralAndForeign(t *testing.T) {
 
 func TestCategorizeDoltExtras_AllEphemeral(t *testing.T) {
 	ctx := context.Background()
-	tmpDir, err := os.MkdirTemp("", "bd-categorize-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-categorize-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -451,13 +451,13 @@ func TestCategorizeDoltExtras_AllEphemeral(t *testing.T) {
 	}
 
 	// All extras are same-prefix (ephemeral)
-	for _, id := range []string{"bd-001", "bd-002", "bd-003"} {
+	for _, id := range []string{"fbd-001", "fbd-002", "fbd-003"} {
 		if err := store.CreateIssue(ctx, newTestIssue(id), "test"); err != nil {
 			t.Fatalf("failed to create issue %s: %v", id, err)
 		}
 	}
 
-	jsonlIDs := map[string]bool{"bd-001": true}
+	jsonlIDs := map[string]bool{"fbd-001": true}
 
 	foreignCount, _, ephemeralCount := categorizeDoltExtras(ctx, store, jsonlIDs)
 
@@ -471,7 +471,7 @@ func TestCategorizeDoltExtras_AllEphemeral(t *testing.T) {
 
 func TestCategorizeDoltExtras_NoExtras(t *testing.T) {
 	ctx := context.Background()
-	tmpDir, err := os.MkdirTemp("", "bd-categorize-*")
+	tmpDir, err := os.MkdirTemp("", "fbd-categorize-*")
 	if err != nil {
 		t.Fatalf("failed to create temp dir: %v", err)
 	}
@@ -488,14 +488,14 @@ func TestCategorizeDoltExtras_NoExtras(t *testing.T) {
 		t.Fatalf("failed to set prefix: %v", err)
 	}
 
-	for _, id := range []string{"bd-001", "bd-002"} {
+	for _, id := range []string{"fbd-001", "fbd-002"} {
 		if err := store.CreateIssue(ctx, newTestIssue(id), "test"); err != nil {
 			t.Fatalf("failed to create issue %s: %v", id, err)
 		}
 	}
 
 	// All Dolt issues are in JSONL
-	jsonlIDs := map[string]bool{"bd-001": true, "bd-002": true}
+	jsonlIDs := map[string]bool{"fbd-001": true, "fbd-002": true}
 
 	foreignCount, _, ephemeralCount := categorizeDoltExtras(ctx, store, jsonlIDs)
 

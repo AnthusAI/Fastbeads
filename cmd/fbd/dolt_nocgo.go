@@ -1,4 +1,4 @@
-//go:build !cgo
+//go:build !dolt
 
 package main
 
@@ -13,12 +13,12 @@ func noCGODoltError(cmd *cobra.Command, args []string) {
 	if jsonOutput {
 		outputJSON(map[string]interface{}{
 			"error":   "dolt_not_available",
-			"message": "Dolt commands require CGO. This binary was built without CGO support.",
+			"message": "Dolt commands require the dolt build tag (and CGO). This binary was built without Dolt support.",
 		})
 	} else {
-		fmt.Fprintf(os.Stderr, "Error: Dolt commands require CGO\n")
-		fmt.Fprintf(os.Stderr, "This binary was built without CGO support.\n")
-		fmt.Fprintf(os.Stderr, "To use Dolt, rebuild with: CGO_ENABLED=1 go build\n")
+		fmt.Fprintf(os.Stderr, "Error: Dolt commands require the dolt build tag (and CGO)\n")
+		fmt.Fprintf(os.Stderr, "This binary was built without Dolt support.\n")
+		fmt.Fprintf(os.Stderr, "To use Dolt, rebuild with: CGO_ENABLED=1 go build -tags dolt\n")
 	}
 	os.Exit(1)
 }
@@ -27,7 +27,7 @@ var doltCmd = &cobra.Command{
 	Use:     "dolt",
 	GroupID: "setup",
 	Short:   "Configure Dolt database settings",
-	Long:    `Dolt commands require CGO. This binary was built without CGO support.`,
+	Long:    `Dolt commands require the dolt build tag (and CGO). This binary was built without Dolt support.`,
 	Run:     noCGODoltError,
 }
 

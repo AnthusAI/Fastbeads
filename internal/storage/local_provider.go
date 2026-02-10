@@ -26,7 +26,7 @@ func NewLocalProvider(dbPath string) (*LocalProvider, error) {
 	var prefix string
 	err = db.QueryRow("SELECT value FROM config WHERE key = 'issue_prefix'").Scan(&prefix)
 	if err != nil || prefix == "" {
-		prefix = "bd" // default
+		prefix = "fbd" // default
 	}
 
 	return &LocalProvider{db: db, prefix: prefix}, nil

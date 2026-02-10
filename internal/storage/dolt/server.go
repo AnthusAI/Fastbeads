@@ -1,4 +1,4 @@
-//go:build cgo
+//go:build cgo && dolt
 // Package dolt implements the storage interface using Dolt (versioned MySQL-compatible database).
 //
 // This file implements the dolt sql-server management for federation mode.

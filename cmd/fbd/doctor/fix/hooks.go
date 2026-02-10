@@ -86,7 +86,7 @@ type HookIntegrationStatus struct {
 }
 
 // bdHookPattern matches the recommended fbd hooks run pattern with word boundaries
-var bdHookPattern = regexp.MustCompile(`\bbd\s+hooks\s+run\b`)
+var bdHookPattern = regexp.MustCompile(`\bfbd\s+hooks\s+run\b`)
 
 // hookManagerPattern pairs a manager name with its detection pattern.
 type hookManagerPattern struct {

@@ -1,4 +1,4 @@
-//go:build cgo
+//go:build cgo && dolt
 package factory
 
 import (
@@ -73,5 +73,4 @@ func TestIsServerConnectionError(t *testing.T) {
 		})
 	}
 }
-
 

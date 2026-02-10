@@ -332,14 +332,27 @@ func sha256Hash(content string) string {
 
 // replaceIDReferences replaces all old ID references with new hash IDs
 func replaceIDReferences(text string, mapping map[string]string) string {
-	// Match patterns like "bd-123" or "bd-123.4"
-	re := regexp.MustCompile(`\bbd-\d+(?:\.\d+)*\b`)
+	if text == "" || len(mapping) == 0 {
+		return text
+	}
+
+	keys := make([]string, 0, len(mapping))
+	for key := range mapping {
+		keys = append(keys, regexp.QuoteMeta(key))
+	}
+
+	// Prefer longer matches to avoid partial replacements (e.g., parent before child).
+	slices.SortFunc(keys, func(a, b string) int {
+		return cmp.Compare(len(b), len(a))
+	})
+
+	re := regexp.MustCompile(`\b(?:` + strings.Join(keys, "|") + `)\b`)
 
 	return re.ReplaceAllStringFunc(text, func(match string) string {
 		if newID, ok := mapping[match]; ok {
 			return newID
 		}
-		return match // Keep unchanged if not in mapping
+		return match
 	})
 }
 

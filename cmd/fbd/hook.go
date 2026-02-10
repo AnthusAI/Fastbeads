@@ -867,8 +867,8 @@ func hookPostCheckout(args []string) int {
 
 	if prevState != nil && prevState.JSONLHash == currentHash {
 		// JSONL hasn't changed, skip redundant import
-		if cfg.ChainStrategy == ChainAfter {
-			return runChainedHookWithConfig("post-checkout", args, cfg)
+		if hookCfg.ChainStrategy == ChainAfter {
+			return runChainedHookWithConfig("post-checkout", args, hookCfg)
 		}
 		return 0
 	}
