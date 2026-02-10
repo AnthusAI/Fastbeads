@@ -12,9 +12,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // MemoryStorage implements the Storage interface using in-memory data structures
@@ -67,6 +67,9 @@ func (m *MemoryStorage) LoadFromIssues(issues []*types.Issue) error {
 	for _, issue := range issues {
 		if issue == nil {
 			continue
+		}
+		if err := issue.EnsureIdentity(); err != nil {
+			return fmt.Errorf("failed to ensure identity for issue %s: %w", issue.ID, err)
 		}
 
 		// Store the issue
@@ -148,7 +151,7 @@ func (m *MemoryStorage) GetAllIssues() []*types.Issue {
 	return issues
 }
 
-// extractPrefixAndNumber extracts prefix and number from issue ID like "bd-123" -> ("bd", 123)
+// extractPrefixAndNumber extracts prefix and number from issue ID like "bd-123" -> ("fbd", 123)
 func extractPrefixAndNumber(id string) (string, int) {
 	lastDash := strings.LastIndex(id, "-")
 	if lastDash == -1 {
@@ -213,12 +216,16 @@ func (m *MemoryStorage) CreateIssue(ctx context.Context, issue *types.Issue, act
 	if issue.ID == "" {
 		prefix := m.config["issue_prefix"]
 		if prefix == "" {
-			prefix = "bd" // Default fallback
+			prefix = "fbd" // Default fallback
 		}
 
 		// Get next ID
 		m.counters[prefix]++
 		issue.ID = fmt.Sprintf("%s-%d", prefix, m.counters[prefix])
+	}
+
+	if err := issue.EnsureIdentity(); err != nil {
+		return fmt.Errorf("failed to ensure identity for issue %s: %w", issue.ID, err)
 	}
 
 	// Check for duplicate
@@ -271,7 +278,7 @@ func (m *MemoryStorage) CreateIssues(ctx context.Context, issues []*types.Issue,
 	now := time.Now()
 	prefix := m.config["issue_prefix"]
 	if prefix == "" {
-		prefix = "bd"
+		prefix = "fbd"
 	}
 
 	// Track IDs in this batch to detect duplicates within batch
@@ -285,6 +292,10 @@ func (m *MemoryStorage) CreateIssues(ctx context.Context, issues []*types.Issue,
 		if issue.ID == "" {
 			m.counters[prefix]++
 			issue.ID = fmt.Sprintf("%s-%d", prefix, m.counters[prefix])
+		}
+
+		if err := issue.EnsureIdentity(); err != nil {
+			return fmt.Errorf("failed to ensure identity for issue %s: %w", issue.ID, err)
 		}
 
 		// Check for duplicates in existing issues
@@ -1003,7 +1014,10 @@ func (m *MemoryStorage) SetJSONLFileHash(ctx context.Context, fileHash string) e
 
 // GetDependencyTree gets the dependency tree for an issue
 func (m *MemoryStorage) GetDependencyTree(ctx context.Context, issueID string, maxDepth int, showAllPaths bool, reverse bool) ([]*types.TreeNode, error) {
-	// Get the root issue first
+	if maxDepth <= 0 {
+		maxDepth = 50
+	}
+
 	root, err := m.GetIssue(ctx, issueID)
 	if err != nil {
 		return nil, err
@@ -1012,50 +1026,129 @@ func (m *MemoryStorage) GetDependencyTree(ctx context.Context, issueID string, m
 		return nil, nil
 	}
 
-	var nodes []*types.TreeNode
-
-	// Add root node at depth 0
-	rootNode := &types.TreeNode{
-		Depth:    0,
-		ParentID: issueID, // Root's parent is itself
-	}
-	rootNode.ID = root.ID
-	rootNode.Title = root.Title
-	rootNode.Description = root.Description
-	rootNode.Status = root.Status
-	rootNode.Priority = root.Priority
-	rootNode.IssueType = root.IssueType
-	nodes = append(nodes, rootNode)
-
-	// Get dependencies (or dependents if reverse)
-	// Note: reverse mode not fully implemented - uses same logic for now
-	deps, err := m.GetDependencies(ctx, issueID)
-	if err != nil {
-		return nil, err
-	}
-
-	// Add dependencies at depth 1
-	for _, dep := range deps {
+	buildNode := func(issue *types.Issue, depth int, parentID string) *types.TreeNode {
 		node := &types.TreeNode{
-			Depth:    1,
-			ParentID: issueID, // Parent is the root
+			Issue:    *issue,
+			Depth:    depth,
+			ParentID: parentID,
 		}
-		node.ID = dep.ID
-		node.Title = dep.Title
-		node.Description = dep.Description
-		node.Status = dep.Status
-		node.Priority = dep.Priority
-		node.IssueType = dep.IssueType
-		nodes = append(nodes, node)
+		if depth >= maxDepth {
+			node.Truncated = true
+		}
+		return node
 	}
 
+	nodes := make([]*types.TreeNode, 0)
+	nodes = append(nodes, buildNode(root, 0, issueID))
+
+	// Build adjacency map based on direction.
+	adj := make(map[string][]string)
+	if reverse {
+		for id, deps := range m.dependencies {
+			for _, dep := range deps {
+				adj[dep.DependsOnID] = append(adj[dep.DependsOnID], id)
+			}
+		}
+	} else {
+		for id, deps := range m.dependencies {
+			for _, dep := range deps {
+				adj[id] = append(adj[id], dep.DependsOnID)
+			}
+		}
+	}
+
+	seen := make(map[string]int)
+	seen[issueID] = 0
+
+	var walk func(parentID, id string, depth int)
+	walk = func(parentID, id string, depth int) {
+		if depth >= maxDepth {
+			return
+		}
+		children := adj[id]
+		for _, childID := range children {
+			if !showAllPaths {
+				if _, ok := seen[childID]; ok {
+					continue
+				}
+				seen[childID] = depth + 1
+			}
+			child, ok := m.issues[childID]
+			if !ok {
+				continue
+			}
+			nodes = append(nodes, buildNode(child, depth+1, id))
+			walk(id, childID, depth+1)
+		}
+	}
+
+	walk(issueID, issueID, 0)
 	return nodes, nil
 }
 
 // DetectCycles detects dependency cycles
 func (m *MemoryStorage) DetectCycles(ctx context.Context) ([][]*types.Issue, error) {
-	// Simplified - return empty (no cycles detected)
-	return nil, nil
+	m.mu.RLock()
+	defer m.mu.RUnlock()
+
+	adj := make(map[string][]string)
+	for id, deps := range m.dependencies {
+		for _, dep := range deps {
+			adj[id] = append(adj[id], dep.DependsOnID)
+		}
+	}
+
+	const (
+		unvisited = 0
+		visiting  = 1
+		visited   = 2
+	)
+	state := make(map[string]int)
+	stack := make([]string, 0)
+	index := make(map[string]int)
+	var cycles [][]*types.Issue
+
+	var dfs func(string)
+	dfs = func(node string) {
+		state[node] = visiting
+		index[node] = len(stack)
+		stack = append(stack, node)
+
+		for _, next := range adj[node] {
+			if state[next] == unvisited {
+				dfs(next)
+			} else if state[next] == visiting {
+				// Found a cycle; extract path.
+				start := index[next]
+				if start >= 0 && start < len(stack) {
+					cycleIDs := append([]string{}, stack[start:]...)
+					issues := make([]*types.Issue, 0, len(cycleIDs))
+					for _, id := range cycleIDs {
+						if issue, ok := m.issues[id]; ok {
+							issues = append(issues, issue)
+						}
+					}
+					if len(issues) > 0 {
+						cycles = append(cycles, issues)
+					}
+				}
+			}
+		}
+
+		stack = stack[:len(stack)-1]
+		state[node] = visited
+	}
+
+	for id := range m.issues {
+		if state[id] == unvisited {
+			dfs(id)
+		}
+	}
+
+	if len(cycles) == 0 {
+		return nil, nil
+	}
+	return cycles, nil
 }
 
 // Add label methods
@@ -1463,7 +1556,7 @@ func (m *MemoryStorage) GetStaleIssues(ctx context.Context, filter types.StaleFi
 }
 
 // GetNewlyUnblockedByClose returns issues that became unblocked when the given issue was closed.
-// This is used by the --suggest-next flag on bd close (GH#679).
+// This is used by the --suggest-next flag on fbd close (GH#679).
 func (m *MemoryStorage) GetNewlyUnblockedByClose(ctx context.Context, closedIssueID string) ([]*types.Issue, error) {
 	m.mu.RLock()
 	defer m.mu.RUnlock()

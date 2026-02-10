@@ -54,6 +54,6 @@ After closing, check if other work became ready:
 Use these via the beads MCP server:
 - `ready`, `list`, `show`, `create`, `update`, `close`
 - `dep` (manage dependencies), `blocked`, `stats`
-- `init` (initialize bd in a project)
+- `init` (initialize fbd in a project)
 
-For more details, see the beads README at: https://github.com/steveyegge/beads
+For more details, see the beads README at: https://github.com/steveyegge/fastbeads

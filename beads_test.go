@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/steveyegge/beads"
+	"github.com/steveyegge/fastbeads"
 )
 
 func TestNewSQLiteStorage(t *testing.T) {

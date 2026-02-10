@@ -15,7 +15,7 @@ This section provides step-by-step recovery procedures for common Beads issues. 
 | Database Corruption | SQLite errors, missing data | [Database Corruption](/recovery/database-corruption) |
 | Merge Conflicts | JSONL conflicts during sync | [Merge Conflicts](/recovery/merge-conflicts) |
 | Circular Dependencies | Cycle detection errors | [Circular Dependencies](/recovery/circular-dependencies) |
-| Sync Failures | `bd sync` errors | [Sync Failures](/recovery/sync-failures) |
+| Sync Failures | `fbd sync` errors | [Sync Failures](/recovery/sync-failures) |
 
 ## Quick Diagnostic
 
@@ -23,17 +23,17 @@ Before diving into specific runbooks, try these quick checks:
 
 ```bash
 # Check Beads status
-bd status
+fbd status
 
 # Verify daemon is running
-bd daemon status
+fbd daemon status
 
 # Check for blocked issues
-bd blocked
+fbd blocked
 ```
 
 :::tip
-Most issues can be diagnosed with `bd status`. Start there before following specific runbooks.
+Most issues can be diagnosed with `fbd status`. Start there before following specific runbooks.
 :::
 
 ## Getting Help
@@ -41,5 +41,5 @@ Most issues can be diagnosed with `bd status`. Start there before following spec
 If these runbooks don't resolve your issue:
 
 1. Check the [FAQ](/reference/faq)
-2. Search [existing issues](https://github.com/steveyegge/beads/issues)
+2. Search [existing issues](https://github.com/steveyegge/fastbeads/issues)
 3. Open a new issue with diagnostic output

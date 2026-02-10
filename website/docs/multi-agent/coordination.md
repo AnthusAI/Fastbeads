@@ -16,26 +16,26 @@ Assign work to a specific agent:
 
 ```bash
 # Pin issue to agent
-bd pin bd-42 --for agent-1
+fbd pin bd-42 --for agent-1
 
 # Pin and start work
-bd pin bd-42 --for agent-1 --start
+fbd pin bd-42 --for agent-1 --start
 
 # Unpin work
-bd unpin bd-42
+fbd unpin bd-42
 ```
 
 ### Checking Pinned Work
 
 ```bash
 # What's on my hook?
-bd hook
+fbd hook
 
 # What's on agent-1's hook?
-bd hook --agent agent-1
+fbd hook --agent agent-1
 
 # JSON output
-bd hook --json
+fbd hook --json
 ```
 
 ## Handoff Patterns
@@ -46,12 +46,12 @@ Agent A completes work, hands off to Agent B:
 
 ```bash
 # Agent A
-bd close bd-42 --reason "Ready for review"
-bd pin bd-42 --for agent-b
+fbd close bd-42 --reason "Ready for review"
+fbd pin bd-42 --for agent-b
 
 # Agent B picks up
-bd hook  # Sees bd-42
-bd update bd-42 --status in_progress
+fbd hook  # Sees bd-42
+fbd update bd-42 --status in_progress
 ```
 
 ### Parallel Work
@@ -60,13 +60,13 @@ Multiple agents work on different issues:
 
 ```bash
 # Coordinator
-bd pin bd-42 --for agent-a --start
-bd pin bd-43 --for agent-b --start
-bd pin bd-44 --for agent-c --start
+fbd pin bd-42 --for agent-a --start
+fbd pin bd-43 --for agent-b --start
+fbd pin bd-44 --for agent-c --start
 
 # Each agent works independently
 # Coordinator monitors progress
-bd list --status in_progress --json
+fbd list --status in_progress --json
 ```
 
 ### Fan-Out / Fan-In
@@ -75,16 +75,16 @@ Split work, then merge:
 
 ```bash
 # Fan-out
-bd create "Part A" --parent bd-epic
-bd create "Part B" --parent bd-epic
-bd create "Part C" --parent bd-epic
+fbd create "Part A" --parent bd-epic
+fbd create "Part B" --parent bd-epic
+fbd create "Part C" --parent bd-epic
 
-bd pin bd-epic.1 --for agent-a
-bd pin bd-epic.2 --for agent-b
-bd pin bd-epic.3 --for agent-c
+fbd pin bd-epic.1 --for agent-a
+fbd pin bd-epic.2 --for agent-b
+fbd pin bd-epic.3 --for agent-c
 
 # Fan-in: wait for all parts
-bd dep add bd-merge bd-epic.1 bd-epic.2 bd-epic.3
+fbd dep add bd-merge bd-epic.1 bd-epic.2 bd-epic.3
 ```
 
 ## Agent Discovery
@@ -93,10 +93,10 @@ Find available agents:
 
 ```bash
 # List known agents (if using agent registry)
-bd agents list
+fbd agents list
 
 # Check agent status
-bd agents status agent-1
+fbd agents status agent-1
 ```
 
 ## Conflict Prevention
@@ -107,23 +107,23 @@ Prevent concurrent edits:
 
 ```bash
 # Reserve files before editing
-bd reserve auth.go --for agent-1
+fbd reserve auth.go --for agent-1
 
 # Check reservations
-bd reservations list
+fbd reservations list
 
 # Release when done
-bd reserve --release auth.go
+fbd reserve --release auth.go
 ```
 
 ### Issue Locking
 
 ```bash
 # Lock issue for exclusive work
-bd lock bd-42 --for agent-1
+fbd lock bd-42 --for agent-1
 
 # Unlock when done
-bd unlock bd-42
+fbd unlock bd-42
 ```
 
 ## Communication Patterns
@@ -132,20 +132,20 @@ bd unlock bd-42
 
 ```bash
 # Agent A leaves note
-bd comment add bd-42 "Completed API, needs frontend integration"
+fbd comment add bd-42 "Completed API, needs frontend integration"
 
 # Agent B reads
-bd show bd-42 --full
+fbd show bd-42 --full
 ```
 
 ### Via Labels
 
 ```bash
 # Mark for review
-bd update bd-42 --add-label "needs-review"
+fbd update bd-42 --add-label "needs-review"
 
 # Agent B filters
-bd list --label-any needs-review
+fbd list --label-any needs-review
 ```
 
 ## Best Practices

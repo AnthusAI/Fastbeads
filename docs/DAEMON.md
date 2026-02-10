@@ -1,11 +1,11 @@
 # Daemon Management Guide
 
-**For:** AI agents and developers managing bd background processes
+**For:** AI agents and developers managing fbd background processes
 **Version:** 0.21.0+
 
 ## Overview
 
-bd runs a background daemon per workspace for auto-sync, RPC operations, and real-time monitoring. This guide covers daemon management, event-driven mode, and troubleshooting.
+fbd runs a background daemon per workspace for auto-sync, RPC operations, and real-time monitoring. This guide covers daemon management, event-driven mode, and troubleshooting.
 
 ## Do I Need the Daemon?
 
@@ -17,8 +17,8 @@ bd runs a background daemon per workspace for auto-sync, RPC operations, and rea
 |----------|---------|
 | **Multi-agent workflows** | Prevents database locking conflicts |
 | **Team collaboration** | Auto-syncs JSONL to git in background |
-| **Long coding sessions** | Changes saved even if you forget `bd sync` |
-| **Real-time monitoring** | Enables `bd watch` and status updates |
+| **Long coding sessions** | Changes saved even if you forget `fbd sync` |
+| **Real-time monitoring** | Enables `fbd watch` and status updates |
 
 ### When to Disable Daemon
 
@@ -36,7 +36,7 @@ bd runs a background daemon per workspace for auto-sync, RPC operations, and rea
 
 **Enable daemon in worktrees:** Configure sync-branch to safely use daemon across all worktrees:
 ```bash
-bd config set sync-branch beads-sync
+fbd config set sync-branch beads-sync
 ```
 
 With sync-branch configured, daemon commits to a dedicated branch using an internal worktree, so your current branch is never affected. See [WORKTREES.md](WORKTREES.md) for details.
@@ -50,10 +50,10 @@ If you're working alone on a local project with no git remote:
 
 ```bash
 # Check if daemon is running
-bd info | grep daemon
+fbd info | grep daemon
 
 # Force direct mode for one command
-bd --no-daemon list
+fbd --no-daemon list
 
 # Disable for entire session
 export BEADS_NO_DAEMON=true
@@ -71,7 +71,7 @@ SQLite Databases (complete isolation)
 ```
 
 Each workspace gets its own daemon:
-- Socket at `.beads/bd.sock` (`.beads/bd.pipe` on Windows)
+- Socket at `.beads/fbd.sock` (`.beads/fbd.pipe` on Windows)
 - Auto-starts on first command (unless disabled)
 - Handles auto-sync, batching, background operations
 - Complete database isolation (no cross-project pollution)
@@ -82,14 +82,14 @@ Each workspace gets its own daemon:
 
 ```bash
 # See all daemons across workspaces
-bd daemons list --json
+fbd daemons list --json
 
 # Example output:
 # [
 #   {
 #     "workspace": "/Users/alice/projects/webapp",
 #     "pid": 12345,
-#     "socket": "/Users/alice/projects/webapp/.beads/bd.sock",
+#     "socket": "/Users/alice/projects/webapp/.beads/fbd.sock",
 #     "version": "0.21.0",
 #     "uptime_seconds": 3600
 #   }
@@ -100,7 +100,7 @@ bd daemons list --json
 
 ```bash
 # Check for version mismatches, stale sockets
-bd daemons health --json
+fbd daemons health --json
 
 # Example output:
 # {
@@ -117,7 +117,7 @@ bd daemons health --json
 ```
 
 **When to use:**
-- After upgrading bd (check for version mismatches)
+- After upgrading fbd (check for version mismatches)
 - Debugging sync issues
 - Periodic health monitoring
 
@@ -125,31 +125,31 @@ bd daemons health --json
 
 ```bash
 # Stop specific daemon by workspace path
-bd daemons stop /path/to/workspace --json
+fbd daemons stop /path/to/workspace --json
 
 # Stop by PID
-bd daemons stop 12345 --json
+fbd daemons stop 12345 --json
 
 # Restart (stop + auto-start on next command)
-bd daemons restart /path/to/workspace --json
-bd daemons restart 12345 --json
+fbd daemons restart /path/to/workspace --json
+fbd daemons restart 12345 --json
 
 # Stop ALL daemons
-bd daemons killall --json
-bd daemons killall --force --json  # Force kill if graceful fails
+fbd daemons killall --json
+fbd daemons killall --force --json  # Force kill if graceful fails
 ```
 
 ### View Daemon Logs
 
 ```bash
 # View last 100 lines
-bd daemons logs /path/to/workspace -n 100
+fbd daemons logs /path/to/workspace -n 100
 
 # Follow mode (tail -f style)
-bd daemons logs 12345 -f
+fbd daemons logs 12345 -f
 
 # Debug sync issues
-bd daemons logs . -n 500 | grep -i "export\|import\|sync"
+fbd daemons logs . -n 500 | grep -i "export\|import\|sync"
 ```
 
 **Common log patterns:**
@@ -161,29 +161,29 @@ bd daemons logs . -n 500 | grep -i "export\|import\|sync"
 
 **Automatic Version Checking (v0.16.0+):**
 
-bd automatically handles daemon version mismatches:
+fbd automatically handles daemon version mismatches:
 - Version compatibility checked on every connection
 - Old daemons automatically detected and restarted
 - No manual intervention needed after upgrades
 - Works with MCP server and CLI
 
-**After upgrading bd:**
+**After upgrading fbd:**
 
 ```bash
 # 1. Check for mismatches
-bd daemons health --json
+fbd daemons health --json
 
 # 2. Restart all daemons with new version
-bd daemons killall
+fbd daemons killall
 
-# 3. Next bd command auto-starts daemon with new version
-bd ready
+# 3. Next fbd command auto-starts daemon with new version
+fbd ready
 ```
 
 **Troubleshooting version mismatches:**
-- Daemon won't stop: `bd daemons killall --force`
-- Socket file stale: `rm .beads/bd.sock` (auto-cleans on next start)
-- Multiple bd versions installed: `which bd` and `bd version`
+- Daemon won't stop: `fbd daemons killall --force`
+- Socket file stale: `rm .beads/fbd.sock` (auto-cleans on next start)
+- Multiple fbd versions installed: `which fbd` and `fbd version`
 
 ## Event-Driven Daemon Mode (Default)
 
@@ -246,10 +246,10 @@ Event-driven mode is the **default** as of v0.21.0. No configuration needed.
 
 ```bash
 # Event-driven mode starts automatically
-bd daemon start
+fbd daemon start
 
 # Explicitly enable (same as default)
-BEADS_DAEMON_MODE=events bd daemon start
+BEADS_DAEMON_MODE=events fbd daemon start
 ```
 
 **Available modes:**
@@ -308,10 +308,10 @@ For edge cases (NFS, containers, WSL) where fsnotify is unreliable:
 
 ```bash
 # Explicitly use polling mode
-BEADS_DAEMON_MODE=poll bd daemon start
+BEADS_DAEMON_MODE=poll fbd daemon start
 
 # With custom interval
-bd daemon start --interval 10s
+fbd daemon start --interval 10s
 ```
 
 ### Troubleshooting Event-Driven Mode
@@ -320,7 +320,7 @@ bd daemon start --interval 10s
 
 ```bash
 # Check daemon logs for errors
-bd daemons logs /path/to/workspace -n 100
+fbd daemons logs /path/to/workspace -n 100
 
 # Common error patterns:
 # - "File watcher unavailable: ..." - fsnotify init failed
@@ -363,14 +363,14 @@ If `BEADS_DAEMON_MODE=events` but watcher fails:
 
 ## Auto-Start Behavior
 
-**Default (v0.9.11+):** Daemon auto-starts on first bd command
+**Default (v0.9.11+):** Daemon auto-starts on first fbd command
 
 ```bash
 # No manual start needed
-bd ready  # Daemon starts automatically if not running
+fbd ready  # Daemon starts automatically if not running
 
 # Check status
-bd info --json | grep daemon_running
+fbd info --json | grep daemon_running
 ```
 
 **Disable auto-start:**
@@ -380,7 +380,7 @@ bd info --json | grep daemon_running
 export BEADS_AUTO_START_DAEMON=false
 
 # Start manually
-bd daemon start
+fbd daemon start
 ```
 
 **Auto-start with exponential backoff:**
@@ -388,7 +388,7 @@ bd daemon start
 - 2nd attempt: 100ms delay
 - 3rd attempt: 200ms delay
 - Max retries: 5
-- Logs available: `bd daemons logs . -n 50`
+- Logs available: `fbd daemons logs . -n 50`
 
 ## Daemon Configuration
 
@@ -428,14 +428,14 @@ export BEADS_AUTO_START_DAEMON=false
 
 1. **Use `--no-daemon` flag** (recommended):
    ```bash
-   bd --no-daemon ready
-   bd --no-daemon create "Fix bug" -p 1
+   fbd --no-daemon ready
+   fbd --no-daemon create "Fix bug" -p 1
    ```
 
 2. **Disable via environment** (entire session):
    ```bash
    export BEADS_NO_DAEMON=1
-   bd ready  # All commands use direct mode
+   fbd ready  # All commands use direct mode
    ```
 
 3. **Disable auto-start** (less safe):
@@ -443,7 +443,7 @@ export BEADS_AUTO_START_DAEMON=false
    export BEADS_AUTO_START_DAEMON=false
    ```
 
-**Automatic detection:** bd detects worktrees and warns if daemon is active.
+**Automatic detection:** fbd detects worktrees and warns if daemon is active.
 
 See [GIT_INTEGRATION.md](GIT_INTEGRATION.md) for more details.
 
@@ -473,7 +473,7 @@ When `.beads/.exclusive-lock` file exists:
 echo '{"holder":"my-tool","pid":'$$',"hostname":"'$(hostname)'","started_at":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","version":"1.0.0"}' > .beads/.exclusive-lock
 
 # Do work (daemon won't interfere)
-bd create "My issue" -p 1
+fbd create "My issue" -p 1
 
 # Release lock
 rm .beads/.exclusive-lock
@@ -490,47 +490,47 @@ See [EXCLUSIVE_LOCK.md](EXCLUSIVE_LOCK.md) for complete documentation.
 
 ### Stale Sockets
 
-**Symptoms:** `bd ready` shows "daemon not responding"
+**Symptoms:** `fbd ready` shows "daemon not responding"
 
 **Solutions:**
 ```bash
 # Auto-cleanup on next command
-bd daemons list  # Removes stale sockets
+fbd daemons list  # Removes stale sockets
 
 # Manual cleanup
-rm .beads/bd.sock
-bd ready  # Auto-starts fresh daemon
+rm .beads/fbd.sock
+fbd ready  # Auto-starts fresh daemon
 ```
 
 ### Version Mismatch
 
-**Symptoms:** `bd ready` shows "version mismatch" error
+**Symptoms:** `fbd ready` shows "version mismatch" error
 
 **Solutions:**
 ```bash
 # Check versions
-bd version
-bd daemons health --json
+fbd version
+fbd daemons health --json
 
 # Restart all daemons
-bd daemons killall
-bd ready  # Auto-starts with CLI version
+fbd daemons killall
+fbd ready  # Auto-starts with CLI version
 ```
 
 ### Daemon Won't Stop
 
-**Symptoms:** `bd daemons stop` hangs or times out
+**Symptoms:** `fbd daemons stop` hangs or times out
 
 **Solutions:**
 ```bash
 # Force kill
-bd daemons killall --force
+fbd daemons killall --force
 
-# Nuclear option (all bd processes)
-pkill -9 bd
+# Nuclear option (all fbd processes)
+pkill -9 fbd
 
 # Clean up socket
-rm .beads/bd.sock
+rm .beads/fbd.sock
 ```
 
 ### Memory Leaks
@@ -540,13 +540,13 @@ rm .beads/bd.sock
 **Solutions:**
 ```bash
 # Check current memory usage
-ps aux | grep "bd daemon"
+ps aux | grep "fbd daemon"
 
 # Restart daemon
-bd daemons restart .
+fbd daemons restart .
 
 # Check logs for issues
-bd daemons logs . -n 200 | grep -i "memory\|leak\|oom"
+fbd daemons logs . -n 200 | grep -i "memory\|leak\|oom"
 ```
 
 **Expected memory usage:**
@@ -561,7 +561,7 @@ If you see repeated "sql: database is closed" errors in daemon logs:
 ### Symptoms
 
 - Health checks fail with "sql: database is closed"
-- Daemon appears running (`bd info` shows PID) but commands fail
+- Daemon appears running (`fbd info` shows PID) but commands fail
 - Error persists for extended periods (30+ minutes)
 
 ### Cause
@@ -575,10 +575,10 @@ Database file was replaced externally (e.g., by `git pull`, `git merge`, or manu
 ls -li .beads/beads.db
 
 # 2. Enable debug logging
-BD_DEBUG_FRESHNESS=1 bd daemon restart
+BD_DEBUG_FRESHNESS=1 fbd daemon restart
 
 # 3. Check if daemon has file descriptors to deleted files
-lsof -p $(pgrep -f "bd.*daemon") | grep beads.db
+lsof -p $(pgrep -f "fbd.*daemon") | grep beads.db
 ```
 
 ### Solutions
@@ -586,16 +586,16 @@ lsof -p $(pgrep -f "bd.*daemon") | grep beads.db
 **Immediate fix:**
 ```bash
 # Restart daemon
-bd daemon restart
+fbd daemon restart
 ```
 
 **Enable debug logging** (for investigation):
 ```bash
 # Start daemon with freshness debugging
-BD_DEBUG_FRESHNESS=1 bd daemon start --foreground
+BD_DEBUG_FRESHNESS=1 fbd daemon start --foreground
 
 # Check daemon logs
-bd daemons logs . -n 100 | grep freshness
+fbd daemons logs . -n 100 | grep freshness
 ```
 
 **Prevention:**
@@ -619,16 +619,16 @@ The daemon monitors database file metadata (inode, mtime) and automatically reco
 
 ```bash
 # Check all daemons
-bd daemons list --json
+fbd daemons list --json
 
 # Stop unused workspaces to free resources
-bd daemons stop /path/to/old-project
+fbd daemons stop /path/to/old-project
 
 # Health check before critical work
-bd daemons health --json
+fbd daemons health --json
 
 # Clean restart after major upgrades
-bd daemons killall
+fbd daemons killall
 # Daemons restart on next command per workspace
 ```
 

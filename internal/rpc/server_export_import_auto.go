@@ -11,14 +11,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/autoimport"
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/debug"
-	"github.com/steveyegge/beads/internal/export"
-	"github.com/steveyegge/beads/internal/importer"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/autoimport"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/debug"
+	"github.com/steveyegge/fastbeads/internal/export"
+	"github.com/steveyegge/fastbeads/internal/importer"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // handleExport handles the export operation
@@ -311,7 +311,7 @@ func (s *Server) checkAndAutoImportIfStale(req *Request) error {
 		s.importInProgress.Store(false)
 		shouldDeferRelease = false
 
-		fmt.Fprintf(os.Stderr, "Warning: auto-import skipped - .beads files have uncommitted changes. Run 'bd sync' after committing.\n")
+		fmt.Fprintf(os.Stderr, "Warning: auto-import skipped - .beads files have uncommitted changes. Run 'fbd sync' after committing.\n")
 		return nil
 	}
 
@@ -384,7 +384,7 @@ func (s *Server) checkAndAutoImportIfStale(req *Request) error {
 	err = autoimport.AutoImportIfNewer(importCtx, store, dbPath, notify, importFunc, onChanged)
 	if err != nil {
 		if importCtx.Err() == context.DeadlineExceeded {
-			fmt.Fprintf(os.Stderr, "Error: auto-import timed out after 5s. Run 'bd sync --import-only' manually.\n")
+			fmt.Fprintf(os.Stderr, "Error: auto-import timed out after 5s. Run 'fbd sync --import-only' manually.\n")
 			return fmt.Errorf("auto-import timed out")
 		}
 		// Log but don't fail the request - let it proceed with stale data

@@ -11,7 +11,7 @@ This runbook helps you resolve JSONL merge conflicts that occur during Git opera
 ## Symptoms
 
 - Git merge conflicts in `.beads/*.jsonl` files
-- `bd sync` fails with conflict errors
+- `fbd sync` fails with conflict errors
 - Different issue states between clones
 
 ## Diagnosis
@@ -44,13 +44,13 @@ git add .beads/issues.jsonl
 
 **Step 3:** Force rebuild to reconcile
 ```bash
-bd doctor --fix
+fbd doctor --fix
 ```
 
 **Step 4:** Verify state
 ```bash
-bd list
-bd status
+fbd list
+fbd status
 ```
 
 **Step 5:** Complete the merge
@@ -61,5 +61,5 @@ git commit -m "Resolved beads merge conflicts"
 ## Prevention
 
 - Sync before and after Git operations
-- Use `bd sync` regularly
+- Use `fbd sync` regularly
 - Avoid concurrent modifications from multiple clones

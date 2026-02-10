@@ -1,6 +1,6 @@
 # Bash Agent Example
 
-A bash script demonstrating how an AI agent can use bd to manage tasks autonomously.
+A bash script demonstrating how an AI agent can use fbd to manage tasks autonomously.
 
 ## Features
 
@@ -14,9 +14,9 @@ A bash script demonstrating how an AI agent can use bd to manage tasks autonomou
 ## Prerequisites
 
 - bash 4.0+
-- bd installed: `go install github.com/steveyegge/beads/cmd/bd@latest`
+- fbd installed: `go install github.com/steveyegge/fastbeads/cmd/fbd@latest`
 - jq for JSON parsing: `brew install jq` (macOS) or `apt install jq` (Linux)
-- A beads database initialized: `bd init`
+- A beads database initialized: `fbd init`
 
 ## Usage
 
@@ -100,13 +100,13 @@ if [[ $((RANDOM % 2)) -eq 0 ]]; then  # 50% chance
 if [[ $((RANDOM % 10)) -lt 3 ]]; then  # 30% chance
 
 # Add assignee filtering
-bd ready --json --assignee "bot" --limit 1
+fbd ready --json --assignee "bot" --limit 1
 
 # Add priority filtering
-bd ready --json --priority 1 --limit 1
+fbd ready --json --priority 1 --limit 1
 
 # Add custom labels
-bd create "New task" -l "automated,agent-discovered"
+fbd create "New task" -l "automated,agent-discovered"
 ```
 
 ## Integration with Real Agents

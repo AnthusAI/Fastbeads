@@ -11,9 +11,9 @@ Beads runs a background daemon for auto-sync and performance.
 ## Overview
 
 Each workspace gets its own daemon process:
-- Auto-starts on first `bd` command
+- Auto-starts on first `fbd` command
 - Handles database ↔ JSONL synchronization
-- Listens on `.beads/bd.sock` (Unix) or `.beads/bd.pipe` (Windows)
+- Listens on `.beads/fbd.sock` (Unix) or `.beads/fbd.pipe` (Windows)
 - Version checking prevents mismatches after upgrades
 
 ## How It Works
@@ -34,25 +34,25 @@ Without daemon, commands access the database directly (slower, no auto-sync).
 
 ```bash
 # List all running daemons
-bd daemons list
-bd daemons list --json
+fbd daemons list
+fbd daemons list --json
 
 # Check health and version mismatches
-bd daemons health
-bd daemons health --json
+fbd daemons health
+fbd daemons health --json
 
 # View daemon logs
-bd daemons logs . -n 100
+fbd daemons logs . -n 100
 
 # Restart all daemons
-bd daemons killall
-bd daemons killall --json
+fbd daemons killall
+fbd daemons killall --json
 ```
 
 ## Daemon Info
 
 ```bash
-bd info
+fbd info
 ```
 
 Shows:
@@ -66,8 +66,8 @@ Shows:
 Use `--no-daemon` flag to bypass the daemon:
 
 ```bash
-bd --no-daemon ready
-bd --no-daemon list
+fbd --no-daemon ready
+fbd --no-daemon list
 ```
 
 **When to disable:**
@@ -83,7 +83,7 @@ Event-driven mode replaces 5-second polling with instant reactivity:
 ```bash
 # Enable globally
 export BEADS_DAEMON_MODE=events
-bd daemons killall  # Restart to apply
+fbd daemons killall  # Restart to apply
 ```
 
 **Benefits:**
@@ -93,7 +93,7 @@ bd daemons killall  # Restart to apply
 
 **How to verify:**
 ```bash
-bd info | grep "daemon mode"
+fbd info | grep "daemon mode"
 ```
 
 ## Troubleshooting
@@ -102,33 +102,33 @@ bd info | grep "daemon mode"
 
 ```bash
 # Check if socket exists
-ls -la .beads/bd.sock
+ls -la .beads/fbd.sock
 
 # Try direct mode
-bd --no-daemon info
+fbd --no-daemon info
 
 # Restart daemon
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### Version mismatch
 
-After upgrading bd:
+After upgrading fbd:
 
 ```bash
-bd daemons killall
-bd info  # Should show matching versions
+fbd daemons killall
+fbd info  # Should show matching versions
 ```
 
 ### Sync not happening
 
 ```bash
 # Force sync
-bd sync
+fbd sync
 
 # Check daemon logs
-bd daemons logs . -n 50
+fbd daemons logs . -n 50
 
 # Verify git status
 git status .beads/
@@ -138,13 +138,13 @@ git status .beads/
 
 ```bash
 # Kill all daemons
-bd daemons killall
+fbd daemons killall
 
 # Remove stale socket
-rm -f .beads/bd.sock
+rm -f .beads/fbd.sock
 
 # Restart
-bd info
+fbd info
 ```
 
 ## Configuration
@@ -153,13 +153,13 @@ Daemon behavior can be configured:
 
 ```bash
 # Set sync debounce interval
-bd config set daemon.sync_interval 10s
+fbd config set daemon.sync_interval 10s
 
 # Disable auto-start
-bd config set daemon.auto_start false
+fbd config set daemon.auto_start false
 
 # Set log level
-bd config set daemon.log_level debug
+fbd config set daemon.log_level debug
 ```
 
 See [Configuration](/reference/configuration) for all options.

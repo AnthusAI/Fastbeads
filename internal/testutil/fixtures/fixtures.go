@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // labels used across all fixtures

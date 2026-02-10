@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
-	"github.com/steveyegge/beads/internal/debug"
+	"github.com/steveyegge/fastbeads/internal/debug"
 )
 
 // Sync trigger constants define when sync operations occur.
@@ -35,7 +35,7 @@ func Initialize() error {
 	v.SetConfigType("yaml")
 
 	// Explicitly locate config.yaml and use SetConfigFile to avoid picking up config.json
-	// Precedence: project .beads/config.yaml > ~/.config/bd/config.yaml > ~/.beads/config.yaml
+	// Precedence: project .beads/config.yaml > ~/.config/fbd/config.yaml (fallback: ~/.config/bd/config.yaml) > ~/.beads/config.yaml
 	configFileSet := false
 
 	// 1. Walk up from CWD to find project .beads/config.yaml
@@ -43,7 +43,7 @@ func Initialize() error {
 	cwd, err := os.Getwd()
 	if err == nil && !configFileSet {
 		// In the beads repo, `.beads/config.yaml` is tracked and may set sync.mode=dolt-native.
-		// In `go test` (especially for `cmd/bd`), we want to avoid unintentionally picking up
+		// In `go test` (especially for `cmd/fbd`), we want to avoid unintentionally picking up
 		// the repo-local config, while still allowing tests to load config.yaml from temp repos.
 		//
 		// If BEADS_TEST_IGNORE_REPO_CONFIG is set, we will ignore the config at
@@ -80,13 +80,19 @@ func Initialize() error {
 		}
 	}
 
-	// 2. User config directory (~/.config/bd/config.yaml)
+	// 2. User config directory (~/.config/fbd/config.yaml, fallback: ~/.config/bd/config.yaml)
 	if !configFileSet {
 		if configDir, err := os.UserConfigDir(); err == nil {
-			configPath := filepath.Join(configDir, "bd", "config.yaml")
-			if _, err := os.Stat(configPath); err == nil {
-				v.SetConfigFile(configPath)
-				configFileSet = true
+			candidates := []string{
+				filepath.Join(configDir, "fbd", "config.yaml"),
+				filepath.Join(configDir, "bd", "config.yaml"),
+			}
+			for _, configPath := range candidates {
+				if _, err := os.Stat(configPath); err == nil {
+					v.SetConfigFile(configPath)
+					configFileSet = true
+					break
+				}
 			}
 		}
 	}
@@ -104,11 +110,11 @@ func Initialize() error {
 
 	// Automatic environment variable binding
 	// Environment variables take precedence over config file
-	// E.g., BD_JSON, BD_NO_DAEMON, BD_ACTOR, BD_DB
+	// E.g., FBD_JSON, FBD_NO_DAEMON, FBD_ACTOR, FBD_DB
 	v.SetEnvPrefix("BD")
 
 	// Replace hyphens and dots with underscores for env var mapping
-	// This allows BD_NO_DAEMON to map to "no-daemon" config key
+	// This allows FBD_NO_DAEMON/BD_NO_DAEMON to map to "no-daemon" config key
 	v.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 	v.AutomaticEnv()
 
@@ -119,12 +125,13 @@ func Initialize() error {
 	v.SetDefault("no-auto-import", false)
 	v.SetDefault("events-export", false)
 	v.SetDefault("no-db", false)
+	v.SetDefault("storage", "")
 	v.SetDefault("db", "")
 	v.SetDefault("actor", "")
 	v.SetDefault("issue-prefix", "")
 	v.SetDefault("lock-timeout", "30s")
 
-	// Additional environment variables (not prefixed with BD_)
+	// Additional environment variables (not prefixed with FBD_/BD_)
 	// These are bound explicitly for backward compatibility
 	_ = v.BindEnv("flush-debounce", "BEADS_FLUSH_DEBOUNCE")
 	_ = v.BindEnv("auto-start-daemon", "BEADS_AUTO_START_DAEMON")
@@ -198,6 +205,9 @@ func Initialize() error {
 	// Maps project names to paths for resolving external: blocked_by references
 	v.SetDefault("external_projects", map[string]string{})
 
+	// Bind FBD_* aliases for all known keys (after defaults are registered).
+	bindEnvPrefixAliases("FBD")
+
 	// Read config file if it was found
 	if configFileSet {
 		if err := v.ReadInConfig(); err != nil {
@@ -222,6 +232,16 @@ func Initialize() error {
 	}
 
 	return nil
+}
+
+func bindEnvPrefixAliases(prefix string) {
+	if v == nil || prefix == "" {
+		return
+	}
+	for _, key := range v.AllKeys() {
+		envKey := prefix + "_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
+		_ = v.BindEnv(key, envKey)
+	}
 }
 
 // ResetForTesting clears the config state, allowing Initialize() to be called again.
@@ -261,7 +281,12 @@ func GetValueSource(key string) ConfigSource {
 	// Check if value is set from environment variable
 	// Viper's IsSet returns true if the key is set from any source (env, config, or default)
 	// We need to check specifically for env var by looking at the env var directly
-	envKey := "BD_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
+	envKey := "FBD_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
+	if os.Getenv(envKey) != "" {
+		return SourceEnvVar
+	}
+
+	envKey = "BD_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
 	if os.Getenv(envKey) != "" {
 		return SourceEnvVar
 	}
@@ -326,8 +351,12 @@ func CheckOverrides(flagOverrides map[string]struct {
 			if envSource == SourceEnvVar && v.InConfig(key) {
 				// Env var is overriding config file value
 				// Get the config file value by temporarily unsetting the env
-				envKey := "BD_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
+				envKey := "FBD_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
 				envValue := os.Getenv(envKey)
+				if envValue == "" {
+					envKey = "BD_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
+					envValue = os.Getenv(envKey)
+				}
 				if envValue == "" {
 					envKey = "BEADS_" + strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), ".", "_"))
 					envValue = os.Getenv(envKey)
@@ -432,7 +461,7 @@ func Set(key string, value interface{}) {
 // }
 
 // DefaultAIModel returns the configured AI model identifier.
-// Override via: bd config set ai.model "model-name" or BD_AI_MODEL=model-name
+// Override via: fbd config set ai.model "model-name" or FBD_AI_MODEL/BD_AI_MODEL=model-name
 func DefaultAIModel() string {
 	return GetString("ai.model")
 }
@@ -580,7 +609,7 @@ func ResolveExternalProjectPath(projectName string) string {
 //  3. git config user.name
 //  4. hostname
 //
-// This is used as the sender field in bd mail commands.
+// This is used as the sender field in fbd mail commands.
 func GetIdentity(flagValue string) string {
 	// 1. Command-line flag takes precedence
 	if flagValue != "" {
@@ -745,7 +774,7 @@ func NeedsJSONL() bool {
 // NeedsJSONLImport returns true if the sync mode should import from JSONL.
 // In dolt-native mode, imports are disabled to prevent stale JSONL from
 // overwriting dolt data. This is for use by internal/rpc which can't
-// import cmd/bd.
+// import cmd/fbd.
 func NeedsJSONLImport() bool {
 	mode := GetSyncMode()
 	return mode != SyncModeDoltNative
@@ -753,7 +782,7 @@ func NeedsJSONLImport() bool {
 
 // GetCustomTypesFromYAML retrieves custom issue types from config.yaml.
 // This is used as a fallback when the database doesn't have types.custom set yet
-// (e.g., during bd init auto-import before the database is fully configured).
+// (e.g., during fbd init auto-import before the database is fully configured).
 // Returns nil if no custom types are configured in config.yaml.
 func GetCustomTypesFromYAML() []string {
 	return getConfigList("types.custom")

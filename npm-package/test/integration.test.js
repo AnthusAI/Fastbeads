@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * Integration tests for @beads/bd npm package
+ * Integration tests for @beads/fbd npm package
  *
  * Tests:
  * 1. Package installation in clean environment
  * 2. Binary download and extraction
- * 3. Basic bd commands (version, init, create, list, etc.)
+ * 3. Basic fbd commands (version, init, create, list, etc.)
  * 4. Claude Code for Web simulation
  */
 
@@ -106,16 +106,16 @@ async function testPackageInstallation() {
     logSuccess('Package installed successfully');
 
     // Verify binary exists
-    const bdPath = path.join(npmPrefix, 'bin', 'bd');
+    const bdPath = path.join(npmPrefix, 'bin', 'fbd');
     if (!fs.existsSync(bdPath) && !fs.existsSync(bdPath + '.cmd')) {
-      // On Windows, might be bd.cmd
-      const windowsPath = path.join(npmPrefix, 'bd.cmd');
+      // On Windows, might be fbd.cmd
+      const windowsPath = path.join(npmPrefix, 'fbd.cmd');
       if (!fs.existsSync(windowsPath)) {
-        throw new Error(`bd binary not found at ${bdPath}`);
+        throw new Error(`fbd binary not found at ${bdPath}`);
       }
     }
 
-    logSuccess('bd binary installed');
+    logSuccess('fbd binary installed');
 
     // Cleanup tarball
     fs.unlinkSync(tarballPath);
@@ -131,14 +131,14 @@ async function testPackageInstallation() {
 async function testBinaryFunctionality(npmPrefix) {
   logTest('Test 2: Binary Functionality');
 
-  const bdCmd = path.join(npmPrefix, 'bin', 'bd');
+  const bdCmd = path.join(npmPrefix, 'bin', 'fbd');
   const env = { ...process.env, PATH: `${path.join(npmPrefix, 'bin')}:${process.env.PATH}` };
 
   try {
     // Test version command
     logInfo('Testing version command...');
     const version = exec(`"${bdCmd}" version`, { env });
-    if (!version.includes('bd version')) {
+    if (!version.includes('fbd version')) {
       throw new Error(`Unexpected version output: ${version}`);
     }
     logSuccess(`Version: ${version.trim()}`);
@@ -158,9 +158,9 @@ async function testBinaryFunctionality(npmPrefix) {
   }
 }
 
-// Test 3: Basic bd workflow
+// Test 3: Basic fbd workflow
 async function testBasicWorkflow(npmPrefix) {
-  logTest('Test 3: Basic bd Workflow');
+  logTest('Test 3: Basic fbd Workflow');
 
   const projectDir = path.join(TEST_DIR, 'test-project');
   fs.mkdirSync(projectDir, { recursive: true });
@@ -170,7 +170,7 @@ async function testBasicWorkflow(npmPrefix) {
   exec('git config user.email "test@example.com"', { cwd: projectDir });
   exec('git config user.name "Test User"', { cwd: projectDir });
 
-  const bdCmd = path.join(npmPrefix, 'bin', 'bd');
+  const bdCmd = path.join(npmPrefix, 'bin', 'fbd');
   const env = {
     ...process.env,
     PATH: `${path.join(npmPrefix, 'bin')}:${process.env.PATH}`,
@@ -178,17 +178,17 @@ async function testBasicWorkflow(npmPrefix) {
   };
 
   try {
-    // Test bd init
-    logInfo('Testing bd init...');
+    // Test fbd init
+    logInfo('Testing fbd init...');
     exec(`"${bdCmd}" init --quiet`, { cwd: projectDir, env });
 
     if (!fs.existsSync(path.join(projectDir, '.beads'))) {
       throw new Error('.beads directory not created');
     }
-    logSuccess('bd init successful');
+    logSuccess('fbd init successful');
 
-    // Test bd create
-    logInfo('Testing bd create...');
+    // Test fbd create
+    logInfo('Testing fbd create...');
     const createOutput = exec(`"${bdCmd}" create "Test issue" -t task -p 1 --json`, {
       cwd: projectDir,
       env
@@ -200,55 +200,55 @@ async function testBasicWorkflow(npmPrefix) {
     // ID format can be bd-xxxx or projectname-xxxx depending on configuration
     logSuccess(`Created issue: ${issue.id}`);
 
-    // Test bd list
-    logInfo('Testing bd list...');
+    // Test fbd list
+    logInfo('Testing fbd list...');
     const listOutput = exec(`"${bdCmd}" list --json`, { cwd: projectDir, env });
     const issues = JSON.parse(listOutput);
     if (!Array.isArray(issues) || issues.length !== 1) {
-      throw new Error('bd list did not return expected issues');
+      throw new Error('fbd list did not return expected issues');
     }
     logSuccess(`Listed ${issues.length} issue(s)`);
 
-    // Test bd show
-    logInfo('Testing bd show...');
+    // Test fbd show
+    logInfo('Testing fbd show...');
     const showOutput = exec(`"${bdCmd}" show ${issue.id} --json`, { cwd: projectDir, env });
     const showResult = JSON.parse(showOutput);
-    // bd show --json returns an array with one element
+    // fbd show --json returns an array with one element
     const showIssue = Array.isArray(showResult) ? showResult[0] : showResult;
     // Compare IDs - both should be present and match
     if (!showIssue.id || showIssue.id !== issue.id) {
-      throw new Error(`bd show returned wrong issue: expected ${issue.id}, got ${showIssue.id}`);
+      throw new Error(`fbd show returned wrong issue: expected ${issue.id}, got ${showIssue.id}`);
     }
     logSuccess(`Show issue: ${showIssue.title}`);
 
-    // Test bd update
-    logInfo('Testing bd update...');
+    // Test fbd update
+    logInfo('Testing fbd update...');
     exec(`"${bdCmd}" update ${issue.id} --status in_progress`, { cwd: projectDir, env });
     const updatedOutput = exec(`"${bdCmd}" show ${issue.id} --json`, { cwd: projectDir, env });
     const updatedResult = JSON.parse(updatedOutput);
     const updatedIssue = Array.isArray(updatedResult) ? updatedResult[0] : updatedResult;
     if (updatedIssue.status !== 'in_progress') {
-      throw new Error(`bd update did not change status: expected 'in_progress', got '${updatedIssue.status}'`);
+      throw new Error(`fbd update did not change status: expected 'in_progress', got '${updatedIssue.status}'`);
     }
     logSuccess('Updated issue status');
 
-    // Test bd close
-    logInfo('Testing bd close...');
+    // Test fbd close
+    logInfo('Testing fbd close...');
     exec(`"${bdCmd}" close ${issue.id} --reason "Test completed"`, { cwd: projectDir, env });
     const closedOutput = exec(`"${bdCmd}" show ${issue.id} --json`, { cwd: projectDir, env });
     const closedResult = JSON.parse(closedOutput);
     const closedIssue = Array.isArray(closedResult) ? closedResult[0] : closedResult;
     if (closedIssue.status !== 'closed') {
-      throw new Error(`bd close did not close issue: expected 'closed', got '${closedIssue.status}'`);
+      throw new Error(`fbd close did not close issue: expected 'closed', got '${closedIssue.status}'`);
     }
     logSuccess('Closed issue');
 
-    // Test bd ready (should be empty after closing)
-    logInfo('Testing bd ready...');
+    // Test fbd ready (should be empty after closing)
+    logInfo('Testing fbd ready...');
     const readyOutput = exec(`"${bdCmd}" ready --json`, { cwd: projectDir, env });
     const readyIssues = JSON.parse(readyOutput);
     if (readyIssues.length !== 0) {
-      throw new Error('bd ready should return no issues after closing all');
+      throw new Error('fbd ready should return no issues after closing all');
     }
     logSuccess('Ready work detection works');
 
@@ -272,7 +272,7 @@ async function testClaudeCodeWebSimulation(npmPrefix) {
     exec('git config user.email "agent@example.com"', { cwd: sessionDir });
     exec('git config user.name "Claude Agent"', { cwd: sessionDir });
 
-    const bdCmd = path.join(npmPrefix, 'bin', 'bd');
+    const bdCmd = path.join(npmPrefix, 'bin', 'fbd');
     const env = {
       ...process.env,
       PATH: `${path.join(npmPrefix, 'bin')}:${process.env.PATH}`,
@@ -290,7 +290,7 @@ async function testClaudeCodeWebSimulation(npmPrefix) {
     const existingIssue = JSON.parse(createOutput);
     logSuccess(`Created issue in first session: ${existingIssue.id}`);
 
-    // Simulate sync to git (bd automatically exports to JSONL)
+    // Simulate sync to git (fbd automatically exports to JSONL)
     const beadsDir = path.join(sessionDir, '.beads');
     const jsonlPath = path.join(beadsDir, 'issues.jsonl');
 
@@ -309,7 +309,7 @@ async function testClaudeCodeWebSimulation(npmPrefix) {
     // Session 2: Re-initialize (simulating SessionStart hook in new session)
     logInfo('Session 2: Re-initialize from JSONL...');
     exec(`"${bdCmd}" init --quiet`, { cwd: sessionDir, env });
-    logSuccess('bd init re-imported from JSONL');
+    logSuccess('fbd init re-imported from JSONL');
 
     // Verify issue was imported
     const listOutput = exec(`"${bdCmd}" list --json`, { cwd: sessionDir, env });
@@ -391,7 +391,7 @@ async function testPlatformDetection() {
     // Check if GitHub release has this binary
     const version = require(path.join(PACKAGE_DIR, 'package.json')).version;
     const ext = platform === 'win32' ? 'zip' : 'tar.gz';
-    const binaryUrl = `https://github.com/steveyegge/beads/releases/download/v${version}/beads_${version}_${platform}_${mappedArch}.${ext}`;
+    const binaryUrl = `https://github.com/steveyegge/fastbeads/releases/download/v${version}/beads_${version}_${platform}_${mappedArch}.${ext}`;
 
     logInfo(`Expected binary URL: ${binaryUrl}`);
     logSuccess('Platform detection logic validated');
@@ -406,7 +406,7 @@ async function testPlatformDetection() {
 // Main test runner
 async function runTests() {
   log('\n╔════════════════════════════════════════╗', 'blue');
-  log('║  @beads/bd Integration Tests          ║', 'blue');
+  log('║  @beads/fbd Integration Tests          ║', 'blue');
   log('╚════════════════════════════════════════╝', 'blue');
 
   let npmPrefix;

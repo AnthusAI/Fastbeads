@@ -8,12 +8,12 @@ sidebar_position: 6
 
 Commands for synchronizing with git.
 
-## bd sync
+## fbd sync
 
 Full sync cycle: export, commit, push.
 
 ```bash
-bd sync [flags]
+fbd sync [flags]
 ```
 
 **What it does:**
@@ -30,8 +30,8 @@ bd sync [flags]
 
 **Examples:**
 ```bash
-bd sync
-bd sync --json
+fbd sync
+fbd sync --json
 ```
 
 **When to use:**
@@ -39,12 +39,12 @@ bd sync --json
 - Before switching branches
 - After significant changes
 
-## bd export
+## fbd export
 
 Export database to JSONL.
 
 ```bash
-bd export [flags]
+fbd export [flags]
 ```
 
 **Flags:**
@@ -56,17 +56,17 @@ bd export [flags]
 
 **Examples:**
 ```bash
-bd export
-bd export -o backup.jsonl
-bd export --dry-run
+fbd export
+fbd export -o backup.jsonl
+fbd export --dry-run
 ```
 
-## bd import
+## fbd import
 
 Import from JSONL file.
 
 ```bash
-bd import -i <file> [flags]
+fbd import -i <file> [flags]
 ```
 
 **Flags:**
@@ -88,18 +88,18 @@ bd import -i <file> [flags]
 
 **Examples:**
 ```bash
-bd import -i .beads/issues.jsonl
-bd import -i backup.jsonl --dry-run
-bd import -i issues.jsonl --orphan-handling resurrect
-bd import -i issues.jsonl --dedupe-after --json
+fbd import -i .beads/issues.jsonl
+fbd import -i backup.jsonl --dry-run
+fbd import -i issues.jsonl --orphan-handling resurrect
+fbd import -i issues.jsonl --dedupe-after --json
 ```
 
-## bd migrate
+## fbd migrate
 
 Migrate database schema.
 
 ```bash
-bd migrate [flags]
+fbd migrate [flags]
 ```
 
 **Flags:**
@@ -113,18 +113,18 @@ bd migrate [flags]
 
 **Examples:**
 ```bash
-bd migrate --inspect --json
-bd migrate --dry-run
-bd migrate
-bd migrate --cleanup --yes
+fbd migrate --inspect --json
+fbd migrate --dry-run
+fbd migrate
+fbd migrate --cleanup --yes
 ```
 
-## bd hooks
+## fbd hooks
 
 Manage git hooks.
 
 ```bash
-bd hooks <subcommand> [flags]
+fbd hooks <subcommand> [flags]
 ```
 
 **Subcommands:**
@@ -136,9 +136,9 @@ bd hooks <subcommand> [flags]
 
 **Examples:**
 ```bash
-bd hooks install
-bd hooks status
-bd hooks uninstall
+fbd hooks install
+fbd hooks status
+fbd hooks uninstall
 ```
 
 ## Auto-Sync Behavior
@@ -156,8 +156,8 @@ Use `--no-daemon` flag:
 - Must manually export/sync
 
 ```bash
-bd --no-daemon create "Task"
-bd export  # Manual export needed
+fbd --no-daemon create "Task"
+fbd export  # Manual export needed
 ```
 
 ## Conflict Resolution
@@ -167,7 +167,7 @@ bd export  # Manual export needed
 Install the beads merge driver:
 
 ```bash
-bd init  # Prompts for merge driver setup
+fbd init  # Prompts for merge driver setup
 ```
 
 The driver automatically:
@@ -180,8 +180,8 @@ The driver automatically:
 ```bash
 # After merge conflict
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 ```
 
 ## Deletion Tracking
@@ -190,11 +190,11 @@ Deletions sync via `.beads/deletions.jsonl`:
 
 ```bash
 # Delete issue
-bd delete bd-42
+fbd delete bd-42
 
 # View deletions
-bd deleted
-bd deleted --since=30d
+fbd deleted
+fbd deleted --since=30d
 
 # Deletions propagate via git
 git pull  # Imports deletions from remote
@@ -202,7 +202,7 @@ git pull  # Imports deletions from remote
 
 ## Best Practices
 
-1. **Always sync at session end** - `bd sync`
-2. **Install git hooks** - `bd hooks install`
+1. **Always sync at session end** - `fbd sync`
+2. **Install git hooks** - `fbd hooks install`
 3. **Use merge driver** - Avoids manual conflict resolution
-4. **Check sync status** - `bd info` shows daemon/sync state
+4. **Check sync status** - `fbd info` shows daemon/sync state

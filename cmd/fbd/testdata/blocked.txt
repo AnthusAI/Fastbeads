@@ -1,0 +1,15 @@
+# Test fbd blocked command
+fbd init --prefix test
+
+# Create first issue
+fbd create 'First issue'
+cp stdout first.txt
+exec sh -c 'grep -oE "test-[a-z0-9]+" first.txt > first_id.txt'
+
+# Create second issue that depends on first
+exec sh -c 'fbd create "Second issue" --deps $(cat first_id.txt)'
+cp stdout second.txt
+
+# Check for blocked issues
+fbd blocked
+stdout 'test-'

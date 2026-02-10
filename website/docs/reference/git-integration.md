@@ -24,7 +24,7 @@ Beads uses git for:
 ├── issues.jsonl       # Issue data (git-tracked)
 ├── deletions.jsonl    # Deletion manifest (git-tracked)
 ├── config.toml        # Project config (git-tracked)
-└── bd.sock            # Daemon socket (gitignored)
+└── fbd.sock            # Daemon socket (gitignored)
 ```
 
 ## Git Hooks
@@ -32,7 +32,7 @@ Beads uses git for:
 ### Installation
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 Installs:
@@ -43,13 +43,13 @@ Installs:
 ### Status
 
 ```bash
-bd hooks status
+fbd hooks status
 ```
 
 ### Uninstall
 
 ```bash
-bd hooks uninstall
+fbd hooks uninstall
 ```
 
 ## Merge Driver
@@ -64,7 +64,7 @@ The beads merge driver handles JSONL conflicts automatically:
 ### Installation
 
 ```bash
-bd init  # Prompts for merge driver setup
+fbd init  # Prompts for merge driver setup
 ```
 
 Or manually add to `.gitattributes`:
@@ -79,7 +79,7 @@ And `.git/config`:
 ```ini
 [merge "beads"]
     name = Beads JSONL merge driver
-    driver = bd merge-driver %O %A %B
+    driver = fbd merge-driver %O %A %B
 ```
 
 ## Protected Branches
@@ -87,7 +87,7 @@ And `.git/config`:
 For protected main branches:
 
 ```bash
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 This:
@@ -101,11 +101,11 @@ Beads requires `--no-daemon` in git worktrees:
 
 ```bash
 # In worktree
-bd --no-daemon create "Task"
-bd --no-daemon list
+fbd --no-daemon create "Task"
+fbd --no-daemon list
 ```
 
-Why: Daemon uses `.beads/bd.sock` which conflicts across worktrees.
+Why: Daemon uses `.beads/fbd.sock` which conflicts across worktrees.
 
 ## Branch Workflows
 
@@ -113,9 +113,9 @@ Why: Daemon uses `.beads/bd.sock` which conflicts across worktrees.
 
 ```bash
 git checkout -b feature-x
-bd create "Feature X" -t feature
+fbd create "Feature X" -t feature
 # Work...
-bd sync
+fbd sync
 git push
 ```
 
@@ -123,15 +123,15 @@ git push
 
 ```bash
 # In fork
-bd init --contributor
+fbd init --contributor
 # Work in separate planning repo...
-bd sync
+fbd sync
 ```
 
 ### Team Workflow
 
 ```bash
-bd init --team
+fbd init --team
 # All team members share issues.jsonl
 git pull  # Auto-imports via hook
 ```
@@ -147,8 +147,8 @@ Automatic - driver handles most conflicts.
 ```bash
 # After conflict
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 git add .beads/
 git commit
 ```
@@ -158,13 +158,13 @@ git commit
 After merge:
 
 ```bash
-bd duplicates --auto-merge
+fbd duplicates --auto-merge
 ```
 
 ## Best Practices
 
-1. **Install hooks** - `bd hooks install`
+1. **Install hooks** - `fbd hooks install`
 2. **Use merge driver** - Avoid manual conflict resolution
-3. **Sync regularly** - `bd sync` at session end
+3. **Sync regularly** - `fbd sync` at session end
 4. **Pull before work** - Get latest issues
 5. **Use `--no-daemon` in worktrees**

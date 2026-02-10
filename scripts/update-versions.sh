@@ -10,7 +10,7 @@ set -e
 # over commits.
 #
 # For full releases with CI gates and verification, use:
-#   bd mol wisp beads-release --var version=X.Y.Z
+#   fbd mol wisp beads-release --var version=X.Y.Z
 #
 # =============================================================================
 
@@ -26,7 +26,7 @@ if [ $# -ne 1 ]; then
     echo ""
     echo "Example: $0 0.47.1"
     echo ""
-    echo "For full releases, use: bd mol wisp beads-release --var version=X.Y.Z"
+    echo "For full releases, use: fbd mol wisp beads-release --var version=X.Y.Z"
     exit 1
 fi
 
@@ -40,13 +40,13 @@ if ! [[ $NEW_VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
 fi
 
 # Check we're in repo root
-if [ ! -f "cmd/bd/version.go" ]; then
+if [ ! -f "cmd/fbd/version.go" ]; then
     echo -e "${RED}Error: Must run from repository root${NC}"
     exit 1
 fi
 
 # Get current version
-CURRENT_VERSION=$(grep 'Version = ' cmd/bd/version.go | sed 's/.*"\(.*\)".*/\1/')
+CURRENT_VERSION=$(grep 'Version = ' cmd/fbd/version.go | sed 's/.*"\(.*\)".*/\1/')
 echo -e "${YELLOW}Bumping: $CURRENT_VERSION → $NEW_VERSION${NC}"
 echo ""
 
@@ -64,9 +64,9 @@ update_file() {
 
 echo "Updating version files..."
 
-# 1. cmd/bd/version.go
-echo "  • cmd/bd/version.go"
-update_file "cmd/bd/version.go" "Version = \"$CURRENT_VERSION\"" "Version = \"$NEW_VERSION\""
+# 1. cmd/fbd/version.go
+echo "  • cmd/fbd/version.go"
+update_file "cmd/fbd/version.go" "Version = \"$CURRENT_VERSION\"" "Version = \"$NEW_VERSION\""
 
 # 2. Plugin JSON files
 echo "  • .claude-plugin/*.json"
@@ -91,19 +91,19 @@ echo "  • default.nix"
 update_file "default.nix" "version = \"$CURRENT_VERSION\";" "version = \"$NEW_VERSION\";"
 
 # 7. Hook templates
-echo "  • cmd/bd/templates/hooks/*"
+echo "  • cmd/fbd/templates/hooks/*"
 for hook in pre-commit post-merge pre-push post-checkout; do
-    update_file "cmd/bd/templates/hooks/$hook" "# bd-hooks-version: $CURRENT_VERSION" "# bd-hooks-version: $NEW_VERSION"
+    update_file "cmd/fbd/templates/hooks/$hook" "# bd-hooks-version: $CURRENT_VERSION" "# bd-hooks-version: $NEW_VERSION"
 done
 
 # 8. Windows PE resource metadata
-echo "  • cmd/bd/winres/winres.json"
-update_file "cmd/bd/winres/winres.json" "\"file_version\": \"$CURRENT_VERSION\"" "\"file_version\": \"$NEW_VERSION\""
-update_file "cmd/bd/winres/winres.json" "\"product_version\": \"$CURRENT_VERSION\"" "\"product_version\": \"$NEW_VERSION\""
-update_file "cmd/bd/winres/winres.json" "\"FileVersion\": \"$CURRENT_VERSION\"" "\"FileVersion\": \"$NEW_VERSION\""
-update_file "cmd/bd/winres/winres.json" "\"ProductVersion\": \"$CURRENT_VERSION\"" "\"ProductVersion\": \"$NEW_VERSION\""
-echo "  • cmd/bd/winres/manifest.xml"
-update_file "cmd/bd/winres/manifest.xml" "version=\"$CURRENT_VERSION.0\"" "version=\"$NEW_VERSION.0\""
+echo "  • cmd/fbd/winres/winres.json"
+update_file "cmd/fbd/winres/winres.json" "\"file_version\": \"$CURRENT_VERSION\"" "\"file_version\": \"$NEW_VERSION\""
+update_file "cmd/fbd/winres/winres.json" "\"product_version\": \"$CURRENT_VERSION\"" "\"product_version\": \"$NEW_VERSION\""
+update_file "cmd/fbd/winres/winres.json" "\"FileVersion\": \"$CURRENT_VERSION\"" "\"FileVersion\": \"$NEW_VERSION\""
+update_file "cmd/fbd/winres/winres.json" "\"ProductVersion\": \"$CURRENT_VERSION\"" "\"ProductVersion\": \"$NEW_VERSION\""
+echo "  • cmd/fbd/winres/manifest.xml"
+update_file "cmd/fbd/winres/manifest.xml" "version=\"$CURRENT_VERSION.0\"" "version=\"$NEW_VERSION.0\""
 
 echo ""
 echo -e "${GREEN}✓ Versions updated to $NEW_VERSION${NC}"
@@ -113,5 +113,5 @@ git diff --stat 2>/dev/null || true
 echo ""
 echo "Next steps:"
 echo "  • Update CHANGELOG.md with release notes"
-echo "  • Update cmd/bd/info.go versionChanges"
-echo "  • Or use: bd mol wisp beads-release --var version=$NEW_VERSION"
+echo "  • Update cmd/fbd/info.go versionChanges"
+echo "  • Or use: fbd mol wisp beads-release --var version=$NEW_VERSION"

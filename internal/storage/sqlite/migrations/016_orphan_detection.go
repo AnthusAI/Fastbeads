@@ -67,7 +67,7 @@ func MigrateOrphanDetection(db *sql.DB) error {
 		}
 		log.Println("\nThese issues have hierarchical IDs but their parent issues no longer exist.")
 		log.Println("You can:")
-		log.Println("  1. Delete them if no longer needed: bd delete <issue-id>")
+		log.Println("  1. Delete them if no longer needed: fbd delete <issue-id>")
 		log.Println("  2. Convert to top-level issues by exporting and reimporting with new IDs")
 		log.Println("  3. Restore the missing parent issues")
 	}

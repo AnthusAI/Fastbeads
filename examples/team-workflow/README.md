@@ -12,7 +12,7 @@ When working as a team on a shared repository, you want to:
 
 ## Solution
 
-Use `bd init --team` to set up team collaboration with automatic sync and optional protected branch support.
+Use `fbd init --team` to set up team collaboration with automatic sync and optional protected branch support.
 
 ## Setup
 
@@ -23,7 +23,7 @@ Use `bd init --team` to set up team collaboration with automatic sync and option
 cd my-project
 
 # Run the team setup wizard
-bd init --team
+fbd init --team
 ```
 
 The wizard will:
@@ -50,10 +50,10 @@ git clone https://github.com/org/project.git
 cd project
 
 # Initialize beads (auto-imports existing issues)
-bd init
+fbd init
 
 # Start working!
-bd ready
+fbd ready
 ```
 
 ## How It Works
@@ -64,14 +64,14 @@ If main isn't protected:
 
 ```bash
 # Create issue
-bd create "Implement feature X" -p 1
+fbd create "Implement feature X" -p 1
 
 # Daemon auto-commits to main
-# (or run 'bd sync' manually)
+# (or run 'fbd sync' manually)
 
 # Pull to see team's issues
 git pull
-bd list
+fbd list
 ```
 
 ### Protected Branch Workflow
@@ -80,10 +80,10 @@ If main is protected:
 
 ```bash
 # Create issue
-bd create "Implement feature X" -p 1
+fbd create "Implement feature X" -p 1
 
 # Daemon commits to beads-metadata branch
-# (or run 'bd sync' manually)
+# (or run 'fbd sync' manually)
 
 # Push beads-metadata
 git push origin beads-metadata
@@ -109,14 +109,14 @@ daemon:
 
 ```bash
 # Enable team mode
-bd config set team.enabled true
+fbd config set team.enabled true
 
 # Set sync branch
-bd config set team.sync_branch beads-metadata
+fbd config set team.sync_branch beads-metadata
 
 # Enable auto-sync
-bd config set daemon.auto_commit true
-bd config set daemon.auto_push true
+fbd config set daemon.auto_commit true
+fbd config set daemon.auto_push true
 ```
 
 ## Example Workflows
@@ -125,17 +125,17 @@ bd config set daemon.auto_push true
 
 ```bash
 # Alice creates an issue
-bd create "Fix authentication bug" -p 1
+fbd create "Fix authentication bug" -p 1
 
 # Daemon commits and pushes to main
 # (auto-sync enabled)
 
 # Bob pulls changes
 git pull
-bd list  # Sees Alice's issue
+fbd list  # Sees Alice's issue
 
 # Bob claims it
-bd update bd-abc --status in_progress
+fbd update bd-abc --status in_progress
 
 # Daemon commits Bob's update
 # Alice pulls and sees Bob is working on it
@@ -145,14 +145,14 @@ bd update bd-abc --status in_progress
 
 ```bash
 # Alice creates an issue
-bd create "Add new API endpoint" -p 1
+fbd create "Add new API endpoint" -p 1
 
 # Daemon commits to beads-metadata
 git push origin beads-metadata
 
 # Bob pulls beads-metadata
 git pull origin beads-metadata
-bd list  # Sees Alice's issue
+fbd list  # Sees Alice's issue
 
 # Later: merge beads-metadata to main via PR
 git checkout main
@@ -167,46 +167,46 @@ git merge beads-metadata
 
 ```bash
 # See what everyone's working on
-bd list --status in_progress
+fbd list --status in_progress
 
 # See what's ready for work
-bd ready
+fbd ready
 
 # See recently closed issues
-bd list --status closed --limit 10
+fbd list --status closed --limit 10
 ```
 
 ### Sprint Planning
 
 ```bash
 # Create sprint issues
-bd create "Implement user auth" -p 1
-bd create "Add profile page" -p 1
-bd create "Fix responsive layout" -p 2
+fbd create "Implement user auth" -p 1
+fbd create "Add profile page" -p 1
+fbd create "Fix responsive layout" -p 2
 
 # Assign to team members
-bd update bd-abc --assignee alice
-bd update bd-def --assignee bob
+fbd update bd-abc --assignee alice
+fbd update bd-def --assignee bob
 
 # Track dependencies
-bd dep add bd-def bd-abc --type blocks
+fbd dep add bd-def bd-abc --type blocks
 ```
 
 ### PR Integration
 
 ```bash
 # Create issue for PR work
-bd create "Refactor auth module" -p 1
+fbd create "Refactor auth module" -p 1
 
 # Work on it
-bd update bd-abc --status in_progress
+fbd update bd-abc --status in_progress
 
 # Open PR with issue reference
 git push origin feature-branch
 # PR title: "feat: refactor auth module (bd-abc)"
 
 # Close when PR merges
-bd close bd-abc --reason "PR #123 merged"
+fbd close bd-abc --reason "PR #123 merged"
 ```
 
 ## Sync Strategies
@@ -216,7 +216,7 @@ bd close bd-abc --reason "PR #123 merged"
 Daemon commits and pushes automatically:
 
 ```bash
-bd daemon start --auto-commit --auto-push
+fbd daemon start --auto-commit --auto-push
 ```
 
 Benefits:
@@ -229,7 +229,7 @@ Benefits:
 Sync when you want:
 
 ```bash
-bd sync  # Export, commit, pull, import, push
+fbd sync  # Export, commit, pull, import, push
 ```
 
 Benefits:
@@ -248,11 +248,11 @@ git pull origin beads-metadata
 
 # Option 1: Accept remote
 git checkout --theirs .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Option 2: Accept local
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Option 3: Use beads-merge tool (recommended)
 # See docs/GIT_INTEGRATION.md for merge conflict resolution
@@ -303,7 +303,7 @@ A: Issues are stored in `.beads/issues.jsonl` which is version-controlled. Pull 
 
 ```bash
 git pull
-bd list  # See everyone's issues
+fbd list  # See everyone's issues
 ```
 
 ### Q: What if two people create issues at the same time?
@@ -315,11 +315,11 @@ A: Hash-based IDs prevent collisions. Even if created simultaneously, they get d
 A: Turn it off:
 
 ```bash
-bd config set daemon.auto_commit false
-bd config set daemon.auto_push false
+fbd config set daemon.auto_commit false
+fbd config set daemon.auto_push false
 
 # Sync manually
-bd sync
+fbd sync
 ```
 
 ### Q: Can we use different sync branches per person?
@@ -327,7 +327,7 @@ bd sync
 A: Not recommended. Use a single shared branch for consistency. If needed:
 
 ```bash
-bd config set sync.branch my-custom-branch
+fbd config set sync.branch my-custom-branch
 ```
 
 ### Q: What about CI/CD integration?
@@ -338,7 +338,7 @@ A: Add to your CI pipeline:
 # In .github/workflows/main.yml
 - name: Sync beads issues
   run: |
-    bd sync
+    fbd sync
     git push origin beads-metadata
 ```
 
@@ -349,22 +349,22 @@ A: Add to your CI pipeline:
 Check daemon status:
 
 ```bash
-bd daemon status
-bd daemons list
+fbd daemon status
+fbd daemons list
 ```
 
 Verify config:
 
 ```bash
-bd config get daemon.auto_commit
-bd config get daemon.auto_push
+fbd config get daemon.auto_commit
+fbd config get daemon.auto_push
 ```
 
 Restart daemon:
 
 ```bash
-bd daemon stop
-bd daemon start --auto-commit --auto-push
+fbd daemon stop
+fbd daemon start --auto-commit --auto-push
 ```
 
 ### Issue: Merge conflicts in JSONL
@@ -373,7 +373,7 @@ Use beads-merge or resolve manually (see [GIT_INTEGRATION.md](../../docs/GIT_INT
 
 ```bash
 git checkout --theirs .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 git add .beads/issues.jsonl
 git commit
 ```
@@ -383,7 +383,7 @@ git commit
 Manually sync:
 
 ```bash
-bd sync
+fbd sync
 git push
 ```
 
@@ -391,7 +391,7 @@ Check for conflicts:
 
 ```bash
 git status
-bd validate --checks=conflicts
+fbd validate --checks=conflicts
 ```
 
 ## See Also

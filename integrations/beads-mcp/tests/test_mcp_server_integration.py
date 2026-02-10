@@ -12,12 +12,12 @@ from beads_mcp.server import mcp
 
 @pytest.fixture(scope="session")
 def bd_executable():
-    """Verify bd is available in PATH."""
-    bd_path = shutil.which("bd")
+    """Verify fbd is available in PATH."""
+    bd_path = shutil.which("fbd")
     if not bd_path:
         pytest.fail(
-            "bd executable not found in PATH. "
-            "Please install bd or add it to your PATH before running integration tests."
+            "fbd executable not found in PATH. "
+            "Please install fbd or add it to your PATH before running integration tests."
         )
     return bd_path
 
@@ -36,7 +36,7 @@ async def temp_db(bd_executable):
     env.pop("BEADS_DB", None)
     env.pop("BEADS_DIR", None)
 
-    # Run bd init in the temp directory - it will create .beads/ subdirectory
+    # Run fbd init in the temp directory - it will create .beads/ subdirectory
     process = await asyncio.create_subprocess_exec(
         bd_executable,
         "init",
@@ -45,7 +45,7 @@ async def temp_db(bd_executable):
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
         env=env,
-        cwd=temp_dir,  # Run in temp dir - bd init creates .beads/ here
+        cwd=temp_dir,  # Run in temp dir - fbd init creates .beads/ here
     )
     stdout, stderr = await process.communicate()
 
@@ -105,7 +105,7 @@ async def test_quickstart_resource(mcp_client):
     assert result is not None
     content = result[0].text
     assert len(content) > 0
-    assert "beads" in content.lower() or "bd" in content.lower()
+    assert "beads" in content.lower() or "fbd" in content.lower()
 
 
 @pytest.mark.asyncio
@@ -637,7 +637,7 @@ async def test_context_init_action(bd_executable):
             output = result.content[0].text
 
             # Verify output contains success message
-            assert "bd initialized successfully!" in output
+            assert "fbd initialized successfully!" in output
             assert "test-init" in output
     finally:
         tools._connection_pool.clear()

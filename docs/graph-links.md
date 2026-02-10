@@ -10,7 +10,7 @@ Creates message threads, similar to email or chat conversations.
 
 **Created by:**
 - Orchestrator mail reply commands (orchestrator handles messaging)
-- `bd dep add <new-id> <original-id> --type replies_to` (manual linking)
+- `fbd dep add <new-id> <original-id> --type replies_to` (manual linking)
 
 **Use cases:**
 - Agent-to-agent message threads
@@ -32,7 +32,7 @@ Creates message threads, similar to email or chat conversations.
 **Viewing threads:**
 
 ```bash
-bd show gt-a1b2 --thread
+fbd show gt-a1b2 --thread
 ```
 
 ### relates_to - Loose Associations
@@ -40,10 +40,10 @@ bd show gt-a1b2 --thread
 Bidirectional "see also" links between related issues. Not blocking, not hierarchical - just related.
 
 **Created by:**
-- `bd relate <id1> <id2>` - Links both issues to each other
+- `fbd relate <id1> <id2>` - Links both issues to each other
 
 **Removed by:**
-- `bd unrelate <id1> <id2>` - Removes link in both directions
+- `fbd unrelate <id1> <id2>` - Removes link in both directions
 
 **Use cases:**
 - Cross-referencing related features
@@ -55,25 +55,25 @@ Bidirectional "see also" links between related issues. Not blocking, not hierarc
 
 ```bash
 # Link two related issues
-bd relate bd-auth bd-security
+fbd relate bd-auth bd-security
 # Result: bd-auth.relates_to includes bd-security
 #         bd-security.relates_to includes bd-auth
 
 # View related issues
-bd show bd-auth
+fbd show bd-auth
 # Shows: Related: bd-security
 
 # Remove the link
-bd unrelate bd-auth bd-security
+fbd unrelate bd-auth bd-security
 ```
 
 **Multiple links:**
 An issue can have multiple relates_to links:
 
 ```bash
-bd relate bd-api bd-auth
-bd relate bd-api bd-docs
-bd relate bd-api bd-tests
+fbd relate bd-api bd-auth
+fbd relate bd-api bd-docs
+fbd relate bd-api bd-tests
 # bd-api now relates to 3 issues
 ```
 
@@ -82,7 +82,7 @@ bd relate bd-api bd-tests
 Marks an issue as a duplicate of a canonical issue. The duplicate is automatically closed.
 
 **Created by:**
-- `bd duplicate <id> --of <canonical>`
+- `fbd duplicate <id> --of <canonical>`
 
 **Use cases:**
 - Consolidating duplicate bug reports
@@ -93,15 +93,15 @@ Marks an issue as a duplicate of a canonical issue. The duplicate is automatical
 
 ```bash
 # Two similar bug reports exist
-bd show bd-bug1  # "Login fails on Safari"
-bd show bd-bug2  # "Safari login broken"
+fbd show bd-bug1  # "Login fails on Safari"
+fbd show bd-bug2  # "Safari login broken"
 
 # Mark bug2 as duplicate of bug1
-bd duplicate bd-bug2 --of bd-bug1
+fbd duplicate bd-bug2 --of bd-bug1
 # Result: bd-bug2 is closed with duplicate_of: bd-bug1
 
 # View shows the relationship
-bd show bd-bug2
+fbd show bd-bug2
 # Status: closed
 # Duplicate of: bd-bug1
 ```
@@ -116,7 +116,7 @@ bd show bd-bug2
 Marks an issue as superseded by a newer version. The old issue is automatically closed.
 
 **Created by:**
-- `bd supersede <old-id> --with <new-id>`
+- `fbd supersede <old-id> --with <new-id>`
 
 **Use cases:**
 - Design document versions
@@ -128,19 +128,19 @@ Marks an issue as superseded by a newer version. The old issue is automatically 
 
 ```bash
 # Original design doc
-bd create --title "Design Doc v1" --type task
+fbd create --title "Design Doc v1" --type task
 # Creates: bd-doc1
 
 # Later, create updated version
-bd create --title "Design Doc v2" --type task
+fbd create --title "Design Doc v2" --type task
 # Creates: bd-doc2
 
 # Mark v1 as superseded
-bd supersede bd-doc1 --with bd-doc2
+fbd supersede bd-doc1 --with bd-doc2
 # Result: bd-doc1 closed with superseded_by: bd-doc2
 
 # View shows the chain
-bd show bd-doc1
+fbd show bd-doc1
 # Status: closed
 # Superseded by: bd-doc2
 ```
@@ -166,7 +166,7 @@ These fields are added to issues:
 ### View Issue Details
 
 ```bash
-bd show <id>
+fbd show <id>
 ```
 
 Shows all link types for an issue:
@@ -185,7 +185,7 @@ Related to (3):
 ### View Threads
 
 ```bash
-bd show <id> --thread
+fbd show <id> --thread
 ```
 
 Follows `replies_to` chain to show conversation history.
@@ -193,7 +193,7 @@ Follows `replies_to` chain to show conversation history.
 ### JSON Output
 
 ```bash
-bd show <id> --json
+fbd show <id> --json
 ```
 
 Returns all fields including graph links:
@@ -226,9 +226,9 @@ Returns all fields including graph links:
 Link related documentation:
 
 ```bash
-bd relate bd-api-ref bd-quickstart
-bd relate bd-api-ref bd-examples
-bd relate bd-quickstart bd-install
+fbd relate bd-api-ref bd-quickstart
+fbd relate bd-api-ref bd-examples
+fbd relate bd-quickstart bd-install
 ```
 
 ### Bug Triage
@@ -237,11 +237,11 @@ Consolidate duplicate reports:
 
 ```bash
 # Find potential duplicates
-bd duplicates
+fbd duplicates
 
 # Merge duplicates
-bd duplicate bd-bug42 --of bd-bug17
-bd duplicate bd-bug58 --of bd-bug17
+fbd duplicate bd-bug42 --of bd-bug17
+fbd duplicate bd-bug58 --of bd-bug17
 ```
 
 ### Version History
@@ -249,8 +249,8 @@ bd duplicate bd-bug58 --of bd-bug17
 Track document evolution:
 
 ```bash
-bd supersede bd-rfc1 --with bd-rfc2
-bd supersede bd-rfc2 --with bd-rfc3
+fbd supersede bd-rfc1 --with bd-rfc2
+fbd supersede bd-rfc2 --with bd-rfc3
 # bd-rfc3 is now the current version
 ```
 
@@ -270,7 +270,7 @@ Build conversation chains (via orchestrator mail):
 2. **Prefer specific link types** - `duplicates` is clearer than generic relates_to
 3. **Keep threads shallow** - Deep reply chains are hard to follow
 4. **Document supersedes chains** - Note why version changed
-5. **Query before creating duplicates** - `bd search` first
+5. **Query before creating duplicates** - `fbd search` first
 
 ## See Also
 

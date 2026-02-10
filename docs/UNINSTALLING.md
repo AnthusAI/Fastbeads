@@ -8,7 +8,7 @@ Run these commands from your repository root:
 
 ```bash
 # 1. Stop any running daemon
-bd daemons killall
+fbd daemons killall
 
 # 2. Remove git hooks installed by Beads
 rm -f .git/hooks/pre-commit .git/hooks/post-merge .git/hooks/pre-push .git/hooks/post-checkout
@@ -35,8 +35,8 @@ rm -rf .git/beads-worktrees
 If a Beads daemon is running for this repository, stop it first:
 
 ```bash
-bd daemons list     # Check if daemon is running
-bd daemons killall  # Stop all daemons
+fbd daemons list     # Check if daemon is running
+fbd daemons killall  # Stop all daemons
 ```
 
 ### 2. Remove Git Hooks
@@ -107,7 +107,7 @@ The `.beads/` directory contains:
 | `daemon.pid` | Running daemon PID |
 | `daemon.log` | Daemon logs |
 | `daemon.lock` | Lock file for daemon |
-| `bd.sock` | Unix socket for daemon IPC |
+| `fbd.sock` | Unix socket for daemon IPC |
 | `config.yaml` | Project configuration |
 | `metadata.json` | Version tracking |
 | `deletions.jsonl` | Soft-deleted issues |
@@ -141,20 +141,20 @@ git commit -m "Remove beads issue tracking"
 git push
 ```
 
-## Uninstalling the `bd` Binary
+## Uninstalling the `fbd` Binary
 
-The `bd` command itself is a standalone binary. Remove it based on how you installed:
+The `fbd` command itself is a standalone binary. Remove it based on how you installed:
 
 **If installed via go install:**
 ```bash
-rm $(which bd)
-# Or: rm ~/go/bin/bd
+rm $(which fbd)
+# Or: rm ~/go/bin/fbd
 ```
 
 **If installed manually:**
 ```bash
 # Remove from wherever you placed it
-rm /usr/local/bin/bd
+rm /usr/local/bin/fbd
 ```
 
 ## Verify Complete Removal
@@ -162,8 +162,8 @@ rm /usr/local/bin/bd
 Run these checks to confirm Beads is fully removed:
 
 ```bash
-# Should show "command not found" or be a different bd
-which bd
+# Should show "command not found" or be a different fbd
+which fbd
 
 # Should not exist
 ls .beads/
@@ -183,7 +183,7 @@ cat .gitattributes
 To set up Beads again in the future:
 
 ```bash
-bd init
+fbd init
 ```
 
 This will recreate the `.beads/` directory, install hooks, and configure the merge driver.

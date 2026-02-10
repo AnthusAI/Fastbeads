@@ -18,7 +18,7 @@ Beads uses a chemistry metaphor for work templates. This guide covers when and h
           ▼               │               ▼
 ┌─────────────────┐       │       ┌─────────────────┐
 │   MOL (Liquid)  │       │       │  WISP (Vapor)   │
-│   bd pour       │       │       │  bd wisp create │
+│   fbd pour       │       │       │  fbd wisp create │
 │                 │       │       │                 │
 │  Persistent     │       │       │  Ephemeral      │
 │  .beads/        │       │       │  .beads-wisp/   │
@@ -49,7 +49,7 @@ Will this work be referenced later?
 │
 ├─ YES → Does it need audit trail / git history?
 │        │
-│        ├─ YES → MOL (bd pour)
+│        ├─ YES → MOL (fbd pour)
 │        │        Examples: Features, bugs, specs
 │        │
 │        └─ NO  → Could go either way
@@ -58,7 +58,7 @@ Will this work be referenced later?
 │                 ├─ YES → MOL
 │                 └─ NO  → WISP (then squash if valuable)
 │
-└─ NO  → WISP (bd wisp create)
+└─ NO  → WISP (fbd wisp create)
          Examples: Grooming, health checks, scratch work
          End state: burn (no value) or squash (capture learnings)
 ```
@@ -67,13 +67,13 @@ Will this work be referenced later?
 
 | Scenario | Use | Command | End State |
 |----------|-----|---------|-----------|
-| New feature work | Mol | `bd pour spec` | Close normally |
-| Bug fix | Mol | `bd pour bug` | Close normally |
-| Grooming session | Wisp | `bd wisp create grooming` | Squash → digest |
-| Code review | Wisp | `bd wisp create review` | Squash findings |
-| Research spike | Wisp | `bd wisp create spike` | Squash or burn |
-| Session health check | Wisp | `bd wisp create health` | Burn |
-| Agent coordination | Wisp | `bd wisp create coordinator` | Burn |
+| New feature work | Mol | `fbd pour spec` | Close normally |
+| Bug fix | Mol | `fbd pour bug` | Close normally |
+| Grooming session | Wisp | `fbd wisp create grooming` | Squash → digest |
+| Code review | Wisp | `fbd wisp create review` | Squash findings |
+| Research spike | Wisp | `fbd wisp create spike` | Squash or burn |
+| Session health check | Wisp | `fbd wisp create health` | Burn |
+| Agent coordination | Wisp | `fbd wisp create coordinator` | Burn |
 
 ## Common Patterns
 
@@ -83,13 +83,13 @@ Use for periodic backlog maintenance.
 
 ```bash
 # Start grooming
-bd wisp create grooming --var date="2025-01-02"
+fbd wisp create grooming --var date="2025-01-02"
 
 # Work through checklist (stale, duplicates, verification)
 # Track findings in wisp notes
 
 # End: capture summary
-bd mol squash <wisp-id>  # Creates digest: "Closed 3, added 5 relationships"
+fbd mol squash <wisp-id>  # Creates digest: "Closed 3, added 5 relationships"
 ```
 
 **Why wisp?** Grooming is operational—you don't need permanent issues for "reviewed stale items."
@@ -100,13 +100,13 @@ Use for PR review checklists.
 
 ```bash
 # Start review
-bd wisp create pr-review --var pr="123" --var repo="myproject"
+fbd wisp create pr-review --var pr="123" --var repo="myproject"
 
 # Track review findings (security, performance, style)
 # Each finding is a child issue in the wisp
 
 # End: promote real issues, discard noise
-bd mol squash <wisp-id>  # Creates permanent issues for real findings
+fbd mol squash <wisp-id>  # Creates permanent issues for real findings
 ```
 
 **Why wisp?** Review checklists are ephemeral. Only actual findings become permanent issues.
@@ -117,15 +117,15 @@ Use for time-boxed exploration.
 
 ```bash
 # Start spike (2 hour timebox)
-bd wisp create spike --var topic="GraphQL pagination"
+fbd wisp create spike --var topic="GraphQL pagination"
 
 # Explore, take notes in wisp issues
 # Track sources, findings, dead ends
 
 # End: decide outcome
-bd mol squash <wisp-id>  # If valuable → creates research summary issue
+fbd mol squash <wisp-id>  # If valuable → creates research summary issue
 # OR
-bd mol burn <wisp-id>    # If dead end → no trace
+fbd mol burn <wisp-id>    # If dead end → no trace
 ```
 
 **Why wisp?** Research might lead nowhere. Don't pollute the database with abandoned explorations.
@@ -136,41 +136,41 @@ bd mol burn <wisp-id>    # If dead end → no trace
 
 ```bash
 # Persistent mol (solid → liquid)
-bd pour <proto>                    # Synced to git
-bd pour <proto> --var key=value
+fbd pour <proto>                    # Synced to git
+fbd pour <proto> --var key=value
 
 # Ephemeral wisp (solid → vapor)
-bd wisp create <proto>             # Not synced
-bd wisp create <proto> --var key=value
+fbd wisp create <proto>             # Not synced
+fbd wisp create <proto> --var key=value
 ```
 
 ### Ending Work
 
 ```bash
 # Mol: close normally
-bd close <mol-id>
+fbd close <mol-id>
 
 # Wisp: squash (condense to digest)
-bd mol squash <wisp-id>            # Creates permanent digest issue
+fbd mol squash <wisp-id>            # Creates permanent digest issue
 
 # Wisp: burn (evaporate, no trace)
-bd mol burn <wisp-id>              # Deletes with no record
+fbd mol burn <wisp-id>              # Deletes with no record
 ```
 
 ### Managing
 
 ```bash
 # List wisps
-bd wisp list
+fbd wisp list
 
 # Garbage collect orphaned wisps
-bd wisp gc
+fbd wisp gc
 
 # View proto/mol structure
-bd mol show <id>
+fbd mol show <id>
 
 # List available protos
-bd mol catalog
+fbd mol catalog
 ```
 
 ## Storage Locations

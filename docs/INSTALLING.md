@@ -1,4 +1,4 @@
-# Installing bd
+# Installing fbd
 
 Complete installation guide for all platforms.
 
@@ -8,12 +8,12 @@ Beads has several components - here's what they are and when you need them:
 
 | Component | What It Is | When You Need It |
 |-----------|------------|------------------|
-| **bd CLI** | Core command-line tool | Always - this is the foundation |
+| **fbd CLI** | Core command-line tool | Always - this is the foundation |
 | **Claude Code Plugin** | Slash commands + enhanced UX | Optional - if you want `/beads:ready`, `/beads:create` commands |
 | **MCP Server (beads-mcp)** | Model Context Protocol interface | Only for MCP-only environments (Claude Desktop, Amp) |
 
 **How they relate:**
-- The **bd CLI** is the core - install it first via Homebrew, npm, or script
+- The **fbd CLI** is the core - install it first via Homebrew, npm, or script
 - The **Plugin** enhances Claude Code with slash commands but *requires* the CLI installed
 - The **MCP server** is an *alternative* to the CLI for environments without shell access
 
@@ -23,11 +23,11 @@ Beads has several components - here's what they are and when you need them:
 
 | Environment | What to Install |
 |-------------|-----------------|
-| Claude Code, Cursor, Windsurf | bd CLI (+ optional Plugin for Claude Code) |
-| GitHub Copilot (VS Code) | bd CLI + MCP server |
+| Claude Code, Cursor, Windsurf | fbd CLI (+ optional Plugin for Claude Code) |
+| GitHub Copilot (VS Code) | fbd CLI + MCP server |
 | Claude Desktop (no shell) | MCP server only |
-| Terminal / scripts | bd CLI only |
-| CI/CD pipelines | bd CLI only |
+| Terminal / scripts | fbd CLI only |
+| CI/CD pipelines | fbd CLI only |
 
 **Are they mutually exclusive?** No - you can have CLI + Plugin + MCP all installed. They don't conflict. But most users only need the CLI.
 
@@ -62,8 +62,8 @@ The installer will:
 | Method | Best For | Updates | Prerequisites | Notes |
 |--------|----------|---------|---------------|-------|
 | **Homebrew** | macOS/Linux users | `brew upgrade beads` | Homebrew | Recommended. Handles everything automatically |
-| **npm** | JS/Node.js projects | `npm update -g @beads/bd` | Node.js | Convenient if npm is your ecosystem |
-| **bun** | JS/Bun.js projects | `bun install -g --trust @beads/bd` | Bun.js | Convenient if bun is your ecosystem |
+| **npm** | JS/Node.js projects | `npm update -g @beads/fbd` | Node.js | Convenient if npm is your ecosystem |
+| **bun** | JS/Bun.js projects | `bun install -g --trust @beads/fbd` | Bun.js | Convenient if bun is your ecosystem |
 | **Install script** | Quick setup, CI/CD | Re-run script | curl, bash | Good for automation and one-liners |
 | **go install** | Go developers | Re-run command | Go 1.24+ | Builds from source, always latest |
 | **From source** | Contributors, custom builds | `git pull && go build` | Go, git | Full control, can modify code |
@@ -93,7 +93,7 @@ sudo dnf install -y libicu-devel libzstd-devel
 If you see `unicode/uregex.h` missing on macOS, `icu4c` is keg-only. Use:
 ```bash
 ICU_PREFIX="$(brew --prefix icu4c)"
-CGO_CFLAGS="-I${ICU_PREFIX}/include" CGO_CPPFLAGS="-I${ICU_PREFIX}/include" CGO_LDFLAGS="-L${ICU_PREFIX}/lib" go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_CFLAGS="-I${ICU_PREFIX}/include" CGO_CPPFLAGS="-I${ICU_PREFIX}/include" CGO_LDFLAGS="-L${ICU_PREFIX}/lib" go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ## Platform-Specific Installation
@@ -107,15 +107,15 @@ brew install beads
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 **From source**:
 ```bash
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ### Linux
@@ -137,15 +137,15 @@ Thanks to [@v4rgas](https://github.com/v4rgas) for maintaining the AUR package!
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 **From source**:
 ```bash
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ### FreeBSD
@@ -157,7 +157,7 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### Windows 11
@@ -179,19 +179,19 @@ The script installs a prebuilt Windows release if available. Go is only required
 
 **Via go install**:
 ```pwsh
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ICU is **not required** on Windows. The regex backend uses pure Go automatically.
 
 **From source**:
 ```pwsh
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
 make build
 # Or without Make:
-go build -tags gms_pure_go -o bd.exe ./cmd/bd
-Move-Item bd.exe $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\
+go build -tags gms_pure_go -o fbd.exe ./cmd/fbd
+Move-Item fbd.exe $env:USERPROFILE\AppData\Local\Microsoft\WindowsApps\
 ```
 
 The `-tags gms_pure_go` flag tells go-mysql-server to use Go's stdlib regexp instead of ICU.
@@ -200,13 +200,13 @@ Additionally, the vendored go-icu-regex library has a Windows-specific pure-Go i
 
 **Verify installation**:
 ```pwsh
-bd version
+fbd version
 ```
 
 **Windows notes:**
-- The background daemon listens on a loopback TCP endpoint recorded in `.beads\bd.sock`
+- The background daemon listens on a loopback TCP endpoint recorded in `.beads\fbd.sock`
 - Keep that metadata file intact
-- Allow `bd.exe` loopback traffic through any host firewall
+- Allow `fbd.exe` loopback traffic through any host firewall
 
 ## IDE and Editor Integrations
 
@@ -215,25 +215,25 @@ bd version
 **The recommended approach** for Claude Code, Cursor, Windsurf, and other editors with shell access:
 
 ```bash
-# 1. Install bd CLI (see Quick Install above)
+# 1. Install fbd CLI (see Quick Install above)
 brew install beads
 
 # 2. Initialize in your project
 cd your-project
-bd init --quiet
+fbd init --quiet
 
 # 3. Setup editor integration (choose one)
-bd setup claude   # Claude Code - installs SessionStart/PreCompact hooks
-bd setup cursor   # Cursor IDE - creates .cursor/rules/beads.mdc
-bd setup aider    # Aider - creates .aider.conf.yml
-bd setup codex    # Codex CLI - creates/updates AGENTS.md
+fbd setup claude   # Claude Code - installs SessionStart/PreCompact hooks
+fbd setup cursor   # Cursor IDE - creates .cursor/rules/beads.mdc
+fbd setup aider    # Aider - creates .aider.conf.yml
+fbd setup codex    # Codex CLI - creates/updates AGENTS.md
 ```
 
 **How it works:**
-- Editor hooks/rules inject `bd prime` automatically on session start
-- `bd prime` provides ~1-2k tokens of workflow context
-- You use `bd` CLI commands directly
-- Git hooks (installed by `bd init`) auto-sync the database
+- Editor hooks/rules inject `fbd prime` automatically on session start
+- `fbd prime` provides ~1-2k tokens of workflow context
+- You use `fbd` CLI commands directly
+- Git hooks (installed by `fbd init`) auto-sync the database
 
 **Why this is recommended:**
 - **Context efficient** - ~1-2k tokens vs 10-50k for MCP tool schemas
@@ -243,10 +243,10 @@ bd setup codex    # Codex CLI - creates/updates AGENTS.md
 
 **Verify installation:**
 ```bash
-bd setup claude --check   # Check Claude Code integration
-bd setup cursor --check   # Check Cursor integration
-bd setup aider --check    # Check Aider integration
-bd setup codex --check    # Check Codex integration
+fbd setup claude --check   # Check Claude Code integration
+fbd setup cursor --check   # Check Cursor integration
+fbd setup aider --check    # Check Aider integration
+fbd setup codex --check    # Check Codex integration
 ```
 
 ### Claude Code Plugin (Optional)
@@ -307,7 +307,7 @@ For VS Code with GitHub Copilot:
 
 3. **Initialize project:**
    ```bash
-   bd init --quiet
+   fbd init --quiet
    ```
 
 4. **Reload VS Code**
@@ -362,47 +362,47 @@ See [integrations/beads-mcp/README.md](../integrations/beads-mcp/README.md) for 
 
 ## Verifying Installation
 
-After installing, verify bd is working:
+After installing, verify fbd is working:
 
 ```bash
-bd version
-bd help
+fbd version
+fbd help
 ```
 
 ## Troubleshooting Installation
 
-### `bd: command not found`
+### `fbd: command not found`
 
-bd is not in your PATH. Either:
+fbd is not in your PATH. Either:
 
 ```bash
 # Check if installed
-go list -f {{.Target}} github.com/steveyegge/beads/cmd/bd
+go list -f {{.Target}} github.com/steveyegge/fastbeads/cmd/fbd
 
 # Add Go bin to PATH (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$(go env GOPATH)/bin"
 
 # Or reinstall
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
-### `zsh: killed bd` or crashes on macOS
+### `zsh: killed fbd` or crashes on macOS
 
-Some users report crashes when running `bd init` or other commands on macOS. This is typically caused by CGO/SQLite compatibility issues.
+Some users report crashes when running `fbd init` or other commands on macOS. This is typically caused by CGO/SQLite compatibility issues.
 
 **Workaround:**
 ```bash
 # Build with CGO enabled
-CGO_ENABLED=1 go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_ENABLED=1 go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 
 # Or if building from source
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
-CGO_ENABLED=1 go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+CGO_ENABLED=1 go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
-If you installed via Homebrew, this shouldn't be necessary as the formula already enables CGO. If you're still seeing crashes with the Homebrew version, please [file an issue](https://github.com/steveyegge/beads/issues).
+If you installed via Homebrew, this shouldn't be necessary as the formula already enables CGO. If you're still seeing crashes with the Homebrew version, please [file an issue](https://github.com/steveyegge/fastbeads/issues).
 
 ### Claude Code Plugin: MCP server fails to start
 
@@ -433,14 +433,14 @@ See the "Claude Code Plugin" section above for alternative installation methods 
 
 After installation:
 
-1. **Initialize a project**: `cd your-project && bd init`
-2. **Configure your agent**: Add bd instructions to `AGENTS.md` (see [README.md](../README.md#quick-start))
+1. **Initialize a project**: `cd your-project && fbd init`
+2. **Configure your agent**: Add fbd instructions to `AGENTS.md` (see [README.md](../README.md#quick-start))
 3. **Learn the basics**: See [QUICKSTART.md](QUICKSTART.md) for a tutorial
 4. **Explore examples**: Check out the [examples/](../examples/) directory
 
-## Updating bd
+## Updating fbd
 
-Use the update command that matches how you installed `bd`.
+Use the update command that matches how you installed `fbd`.
 
 ### Quick Install Script (macOS/Linux/FreeBSD)
 
@@ -463,19 +463,19 @@ brew upgrade beads
 ### npm
 
 ```bash
-npm update -g @beads/bd
+npm update -g @beads/fbd
 ```
 
 ### bun
 
 ```bash
-bun install -g --trust @beads/bd
+bun install -g --trust @beads/fbd
 ```
 
 ### go install
 
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### From source
@@ -483,17 +483,17 @@ go install github.com/steveyegge/beads/cmd/bd@latest
 ```bash
 cd beads
 git pull
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ## After Upgrading (Recommended)
 
 ```bash
-bd info --whats-new
-bd hooks install
-bd daemons killall
-bd version
+fbd info --whats-new
+fbd hooks install
+fbd daemons killall
+fbd version
 ```
 
 ## Uninstalling

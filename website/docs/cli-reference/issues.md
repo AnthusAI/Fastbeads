@@ -8,12 +8,12 @@ sidebar_position: 3
 
 Commands for managing issues.
 
-## bd create
+## fbd create
 
 Create a new issue.
 
 ```bash
-bd create <title> [flags]
+fbd create <title> [flags]
 ```
 
 **All flags:**
@@ -34,38 +34,38 @@ bd create <title> [flags]
 **Examples:**
 ```bash
 # Bug with high priority
-bd create "Login fails with special chars" -t bug -p 1
+fbd create "Login fails with special chars" -t bug -p 1
 
 # Feature with description
-bd create "Add export to PDF" -t feature -p 2 \
+fbd create "Add export to PDF" -t feature -p 2 \
   --description="Users want to export reports as PDF files"
 
 # Feature with design, acceptance, and notes
-bd create "Implement user authentication" -t feature -p 1 \
+fbd create "Implement user authentication" -t feature -p 1 \
   --description="Add JWT-based authentication" \
   --design="Use bcrypt for password hashing, JWT for sessions" \
   --acceptance="All tests pass, security audit complete" \
   --notes="Consider rate limiting for login attempts"
 
 # Task with labels
-bd create "Update CI config" -t task -l "ci,infrastructure"
+fbd create "Update CI config" -t task -l "ci,infrastructure"
 
 # Epic with children
-bd create "Auth System" -t epic -p 1
-bd create "Design login UI" --parent bd-42
-bd create "Implement backend" --parent bd-42
+fbd create "Auth System" -t epic -p 1
+fbd create "Design login UI" --parent bd-42
+fbd create "Implement backend" --parent bd-42
 
 # Discovered issue
-bd create "Found SQL injection" -t bug -p 0 \
+fbd create "Found SQL injection" -t bug -p 0 \
   --deps discovered-from:bd-42 --json
 ```
 
-## bd show
+## fbd show
 
 Display issue details.
 
 ```bash
-bd show <id>... [flags]
+fbd show <id>... [flags]
 ```
 
 **Flags:**
@@ -76,17 +76,17 @@ bd show <id>... [flags]
 
 **Examples:**
 ```bash
-bd show bd-42
-bd show bd-42 --full
-bd show bd-42 bd-43 bd-44 --json
+fbd show bd-42
+fbd show bd-42 --full
+fbd show bd-42 bd-43 bd-44 --json
 ```
 
-## bd update
+## fbd update
 
 Update issue fields.
 
 ```bash
-bd update <id> [flags]
+fbd update <id> [flags]
 ```
 
 **All flags:**
@@ -105,24 +105,24 @@ bd update <id> [flags]
 **Examples:**
 ```bash
 # Start work
-bd update bd-42 --status in_progress
+fbd update bd-42 --status in_progress
 
 # Escalate priority
-bd update bd-42 --priority 0 --add-label urgent
+fbd update bd-42 --priority 0 --add-label urgent
 
 # Change title and description
-bd update bd-42 --title "New title" --description="Updated description"
+fbd update bd-42 --title "New title" --description="Updated description"
 
 # Multiple changes
-bd update bd-42 --status in_progress --priority 1 --add-label "in-review" --json
+fbd update bd-42 --status in_progress --priority 1 --add-label "in-review" --json
 ```
 
-## bd close
+## fbd close
 
 Close an issue.
 
 ```bash
-bd close <id> [flags]
+fbd close <id> [flags]
 ```
 
 **Flags:**
@@ -133,31 +133,31 @@ bd close <id> [flags]
 
 **Examples:**
 ```bash
-bd close bd-42
-bd close bd-42 --reason "Fixed in commit abc123"
-bd close bd-42 --reason "Duplicate of bd-43" --json
+fbd close bd-42
+fbd close bd-42 --reason "Fixed in commit abc123"
+fbd close bd-42 --reason "Duplicate of bd-43" --json
 ```
 
-## bd reopen
+## fbd reopen
 
 Reopen a closed issue.
 
 ```bash
-bd reopen <id> [flags]
+fbd reopen <id> [flags]
 ```
 
 **Examples:**
 ```bash
-bd reopen bd-42
-bd reopen bd-42 --json
+fbd reopen bd-42
+fbd reopen bd-42 --json
 ```
 
-## bd delete
+## fbd delete
 
 Delete an issue.
 
 ```bash
-bd delete <id> [flags]
+fbd delete <id> [flags]
 ```
 
 **Flags:**
@@ -168,18 +168,18 @@ bd delete <id> [flags]
 
 **Examples:**
 ```bash
-bd delete bd-42
-bd delete bd-42 -f --json
+fbd delete bd-42
+fbd delete bd-42 -f --json
 ```
 
 **Note:** Deletions are tracked in `.beads/deletions.jsonl` for sync.
 
-## bd search
+## fbd search
 
 Search issues by text.
 
 ```bash
-bd search <query> [flags]
+fbd search <query> [flags]
 ```
 
 **Flags:**
@@ -191,17 +191,17 @@ bd search <query> [flags]
 
 **Examples:**
 ```bash
-bd search "authentication"
-bd search "login bug" --status open
-bd search "API" --type feature --json
+fbd search "authentication"
+fbd search "login bug" --status open
+fbd search "API" --type feature --json
 ```
 
-## bd duplicates
+## fbd duplicates
 
 Find and manage duplicate issues.
 
 ```bash
-bd duplicates [flags]
+fbd duplicates [flags]
 ```
 
 **Flags:**
@@ -213,17 +213,17 @@ bd duplicates [flags]
 
 **Examples:**
 ```bash
-bd duplicates
-bd duplicates --auto-merge
-bd duplicates --dry-run --json
+fbd duplicates
+fbd duplicates --auto-merge
+fbd duplicates --dry-run --json
 ```
 
-## bd merge
+## fbd merge
 
 Merge duplicate issues.
 
 ```bash
-bd merge <source>... --into <target> [flags]
+fbd merge <source>... --into <target> [flags]
 ```
 
 **Flags:**
@@ -235,6 +235,6 @@ bd merge <source>... --into <target> [flags]
 
 **Examples:**
 ```bash
-bd merge bd-42 bd-43 --into bd-41
-bd merge bd-42 bd-43 --into bd-41 --dry-run --json
+fbd merge bd-42 bd-43 --into bd-41
+fbd merge bd-42 bd-43 --into bd-41 --dry-run --json
 ```

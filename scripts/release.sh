@@ -15,7 +15,7 @@ set -euo pipefail
 #   2. RESUMABILITY: If a release fails at step 17, you resume at step 17.
 #      Scripts restart from scratch or require manual state tracking.
 #
-#   3. OBSERVABILITY: `bd activity --follow` shows real-time progress.
+#   3. OBSERVABILITY: `fbd activity --follow` shows real-time progress.
 #      Scripts are opaque until they finish (or fail).
 #
 #   4. GATES: The release molecule waits for CI via gates, not polling.
@@ -34,7 +34,7 @@ set -euo pipefail
 #   Phase 3: Local install → daemon restart
 #
 # View the full formula:
-#   bd formula show beads-release
+#   fbd formula show beads-release
 #
 # =============================================================================
 
@@ -65,7 +65,7 @@ After running this script:
   1. The release molecule (wisp) is created with all 29 steps
   2. Hook it to start working: gt hook <mol-id>
   3. Or sling to a polecat: gt sling beads/polecats/p1 <mol-id>
-  4. Watch progress: bd activity --follow
+  4. Watch progress: fbd activity --follow
 
 EOF
     exit 1
@@ -108,16 +108,16 @@ if [ "$DRY_RUN" = true ]; then
     echo -e "${YELLOW}DRY RUN - showing what would happen${NC}"
     echo ""
     echo "Would create release molecule with:"
-    echo "  bd mol wisp beads-release --var version=${VERSION}"
+    echo "  fbd mol wisp beads-release --var version=${VERSION}"
     echo ""
     echo "The molecule has 29 steps:"
-    bd formula show beads-release 2>/dev/null | grep -E "^   [├└]" | head -15
+    fbd formula show beads-release 2>/dev/null | grep -E "^   [├└]" | head -15
     echo "   ... (14 more steps)"
     echo ""
     echo -e "${BLUE}Why a molecule instead of a script?${NC}"
     echo "  • Each step is a ledger entry (your work history)"
     echo "  • Resumable if interrupted (no restart from scratch)"
-    echo "  • Observable via bd activity --follow"
+    echo "  • Observable via fbd activity --follow"
     echo "  • Gates wait for CI without polling"
     echo ""
     echo "Read: ~/gt/docs/PRIMING.md → 'The Batch-Closure Heresy'"
@@ -129,7 +129,7 @@ echo -e "${YELLOW}Creating release molecule...${NC}"
 echo ""
 
 # Create the wisp and capture the output
-OUTPUT=$(bd mol wisp beads-release --var version="${VERSION}" 2>&1)
+OUTPUT=$(fbd mol wisp beads-release --var version="${VERSION}" 2>&1)
 MOL_ID=$(echo "$OUTPUT" | grep -oE 'bd-wisp-[a-z0-9]+' | head -1)
 
 if [ -z "$MOL_ID" ]; then
@@ -142,7 +142,7 @@ echo -e "${GREEN}✓ Created release molecule: ${MOL_ID}${NC}"
 echo ""
 
 # Show the molecule
-bd show "$MOL_ID" 2>/dev/null | head -20
+fbd show "$MOL_ID" 2>/dev/null | head -20
 echo ""
 
 echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"
@@ -152,15 +152,15 @@ echo "Next steps:"
 echo ""
 echo "  ${YELLOW}Option 1: Work on it yourself${NC}"
 echo "    gt hook ${MOL_ID}"
-echo "    # Then follow the steps in bd show ${MOL_ID}"
+echo "    # Then follow the steps in fbd show ${MOL_ID}"
 echo ""
 echo "  ${YELLOW}Option 2: Assign to a polecat${NC}"
 echo "    gt sling beads/polecats/p1 ${MOL_ID}"
 echo ""
 echo "  ${YELLOW}Watch progress:${NC}"
-echo "    bd activity --follow"
+echo "    fbd activity --follow"
 echo ""
 echo "  ${YELLOW}See all steps:${NC}"
-echo "    bd mol steps ${MOL_ID}"
+echo "    fbd mol steps ${MOL_ID}"
 echo ""
 echo -e "${BLUE}═══════════════════════════════════════════════════════════════${NC}"

@@ -1,0 +1,13 @@
+# Test fbd lint command
+
+fbd init --prefix test
+
+# Create a bug without required sections - should have warnings
+fbd create 'Bug without sections' --type bug
+
+# Create a chore - no required sections
+fbd create 'Simple chore' --type chore
+
+# Lint all issues - bug should have warnings
+! fbd lint
+stdout 'Bug without sections'

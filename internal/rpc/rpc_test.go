@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	sqlitestorage "github.com/steveyegge/beads/internal/storage/sqlite"
-	"github.com/steveyegge/beads/internal/types"
+	sqlitestorage "github.com/steveyegge/fastbeads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func setupTestServer(t *testing.T) (*Server, *Client, func()) {
@@ -696,7 +696,7 @@ func TestCreate_DiscoveredFromInheritsSourceRepo(t *testing.T) {
 	// 1. Create a parent with custom source_repo (requires direct storage access)
 	// 2. Verify the discovered issue inherited it
 	// The logic is implemented in server_issues_epics.go handleCreate
-	// and tested via the cmd/bd test which has direct storage access
+	// and tested via the cmd/fbd test which has direct storage access
 }
 
 func TestRPCCreateWithExternalRef(t *testing.T) {

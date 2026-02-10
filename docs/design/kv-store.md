@@ -1,6 +1,6 @@
 # Key-Value Store for Beads
 
-> Design document for `bd kv` commands
+> Design document for `fbd kv` commands
 > Status: Draft - pending Dolt team review
 > Date: 2026-01-21
 
@@ -8,18 +8,18 @@
 
 Add a simple key-value store to beads for persisting lightweight metadata that doesn't fit the issue model. This enables storing things like:
 
-- Feature flags (`bd kv set debug_mode true`)
-- Project configuration (`bd kv set entry_point src/main.ts`)
-- Workflow state across sessions (`bd kv set current_sprint 42`)
+- Feature flags (`fbd kv set debug_mode true`)
+- Project configuration (`fbd kv set entry_point src/main.ts`)
+- Workflow state across sessions (`fbd kv set current_sprint 42`)
 - Agent memory that survives context cycling
 
 ## Commands
 
 ```
-bd kv set <key> <value>   # Set a key-value pair
-bd kv get <key>           # Get a value (exit 1 if not found)
-bd kv delete <key>        # Delete a key
-bd kv list [prefix]       # List all pairs (optionally filtered by prefix)
+fbd kv set <key> <value>   # Set a key-value pair
+fbd kv get <key>           # Get a value (exit 1 if not found)
+fbd kv delete <key>        # Delete a key
+fbd kv list [prefix]       # List all pairs (optionally filtered by prefix)
 ```
 
 All commands support `--json` for machine-readable output.
@@ -28,30 +28,30 @@ All commands support `--json` for machine-readable output.
 
 ```bash
 # Store project metadata
-bd kv set primary_language go
-bd kv set entry_point cmd/bd/main.go
+fbd kv set primary_language go
+fbd kv set entry_point cmd/fbd/main.go
 
 # Retrieve values
-bd kv get primary_language
+fbd kv get primary_language
 # Output: go
 
 # List all pairs
-bd kv list
+fbd kv list
 # Output:
 # primary_language = go
-# entry_point = cmd/bd/main.go
+# entry_point = cmd/fbd/main.go
 
 # List with prefix filter
-bd kv list entry
+fbd kv list entry
 # Output:
-# entry_point = cmd/bd/main.go
+# entry_point = cmd/fbd/main.go
 
 # JSON output
-bd kv list --json
+fbd kv list --json
 # Output: [{"key":"primary_language","value":"go","set_at":"2026-01-21T10:30:00Z","set_by":"beads/crew/collins"},...]
 
 # Delete a key
-bd kv delete primary_language
+fbd kv delete primary_language
 ```
 
 ## Schema
@@ -84,7 +84,7 @@ CREATE TABLE kv (
 **Why not make KV pairs into issues/beads?**
 - KV is meant to be lightweight - issues have significant overhead (id, title, description, status, priority, type, etc.)
 - Different lifecycle - KV is "set and forget", issues are "open → work → close"
-- Would pollute `bd list` with non-work entries
+- Would pollute `fbd list` with non-work entries
 
 **Why track `set_at` and `set_by`?**
 - Attribution: know who set a value and when
@@ -105,7 +105,7 @@ KV data syncs via the standard beads-sync mechanism:
 
 ```jsonl
 {"key":"primary_language","value":"go","set_at":"2026-01-21T10:30:00Z","set_by":"beads/crew/collins"}
-{"key":"entry_point","value":"cmd/bd/main.go","set_at":"2026-01-21T10:31:00Z","set_by":"human"}
+{"key":"entry_point","value":"cmd/fbd/main.go","set_at":"2026-01-21T10:31:00Z","set_by":"human"}
 ```
 
 This format is:
@@ -135,7 +135,7 @@ These are NOT in scope for v1, but the design accommodates them:
 
 ## Credit
 
-This feature is inspired by PR #1164 from Piyush Jha (@Hackinet). The original PR proposed `bd set/get/clear` as top-level commands; this design groups them under `bd kv` for cleaner namespacing.
+This feature is inspired by PR #1164 from Piyush Jha (@Hackinet). The original PR proposed `fbd set/get/clear` as top-level commands; this design groups them under `fbd kv` for cleaner namespacing.
 
 ## Questions for Dolt Team
 

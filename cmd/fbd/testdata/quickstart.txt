@@ -1,0 +1,5 @@
+# Test fbd quickstart command
+fbd quickstart
+stdout 'Dependency-Aware'
+stdout 'fbd init'
+stdout 'fbd create'

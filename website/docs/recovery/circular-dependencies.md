@@ -11,33 +11,33 @@ This runbook helps you detect and break circular dependency cycles in your issue
 ## Symptoms
 
 - "circular dependency detected" errors
-- `bd blocked` shows unexpected results
+- `fbd blocked` shows unexpected results
 - Issues that should be ready appear blocked
 
 ## Diagnosis
 
 ```bash
 # Check for blocked issues
-bd blocked
+fbd blocked
 
 # View dependencies for a specific issue
-bd show <issue-id>
+fbd show <issue-id>
 
 # List all dependencies
-bd dep tree
+fbd dep tree
 ```
 
 ## Solution
 
 **Step 1:** Identify the cycle
 ```bash
-bd blocked --verbose
+fbd blocked --verbose
 ```
 
 **Step 2:** Map the dependency chain
 ```bash
-bd show <issue-a>
-bd show <issue-b>
+fbd show <issue-a>
+fbd show <issue-b>
 # Follow the chain until you return to <issue-a>
 ```
 
@@ -46,17 +46,17 @@ Consider: Which dependency is least critical to the workflow?
 
 **Step 4:** Remove the problematic dependency
 ```bash
-bd dep remove <dependent-issue> <blocking-issue>
+fbd dep remove <dependent-issue> <blocking-issue>
 ```
 
 **Step 5:** Verify the cycle is broken
 ```bash
-bd blocked
-bd ready
+fbd blocked
+fbd ready
 ```
 
 ## Prevention
 
 - Think "X needs Y" not "X before Y" when adding dependencies
-- Use `bd blocked` after adding dependencies to check for cycles
+- Use `fbd blocked` after adding dependencies to check for cycles
 - Keep dependency chains shallow when possible

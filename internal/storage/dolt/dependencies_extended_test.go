@@ -4,7 +4,7 @@ package dolt
 import (
 	"testing"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // =============================================================================

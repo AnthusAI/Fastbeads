@@ -13,7 +13,7 @@ How to use beads with Junie (JetBrains AI Agent).
 ### Quick Setup
 
 ```bash
-bd setup junie
+fbd setup junie
 ```
 
 This creates:
@@ -23,15 +23,15 @@ This creates:
 ### Verify Setup
 
 ```bash
-bd setup junie --check
+fbd setup junie --check
 ```
 
 ## How It Works
 
 1. **Session starts** → Junie reads `.junie/guidelines.md` for workflow context
 2. **MCP tools available** → Junie can use beads MCP tools directly
-3. **You work** → Use `bd` CLI commands or MCP tools
-4. **Session ends** → Run `bd sync` to save work to git
+3. **You work** → Use `fbd` CLI commands or MCP tools
+4. **Session ends** → Run `fbd sync` to save work to git
 
 ## Configuration Files
 
@@ -51,7 +51,7 @@ Configures the beads MCP server:
 {
   "mcpServers": {
     "beads": {
-      "command": "bd",
+      "command": "fbd",
       "args": ["mcp"]
     }
   }
@@ -76,18 +76,18 @@ With MCP configured, Junie can use these tools directly:
 
 ## CLI Commands
 
-You can also use the `bd` CLI directly:
+You can also use the `fbd` CLI directly:
 
 ### Creating Issues
 
 ```bash
 # Always include description for context
-bd create "Fix authentication bug" \
+fbd create "Fix authentication bug" \
   --description="Login fails with special characters in password" \
   -t bug -p 1 --json
 
 # Link discovered issues
-bd create "Found SQL injection" \
+fbd create "Found SQL injection" \
   --description="User input not sanitized in query builder" \
   --deps discovered-from:bd-42 --json
 ```
@@ -96,33 +96,33 @@ bd create "Found SQL injection" \
 
 ```bash
 # Find ready work
-bd ready --json
+fbd ready --json
 
 # Start work
-bd update bd-42 --status in_progress --json
+fbd update bd-42 --status in_progress --json
 
 # Complete work
-bd close bd-42 --reason "Fixed in commit abc123" --json
+fbd close bd-42 --reason "Fixed in commit abc123" --json
 ```
 
 ### Querying
 
 ```bash
 # List open issues
-bd list --status open --json
+fbd list --status open --json
 
 # Show issue details
-bd show bd-42 --json
+fbd show bd-42 --json
 
 # Check blocked issues
-bd blocked --json
+fbd blocked --json
 ```
 
 ### Syncing
 
 ```bash
 # ALWAYS run at session end
-bd sync
+fbd sync
 ```
 
 ## Best Practices
@@ -130,28 +130,28 @@ bd sync
 ### Always Use `--json`
 
 ```bash
-bd list --json          # Parse programmatically
-bd create "Task" --json # Get issue ID from output
-bd show bd-42 --json    # Structured data
+fbd list --json          # Parse programmatically
+fbd create "Task" --json # Get issue ID from output
+fbd show bd-42 --json    # Structured data
 ```
 
 ### Always Include Descriptions
 
 ```bash
 # Good
-bd create "Fix auth bug" \
+fbd create "Fix auth bug" \
   --description="Login fails when password contains quotes" \
   -t bug -p 1 --json
 
 # Bad - no context for future work
-bd create "Fix auth bug" -t bug -p 1 --json
+fbd create "Fix auth bug" -t bug -p 1 --json
 ```
 
 ### Link Related Work
 
 ```bash
 # When you discover issues during work
-bd create "Found related bug" \
+fbd create "Found related bug" \
   --deps discovered-from:bd-current --json
 ```
 
@@ -159,7 +159,7 @@ bd create "Found related bug" \
 
 ```bash
 # ALWAYS run before ending
-bd sync
+fbd sync
 ```
 
 ## Troubleshooting
@@ -168,10 +168,10 @@ bd sync
 
 ```bash
 # Check setup
-bd setup junie --check
+fbd setup junie --check
 
 # Reinstall if needed
-bd setup junie
+fbd setup junie
 ```
 
 ### MCP tools not available
@@ -181,31 +181,31 @@ bd setup junie
 cat .junie/mcp/mcp.json
 
 # Test MCP server
-bd mcp --help
+fbd mcp --help
 ```
 
 ### Changes not syncing
 
 ```bash
 # Force sync
-bd sync
+fbd sync
 
 # Check daemon
-bd info
-bd daemons health
+fbd info
+fbd daemons health
 ```
 
 ### Database not found
 
 ```bash
 # Initialize beads
-bd init --quiet
+fbd init --quiet
 ```
 
 ## Removing Integration
 
 ```bash
-bd setup junie --remove
+fbd setup junie --remove
 ```
 
 This removes:

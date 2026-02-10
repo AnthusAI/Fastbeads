@@ -1,0 +1,10 @@
+# Test fbd export command
+fbd init --prefix test
+fbd create 'Test issue'
+fbd export -o export.jsonl
+exists export.jsonl
+
+# Verify the exported file contains the issue
+fbd import -i export.jsonl
+fbd list
+stdout 'Test issue'

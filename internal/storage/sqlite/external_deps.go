@@ -16,8 +16,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/configfile"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/configfile"
 )
 
 // externalDepStatus represents whether an external dependency is satisfied

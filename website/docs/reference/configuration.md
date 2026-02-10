@@ -19,16 +19,16 @@ Complete configuration reference for beads.
 
 ```bash
 # Get config value
-bd config get import.orphan_handling
+fbd config get import.orphan_handling
 
 # Set config value
-bd config set import.orphan_handling allow
+fbd config set import.orphan_handling allow
 
 # List all config
-bd config list
+fbd config list
 
 # Reset to default
-bd config reset import.orphan_handling
+fbd config reset import.orphan_handling
 ```
 
 ## Configuration Options
@@ -44,7 +44,7 @@ path = ".beads/beads.db"     # Database file location
 
 ```toml
 [id]
-prefix = "bd"                 # Issue ID prefix
+prefix = "fbd"                 # Issue ID prefix
 hash_length = 4               # Hash length in IDs
 ```
 
@@ -88,7 +88,7 @@ mode = "poll"                 # poll|events (experimental)
 [git]
 auto_commit = true            # Auto-commit on sync
 auto_push = true              # Auto-push on sync
-commit_message = "bd sync"    # Default commit message
+commit_message = "fbd sync"    # Default commit message
 ```
 
 ### Hooks
@@ -122,10 +122,10 @@ prune_on_sync = true          # Auto-prune old records
 
 ```bash
 # Override database
-bd --db /tmp/test.db list
+fbd --db /tmp/test.db list
 
 # Disable daemon for single command
-bd --no-daemon create "Task"
+fbd --no-daemon create "Task"
 ```
 
 ## Example Configuration
@@ -157,5 +157,5 @@ retention_days = 90
 ## Viewing Active Configuration
 
 ```bash
-bd info --json | jq '.config'
+fbd info --json | jq '.config'
 ```

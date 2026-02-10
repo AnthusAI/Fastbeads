@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/steveyegge/beads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/beads"
 )
 
 //go:embed schema.sql
@@ -24,10 +24,10 @@ func main() {
 		*dbPath = beads.FindDatabasePath()
 	}
 	if *dbPath == "" {
-		log.Fatal("No database found. Run 'bd init'")
+		log.Fatal("No database found. Run 'fbd init'")
 	}
 
-	// Open bd storage + extension database
+	// Open fbd storage + extension database
 	store, _ := beads.NewSQLiteStorage(*dbPath)
 	defer store.Close()
 	db, _ := sql.Open("sqlite3", *dbPath)
@@ -52,7 +52,7 @@ func main() {
 		VALUES (?, 'running', 'demo-agent', ?)`, issue.ID, time.Now())
 	execID, _ := result.LastInsertId()
 
-	// Update issue in bd
+	// Update issue in fbd
 	store.UpdateIssue(ctx, issue.ID, map[string]interface{}{"status": beads.StatusInProgress}, "demo-agent")
 
 	// Create checkpoints

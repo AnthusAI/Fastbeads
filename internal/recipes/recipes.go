@@ -1,4 +1,4 @@
-// Package recipes provides recipe-based configuration for bd setup.
+// Package recipes provides recipe-based configuration for fbd setup.
 // Recipes define where beads workflow instructions are written for different AI tools.
 package recipes
 

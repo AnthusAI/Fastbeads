@@ -29,27 +29,27 @@ Wisps are "vapor phase" molecules:
 
 ```bash
 # Create wisp from formula
-bd wisp create <formula> [--var key=value]
+fbd wisp create <formula> [--var key=value]
 
 # Example
-bd wisp create quick-check --var target=auth-module
+fbd wisp create quick-check --var target=auth-module
 ```
 
 ## Wisp Commands
 
 ```bash
 # List wisps
-bd wisp list
-bd wisp list --json
+fbd wisp list
+fbd wisp list --json
 
 # Show wisp details
-bd wisp show <wisp-id>
+fbd wisp show <wisp-id>
 
 # Delete wisp
-bd wisp delete <wisp-id>
+fbd wisp delete <wisp-id>
 
 # Delete all completed wisps
-bd wisp cleanup
+fbd wisp cleanup
 ```
 
 ## Wisp vs Molecule
@@ -63,14 +63,14 @@ bd wisp cleanup
 
 ## Phase Control
 
-Use `bd mol bond` to control phase:
+Use `fbd mol bond` to control phase:
 
 ```bash
 # Force liquid (persistent molecule)
-bd mol bond <formula> <target> --pour
+fbd mol bond <formula> <target> --pour
 
 # Force vapor (ephemeral wisp)
-bd mol bond <formula> <target> --wisp
+fbd mol bond <formula> <target> --wisp
 ```
 
 ## Example: Quick Check Workflow
@@ -100,9 +100,9 @@ needs = ["test"]
 Use as wisp:
 
 ```bash
-bd wisp create quick-check
+fbd wisp create quick-check
 # Work through steps...
-bd wisp cleanup  # Remove when done
+fbd wisp cleanup  # Remove when done
 ```
 
 ## Auto-Expiration
@@ -117,13 +117,13 @@ expires_after = "24h"  # Auto-delete after 24 hours
 Or cleanup manually:
 
 ```bash
-bd wisp cleanup --all  # Remove all wisps
-bd wisp cleanup --completed  # Remove only completed
+fbd wisp cleanup --all  # Remove all wisps
+fbd wisp cleanup --completed  # Remove only completed
 ```
 
 ## Best Practices
 
 1. **Use wisps for local-only work** - Don't sync to git
-2. **Clean up regularly** - `bd wisp cleanup`
+2. **Clean up regularly** - `fbd wisp cleanup`
 3. **Use molecules for tracked work** - Wisps are ephemeral
 4. **Consider CI/CD wisps** - Perfect for pipeline steps

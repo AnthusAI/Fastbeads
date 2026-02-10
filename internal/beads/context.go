@@ -28,7 +28,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/steveyegge/beads/internal/git"
+	"github.com/steveyegge/fastbeads/internal/git"
 )
 
 // UserRole represents the user's relationship to a repository.
@@ -237,7 +237,7 @@ func (rc *RepoContext) GitCmd(ctx context.Context, args ...string) *exec.Cmd {
 	cmd.Dir = rc.RepoRoot
 
 	// GH#2538: Ensure git uses the target repository, not the worktree we may be running from.
-	// This fixes "pathspec outside repository" errors when bd sync runs from a worktree.
+	// This fixes "pathspec outside repository" errors when fbd sync runs from a worktree.
 	gitDir := filepath.Join(rc.RepoRoot, ".git")
 
 	// Security: Disable git hooks and templates to prevent code execution

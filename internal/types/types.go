@@ -1,4 +1,4 @@
-// Package types defines core data structures for the bd issue tracker.
+// Package types defines core data structures for the fbd issue tracker.
 package types
 
 import (
@@ -14,8 +14,11 @@ import (
 // Fields are organized into logical groups for maintainability.
 type Issue struct {
 	// ===== Core Identification =====
-	ID          string `json:"id"`
-	ContentHash string `json:"-"` // Internal: SHA256 of canonical content - NOT exported to JSONL
+	ID          string   `json:"id"`
+	UUID        string   `json:"uuid,omitempty"`
+	DisplayID   string   `json:"display_id,omitempty"`
+	Aliases     []string `json:"aliases,omitempty"`
+	ContentHash string   `json:"-"` // Internal: SHA256 of canonical content - NOT exported to JSONL
 
 	// ===== Issue Content =====
 	Title              string `json:"title"`
@@ -45,7 +48,7 @@ type Issue struct {
 
 	// ===== Time-Based Scheduling (GH#820) =====
 	DueAt      *time.Time `json:"due_at,omitempty"`      // When this issue should be completed
-	DeferUntil *time.Time `json:"defer_until,omitempty"` // Hide from bd ready until this time
+	DeferUntil *time.Time `json:"defer_until,omitempty"` // Hide from fbd ready until this time
 
 	// ===== External Integration =====
 	ExternalRef  *string `json:"external_ref,omitempty"`  // e.g., "gh-9", "jira-ABC"
@@ -480,7 +483,7 @@ func (s Status) IsValid() bool {
 }
 
 // IsValidWithCustom checks if the status is valid, including custom statuses.
-// Custom statuses are user-defined via bd config set status.custom "status1,status2,..."
+// Custom statuses are user-defined via fbd config set status.custom "status1,status2,..."
 func (s Status) IsValidWithCustom(customStatuses []string) bool {
 	// First check built-in statuses
 	if s.IsValid() {
@@ -539,7 +542,7 @@ func (t IssueType) IsBuiltIn() bool {
 }
 
 // IsValidWithCustom checks if the issue type is valid, including custom types.
-// Custom types are user-defined via bd config set types.custom "type1,type2,..."
+// Custom types are user-defined via fbd config set types.custom "type1,type2,..."
 func (t IssueType) IsValidWithCustom(customTypes []string) bool {
 	if t.IsBuiltIn() {
 		return true
@@ -566,7 +569,7 @@ func (t IssueType) Normalize() IssueType {
 }
 
 // RequiredSection describes a recommended section for an issue type.
-// Used by bd lint and bd create --validate for template validation.
+// Used by fbd lint and fbd create --validate for template validation.
 type RequiredSection struct {
 	Heading string // Markdown heading, e.g., "## Steps to Reproduce"
 	Hint    string // Guidance for what to include
@@ -722,7 +725,7 @@ type IssueWithCounts struct {
 }
 
 // IssueDetails extends Issue with labels, dependencies, dependents, and comments.
-// Used for JSON serialization in bd show and RPC responses.
+// Used for JSON serialization in fbd show and RPC responses.
 type IssueDetails struct {
 	Issue
 	Labels       []string                       `json:"labels,omitempty"`
@@ -1120,8 +1123,8 @@ const (
 
 // ID prefix constants for molecule/wisp instantiation.
 // These prefixes are inserted into issue IDs: <project>-<prefix>-<id>
-// Used by: cmd/bd/pour.go, cmd/bd/wisp.go (ID generation)
-// Exclusion from bd ready is config-driven via ready.exclude_id_patterns (default: -mol-,-wisp-)
+// Used by: cmd/fbd/pour.go, cmd/fbd/wisp.go (ID generation)
+// Exclusion from fbd ready is config-driven via ready.exclude_id_patterns (default: -mol-,-wisp-)
 const (
 	IDPrefixMol  = "mol"  // Persistent molecules (bd-mol-xxx)
 	IDPrefixWisp = "wisp" // Ephemeral wisps (bd-wisp-xxx)

@@ -55,11 +55,11 @@ Beads automatically routes new issues to the right repository based on your role
 
 ```bash
 # Maintainer (has SSH push access)
-bd create "Fix bug" -p 1
+fbd create "Fix bug" -p 1
 # → Creates in current repo (source_repo = ".")
 
 # Contributor (HTTPS or no push access)
-bd create "Fix bug" -p 1  
+fbd create "Fix bug" -p 1  
 # → Creates in ~/.beads-planning (source_repo = "~/.beads-planning")
 ```
 
@@ -68,7 +68,7 @@ bd create "Fix bug" -p 1
 Beads can aggregate issues from multiple repositories into a unified database:
 
 ```bash
-bd list --json
+fbd list --json
 # Shows issues from:
 # - Current repo (.)
 # - Planning repo (~/.beads-planning)
@@ -89,10 +89,10 @@ git clone https://github.com/you/project.git
 cd project
 
 # 2. Initialize beads (if not already done)
-bd init
+fbd init
 
 # 3. Run the contributor setup wizard
-bd init --contributor
+fbd init --contributor
 
 # The wizard will:
 # - Detect that you're in a fork (checks for 'upstream' remote)
@@ -110,15 +110,15 @@ If you prefer manual setup:
 mkdir -p ~/.beads-planning
 cd ~/.beads-planning
 git init
-bd init --prefix plan
+fbd init --prefix plan
 
 # 2. Configure routing in your fork
 cd ~/projects/project
-bd config set routing.mode auto
-bd config set routing.contributor "~/.beads-planning"
+fbd config set routing.mode auto
+fbd config set routing.contributor "~/.beads-planning"
 
 # 3. Add planning repo to hydration sources
-bd config set repos.additional "~/.beads-planning"
+fbd config set repos.additional "~/.beads-planning"
 ```
 
 ### Daily Workflow
@@ -128,18 +128,18 @@ bd config set repos.additional "~/.beads-planning"
 cd ~/projects/project
 
 # Create planning issues (auto-routed to ~/.beads-planning)
-bd create "Investigate auth implementation" -p 1
-bd create "Draft RFC for new feature" -p 2
+fbd create "Investigate auth implementation" -p 1
+fbd create "Draft RFC for new feature" -p 2
 
 # View all issues (current repo + planning repo)
-bd ready
-bd list --json
+fbd ready
+fbd list --json
 
 # Work on an issue
-bd update plan-42 --status in_progress
+fbd update plan-42 --status in_progress
 
 # Complete work
-bd close plan-42 --reason "Completed"
+fbd close plan-42 --reason "Completed"
 
 # Create PR - your planning issues never appear!
 git add .
@@ -154,12 +154,12 @@ If you want to share a planning issue with upstream:
 
 ```bash
 # Option 1: Manually copy issue to upstream repo
-bd show plan-42 --json > /tmp/issue.json
+fbd show plan-42 --json > /tmp/issue.json
 # (Send to maintainers or create GitHub issue)
 
 # Option 2: Migrate issue (future feature, see bd-mlcz)
-bd migrate plan-42 --to . --dry-run
-bd migrate plan-42 --to .
+fbd migrate plan-42 --to . --dry-run
+fbd migrate plan-42 --to .
 ```
 
 ## Team Workflow
@@ -173,10 +173,10 @@ bd migrate plan-42 --to .
 ```bash
 # 1. Initialize beads in main repo
 cd ~/projects/team-project
-bd init --prefix team
+fbd init --prefix team
 
 # 2. Run team setup wizard  
-bd init --team
+fbd init --team
 
 # The wizard will:
 # - Detect shared repository (SSH push access)
@@ -193,34 +193,34 @@ git clone git@github.com:team/project.git
 cd project
 
 # 2. Beads auto-detects you're a maintainer (SSH access)
-bd create "Implement feature X" -p 1
+fbd create "Implement feature X" -p 1
 # → Creates in current repo (team-123)
 
 # 3. Optional: Create personal planning repo for experiments
 mkdir -p ~/.beads-planning-personal
 cd ~/.beads-planning-personal
 git init
-bd init --prefix exp
+fbd init --prefix exp
 
 # 4. Configure multi-repo in team project
 cd ~/projects/project
-bd config set repos.additional "~/.beads-planning-personal"
+fbd config set repos.additional "~/.beads-planning-personal"
 ```
 
 ### Daily Workflow
 
 ```bash
 # Shared team planning (committed to repo)
-bd create "Implement auth" -p 1 --repo .
+fbd create "Implement auth" -p 1 --repo .
 # → team-42 (visible to entire team)
 
 # Personal experiments (not committed to team repo)
-bd create "Try alternative approach" -p 2 --repo ~/.beads-planning-personal
+fbd create "Try alternative approach" -p 2 --repo ~/.beads-planning-personal
 # → exp-99 (private planning)
 
 # View all work
-bd ready
-bd list --json
+fbd ready
+fbd list --json
 
 # Complete team work
 git add .beads/issues.jsonl
@@ -245,19 +245,19 @@ mkdir -p ~/projects/myapp-maintenance
 # 2. Initialize each phase
 cd ~/projects/myapp-planning
 git init
-bd init --prefix plan
+fbd init --prefix plan
 
 cd ~/projects/myapp-implementation  
 git init
-bd init --prefix impl
+fbd init --prefix impl
 
 cd ~/projects/myapp-maintenance
 git init
-bd init --prefix maint
+fbd init --prefix maint
 
 # 3. Configure aggregation in main workspace
 cd ~/projects/myapp-implementation
-bd config set repos.additional "~/projects/myapp-planning,~/projects/myapp-maintenance"
+fbd config set repos.additional "~/projects/myapp-planning,~/projects/myapp-maintenance"
 ```
 
 ### Workflow
@@ -265,18 +265,18 @@ bd config set repos.additional "~/projects/myapp-planning,~/projects/myapp-maint
 ```bash
 # Phase 1: Planning
 cd ~/projects/myapp-planning
-bd create "Design auth system" -p 1 -t epic
-bd create "Research OAuth providers" -p 1
+fbd create "Design auth system" -p 1 -t epic
+fbd create "Research OAuth providers" -p 1
 
 # Phase 2: Implementation (view planning + implementation issues)
 cd ~/projects/myapp-implementation
-bd ready  # Shows issues from both repos
-bd create "Implement auth backend" -p 1
-bd dep add impl-42 plan-10 --type blocks  # Link across repos
+fbd ready  # Shows issues from both repos
+fbd create "Implement auth backend" -p 1
+fbd dep add impl-42 plan-10 --type blocks  # Link across repos
 
 # Phase 3: Maintenance
 cd ~/projects/myapp-maintenance
-bd create "Security patch for auth" -p 0 -t bug
+fbd create "Security patch for auth" -p 0 -t bug
 ```
 
 ## Multiple Personas
@@ -294,15 +294,15 @@ mkdir -p ~/implementer-tasks
 
 cd ~/architect-planning
 git init
-bd init --prefix arch
+fbd init --prefix arch
 
 cd ~/implementer-tasks
 git init  
-bd init --prefix impl
+fbd init --prefix impl
 
 # 2. Configure aggregation
 cd ~/implementer-tasks
-bd config set repos.additional "~/architect-planning"
+fbd config set repos.additional "~/architect-planning"
 ```
 
 ### Workflow
@@ -310,17 +310,17 @@ bd config set repos.additional "~/architect-planning"
 ```bash
 # Architect mode
 cd ~/architect-planning
-bd create "System architecture for feature X" -p 1 -t epic
-bd create "Database schema design" -p 1
+fbd create "System architecture for feature X" -p 1 -t epic
+fbd create "Database schema design" -p 1
 
 # Implementer mode (sees both architect + implementation tasks)
 cd ~/implementer-tasks
-bd ready
-bd create "Implement user table" -p 1
-bd dep add impl-10 arch-42 --type blocks
+fbd ready
+fbd create "Implement user table" -p 1
+fbd dep add impl-10 arch-42 --type blocks
 
 # Complete implementation
-bd close impl-10 --reason "Completed"
+fbd close impl-10 --reason "Completed"
 ```
 
 ## Configuration Reference
@@ -329,69 +329,69 @@ bd close impl-10 --reason "Completed"
 
 ```bash
 # Auto-detect role and route accordingly
-bd config set routing.mode auto
+fbd config set routing.mode auto
 
 # Always use default repo (ignore role detection)
-bd config set routing.mode explicit  
-bd config set routing.default "."
+fbd config set routing.mode explicit  
+fbd config set routing.default "."
 
 # Configure repos for each role
-bd config set routing.maintainer "."
-bd config set routing.contributor "~/.beads-planning"
+fbd config set routing.maintainer "."
+fbd config set routing.contributor "~/.beads-planning"
 ```
 
 ### Multi-Repo Hydration
 
 ```bash
 # Add additional repos to aggregate
-bd config set repos.additional "~/repo1,~/repo2,~/repo3"
+fbd config set repos.additional "~/repo1,~/repo2,~/repo3"
 
 # Set primary repo (optional)
-bd config set repos.primary "."
+fbd config set repos.primary "."
 ```
 
 ### Override Auto-Routing
 
 ```bash
 # Force issue to specific repo (ignores auto-routing)
-bd create "Issue" -p 1 --repo /path/to/repo
+fbd create "Issue" -p 1 --repo /path/to/repo
 ```
 
 ## Troubleshooting
 
 ### Issues appearing in wrong repository
 
-**Problem:** `bd create` routes issues to unexpected repository.
+**Problem:** `fbd create` routes issues to unexpected repository.
 
 **Solution:**
 ```bash
 # Check current routing configuration
-bd config get routing.mode
-bd config get routing.maintainer
-bd config get routing.contributor
+fbd config get routing.mode
+fbd config get routing.maintainer
+fbd config get routing.contributor
 
 # Check detected role
-bd info --json | jq '.role'
+fbd info --json | jq '.role'
 
 # Override with explicit flag
-bd create "Issue" -p 1 --repo .
+fbd create "Issue" -p 1 --repo .
 ```
 
 ### Can't see issues from other repos
 
-**Problem:** `bd list` only shows issues from current repo.
+**Problem:** `fbd list` only shows issues from current repo.
 
 **Solution:**
 ```bash
 # Check multi-repo configuration
-bd config get repos.additional
+fbd config get repos.additional
 
 # Add missing repos
-bd config set repos.additional "~/repo1,~/repo2"
+fbd config set repos.additional "~/repo1,~/repo2"
 
 # Verify hydration
-bd sync
-bd list --json
+fbd sync
+fbd list --json
 ```
 
 ### Git merge conflicts in .beads/issues.jsonl
@@ -406,7 +406,7 @@ bd list --json
 
 **Solution:** Discovered issues automatically inherit parent's `source_repo`. This is intentional. To override:
 ```bash
-bd create "Issue" -p 1 --deps discovered-from:bd-42 --repo /different/repo
+fbd create "Issue" -p 1 --deps discovered-from:bd-42 --repo /different/repo
 ```
 
 ### Planning repo polluting PRs
@@ -420,7 +420,7 @@ ls -la ~/.beads-planning/.git  # Should exist
 ls -la ~/projects/fork/.beads/  # Should NOT contain planning issues
 
 # Verify routing
-bd config get routing.contributor  # Should be ~/.beads-planning
+fbd config get routing.contributor  # Should be ~/.beads-planning
 ```
 
 ## Backward Compatibility
@@ -431,11 +431,11 @@ No migration needed! Multi-repo mode is opt-in:
 
 ```bash
 # Before (single repo)
-bd create "Issue" -p 1
+fbd create "Issue" -p 1
 # → Creates in .beads/issues.jsonl
 
 # After (multi-repo configured)
-bd create "Issue" -p 1
+fbd create "Issue" -p 1
 # → Auto-routed based on role
 # → Old issues in .beads/issues.jsonl still work
 ```
@@ -444,11 +444,11 @@ bd create "Issue" -p 1
 
 ```bash
 # Remove routing configuration
-bd config unset routing.mode
-bd config unset repos.additional
+fbd config unset routing.mode
+fbd config unset repos.additional
 
 # All issues go to current repo again
-bd create "Issue" -p 1
+fbd create "Issue" -p 1
 # → Back to single-repo mode
 ```
 
@@ -483,12 +483,12 @@ bd create "Issue" -p 1
 
 <<<<<<< HEAD
 - `bd-8rd` - Migration and onboarding epic
-- `bd-mlcz` - `bd migrate` command (planned)
-- `bd-kla1` - `bd init --contributor` wizard ✅ implemented
-- `bd-twlr` - `bd init --team` wizard ✅ implemented
+- `bd-mlcz` - `fbd migrate` command (planned)
+- `bd-kla1` - `fbd init --contributor` wizard ✅ implemented
+- `bd-twlr` - `fbd init --team` wizard ✅ implemented
 =======
 - [bd-8rd](/.beads/issues.jsonl#bd-8rd) - Migration and onboarding epic
-- [bd-mlcz](/.beads/issues.jsonl#bd-mlcz) - `bd migrate` command (planned)
-- [bd-kla1](/.beads/issues.jsonl#bd-kla1) - `bd init --contributor` wizard ✅ implemented
-- [bd-twlr](/.beads/issues.jsonl#bd-twlr) - `bd init --team` wizard ✅ implemented
+- [bd-mlcz](/.beads/issues.jsonl#bd-mlcz) - `fbd migrate` command (planned)
+- [bd-kla1](/.beads/issues.jsonl#bd-kla1) - `fbd init --contributor` wizard ✅ implemented
+- [bd-twlr](/.beads/issues.jsonl#bd-twlr) - `fbd init --team` wizard ✅ implemented
 >>>>>>> origin/bd-l0pg-slit

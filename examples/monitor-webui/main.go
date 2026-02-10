@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/steveyegge/beads/internal/beads"
-	"github.com/steveyegge/beads/internal/rpc"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/rpc"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 //go:embed web
@@ -81,7 +81,7 @@ func main() {
 			dbPathResolved = foundDB
 		} else {
 			fmt.Fprintf(os.Stderr, "Error: no beads database found\n")
-			fmt.Fprintf(os.Stderr, "Hint: run 'bd init' to create a database in the current directory\n")
+			fmt.Fprintf(os.Stderr, "Hint: run 'fbd init' to create a database in the current directory\n")
 			fmt.Fprintf(os.Stderr, "Or specify database path with -db flag\n")
 			os.Exit(1)
 		}
@@ -117,7 +117,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/", http.FileServer(http.FS(webFS))))
 
 	addr := fmt.Sprintf("%s:%d", *host, *port)
-	fmt.Printf("🖥️  bd monitor-webui starting on http://%s\n", addr)
+	fmt.Printf("🖥️  fbd monitor-webui starting on http://%s\n", addr)
 	fmt.Printf("📊 Open your browser to view real-time issue tracking\n")
 	fmt.Printf("🔌 WebSocket endpoint available at ws://%s/ws\n", addr)
 	fmt.Printf("Press Ctrl+C to stop\n\n")
@@ -139,10 +139,10 @@ func getSocketPath(dbPath string) string {
 func connectToDaemon(socketPath, dbPath string) error {
 	client, err := rpc.TryConnect(socketPath)
 	if err != nil || client == nil {
-		return fmt.Errorf("bd monitor-webui requires the daemon to be running\n\n"+
+		return fmt.Errorf("fbd monitor-webui requires the daemon to be running\n\n"+
 			"The monitor uses the daemon's RPC interface to avoid database locking conflicts.\n"+
 			"Please start the daemon first:\n\n"+
-			"  bd daemon\n\n"+
+			"  fbd daemon\n\n"+
 			"Then start the monitor:\n\n"+
 			"  %s\n", os.Args[0])
 	}
@@ -158,7 +158,7 @@ func connectToDaemon(socketPath, dbPath string) error {
 		if health.Error != "" {
 			errMsg += fmt.Sprintf("\nError: %s", health.Error)
 		}
-		return fmt.Errorf("%s\n\nTry restarting the daemon:\n  bd daemon stop\n  bd daemon start", errMsg)
+		return fmt.Errorf("%s\n\nTry restarting the daemon:\n  fbd daemon stop\n  fbd daemon start", errMsg)
 	}
 
 	// Set database path

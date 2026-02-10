@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/steveyegge/beads/internal/lockfile"
+	"github.com/steveyegge/fastbeads/internal/lockfile"
 )
 
 // AccessLock coordinates access to the embedded Dolt database using flock.
@@ -81,7 +81,7 @@ func AcquireAccessLock(doltDir string, exclusive bool, timeout time.Duration) (*
 	if exclusive {
 		kind = "exclusive"
 	}
-	return nil, fmt.Errorf("dolt access lock timeout (%s, %v): another bd process is using the database: %w",
+	return nil, fmt.Errorf("dolt access lock timeout (%s, %v): another fbd process is using the database: %w",
 		kind, timeout, lockfile.ErrLockBusy)
 }
 

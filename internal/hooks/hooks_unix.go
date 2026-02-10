@@ -11,7 +11,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // runHook executes the hook and enforces a timeout, killing the process group

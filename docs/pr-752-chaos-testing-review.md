@@ -1,6 +1,6 @@
 # PR #752 Chaos Testing Review
 
-**PR**: https://github.com/steveyegge/beads/pull/752
+**PR**: https://github.com/steveyegge/fastbeads/pull/752
 **Author**: jordanhubbard
 **Bead**: bd-kx1j
 **Status**: Under Review
@@ -23,18 +23,18 @@ Jordan proposes adding chaos testing and E2E test coverage to beads. The PR:
 ## Files Changed (Major Categories)
 
 ### Chaos/Doctor Infrastructure
-- `cmd/bd/doctor_repair_chaos_test.go` (378 lines) - Core chaos testing
-- `cmd/bd/doctor/fix/database_integrity.go` (116 lines) - DB integrity fixes
-- `cmd/bd/doctor/fix/jsonl_integrity.go` (87 lines) - JSONL integrity fixes
-- `cmd/bd/doctor/fix/fs.go` (57 lines) - Filesystem fault injection
-- `cmd/bd/doctor/fix/sqlite_open.go` (52 lines) - SQLite open handling
-- `cmd/bd/doctor/jsonl_integrity.go` (123 lines) - JSONL checks
-- `cmd/bd/doctor/git.go` (168 additions) - Git hygiene checks
+- `cmd/fbd/doctor_repair_chaos_test.go` (378 lines) - Core chaos testing
+- `cmd/fbd/doctor/fix/database_integrity.go` (116 lines) - DB integrity fixes
+- `cmd/fbd/doctor/fix/jsonl_integrity.go` (87 lines) - JSONL integrity fixes
+- `cmd/fbd/doctor/fix/fs.go` (57 lines) - Filesystem fault injection
+- `cmd/fbd/doctor/fix/sqlite_open.go` (52 lines) - SQLite open handling
+- `cmd/fbd/doctor/jsonl_integrity.go` (123 lines) - JSONL checks
+- `cmd/fbd/doctor/git.go` (168 additions) - Git hygiene checks
 
 ### Test Coverage Additions
 - `internal/storage/memory/memory_more_coverage_test.go` (921 lines) - Memory storage tests
-- `cmd/bd/cli_coverage_show_test.go` (426 lines) - CLI show command tests
-- `cmd/bd/daemon_autostart_unit_test.go` (331 lines) - Daemon autostart tests
+- `cmd/fbd/cli_coverage_show_test.go` (426 lines) - CLI show command tests
+- `cmd/fbd/daemon_autostart_unit_test.go` (331 lines) - Daemon autostart tests
 - `internal/rpc/client_gate_shutdown_test.go` (107 lines) - RPC client tests
 - Various other test files
 
@@ -76,7 +76,7 @@ From `doctor_repair_chaos_test.go`:
 
 Each test:
 - Uses isolated temp directories
-- Builds a fresh `bd` binary for testing
+- Builds a fresh `fbd` binary for testing
 - Uses "side databases" (separate from real data)
 - Has proper cleanup
 
@@ -106,7 +106,7 @@ Is the testing worth the ongoing maintenance cost?
 ### Argument FOR Merging
 
 1. **Beads is more robust than feared**. If Jordan got these tests passing, it means:
-   - `bd doctor` actually recovers from corruption
+   - `fbd doctor` actually recovers from corruption
    - JSONL/DB sync is working correctly
    - Migration edge cases are handled
 

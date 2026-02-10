@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/steveyegge/beads/internal/compact"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/compact"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func (s *Server) handleCompact(req *Request) Response {
@@ -23,7 +23,7 @@ func (s *Server) handleCompact(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -246,7 +246,7 @@ func (s *Server) handleCompactStats(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 

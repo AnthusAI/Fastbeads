@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage/memory"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage/memory"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func TestImportIssues_BackendAgnostic_DepsLabelsCommentsTombstone(t *testing.T) {

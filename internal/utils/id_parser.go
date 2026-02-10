@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // parseIssueID ensures an issue ID has the configured prefix.
@@ -42,7 +42,7 @@ func ResolvePartialID(ctx context.Context, store storage.Storage, input string) 
 	}
 
 	// Fast path: Use SearchIssues with exact ID filter (GH#942).
-	// This uses the same query path as "bd list --id", ensuring consistency.
+	// This uses the same query path as "fbd list --id", ensuring consistency.
 	// Previously we used GetIssue which could fail in cases where SearchIssues
 	// with filter.IDs succeeded, likely due to subtle query differences.
 	exactFilter := types.IssueFilter{IDs: []string{input}}
@@ -53,7 +53,7 @@ func ResolvePartialID(ctx context.Context, store storage.Storage, input string) 
 	// Get the configured prefix
 	prefix, err := store.GetConfig(ctx, "issue_prefix")
 	if err != nil || prefix == "" {
-		prefix = "bd"
+		prefix = "fbd"
 	}
 
 	// Ensure prefix has hyphen for ID format

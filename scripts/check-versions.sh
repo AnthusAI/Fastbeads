@@ -9,10 +9,10 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 # Get the canonical version from version.go
-CANONICAL=$(grep 'Version = ' cmd/bd/version.go | sed 's/.*"\(.*\)".*/\1/')
+CANONICAL=$(grep 'Version = ' cmd/fbd/version.go | sed 's/.*"\(.*\)".*/\1/')
 
 if [ -z "$CANONICAL" ]; then
-    echo -e "${RED}❌ Could not read version from cmd/bd/version.go${NC}"
+    echo -e "${RED}❌ Could not read version from cmd/fbd/version.go${NC}"
     exit 1
 fi
 
@@ -55,8 +55,8 @@ check_version "npm-package/package.json" \
     "$(jq -r '.version' npm-package/package.json 2>/dev/null)" \
     "npm package.json"
 
-check_version "cmd/bd/templates/hooks/pre-commit" \
-    "$(grep '# bd-hooks-version:' cmd/bd/templates/hooks/pre-commit 2>/dev/null | sed 's/.*: //')" \
+check_version "cmd/fbd/templates/hooks/pre-commit" \
+    "$(grep '# bd-hooks-version:' cmd/fbd/templates/hooks/pre-commit 2>/dev/null | sed 's/.*: //')" \
     "Hook templates"
 
 echo ""

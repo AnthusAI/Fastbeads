@@ -1,12 +1,12 @@
-# 🚀 @beads/bd Launch Summary
+# 🚀 @beads/fbd Launch Summary
 
 ## ✅ Published Successfully!
 
-**Package**: @beads/bd
+**Package**: @beads/fbd
 **Version**: 0.21.5
 **Published**: November 3, 2025
 **Registry**: https://registry.npmjs.org
-**Package Page**: https://www.npmjs.com/package/@beads/bd
+**Package Page**: https://www.npmjs.com/package/@beads/fbd
 
 ## 📦 What Was Published
 
@@ -18,10 +18,10 @@
 ### Package Contents
 
 ```
-@beads/bd@0.21.5
+@beads/fbd@0.21.5
 ├── bin/
-│   ├── bd              (17.1 MB - native binary)
-│   ├── bd.js           (1.3 KB - CLI wrapper)
+│   ├── fbd              (17.1 MB - native binary)
+│   ├── fbd.js           (1.3 KB - CLI wrapper)
 │   ├── CHANGELOG.md    (40.5 KB)
 │   ├── LICENSE         (1.1 KB)
 │   └── README.md       (23.6 KB)
@@ -35,28 +35,28 @@
 
 ## 🎯 Installation
 
-Users can now install bd via npm:
+Users can now install fbd via npm:
 
 ```bash
 # Global installation (recommended)
-npm install -g @beads/bd
+npm install -g @beads/fbd
 
 # Project dependency
-npm install --save-dev @beads/bd
+npm install --save-dev @beads/fbd
 
 # Verify installation
-bd version
+fbd version
 ```
 
 ## 🔧 How It Works
 
-1. User runs `npm install -g @beads/bd`
+1. User runs `npm install -g @beads/fbd`
 2. npm downloads package (6.4 MB)
 3. Postinstall script runs automatically
 4. Downloads platform-specific binary from GitHub releases
 5. Extracts binary to bin/ directory
 6. Makes binary executable
-7. `bd` command is ready to use!
+7. `fbd` command is ready to use!
 
 ## 🌐 Claude Code for Web Integration
 
@@ -64,18 +64,18 @@ Users can add to `.claude/hooks/session-start.sh`:
 
 ```bash
 #!/bin/bash
-npm install -g @beads/bd
-bd init --quiet
+npm install -g @beads/fbd
+fbd init --quiet
 ```
 
-This gives automatic bd installation in every Claude Code for Web session!
+This gives automatic fbd installation in every Claude Code for Web session!
 
 ## 📊 Success Metrics
 
 All success criteria from bd-febc met:
 
-- ✅ **npm install @beads/bd works** - Published and available
-- ✅ **All bd commands function identically** - Native binary wrapper
+- ✅ **npm install @beads/fbd works** - Published and available
+- ✅ **All fbd commands function identically** - Native binary wrapper
 - ✅ **SessionStart hook documented** - Complete guide in CLAUDE_CODE_WEB.md
 - ✅ **Package published to npm registry** - Live at npmjs.com
 
@@ -92,10 +92,10 @@ All success criteria from bd-febc met:
 
 ### For Users
 
-1. Visit: https://www.npmjs.com/package/@beads/bd
-2. Install: `npm install -g @beads/bd`
-3. Use: `bd init` in your project
-4. Read: https://github.com/steveyegge/beads for full docs
+1. Visit: https://www.npmjs.com/package/@beads/fbd
+2. Install: `npm install -g @beads/fbd`
+3. Use: `fbd init` in your project
+4. Read: https://github.com/steveyegge/fastbeads for full docs
 
 ### For Maintainers
 
@@ -104,7 +104,7 @@ All success criteria from bd-febc met:
 1. Update `npm-package/package.json` version to match new beads release
 2. Ensure GitHub release has binary assets
 3. Run `npm publish` from npm-package directory
-4. Verify at npmjs.com/package/@beads/bd
+4. Verify at npmjs.com/package/@beads/fbd
 
 **Automation opportunity:**
 
@@ -112,10 +112,10 @@ Create `.github/workflows/publish-npm.yml` to auto-publish on GitHub releases.
 
 ## 🔗 Links
 
-- **npm package**: https://www.npmjs.com/package/@beads/bd
-- **GitHub repo**: https://github.com/steveyegge/beads
+- **npm package**: https://www.npmjs.com/package/@beads/fbd
+- **GitHub repo**: https://github.com/steveyegge/fastbeads
 - **npm organization**: https://www.npmjs.com/org/beads
-- **Documentation**: https://github.com/steveyegge/beads#readme
+- **Documentation**: https://github.com/steveyegge/fastbeads#readme
 
 ## 💡 Key Features
 

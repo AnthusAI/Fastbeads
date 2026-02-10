@@ -57,14 +57,14 @@ Use `--no-daemon` when not needed (CI, worktrees).
 ```bash
 # Auto-sync via daemon (default)
 # Or manual sync:
-bd sync
+fbd sync
 ```
 
 ### How do I handle merge conflicts?
 
 Install the beads merge driver:
 ```bash
-bd init  # Prompts for merge driver
+fbd init  # Prompts for merge driver
 ```
 
 Or manually resolve and reimport.
@@ -83,7 +83,7 @@ Yes! That's what beads was designed for:
 export BEADS_NO_DAEMON=true
 
 # Or per-command
-bd --no-daemon list
+fbd --no-daemon list
 ```
 
 ## Workflows
@@ -118,16 +118,16 @@ Async coordination primitives:
 ### How do I integrate with my editor?
 
 ```bash
-bd setup claude   # Claude Code
-bd setup cursor   # Cursor
-bd setup aider    # Aider
+fbd setup claude   # Claude Code
+fbd setup cursor   # Cursor
+fbd setup aider    # Aider
 ```
 
 ### Can beads import from GitHub Issues?
 
 Yes:
 ```bash
-bd import --from github --repo owner/repo
+fbd import --from github --repo owner/repo
 ```
 
 ## Troubleshooting
@@ -136,28 +136,28 @@ bd import --from github --repo owner/repo
 
 ```bash
 # Remove stale socket
-rm -f .beads/bd.sock
+rm -f .beads/fbd.sock
 
 # Restart
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### Why aren't my changes syncing?
 
 ```bash
 # Check daemon status
-bd info
+fbd info
 
 # Force sync
-bd sync
+fbd sync
 
 # Check hooks
-bd hooks status
+fbd hooks status
 ```
 
 ### How do I report a bug?
 
-1. Check existing issues: https://github.com/steveyegge/beads/issues
-2. Include: `bd version`, `bd info --json`, reproduction steps
-3. File at: https://github.com/steveyegge/beads/issues/new
+1. Check existing issues: https://github.com/steveyegge/fastbeads/issues
+2. Include: `fbd version`, `fbd info --json`, reproduction steps
+3. File at: https://github.com/steveyegge/fastbeads/issues/new

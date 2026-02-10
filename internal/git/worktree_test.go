@@ -700,7 +700,7 @@ func TestSyncJSONLToWorktreeMerge(t *testing.T) {
 }
 
 // TestSyncJSONLToWorktree_DeleteMutation is a regression test for the bug where
-// intentional deletions via `bd delete` are not synced to the sync branch.
+// intentional deletions via `fbd delete` are not synced to the sync branch.
 // The issue: SyncJSONLToWorktree uses issue count to decide merge vs overwrite.
 // When local has fewer issues (due to deletion), it merges instead of overwrites,
 // which re-adds the deleted issue. This test verifies that when forceOverwrite
@@ -730,7 +730,7 @@ func TestSyncJSONLToWorktree_DeleteMutation(t *testing.T) {
 			t.Fatalf("Failed to write worktree JSONL: %v", err)
 		}
 
-		// Local has 2 issues (user deleted bd-102 via `bd delete bd-102 --force`)
+		// Local has 2 issues (user deleted bd-102 via `fbd delete bd-102 --force`)
 		mainJSONL := filepath.Join(repoPath, ".beads", "issues.jsonl")
 		mainData := `{"id":"bd-100","title":"Issue 1","status":"open","created_at":"2025-01-01T00:00:00Z","created_by":"user1"}
 {"id":"bd-101","title":"Issue 2","status":"open","created_at":"2025-01-01T00:00:01Z","created_by":"user1"}

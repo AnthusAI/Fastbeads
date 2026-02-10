@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // MaxMessageSize is the maximum size of a single RPC message (request or response).
@@ -12,7 +12,7 @@ import (
 // 10MB is generous for any legitimate beads operation (issue lists, batch ops, etc.).
 const MaxMessageSize = 10 * 1024 * 1024 // 10MB
 
-// Operation constants for all bd commands
+// Operation constants for all fbd commands
 const (
 	OpPing        = "ping"
 	OpStatus      = "status"

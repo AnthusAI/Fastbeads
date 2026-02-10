@@ -16,7 +16,7 @@ Beads now provides **enhanced Git worktree support** with a shared database arch
 
 ### Why Beads Creates Worktrees
 
-When you configure a **sync branch** (via `bd init --branch <name>` or `bd config set sync.branch <name>`), beads needs to commit issue updates to that branch without switching your working directory away from your current branch.
+When you configure a **sync branch** (via `fbd init --branch <name>` or `fbd config set sync.branch <name>`), beads needs to commit issue updates to that branch without switching your working directory away from your current branch.
 
 **Solution:** Beads creates a lightweight worktree that:
 - Contains only the `.beads/` directory (sparse checkout)
@@ -73,11 +73,11 @@ If you don't want beads to use a separate sync branch:
 
 ```bash
 # Unset the sync branch configuration
-bd config set sync.branch ""
+fbd config set sync.branch ""
 
 # Stop and restart daemon
-bd daemon stop
-bd daemon start
+fbd daemon stop
+fbd daemon start
 
 # Clean up existing worktrees
 rm -rf .git/beads-worktrees
@@ -88,7 +88,7 @@ git worktree prune
 
 ```bash
 # See current sync branch setting
-bd config get sync.branch
+fbd config get sync.branch
 
 # Check if worktrees exist
 ls -la .git/beads-worktrees/ 2>/dev/null || echo "No beads worktrees"
@@ -129,7 +129,7 @@ Main Repository
 
 ### Worktree Detection & Daemon Safety
 
-bd automatically detects when you're in a git worktree and handles daemon mode safely:
+fbd automatically detects when you're in a git worktree and handles daemon mode safely:
 
 **Default behavior (no sync-branch configured):**
 - Daemon is **automatically disabled** in worktrees
@@ -147,13 +147,13 @@ bd automatically detects when you're in a git worktree and handles daemon mode s
 
 ```bash
 # Configure sync-branch once (in main repo or any worktree)
-bd config set sync-branch beads-sync
+fbd config set sync-branch beads-sync
 
 # Now daemon works safely in all worktrees
 cd feature-worktree
-bd create "Implement feature X" -t feature -p 1
-bd update bd-a1b2 --status in_progress
-bd ready  # Daemon auto-syncs to beads-sync branch
+fbd create "Implement feature X" -t feature -p 1
+fbd update bd-a1b2 --status in_progress
+fbd ready  # Daemon auto-syncs to beads-sync branch
 ```
 
 ### Alternative: Direct Mode (No Configuration Needed)
@@ -161,9 +161,9 @@ bd ready  # Daemon auto-syncs to beads-sync branch
 ```bash
 # Without sync-branch, daemon is auto-disabled in worktrees
 cd feature-worktree
-bd create "Implement feature X" -t feature -p 1
-bd ready  # Uses direct mode automatically
-bd sync   # Manual sync when needed
+fbd create "Implement feature X" -t feature -p 1
+fbd ready  # Uses direct mode automatically
+fbd sync   # Manual sync when needed
 ```
 
 ### Legacy: Explicit Daemon Disable
@@ -172,14 +172,14 @@ bd sync   # Manual sync when needed
 # Still works if you prefer explicit control
 export BEADS_NO_DAEMON=1
 # or
-bd --no-daemon ready
+fbd --no-daemon ready
 ```
 
 ## Worktree-Aware Features
 
 ### Database Discovery
 
-bd intelligently finds the correct database:
+fbd intelligently finds the correct database:
 
 1. **Priority search**: Main repository `.beads` directory first
 2. **Fallback logic**: Searches worktree if main repo doesn't have database
@@ -220,11 +220,11 @@ git worktree add feature-worktree
 
 # Initialize beads in main repo
 cd main-repo
-bd init
+fbd init
 
 # Worktrees automatically share the database
 cd ../feature-worktree
-bd ready  # Works immediately - sees same issues
+fbd ready  # Works immediately - sees same issues
 ```
 
 ### Multi-Feature Development
@@ -232,19 +232,19 @@ bd ready  # Works immediately - sees same issues
 ```bash
 # Main development
 cd main-repo
-bd create "Epic: User authentication" -t epic -p 1
+fbd create "Epic: User authentication" -t epic -p 1
 # Returns: bd-a3f8e9
 
 # Feature branch worktree
 git worktree add auth-feature
 cd auth-feature
-bd create "Design login UI" -p 1
+fbd create "Design login UI" -p 1
 # Auto-assigned: bd-a3f8e9.1 (child of epic)
 
 # Bugfix worktree
 git worktree add auth-bugfix
 cd auth-bugfix
-bd create "Fix password validation" -t bug -p 0
+fbd create "Fix password validation" -t bug -p 0
 # Auto-assigned: bd-f14c3
 ```
 
@@ -275,14 +275,14 @@ git checkout main
 
 **Prevention:** If you use trunk-based development and don't need a separate sync branch, disable it:
 ```bash
-bd config set sync.branch ""
+fbd config set sync.branch ""
 ```
 
 ### Issue: Unexpected worktree directories appeared
 
 **Symptoms:** You notice `.git/beads-worktrees/` or entries in `.git/worktrees/` that you didn't create.
 
-**Cause:** Beads automatically creates worktrees when using the sync-branch feature (configured via `bd init --branch` or `bd config set sync.branch`).
+**Cause:** Beads automatically creates worktrees when using the sync-branch feature (configured via `fbd init --branch` or `fbd config set sync.branch`).
 
 **Solution:** See [Beads-Created Worktrees](#beads-created-worktrees-sync-branch) section above for details on what these are and how to remove them if unwanted.
 
@@ -295,17 +295,17 @@ bd config set sync.branch ""
 **Solution (if still occurring):**
 ```bash
 # Option 1: Configure sync-branch (recommended)
-bd config set sync-branch beads-sync
+fbd config set sync-branch beads-sync
 
 # Option 2: Explicitly disable daemon
 export BEADS_NO_DAEMON=1
 # Or use --no-daemon flag for individual commands
-bd --no-daemon sync
+fbd --no-daemon sync
 ```
 
 ### Issue: Database not found in worktree
 
-**Symptoms:** `bd: database not found` error
+**Symptoms:** `fbd: database not found` error
 
 **Solutions:**
 ```bash
@@ -313,12 +313,12 @@ bd --no-daemon sync
 cd main-repo
 ls -la .beads/
 
-# Re-run bd init if needed
-bd init
+# Re-run fbd init if needed
+fbd init
 
 # Check worktree can access main repo
 cd ../worktree-name
-bd info  # Should show database path in main repo
+fbd info  # Should show database path in main repo
 ```
 
 ### Issue: Multiple databases detected
@@ -327,7 +327,7 @@ bd info  # Should show database path in main repo
 
 **Solution:**
 ```bash
-# bd shows warning with database locations
+# fbd shows warning with database locations
 # Typically, the closest database (in main repo) is correct
 # Remove extra .beads directories if they're not needed
 ```
@@ -357,10 +357,10 @@ export BEADS_DB=/path/to/specific/.beads/beads.db
 
 ```bash
 # Configure sync behavior
-bd config set sync.branch beads-sync  # Use separate sync branch
+fbd config set sync.branch beads-sync  # Use separate sync branch
 
 # For git-portable workflows, enable daemon auto-commit/push (SQLite backend only):
-bd daemon start --auto-commit --auto-push
+fbd daemon start --auto-commit --auto-push
 ```
 
 ## Performance Considerations
@@ -394,7 +394,7 @@ bd daemon start --auto-commit --auto-push
 - ✅ Clear user guidance and warnings
 - ✅ Comprehensive documentation
 - ✅ Git hooks work correctly
-- ✅ All bd commands function properly
+- ✅ All fbd commands function properly
 
 **Note:** Based on comprehensive internal testing. Real-world usage may reveal additional refinements needed.
 
@@ -411,10 +411,10 @@ git worktree add services/web
 # Each service team works in their worktree
 cd services/auth
 export BEADS_NO_DAEMON=1
-bd create "Add OAuth support" -t feature -p 1
+fbd create "Add OAuth support" -t feature -p 1
 
 cd ../api
-bd create "Implement auth endpoints" -p 1
+fbd create "Implement auth endpoints" -p 1
 # Issues automatically linked and visible across worktrees
 ```
 
@@ -426,9 +426,9 @@ git worktree add feature/user-profiles
 cd feature/user-profiles
 
 # Work on feature with full issue tracking
-bd create "Design user profile schema" -t task -p 1
-bd create "Implement profile API" -t task -p 1
-bd create "Add profile UI components" -t task -p 2
+fbd create "Design user profile schema" -t task -p 1
+fbd create "Implement profile API" -t task -p 1
+fbd create "Add profile UI components" -t task -p 2
 
 # Issues tracked in shared database
 # Code changes isolated to worktree
@@ -455,7 +455,7 @@ mkdir -p ~/my-project-beads/.beads
 
 # 2. Set BEADS_DIR and initialize from anywhere
 export BEADS_DIR=~/my-project-beads/.beads
-bd init --prefix myproj    # Creates database at $BEADS_DIR
+fbd init --prefix myproj    # Creates database at $BEADS_DIR
 
 # 3. Initialize git in the beads repo (optional, for sync)
 cd ~/my-project-beads && git init
@@ -467,7 +467,7 @@ cd ~/my-project-beads && git init
 mkdir ~/my-project-beads
 cd ~/my-project-beads
 git init
-bd init --prefix myproj
+fbd init --prefix myproj
 
 # 2. Add a remote for cross-machine sync (optional)
 git remote add origin git@github.com:you/my-project-beads.git
@@ -482,10 +482,10 @@ Set `BEADS_DIR` to point at your separate beads repository:
 cd ~/my-project
 export BEADS_DIR=~/my-project-beads/.beads
 
-# All bd commands now use the separate repo
-bd create "My task" -t task
-bd list
-bd sync  # commits to ~/my-project-beads, pushes there
+# All fbd commands now use the separate repo
+fbd create "My task" -t task
+fbd list
+fbd sync  # commits to ~/my-project-beads, pushes there
 ```
 
 ### Making It Permanent
@@ -506,18 +506,18 @@ export BEADS_DIR=~/my-project-beads/.beads
 ```bash
 # ~/bin/bd-myproj
 #!/bin/bash
-BEADS_DIR=~/my-project-beads/.beads exec bd "$@"
+BEADS_DIR=~/my-project-beads/.beads exec fbd "$@"
 ```
 
 ### How It Works
 
 When `BEADS_DIR` points to a different git repository than your current directory:
 
-1. `bd sync` detects "External BEADS_DIR"
+1. `fbd sync` detects "External BEADS_DIR"
 2. Git operations (add, commit, push, pull) target the beads repo
 3. Your code repository is never touched
 
-This was contributed by @dand-oss in [PR #533](https://github.com/steveyegge/beads/pull/533).
+This was contributed by @dand-oss in [PR #533](https://github.com/steveyegge/fastbeads/pull/533).
 
 ### Combining with Worktrees
 
@@ -527,9 +527,9 @@ This approach elegantly solves the worktree isolation problem:
 # All worktrees share the same external beads repo
 export BEADS_DIR=~/project-beads/.beads
 
-cd ~/project/main       && bd list  # Same issues
-cd ~/project/feature-1  && bd list  # Same issues
-cd ~/project/feature-2  && bd list  # Same issues
+cd ~/project/main       && fbd list  # Same issues
+cd ~/project/feature-1  && fbd list  # Same issues
+cd ~/project/feature-2  && fbd list  # Same issues
 ```
 
 No daemon conflicts, no branch confusion - all worktrees see the same issues because they all use the same external repository.

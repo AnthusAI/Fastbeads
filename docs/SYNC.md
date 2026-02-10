@@ -1,6 +1,6 @@
 # Sync Architecture
 
-This document explains the design decisions behind `bd sync` - why it works the way it does, and the problems each design choice solves.
+This document explains the design decisions behind `fbd sync` - why it works the way it does, and the problems each design choice solves.
 
 > **Looking for something else?**
 > - Command usage: [commands/sync.md](/claude-plugin/commands/sync.md) (Reference)
@@ -67,7 +67,7 @@ The last two rows show why 3-way merge prevents accidental data loss: if one sid
 ## Sync Flow
 
 ```
-bd sync
+fbd sync
 
   1. Pull  -->  2. Merge  -->  3. Export  -->  4. Push
    Remote       3-way          JSONL          Remote
@@ -126,7 +126,7 @@ However, if the local copy is unchanged from base (meaning the user on this mach
 
 ## Concurrency Protection
 
-What happens if you run `bd sync` twice simultaneously? Without protection, both processes could:
+What happens if you run `fbd sync` twice simultaneously? Without protection, both processes could:
 
 1. Load the same base state
 2. Pull at different times (seeing different remote states)
@@ -186,7 +186,7 @@ Beads supports several sync modes for different use cases:
 
 | Mode | Trigger | Flow | Use Case |
 |------|---------|------|----------|
-| **Normal** | Default `bd sync` | Pull → Merge → Export → Push | Standard multi-machine sync |
+| **Normal** | Default `fbd sync` | Pull → Merge → Export → Push | Standard multi-machine sync |
 | **Sync-branch** | `sync.branch` config | Separate git branch for beads files | Isolated beads history |
 | **External** | `BEADS_DIR` env | Separate repo for beads | Shared team database |
 | **From-main** | `sync.from_main` config | Clone beads from main branch | Feature branch workflow |
@@ -212,7 +212,7 @@ sync:
 
 ### Test Coverage
 
-Each mode has E2E tests in `cmd/bd/`:
+Each mode has E2E tests in `cmd/fbd/`:
 
 | Mode | Test File |
 |------|-----------|
@@ -230,7 +230,7 @@ Each mode has E2E tests in `cmd/bd/`:
 Sync-branch mode has two distinct code paths that must be tested independently:
 
 ```
-bd sync (CLI)                     Daemon (background)
+fbd sync (CLI)                     Daemon (background)
      │                                  │
      ▼                                  ▼
 Force close daemon              daemon_sync_branch.go

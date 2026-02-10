@@ -1,4 +1,4 @@
-"""Real integration tests for BdClient using actual bd binary."""
+"""Real integration tests for BdClient using actual fbd binary."""
 
 import os
 import shutil
@@ -22,12 +22,12 @@ from beads_mcp.models import (
 
 @pytest.fixture(scope="session")
 def bd_executable():
-    """Verify bd is available in PATH."""
-    bd_path = shutil.which("bd")
+    """Verify fbd is available in PATH."""
+    bd_path = shutil.which("fbd")
     if not bd_path:
         pytest.fail(
-            "bd executable not found in PATH. "
-            "Please install bd or add it to your PATH before running integration tests."
+            "fbd executable not found in PATH. "
+            "Please install fbd or add it to your PATH before running integration tests."
         )
     return bd_path
 
@@ -37,7 +37,7 @@ def temp_db():
     """Create a temporary database file."""
     fd, db_path = tempfile.mkstemp(suffix=".db", prefix="beads_test_", dir="/tmp")
     os.close(fd)
-    # Remove the file so bd init can create it
+    # Remove the file so fbd init can create it
     os.unlink(db_path)
     yield db_path
     # Cleanup
@@ -305,7 +305,7 @@ async def test_quickstart(bd_client):
     result = await bd_client.quickstart()
 
     assert len(result) > 0
-    assert "beads" in result.lower() or "bd" in result.lower()
+    assert "beads" in result.lower() or "fbd" in result.lower()
 
 
 @pytest.mark.asyncio
@@ -319,7 +319,7 @@ async def test_create_with_labels(bd_client):
     )
     created = await bd_client.create(params)
 
-    # Note: bd currently doesn't return labels in JSON output
+    # Note: fbd currently doesn't return labels in JSON output
     # This test verifies the command succeeds with labels parameter
     assert created.id is not None
     assert created.title == "Issue with labels"
@@ -381,7 +381,7 @@ async def test_invalid_issue_id(bd_client):
     """Test showing non-existent issue."""
     params = ShowIssueParams(issue_id="test-999")
 
-    with pytest.raises(BdCommandError, match="bd command failed"):
+    with pytest.raises(BdCommandError, match="fbd command failed"):
         await bd_client.show(params)
 
 

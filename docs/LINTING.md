@@ -37,7 +37,7 @@ Fixing these would add noise without improving code quality. The critical cleanu
 Examples:
 - Launching `$EDITOR` for issue editing
 - Executing git commands
-- Running bd daemon binary
+- Running fbd daemon binary
 
 **Pattern 2**: G304 - File inclusion via variable (3 issues)
 **Status**: Intended feature - user-specified file paths for import/export

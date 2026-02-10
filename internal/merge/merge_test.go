@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // mustParseTime parses RFC3339 timestamp or panics (for test setup)
@@ -2009,7 +2009,7 @@ func TestMerge3Way_TombstoneVsLiveTimestampPrecisionMismatch(t *testing.T) {
 // This is important for:
 // - Reproducible git diffs between merges
 // - Cross-machine consistency
-// - Matching bd export behavior
+// - Matching fbd export behavior
 func TestMerge3Way_DeterministicOutputOrder(t *testing.T) {
 	// Create issues with IDs that would appear in different orders
 	// if map iteration order determined output order

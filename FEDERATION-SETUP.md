@@ -23,7 +23,7 @@ data between independent teams or locations. Key benefits:
 
 ### Enable Federation-Compatible Sync
 
-Edit `.beads/config.yaml` or `~/.config/bd/config.yaml`:
+Edit `.beads/config.yaml` or `~/.config/fbd/config.yaml`:
 
 ```yaml
 sync:
@@ -62,10 +62,10 @@ export BD_FEDERATION_SOVEREIGNTY="T2"
 
 ## Adding Federation Peers
 
-Use `bd federation add-peer` to register remote peers:
+Use `fbd federation add-peer` to register remote peers:
 
 ```bash
-bd federation add-peer <name> <endpoint>
+fbd federation add-peer <name> <endpoint>
 ```
 
 ### Peer Name Rules
@@ -90,17 +90,17 @@ bd federation add-peer <name> <endpoint>
 
 ```bash
 # Add a staging environment on DoltHub
-bd federation add-peer staging dolthub://myorg/staging-beads
+fbd federation add-peer staging dolthub://myorg/staging-beads
 
 # Add a cloud backup
-bd federation add-peer backup gs://mybucket/beads-backup
-bd federation add-peer backup-s3 s3://mybucket/beads-backup
+fbd federation add-peer backup gs://mybucket/beads-backup
+fbd federation add-peer backup-s3 s3://mybucket/beads-backup
 
 # Add a local backup
-bd federation add-peer local file:///home/user/beads-backup
+fbd federation add-peer local file:///home/user/beads-backup
 
 # Add a partner organization
-bd federation add-peer partner-town dolthub://partner-org/beads
+fbd federation add-peer partner-town dolthub://partner-org/beads
 ```
 
 ### JSON Output
@@ -108,7 +108,7 @@ bd federation add-peer partner-town dolthub://partner-org/beads
 For scripting, use the `--json` flag:
 
 ```bash
-bd --json federation add-peer staging dolthub://myorg/staging-beads
+fbd --json federation add-peer staging dolthub://myorg/staging-beads
 # {"name":"staging","endpoint":"dolthub://myorg/staging-beads","status":"added"}
 ```
 
@@ -117,7 +117,7 @@ bd --json federation add-peer staging dolthub://myorg/staging-beads
 Check stored peers:
 
 ```bash
-bd config list | grep federation.peers
+fbd config list | grep federation.peers
 ```
 
 ## Architecture Notes
@@ -144,10 +144,10 @@ the peer. This allows configuring remotes before infrastructure is ready.
 The following operations have infrastructure support but are not yet exposed
 as commands:
 
-- `bd federation list-peers` - List configured peers
-- `bd federation push <peer>` - Push to specific peer
-- `bd federation pull <peer>` - Pull from specific peer
-- `bd federation sync <peer>` - Bidirectional sync
+- `fbd federation list-peers` - List configured peers
+- `fbd federation push <peer>` - Push to specific peer
+- `fbd federation pull <peer>` - Pull from specific peer
+- `fbd federation sync <peer>` - Bidirectional sync
 
 ## Troubleshooting
 
@@ -159,7 +159,7 @@ daemon mode for federation operations.
 ### "peer already exists"
 
 A peer with that name is already configured. Use a different name or check
-existing peers with `bd config list | grep federation.peers`.
+existing peers with `fbd config list | grep federation.peers`.
 
 ### Invalid endpoint format
 
@@ -170,6 +170,6 @@ or git SSH format (`git@host:path`).
 ## Reference
 
 - Configuration: See `docs/CONFIG.md` for all federation settings
-- Source: `cmd/bd/federation.go`
+- Source: `cmd/fbd/federation.go`
 - Storage interfaces: `internal/storage/versioned.go`
 - Dolt implementation: `internal/storage/dolt/store.go`

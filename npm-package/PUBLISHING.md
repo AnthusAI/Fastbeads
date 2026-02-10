@@ -1,6 +1,6 @@
-# Publishing @beads/bd to npm
+# Publishing @beads/fbd to npm
 
-This guide covers how to publish the @beads/bd package to npm.
+This guide covers how to publish the @beads/fbd package to npm.
 
 ## Prerequisites
 
@@ -62,7 +62,7 @@ npm test
 npm link
 
 # Verify the global install works
-bd version
+fbd version
 ```
 
 ### 3. Publish to npm
@@ -84,11 +84,11 @@ npm publish
 
 ```bash
 # Check the package page
-open https://www.npmjs.com/package/@beads/bd
+open https://www.npmjs.com/package/@beads/fbd
 
 # Try installing it
-npm install -g @beads/bd
-bd version
+npm install -g @beads/fbd
+fbd version
 ```
 
 ## Publishing Workflow
@@ -156,7 +156,7 @@ You don't have permission to publish to @beads. Either:
 
 The version in package.json doesn't match a GitHub release, or the release doesn't have the required binary assets.
 
-Check: https://github.com/steveyegge/beads/releases/v{VERSION}
+Check: https://github.com/steveyegge/fastbeads/releases/v{VERSION}
 
 ## Version Sync
 
@@ -167,5 +167,5 @@ Keep these in sync:
 
 The postinstall script downloads binaries from:
 ```
-https://github.com/steveyegge/beads/releases/download/v{VERSION}/beads_{VERSION}_{platform}_{arch}.{ext}
+https://github.com/steveyegge/fastbeads/releases/download/v{VERSION}/beads_{VERSION}_{platform}_{arch}.{ext}
 ```

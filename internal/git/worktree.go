@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/merge"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/merge"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // WorktreeManager handles git worktree lifecycle for separate beads branches
@@ -232,7 +232,7 @@ func (wm *WorktreeManager) SyncJSONLToWorktreeWithOptions(worktreePath, jsonlRel
 
 	// ForceOverwrite: When the daemon knows a mutation occurred (especially delete),
 	// the local state is authoritative and should overwrite the worktree without merging.
-	// This fixes the bug where `bd delete` mutations were not reflected in the sync branch
+	// This fixes the bug where `fbd delete` mutations were not reflected in the sync branch
 	// because the merge logic would re-add the deleted issue.
 	if opts.ForceOverwrite {
 		if err := os.WriteFile(dstPath, srcData, 0644); err != nil { // #nosec G306 - JSONL needs to be readable

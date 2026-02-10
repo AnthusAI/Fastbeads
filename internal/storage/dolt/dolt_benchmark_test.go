@@ -18,7 +18,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // setupBenchStore creates a store for benchmarks
@@ -116,7 +116,7 @@ func BenchmarkBootstrapEmbedded(b *testing.B) {
 }
 
 // BenchmarkColdStart simulates CLI pattern: open store, read one issue, close.
-// This measures the realistic cost of a single bd command.
+// This measures the realistic cost of a single fbd command.
 func BenchmarkColdStart(b *testing.B) {
 	// First create a store with data
 	store, cleanup := setupBenchStore(b)
@@ -233,7 +233,7 @@ func BenchmarkCLIWorkflow(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		// Simulate: bd ready && bd show <first>
+		// Simulate: fbd ready && fbd show <first>
 		s, err := New(ctx, cfg)
 		if err != nil {
 			b.Fatalf("failed to open store: %v", err)

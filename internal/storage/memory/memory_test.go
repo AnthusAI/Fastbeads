@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func setupTestMemory(t *testing.T) *MemoryStorage {

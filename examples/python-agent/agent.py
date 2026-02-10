@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple AI agent workflow using bd (Beads issue tracker).
+Simple AI agent workflow using fbd (Beads issue tracker).
 
 This demonstrates how an agent can:
 1. Find ready work
@@ -23,8 +23,8 @@ class BeadsAgent:
         self.current_task = None
 
     def run_bd(self, *args) -> dict:
-        """Run bd command and parse JSON output."""
-        cmd = ["bd"] + list(args) + ["--json"]
+        """Run fbd command and parse JSON output."""
+        cmd = ["fbd"] + list(args) + ["--json"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
         if result.stdout.strip():
@@ -58,7 +58,7 @@ class BeadsAgent:
         """Link a discovered issue back to its parent."""
         print(f"🔗 Linking {discovered_id} ← discovered-from ← {parent_id}")
         subprocess.run(
-            ["bd", "dep", "add", discovered_id, parent_id, "--type", "discovered-from"],
+            ["fbd", "dep", "add", discovered_id, parent_id, "--type", "discovered-from"],
             check=True
         )
 
@@ -138,8 +138,8 @@ def main():
         agent = BeadsAgent()
         agent.run()
     except subprocess.CalledProcessError as e:
-        print(f"Error running bd: {e}", file=sys.stderr)
-        print(f"Make sure bd is installed: go install github.com/steveyegge/beads/cmd/bd@latest")
+        print(f"Error running fbd: {e}", file=sys.stderr)
+        print(f"Make sure fbd is installed: go install github.com/steveyegge/fastbeads/cmd/fbd@latest")
         sys.exit(1)
     except KeyboardInterrupt:
         print("\n\n👋 Agent interrupted by user")

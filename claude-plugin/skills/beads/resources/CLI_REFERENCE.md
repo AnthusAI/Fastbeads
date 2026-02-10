@@ -1,6 +1,6 @@
 # CLI Command Reference
 
-**For:** AI agents and developers using bd command-line interface
+**For:** AI agents and developers using fbd command-line interface
 **Version:** 0.47.1+
 
 ## Quick Navigation
@@ -20,50 +20,50 @@
 
 ```bash
 # Basic health check
-bd doctor                      # Check installation health
-bd doctor --json               # Machine-readable output
+fbd doctor                      # Check installation health
+fbd doctor --json               # Machine-readable output
 
 # Fix issues
-bd doctor --fix                # Auto-fix with confirmation
-bd doctor --fix --yes          # Auto-fix without confirmation
-bd doctor --dry-run            # Preview what --fix would do
+fbd doctor --fix                # Auto-fix with confirmation
+fbd doctor --fix --yes          # Auto-fix without confirmation
+fbd doctor --dry-run            # Preview what --fix would do
 
 # Deep validation
-bd doctor --deep               # Full graph integrity validation
+fbd doctor --deep               # Full graph integrity validation
 
 # Performance diagnostics
-bd doctor --perf               # Run performance diagnostics
-bd doctor --output diag.json   # Export diagnostics to file
+fbd doctor --perf               # Run performance diagnostics
+fbd doctor --output diag.json   # Export diagnostics to file
 
 # Specific checks
-bd doctor --check=pollution              # Detect test issues
-bd doctor --check=pollution --clean      # Delete test issues
+fbd doctor --check=pollution              # Detect test issues
+fbd doctor --check=pollution --clean      # Delete test issues
 
 # Recovery modes
-bd doctor --fix --source=jsonl           # Rebuild DB from JSONL
-bd doctor --fix --force                  # Force repair on corrupted DB
+fbd doctor --fix --source=jsonl           # Rebuild DB from JSONL
+fbd doctor --fix --force                  # Force repair on corrupted DB
 ```
 
 ### Status Overview
 
 ```bash
 # Quick database snapshot (like git status for issues)
-bd status                      # Summary with activity
-bd status --json               # JSON format
-bd status --no-activity        # Skip git activity (faster)
-bd status --assigned           # Show issues assigned to you
-bd stats                       # Alias for bd status
+fbd status                      # Summary with activity
+fbd status --json               # JSON format
+fbd status --no-activity        # Skip git activity (faster)
+fbd status --assigned           # Show issues assigned to you
+fbd stats                       # Alias for fbd status
 ```
 
 ### Prime (AI Context)
 
 ```bash
 # Output AI-optimized workflow context
-bd prime                       # Auto-detects MCP vs CLI mode
-bd prime --full                # Force full CLI output
-bd prime --mcp                 # Force minimal MCP output
-bd prime --stealth             # No git operations mode
-bd prime --export              # Dump default content for customization
+fbd prime                       # Auto-detects MCP vs CLI mode
+fbd prime --full                # Force full CLI output
+fbd prime --mcp                 # Force minimal MCP output
+fbd prime --stealth             # No git operations mode
+fbd prime --export              # Dump default content for customization
 ```
 
 **Customization:** Place `.beads/PRIME.md` to override default output.
@@ -74,12 +74,12 @@ bd prime --export              # Dump default content for customization
 
 ```bash
 # Check database path and daemon status
-bd info --json
+fbd info --json
 
 # Example output:
 # {
 #   "database_path": "/path/to/.beads/beads.db",
-#   "issue_prefix": "bd",
+#   "issue_prefix": "fbd",
 #   "daemon_running": true
 # }
 ```
@@ -88,20 +88,20 @@ bd info --json
 
 ```bash
 # Find ready work (no blockers)
-bd ready --json
-bd list --ready --json                        # Same, integrated into list (v0.47.1+)
+fbd ready --json
+fbd list --ready --json                        # Same, integrated into list (v0.47.1+)
 
 # Find blocked work
-bd blocked --json                             # Show all blocked issues
-bd blocked --parent bd-epic --json            # Blocked descendants of epic
+fbd blocked --json                             # Show all blocked issues
+fbd blocked --parent bd-epic --json            # Blocked descendants of epic
 
 # Find molecules waiting on gates for resume (v0.47.0+)
-bd ready --gated --json                       # Gate-resume discovery
+fbd ready --gated --json                       # Gate-resume discovery
 
 # Find stale issues (not updated recently)
-bd stale --days 30 --json                    # Default: 30 days
-bd stale --days 90 --status in_progress --json  # Filter by status
-bd stale --limit 20 --json                   # Limit results
+fbd stale --days 30 --json                    # Default: 30 days
+fbd stale --days 90 --status in_progress --json  # Filter by status
+fbd stale --limit 20 --json                   # Limit results
 ```
 
 ## Issue Management
@@ -111,104 +111,104 @@ bd stale --limit 20 --json                   # Limit results
 ```bash
 # Basic creation
 # IMPORTANT: Always quote titles and descriptions with double quotes
-bd create "Issue title" -t bug|feature|task -p 0-4 -d "Description" --json
+fbd create "Issue title" -t bug|feature|task -p 0-4 -d "Description" --json
 
 # Create with explicit ID (for parallel workers)
-bd create "Issue title" --id worker1-100 -p 1 --json
+fbd create "Issue title" --id worker1-100 -p 1 --json
 
 # Create with labels (--labels or --label work)
-bd create "Issue title" -t bug -p 1 -l bug,critical --json
-bd create "Issue title" -t bug -p 1 --label bug,critical --json
+fbd create "Issue title" -t bug -p 1 -l bug,critical --json
+fbd create "Issue title" -t bug -p 1 --label bug,critical --json
 
 # Examples with special characters (all require quoting):
-bd create "Fix: auth doesn't validate tokens" -t bug -p 1 --json
-bd create "Add support for OAuth 2.0" -d "Implement RFC 6749 (OAuth 2.0 spec)" --json
+fbd create "Fix: auth doesn't validate tokens" -t bug -p 1 --json
+fbd create "Add support for OAuth 2.0" -d "Implement RFC 6749 (OAuth 2.0 spec)" --json
 
 # Create multiple issues from markdown file
-bd create -f feature-plan.md --json
+fbd create -f feature-plan.md --json
 
 # Create epic with hierarchical child tasks
-bd create "Auth System" -t epic -p 1 --json         # Returns: bd-a3f8e9
-bd create "Login UI" -p 1 --json                     # Auto-assigned: bd-a3f8e9.1
-bd create "Backend validation" -p 1 --json           # Auto-assigned: bd-a3f8e9.2
-bd create "Tests" -p 1 --json                        # Auto-assigned: bd-a3f8e9.3
+fbd create "Auth System" -t epic -p 1 --json         # Returns: bd-a3f8e9
+fbd create "Login UI" -p 1 --json                     # Auto-assigned: bd-a3f8e9.1
+fbd create "Backend validation" -p 1 --json           # Auto-assigned: bd-a3f8e9.2
+fbd create "Tests" -p 1 --json                        # Auto-assigned: bd-a3f8e9.3
 
 # Create and link discovered work (one command)
-bd create "Found bug" -t bug -p 1 --deps discovered-from:<parent-id> --json
+fbd create "Found bug" -t bug -p 1 --deps discovered-from:<parent-id> --json
 
 # Create with external reference (v0.9.2+)
-bd create "Fix login" -t bug -p 1 --external-ref "gh-123" --json  # Short form
-bd create "Fix login" -t bug -p 1 --external-ref "https://github.com/org/repo/issues/123" --json  # Full URL
-bd create "Jira task" -t task -p 1 --external-ref "jira-PROJ-456" --json  # Custom prefix
+fbd create "Fix login" -t bug -p 1 --external-ref "gh-123" --json  # Short form
+fbd create "Fix login" -t bug -p 1 --external-ref "https://github.com/org/repo/issues/123" --json  # Full URL
+fbd create "Jira task" -t task -p 1 --external-ref "jira-PROJ-456" --json  # Custom prefix
 
 # Preview creation without side effects (v0.47.0+)
-bd create "Issue title" -t task -p 1 --dry-run --json  # Shows what would be created
+fbd create "Issue title" -t task -p 1 --dry-run --json  # Shows what would be created
 ```
 
 ### Quick Capture (q)
 
 ```bash
 # Create issue and output only the ID (for scripting)
-bd q "Fix login bug"                          # Outputs: bd-a1b2
-bd q "Task" -t task -p 1                      # With type and priority
-bd q "Bug" -t bug -l critical                 # With labels
+fbd q "Fix login bug"                          # Outputs: bd-a1b2
+fbd q "Task" -t task -p 1                      # With type and priority
+fbd q "Bug" -t bug -l critical                 # With labels
 
 # Scripting examples
-ISSUE=$(bd q "New feature")                   # Capture ID in variable
-bd q "Task" | xargs bd show                   # Pipe to other commands
+ISSUE=$(fbd q "New feature")                   # Capture ID in variable
+fbd q "Task" | xargs fbd show                   # Pipe to other commands
 ```
 
 ### Update Issues
 
 ```bash
 # Update one or more issues
-bd update <id> [<id>...] --status in_progress --json
-bd update <id> [<id>...] --priority 1 --json
+fbd update <id> [<id>...] --status in_progress --json
+fbd update <id> [<id>...] --priority 1 --json
 
 # Update external reference (v0.9.2+)
-bd update <id> --external-ref "gh-456" --json           # Short form
-bd update <id> --external-ref "jira-PROJ-789" --json    # Custom prefix
+fbd update <id> --external-ref "gh-456" --json           # Short form
+fbd update <id> --external-ref "jira-PROJ-789" --json    # Custom prefix
 
 # Edit issue fields in $EDITOR (HUMANS ONLY - not for agents)
 # NOTE: This command is intentionally NOT exposed via the MCP server
-# Agents should use 'bd update' with field-specific parameters instead
-bd edit <id>                    # Edit description
-bd edit <id> --title            # Edit title
-bd edit <id> --design           # Edit design notes
-bd edit <id> --notes            # Edit notes
-bd edit <id> --acceptance       # Edit acceptance criteria
+# Agents should use 'fbd update' with field-specific parameters instead
+fbd edit <id>                    # Edit description
+fbd edit <id> --title            # Edit title
+fbd edit <id> --design           # Edit design notes
+fbd edit <id> --notes            # Edit notes
+fbd edit <id> --acceptance       # Edit acceptance criteria
 ```
 
 ### Close/Reopen Issues
 
 ```bash
 # Complete work (supports multiple IDs)
-bd close <id> [<id>...] --reason "Done" --json
+fbd close <id> [<id>...] --reason "Done" --json
 
 # Reopen closed issues (supports multiple IDs)
-bd reopen <id> [<id>...] --reason "Reopening" --json
+fbd reopen <id> [<id>...] --reason "Reopening" --json
 ```
 
 ### View Issues
 
 ```bash
 # Show dependency tree
-bd dep tree <id>
+fbd dep tree <id>
 
 # Get issue details (supports multiple IDs)
-bd show <id> [<id>...] --json
+fbd show <id> [<id>...] --json
 ```
 
 ### Comments
 
 ```bash
 # List comments on an issue
-bd comments bd-123                            # Human-readable
-bd comments bd-123 --json                     # JSON format
+fbd comments bd-123                            # Human-readable
+fbd comments bd-123 --json                     # JSON format
 
 # Add a comment
-bd comments add bd-123 "This is a comment"
-bd comments add bd-123 -f notes.txt           # From file
+fbd comments add bd-123 "This is a comment"
+fbd comments add bd-123 -f notes.txt           # From file
 ```
 
 ## Dependencies & Labels
@@ -217,20 +217,20 @@ bd comments add bd-123 -f notes.txt           # From file
 
 ```bash
 # Link discovered work (old way - two commands)
-bd dep add <discovered-id> <parent-id> --type discovered-from
+fbd dep add <discovered-id> <parent-id> --type discovered-from
 
 # Create and link in one command (new way - preferred)
-bd create "Issue title" -t bug -p 1 --deps discovered-from:<parent-id> --json
+fbd create "Issue title" -t bug -p 1 --deps discovered-from:<parent-id> --json
 ```
 
 ### Labels
 
 ```bash
 # Label management (supports multiple IDs)
-bd label add <id> [<id>...] <label> --json
-bd label remove <id> [<id>...] <label> --json
-bd label list <id> --json
-bd label list-all --json
+fbd label add <id> [<id>...] <label> --json
+fbd label remove <id> [<id>...] <label> --json
+fbd label list <id> --json
+fbd label list-all --json
 ```
 
 ## Filtering & Search
@@ -239,91 +239,91 @@ bd label list-all --json
 
 ```bash
 # Filter by status, priority, type
-bd list --status open --priority 1 --json               # Status and priority
-bd list --assignee alice --json                         # By assignee
-bd list --type bug --json                               # By issue type
-bd list --id bd-123,bd-456 --json                       # Specific IDs
+fbd list --status open --priority 1 --json               # Status and priority
+fbd list --assignee alice --json                         # By assignee
+fbd list --type bug --json                               # By issue type
+fbd list --id bd-123,bd-456 --json                       # Specific IDs
 ```
 
 ### Label Filters
 
 ```bash
 # Labels (AND: must have ALL)
-bd list --label bug,critical --json
+fbd list --label bug,critical --json
 
 # Labels (OR: has ANY)
-bd list --label-any frontend,backend --json
+fbd list --label-any frontend,backend --json
 ```
 
 ### Search Command
 
 ```bash
 # Full-text search across title, description, and ID
-bd search "authentication bug"                          # Basic search
-bd search "login" --status open --json                  # With status filter
-bd search "database" --label backend --limit 10         # With label and limit
-bd search "bd-5q"                                       # Search by partial ID
+fbd search "authentication bug"                          # Basic search
+fbd search "login" --status open --json                  # With status filter
+fbd search "database" --label backend --limit 10         # With label and limit
+fbd search "bd-5q"                                       # Search by partial ID
 
 # Find beads issue by external reference
-bd list --json | jq -r '.[] | select(.external_ref == "gh-123") | .id'
+fbd list --json | jq -r '.[] | select(.external_ref == "gh-123") | .id'
 
 # Filtered search
-bd search "security" --priority-min 0 --priority-max 2  # Priority range
-bd search "bug" --created-after 2025-01-01              # Date filter
-bd search --query "refactor" --assignee alice           # By assignee
+fbd search "security" --priority-min 0 --priority-max 2  # Priority range
+fbd search "bug" --created-after 2025-01-01              # Date filter
+fbd search --query "refactor" --assignee alice           # By assignee
 
 # Sorted results
-bd search "bug" --sort priority                         # Sort by priority
-bd search "task" --sort created --reverse               # Reverse chronological
-bd search "feature" --long                              # Detailed multi-line output
+fbd search "bug" --sort priority                         # Sort by priority
+fbd search "task" --sort created --reverse               # Reverse chronological
+fbd search "feature" --long                              # Detailed multi-line output
 ```
 
 ### Text Search (via list)
 
 ```bash
 # Title search (substring)
-bd list --title "auth" --json
+fbd list --title "auth" --json
 
 # Pattern matching (case-insensitive substring)
-bd list --title-contains "auth" --json                  # Search in title
-bd list --desc-contains "implement" --json              # Search in description
-bd list --notes-contains "TODO" --json                  # Search in notes
+fbd list --title-contains "auth" --json                  # Search in title
+fbd list --desc-contains "implement" --json              # Search in description
+fbd list --notes-contains "TODO" --json                  # Search in notes
 ```
 
 ### Date Range Filters
 
 ```bash
 # Date range filters (YYYY-MM-DD or RFC3339)
-bd list --created-after 2024-01-01 --json               # Created after date
-bd list --created-before 2024-12-31 --json              # Created before date
-bd list --updated-after 2024-06-01 --json               # Updated after date
-bd list --updated-before 2024-12-31 --json              # Updated before date
-bd list --closed-after 2024-01-01 --json                # Closed after date
-bd list --closed-before 2024-12-31 --json               # Closed before date
+fbd list --created-after 2024-01-01 --json               # Created after date
+fbd list --created-before 2024-12-31 --json              # Created before date
+fbd list --updated-after 2024-06-01 --json               # Updated after date
+fbd list --updated-before 2024-12-31 --json              # Updated before date
+fbd list --closed-after 2024-01-01 --json                # Closed after date
+fbd list --closed-before 2024-12-31 --json               # Closed before date
 ```
 
 ### Empty/Null Checks
 
 ```bash
 # Empty/null checks
-bd list --empty-description --json                      # Issues with no description
-bd list --no-assignee --json                            # Unassigned issues
-bd list --no-labels --json                              # Issues with no labels
+fbd list --empty-description --json                      # Issues with no description
+fbd list --no-assignee --json                            # Unassigned issues
+fbd list --no-labels --json                              # Issues with no labels
 ```
 
 ### Priority Ranges
 
 ```bash
 # Priority ranges
-bd list --priority-min 0 --priority-max 1 --json        # P0 and P1 only
-bd list --priority-min 2 --json                         # P2 and below
+fbd list --priority-min 0 --priority-max 1 --json        # P0 and P1 only
+fbd list --priority-min 2 --json                         # P2 and below
 ```
 
 ### Combine Filters
 
 ```bash
 # Combine multiple filters
-bd list --status open --priority 1 --label-any urgent,critical --no-assignee --json
+fbd list --status open --priority 1 --label-any urgent,critical --no-assignee --json
 ```
 
 ## Visualization
@@ -332,14 +332,14 @@ bd list --status open --priority 1 --label-any urgent,critical --no-assignee --j
 
 ```bash
 # Show dependency graph for an issue
-bd graph bd-123                               # ASCII box format (default)
-bd graph bd-123 --compact                     # Tree format, one line per issue
+fbd graph bd-123                               # ASCII box format (default)
+fbd graph bd-123 --compact                     # Tree format, one line per issue
 
 # Show graph for epic (includes all children)
-bd graph bd-epic
+fbd graph bd-epic
 
 # Show all open issues grouped by component
-bd graph --all
+fbd graph --all
 ```
 
 **Display formats:**
@@ -355,11 +355,11 @@ bd graph --all
 
 ## Global Flags
 
-Global flags work with any bd command and must appear **before** the subcommand.
+Global flags work with any fbd command and must appear **before** the subcommand.
 
 ### Sandbox Mode
 
-**Auto-detection (v0.21.1+):** bd automatically detects sandboxed environments and enables sandbox mode.
+**Auto-detection (v0.21.1+):** fbd automatically detects sandboxed environments and enables sandbox mode.
 
 When detected, you'll see: `ℹ️  Sandbox detected, using direct mode`
 
@@ -367,10 +367,10 @@ When detected, you'll see: `ℹ️  Sandbox detected, using direct mode`
 
 ```bash
 # Explicitly enable sandbox mode
-bd --sandbox <command>
+fbd --sandbox <command>
 
 # Equivalent to combining these flags:
-bd --no-daemon --no-auto-flush --no-auto-import <command>
+fbd --no-daemon --no-auto-flush --no-auto-import <command>
 ```
 
 **What it does:**
@@ -384,11 +384,11 @@ bd --no-daemon --no-auto-flush --no-auto-import <command>
 
 ```bash
 # Skip staleness check (emergency escape hatch)
-bd --allow-stale <command>
+fbd --allow-stale <command>
 
 # Example: access database even if out of sync with JSONL
-bd --allow-stale ready --json
-bd --allow-stale list --status open --json
+fbd --allow-stale ready --json
+fbd --allow-stale list --status open --json
 ```
 
 **Shows:** `⚠️  Staleness check skipped (--allow-stale), data may be out of sync`
@@ -399,10 +399,10 @@ bd --allow-stale list --status open --json
 
 ```bash
 # Force metadata update even when DB appears synced
-bd import --force -i .beads/issues.jsonl
+fbd import --force -i .beads/issues.jsonl
 ```
 
-**When to use:** `bd import` reports "0 created, 0 updated" but staleness errors persist.
+**When to use:** `fbd import` reports "0 created, 0 updated" but staleness errors persist.
 
 **Shows:** `Metadata updated (database already in sync with JSONL)`
 
@@ -410,20 +410,20 @@ bd import --force -i .beads/issues.jsonl
 
 ```bash
 # JSON output for programmatic use
-bd --json <command>
+fbd --json <command>
 
 # Force direct mode (bypass daemon)
-bd --no-daemon <command>
+fbd --no-daemon <command>
 
 # Disable auto-sync
-bd --no-auto-flush <command>    # Disable auto-export to JSONL
-bd --no-auto-import <command>   # Disable auto-import from JSONL
+fbd --no-auto-flush <command>    # Disable auto-export to JSONL
+fbd --no-auto-import <command>   # Disable auto-import from JSONL
 
 # Custom database path
-bd --db /path/to/.beads/beads.db <command>
+fbd --db /path/to/.beads/beads.db <command>
 
 # Custom actor for audit trail
-bd --actor alice <command>
+fbd --actor alice <command>
 ```
 
 **See also:**
@@ -436,49 +436,49 @@ bd --actor alice <command>
 
 ```bash
 # Clean up closed issues (bulk deletion)
-bd admin cleanup --force --json                                   # Delete ALL closed issues
-bd admin cleanup --older-than 30 --force --json                   # Delete closed >30 days ago
-bd admin cleanup --dry-run --json                                 # Preview what would be deleted
-bd admin cleanup --older-than 90 --cascade --force --json         # Delete old + dependents
+fbd admin cleanup --force --json                                   # Delete ALL closed issues
+fbd admin cleanup --older-than 30 --force --json                   # Delete closed >30 days ago
+fbd admin cleanup --dry-run --json                                 # Preview what would be deleted
+fbd admin cleanup --older-than 90 --cascade --force --json         # Delete old + dependents
 ```
 
 ### Duplicate Detection & Merging
 
 ```bash
 # Find and merge duplicate issues
-bd duplicates                                          # Show all duplicates
-bd duplicates --auto-merge                             # Automatically merge all
-bd duplicates --dry-run                                # Preview merge operations
+fbd duplicates                                          # Show all duplicates
+fbd duplicates --auto-merge                             # Automatically merge all
+fbd duplicates --dry-run                                # Preview merge operations
 
 # Merge specific duplicate issues
-bd merge <source-id...> --into <target-id> --json      # Consolidate duplicates
-bd merge bd-42 bd-43 --into bd-41 --dry-run            # Preview merge
+fbd merge <source-id...> --into <target-id> --json      # Consolidate duplicates
+fbd merge bd-42 bd-43 --into bd-41 --dry-run            # Preview merge
 ```
 
 ### Compaction (Memory Decay)
 
 ```bash
 # Agent-driven compaction
-bd admin compact --analyze --json                           # Get candidates for review
-bd admin compact --analyze --tier 1 --limit 10 --json       # Limited batch
-bd admin compact --apply --id bd-42 --summary summary.txt   # Apply compaction
-bd admin compact --apply --id bd-42 --summary - < summary.txt  # From stdin
-bd admin compact --stats --json                             # Show statistics
+fbd admin compact --analyze --json                           # Get candidates for review
+fbd admin compact --analyze --tier 1 --limit 10 --json       # Limited batch
+fbd admin compact --apply --id bd-42 --summary summary.txt   # Apply compaction
+fbd admin compact --apply --id bd-42 --summary - < summary.txt  # From stdin
+fbd admin compact --stats --json                             # Show statistics
 
 # Legacy AI-powered compaction (requires ANTHROPIC_API_KEY)
-bd admin compact --auto --dry-run --all                     # Preview
-bd admin compact --auto --all --tier 1                      # Auto-compact tier 1
+fbd admin compact --auto --dry-run --all                     # Preview
+fbd admin compact --auto --all --tier 1                      # Auto-compact tier 1
 
 # Restore compacted issue from git history
-bd restore <id>  # View full history at time of compaction
+fbd restore <id>  # View full history at time of compaction
 ```
 
 ### Rename Prefix
 
 ```bash
 # Rename issue prefix (e.g., from 'knowledge-work-' to 'kw-')
-bd rename-prefix kw- --dry-run  # Preview changes
-bd rename-prefix kw- --json     # Apply rename
+fbd rename-prefix kw- --dry-run  # Preview changes
+fbd rename-prefix kw- --json     # Apply rename
 ```
 
 ## Database Management
@@ -487,19 +487,19 @@ bd rename-prefix kw- --json     # Apply rename
 
 ```bash
 # Import issues from JSONL
-bd import -i .beads/issues.jsonl --dry-run      # Preview changes
-bd import -i .beads/issues.jsonl                # Import and update issues
-bd import -i .beads/issues.jsonl --dedupe-after # Import + detect duplicates
+fbd import -i .beads/issues.jsonl --dry-run      # Preview changes
+fbd import -i .beads/issues.jsonl                # Import and update issues
+fbd import -i .beads/issues.jsonl --dedupe-after # Import + detect duplicates
 
 # Handle missing parents during import
-bd import -i issues.jsonl --orphan-handling allow      # Default: import orphans without validation
-bd import -i issues.jsonl --orphan-handling resurrect  # Auto-resurrect deleted parents as tombstones
-bd import -i issues.jsonl --orphan-handling skip       # Skip orphans with warning
-bd import -i issues.jsonl --orphan-handling strict     # Fail if parent is missing
+fbd import -i issues.jsonl --orphan-handling allow      # Default: import orphans without validation
+fbd import -i issues.jsonl --orphan-handling resurrect  # Auto-resurrect deleted parents as tombstones
+fbd import -i issues.jsonl --orphan-handling skip       # Skip orphans with warning
+fbd import -i issues.jsonl --orphan-handling strict     # Fail if parent is missing
 
 # Configure default orphan handling behavior
-bd config set import.orphan_handling "resurrect"
-bd sync  # Now uses resurrect mode by default
+fbd config set import.orphan_handling "resurrect"
+fbd sync  # Now uses resurrect mode by default
 ```
 
 **Orphan handling modes:**
@@ -521,13 +521,13 @@ See [CONFIG.md](CONFIG.md#example-import-orphan-handling) and [TROUBLESHOOTING.m
 
 ```bash
 # Migrate databases after version upgrade
-bd migrate                                             # Detect and migrate old databases
-bd migrate --dry-run                                   # Preview migration
-bd migrate --cleanup --yes                             # Migrate and remove old files
+fbd migrate                                             # Detect and migrate old databases
+fbd migrate --dry-run                                   # Preview migration
+fbd migrate --cleanup --yes                             # Migrate and remove old files
 
-# AI-supervised migration (check before running bd migrate)
-bd migrate --inspect --json                            # Show migration plan for AI agents
-bd info --schema --json                                # Get schema, tables, config, sample IDs
+# AI-supervised migration (check before running fbd migrate)
+fbd migrate --inspect --json                            # Show migration plan for AI agents
+fbd info --schema --json                                # Get schema, tables, config, sample IDs
 ```
 
 **Migration workflow for AI agents:**
@@ -536,7 +536,7 @@ bd info --schema --json                                # Get schema, tables, con
 2. Check for `missing_config` (like issue_prefix)
 3. Review `invariants_to_check` for safety guarantees
 4. If warnings exist, fix config issues first
-5. Then run `bd migrate` safely
+5. Then run `fbd migrate` safely
 
 **Migration safety invariants:**
 
@@ -552,29 +552,29 @@ See [docs/DAEMON.md](DAEMON.md) for complete daemon management reference.
 
 ```bash
 # List all running daemons
-bd daemons list --json
+fbd daemons list --json
 
 # Check health (version mismatches, stale sockets)
-bd daemons health --json
+fbd daemons health --json
 
 # Stop/restart specific daemon
-bd daemons stop /path/to/workspace --json
-bd daemons restart 12345 --json  # By PID
+fbd daemons stop /path/to/workspace --json
+fbd daemons restart 12345 --json  # By PID
 
 # View daemon logs
-bd daemons logs /path/to/workspace -n 100
-bd daemons logs 12345 -f  # Follow mode
+fbd daemons logs /path/to/workspace -n 100
+fbd daemons logs 12345 -f  # Follow mode
 
 # Stop all daemons
-bd daemons killall --json
-bd daemons killall --force --json  # Force kill if graceful fails
+fbd daemons killall --json
+fbd daemons killall --force --json  # Force kill if graceful fails
 ```
 
 ### Sync Operations
 
 ```bash
 # Manual sync (force immediate export/import/commit/push)
-bd sync
+fbd sync
 
 # What it does:
 # 1. Export pending changes to JSONL
@@ -584,8 +584,8 @@ bd sync
 # 5. Push to remote
 
 # Resolve JSONL merge conflict markers (v0.47.0+)
-bd resolve-conflicts                          # Resolve in mechanical mode
-bd resolve-conflicts --dry-run --json         # Preview resolution
+fbd resolve-conflicts                          # Resolve in mechanical mode
+fbd resolve-conflicts --dry-run --json         # Preview resolution
 # Mechanical mode rules: updated_at wins, closed beats open, higher priority wins
 ```
 
@@ -634,13 +634,13 @@ Always use `--json` flag for programmatic use:
 
 ```bash
 # Single issue
-bd show bd-42 --json
+fbd show bd-42 --json
 
 # List of issues
-bd ready --json
+fbd ready --json
 
 # Operation result
-bd create "Issue" -p 1 --json
+fbd create "Issue" -p 1 --json
 ```
 
 ### Human-Readable Output
@@ -648,7 +648,7 @@ bd create "Issue" -p 1 --json
 Default output without `--json`:
 
 ```bash
-bd ready
+fbd ready
 # bd-42  Fix authentication bug  [P1, bug, in_progress]
 # bd-43  Add user settings page  [P2, feature, open]
 ```
@@ -659,15 +659,15 @@ bd ready
 
 ```bash
 # 1. Find available work
-bd ready --json
+fbd ready --json
 
 # 2. Claim issue
-bd update bd-42 --status in_progress --json
+fbd update bd-42 --status in_progress --json
 
 # 3. Work on it...
 
 # 4. Close when done
-bd close bd-42 --reason "Implemented and tested" --json
+fbd close bd-42 --reason "Implemented and tested" --json
 ```
 
 ### Discover and Link Work
@@ -676,42 +676,42 @@ bd close bd-42 --reason "Implemented and tested" --json
 # While working on bd-100, discover a bug
 
 # Old way (two commands):
-bd create "Found auth bug" -t bug -p 1 --json  # Returns bd-101
-bd dep add bd-101 bd-100 --type discovered-from
+fbd create "Found auth bug" -t bug -p 1 --json  # Returns bd-101
+fbd dep add bd-101 bd-100 --type discovered-from
 
 # New way (one command):
-bd create "Found auth bug" -t bug -p 1 --deps discovered-from:bd-100 --json
+fbd create "Found auth bug" -t bug -p 1 --deps discovered-from:bd-100 --json
 ```
 
 ### Batch Operations
 
 ```bash
 # Update multiple issues at once
-bd update bd-41 bd-42 bd-43 --priority 0 --json
+fbd update bd-41 bd-42 bd-43 --priority 0 --json
 
 # Close multiple issues
-bd close bd-41 bd-42 bd-43 --reason "Batch completion" --json
+fbd close bd-41 bd-42 bd-43 --reason "Batch completion" --json
 
 # Add label to multiple issues
-bd label add bd-41 bd-42 bd-43 urgent --json
+fbd label add bd-41 bd-42 bd-43 urgent --json
 ```
 
 ### Session Workflow
 
 ```bash
 # Start of session
-bd ready --json  # Find work
+fbd ready --json  # Find work
 
 # During session
-bd create "..." -p 1 --json
-bd update bd-42 --status in_progress --json
+fbd create "..." -p 1 --json
+fbd update bd-42 --status in_progress --json
 # ... work ...
 
 # End of session (IMPORTANT!)
-bd sync  # Force immediate sync, bypass debounce
+fbd sync  # Force immediate sync, bypass debounce
 ```
 
-**ALWAYS run `bd sync` at end of agent sessions** to ensure changes are committed/pushed immediately.
+**ALWAYS run `fbd sync` at end of agent sessions** to ensure changes are committed/pushed immediately.
 
 ## See Also
 

@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
-Export bd issues to Jira.
+Export fbd issues to Jira.
 
-Creates new Jira issues from bd issues without external_ref, and optionally
+Creates new Jira issues from fbd issues without external_ref, and optionally
 updates existing Jira issues matched by external_ref.
 
 Usage:
     # Export all issues (create new, update existing)
-    bd export | python jsonl2jira.py --from-config
+    fbd export | python jsonl2jira.py --from-config
 
     # Create only (don't update existing Jira issues)
-    bd export | python jsonl2jira.py --from-config --create-only
+    fbd export | python jsonl2jira.py --from-config --create-only
 
     # Dry run (preview what would happen)
-    bd export | python jsonl2jira.py --from-config --dry-run
+    fbd export | python jsonl2jira.py --from-config --dry-run
 
     # From JSONL file
     python jsonl2jira.py --from-config --file issues.jsonl
@@ -33,10 +33,10 @@ from urllib.error import HTTPError, URLError
 
 
 def get_bd_config(key: str) -> Optional[str]:
-    """Get a configuration value from bd config."""
+    """Get a configuration value from fbd config."""
     try:
         result = subprocess.run(
-            ["bd", "config", "get", "--json", key],
+            ["fbd", "config", "get", "--json", key],
             capture_output=True,
             text=True,
             timeout=10
@@ -50,10 +50,10 @@ def get_bd_config(key: str) -> Optional[str]:
 
 
 def get_all_bd_config() -> Dict[str, str]:
-    """Get all configuration values from bd config."""
+    """Get all configuration values from fbd config."""
     try:
         result = subprocess.run(
-            ["bd", "config", "list", "--json"],
+            ["fbd", "config", "list", "--json"],
             capture_output=True,
             text=True,
             timeout=10
@@ -67,7 +67,7 @@ def get_all_bd_config() -> Dict[str, str]:
 
 def get_reverse_status_mapping() -> Dict[str, str]:
     """
-    Get reverse status mapping (bd status -> Jira status).
+    Get reverse status mapping (fbd status -> Jira status).
 
     Uses jira.reverse_status_map.* if configured, otherwise inverts jira.status_map.*.
     Falls back to sensible defaults.
@@ -88,11 +88,11 @@ def get_reverse_status_mapping() -> Dict[str, str]:
     for key, value in config.items():
         if key.startswith("jira.status_map."):
             jira_status = key[len("jira.status_map."):]
-            # Value is bd status, key suffix is jira status
+            # Value is fbd status, key suffix is jira status
             if value not in reverse_map:
                 reverse_map[value] = jira_status.replace("_", " ").title()
 
-    # Add defaults for any missing bd statuses
+    # Add defaults for any missing fbd statuses
     defaults = {
         "open": "To Do",
         "in_progress": "In Progress",
@@ -109,7 +109,7 @@ def get_reverse_status_mapping() -> Dict[str, str]:
 
 def get_reverse_type_mapping() -> Dict[str, str]:
     """
-    Get reverse type mapping (bd type -> Jira issue type).
+    Get reverse type mapping (fbd type -> Jira issue type).
 
     Uses jira.reverse_type_map.* if configured, otherwise inverts jira.type_map.*.
     Falls back to sensible defaults.
@@ -133,7 +133,7 @@ def get_reverse_type_mapping() -> Dict[str, str]:
             if value not in reverse_map:
                 reverse_map[value] = jira_type.replace("_", " ").title()
 
-    # Add defaults for any missing bd types
+    # Add defaults for any missing fbd types
     defaults = {
         "bug": "Bug",
         "feature": "Story",
@@ -151,7 +151,7 @@ def get_reverse_type_mapping() -> Dict[str, str]:
 
 def get_reverse_priority_mapping() -> Dict[int, str]:
     """
-    Get reverse priority mapping (bd priority -> Jira priority name).
+    Get reverse priority mapping (fbd priority -> Jira priority name).
 
     Uses jira.reverse_priority_map.* if configured.
     Falls back to sensible defaults.
@@ -182,7 +182,7 @@ def get_reverse_priority_mapping() -> Dict[int, str]:
 
 
 class BeadsToJira:
-    """Export bd issues to Jira."""
+    """Export fbd issues to Jira."""
 
     def __init__(
         self,
@@ -316,7 +316,7 @@ class BeadsToJira:
             return []
 
     def find_issue_type_id(self, bd_type: str) -> Optional[str]:
-        """Find Jira issue type ID for a bd type."""
+        """Find Jira issue type ID for a fbd type."""
         jira_type_name = self.type_map.get(bd_type, "Task")
         issue_types = self.get_issue_types()
 
@@ -338,7 +338,7 @@ class BeadsToJira:
         return None
 
     def find_priority_id(self, bd_priority: int) -> Optional[str]:
-        """Find Jira priority ID for a bd priority."""
+        """Find Jira priority ID for a fbd priority."""
         jira_priority_name = self.priority_map.get(bd_priority, "Medium")
         priorities = self.get_priorities()
 
@@ -485,7 +485,7 @@ class BeadsToJira:
         return bool(updates) or current_status != target_jira_status
 
     def process_issue(self, bd_issue: Dict) -> None:
-        """Process a single bd issue."""
+        """Process a single fbd issue."""
         bd_id = bd_issue.get("id", "unknown")
         external_ref = bd_issue.get("external_ref", "")
 
@@ -552,7 +552,7 @@ class BeadsToJira:
 
 
 def update_bd_external_refs(mappings: List[Dict]) -> None:
-    """Update bd issues with external_ref from created Jira issues."""
+    """Update fbd issues with external_ref from created Jira issues."""
     for mapping in mappings:
         bd_id = mapping.get("bd_id")
         external_ref = mapping.get("external_ref")
@@ -560,7 +560,7 @@ def update_bd_external_refs(mappings: List[Dict]) -> None:
         if bd_id and external_ref:
             try:
                 subprocess.run(
-                    ["bd", "update", bd_id, f"--external-ref={external_ref}"],
+                    ["fbd", "update", bd_id, f"--external-ref={external_ref}"],
                     capture_output=True,
                     timeout=10
                 )
@@ -573,42 +573,42 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Export bd issues to Jira",
+        description="Export fbd issues to Jira",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # Export all issues (create new, update existing)
-  bd export | python jsonl2jira.py --from-config
+  fbd export | python jsonl2jira.py --from-config
 
   # Create only (don't update existing Jira issues)
-  bd export | python jsonl2jira.py --from-config --create-only
+  fbd export | python jsonl2jira.py --from-config --create-only
 
   # Dry run (preview what would happen)
-  bd export | python jsonl2jira.py --from-config --dry-run
+  fbd export | python jsonl2jira.py --from-config --dry-run
 
   # From JSONL file
   python jsonl2jira.py --from-config --file issues.jsonl
 
-  # Update bd with new external_refs
-  bd export | python jsonl2jira.py --from-config | while read line; do
+  # Update fbd with new external_refs
+  fbd export | python jsonl2jira.py --from-config | while read line; do
     bd_id=$(echo "$line" | jq -r '.bd_id')
     ext_ref=$(echo "$line" | jq -r '.external_ref')
-    bd update "$bd_id" --external-ref="$ext_ref"
+    fbd update "$bd_id" --external-ref="$ext_ref"
   done
 
 Configuration:
-  Set up bd config for easier usage:
-    bd config set jira.url "https://company.atlassian.net"
-    bd config set jira.project "PROJ"
-    bd config set jira.api_token "YOUR_TOKEN"
-    bd config set jira.username "your_email@company.com"  # For Jira Cloud
+  Set up fbd config for easier usage:
+    fbd config set jira.url "https://company.atlassian.net"
+    fbd config set jira.project "PROJ"
+    fbd config set jira.api_token "YOUR_TOKEN"
+    fbd config set jira.username "your_email@company.com"  # For Jira Cloud
 
-  Reverse field mappings (bd -> Jira):
-    bd config set jira.reverse_status_map.open "To Do"
-    bd config set jira.reverse_status_map.in_progress "In Progress"
-    bd config set jira.reverse_status_map.closed "Done"
-    bd config set jira.reverse_type_map.feature "Story"
-    bd config set jira.reverse_priority_map.0 "Highest"
+  Reverse field mappings (fbd -> Jira):
+    fbd config set jira.reverse_status_map.open "To Do"
+    fbd config set jira.reverse_status_map.in_progress "In Progress"
+    fbd config set jira.reverse_status_map.closed "Done"
+    fbd config set jira.reverse_type_map.feature "Story"
+    fbd config set jira.reverse_priority_map.0 "Highest"
         """
     )
 
@@ -623,12 +623,12 @@ Configuration:
     parser.add_argument(
         "--file",
         type=Path,
-        help="JSONL file containing bd issues (default: read from stdin)"
+        help="JSONL file containing fbd issues (default: read from stdin)"
     )
     parser.add_argument(
         "--from-config",
         action="store_true",
-        help="Read Jira settings from bd config"
+        help="Read Jira settings from fbd config"
     )
     parser.add_argument(
         "--username",
@@ -651,7 +651,7 @@ Configuration:
     parser.add_argument(
         "--update-refs",
         action="store_true",
-        help="Automatically update bd issues with external_ref after creation"
+        help="Automatically update fbd issues with external_ref after creation"
     )
 
     args = parser.parse_args()
@@ -720,9 +720,9 @@ Configuration:
     exporter.process_issues(issues)
     exporter.print_summary()
 
-    # Optionally update bd external_refs
+    # Optionally update fbd external_refs
     if args.update_refs and exporter.created and not args.dry_run:
-        print("\nUpdating bd issues with external_ref...", file=sys.stderr)
+        print("\nUpdating fbd issues with external_ref...", file=sys.stderr)
         mappings = [
             {"bd_id": bd_id, "external_ref": f"{jira_url}/browse/{jira_key}"}
             for bd_id, jira_key in exporter.created

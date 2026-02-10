@@ -1,0 +1,18 @@
+# Test fbd stats command
+fbd init --prefix test
+
+# Create issues
+fbd create 'First issue'
+cp stdout first.txt
+exec sh -c 'grep -oE "test-[a-z0-9]+" first.txt > first_id.txt'
+
+fbd create 'Second issue'
+
+# Close one issue
+exec sh -c 'fbd close $(cat first_id.txt)'
+
+# Check stats
+fbd stats
+stdout 'Total Issues:'
+stdout 'Open:'
+stdout 'Closed:'

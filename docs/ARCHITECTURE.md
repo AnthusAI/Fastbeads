@@ -1,17 +1,17 @@
 # Architecture
 
-This document describes bd's overall architecture - the data model, sync mechanism, and how components fit together. For internal implementation details (FlushManager, Blocked Cache), see [INTERNALS.md](INTERNALS.md).
+This document describes fbd's overall architecture - the data model, sync mechanism, and how components fit together. For internal implementation details (FlushManager, Blocked Cache), see [INTERNALS.md](INTERNALS.md).
 
 ## The Three-Layer Data Model
 
-bd's core design enables a distributed, git-backed issue tracker that feels like a centralized database. The "magic" comes from three synchronized layers:
+fbd's core design enables a distributed, git-backed issue tracker that feels like a centralized database. The "magic" comes from three synchronized layers:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        CLI Layer                                 │
 │                                                                  │
-│  bd create, list, update, close, ready, show, dep, sync, ...    │
-│  - Cobra commands in cmd/bd/                                     │
+│  fbd create, list, update, close, ready, show, dep, sync, ...    │
+│  - Cobra commands in cmd/fbd/                                     │
 │  - All commands support --json for programmatic use              │
 │  - Tries daemon RPC first, falls back to direct DB access        │
 └──────────────────────────────┬──────────────────────────────────┘
@@ -69,7 +69,7 @@ When you create or modify an issue:
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   CLI Command   │───▶│  SQLite Write   │───▶│  Mark Dirty     │
-│   (bd create)   │    │  (immediate)    │    │  (trigger sync) │
+│   (fbd create)   │    │  (immediate)    │    │  (trigger sync) │
 └─────────────────┘    └─────────────────┘    └────────┬────────┘
                                                        │
                                               5-second debounce
@@ -81,14 +81,14 @@ When you create or modify an issue:
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-1. **Command executes:** `bd create "New feature"` writes to SQLite immediately
+1. **Command executes:** `fbd create "New feature"` writes to SQLite immediately
 2. **Mark dirty:** The operation marks the database as needing export
 3. **Debounce window:** Wait 5 seconds for batch operations (configurable)
 4. **Export to JSONL:** Only changed entities are appended/updated
 5. **Git commit:** If git hooks are installed, changes auto-commit
 
 Key implementation:
-- Export: `cmd/bd/export.go`, `cmd/bd/autoflush.go`
+- Export: `cmd/fbd/export.go`, `cmd/fbd/autoflush.go`
 - FlushManager: `internal/flush/` (see [INTERNALS.md](INTERNALS.md))
 - Dirty tracking: `internal/storage/sqlite/dirty_issues.go`
 
@@ -105,17 +105,17 @@ When you query issues after a `git pull`:
                                                        v
                                                ┌─────────────────┐
                                                │  CLI Query      │
-                                               │  (bd ready)     │
+                                               │  (fbd ready)     │
                                                └─────────────────┘
 ```
 
 1. **Git pull:** Fetches updated JSONL from remote
-2. **Auto-import detection:** First bd command checks if JSONL is newer than DB
+2. **Auto-import detection:** First fbd command checks if JSONL is newer than DB
 3. **Import to SQLite:** Parse JSONL, merge with local state using content hashes
 4. **Query:** Commands read from fast local SQLite
 
 Key implementation:
-- Import: `cmd/bd/import.go`, `cmd/bd/autoimport.go`
+- Import: `cmd/fbd/import.go`, `cmd/fbd/autoimport.go`
 - Auto-import logic: `internal/autoimport/autoimport.go`
 - Collision detection: `internal/importer/importer.go`
 
@@ -128,8 +128,8 @@ The key insight that enables distributed operation: **content-based hashing for 
 Sequential IDs (bd-1, bd-2, bd-3) cause collisions when multiple agents create issues concurrently:
 
 ```
-Branch A: bd create "Add OAuth"   → bd-10
-Branch B: bd create "Add Stripe"  → bd-10 (collision!)
+Branch A: fbd create "Add OAuth"   → bd-10
+Branch B: fbd create "Add Stripe"  → bd-10 (collision!)
 ```
 
 ### The Solution
@@ -137,8 +137,8 @@ Branch B: bd create "Add Stripe"  → bd-10 (collision!)
 Hash-based IDs derived from random UUIDs ensure uniqueness:
 
 ```
-Branch A: bd create "Add OAuth"   → bd-a1b2
-Branch B: bd create "Add Stripe"  → bd-f14c (no collision)
+Branch A: fbd create "Add OAuth"   → bd-a1b2
+Branch B: fbd create "Add Stripe"  → bd-f14c (no collision)
 ```
 
 ### How It Works
@@ -176,7 +176,7 @@ Each workspace runs its own background daemon for auto-sync:
 │                                                                  │
 │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐         │
 │  │ RPC Server  │    │  Auto-Sync  │    │  Background │         │
-│  │ (bd.sock)   │    │  Manager    │    │  Tasks      │         │
+│  │ (fbd.sock)   │    │  Manager    │    │  Tasks      │         │
 │  └─────────────┘    └─────────────┘    └─────────────┘         │
 │         │                  │                  │                  │
 │         └──────────────────┴──────────────────┘                  │
@@ -200,14 +200,14 @@ Each workspace runs its own background daemon for auto-sync:
 - One daemon per workspace (LSP-like model)
 
 **Communication:**
-- Unix domain socket at `.beads/bd.sock` (Windows: named pipes)
+- Unix domain socket at `.beads/fbd.sock` (Windows: named pipes)
 - Protocol defined in `internal/rpc/protocol.go`
 - CLI tries daemon first, falls back to direct DB access
 
 **Lifecycle:**
-- Auto-starts on first bd command (unless `BEADS_NO_DAEMON=1`)
+- Auto-starts on first fbd command (unless `BEADS_NO_DAEMON=1`)
 - Auto-restarts after version upgrades
-- Managed via `bd daemons` command
+- Managed via `fbd daemons` command
 
 See [DAEMON.md](DAEMON.md) for operational details.
 
@@ -225,7 +225,7 @@ Core types in `internal/types/types.go`:
 
 ### Dependency Types
 
-| Type | Semantic | Affects `bd ready`? |
+| Type | Semantic | Affects `fbd ready`? |
 |------|----------|---------------------|
 | `blocks` | Issue X must close before Y starts | Yes |
 | `parent-child` | Hierarchical (epic/subtask) | Yes (children blocked if parent blocked) |
@@ -317,7 +317,7 @@ Each issue in `.beads/issues.jsonl` is a JSON object with the following fields. 
 .beads/
 ├── beads.db          # SQLite database (gitignored)
 ├── issues.jsonl      # JSONL source of truth (git-tracked)
-├── bd.sock           # Daemon socket (gitignored)
+├── fbd.sock           # Daemon socket (gitignored)
 ├── daemon.log        # Daemon logs (gitignored)
 ├── config.yaml       # Project config (optional)
 └── export_hashes.db  # Export tracking (gitignored)
@@ -327,12 +327,12 @@ Each issue in `.beads/issues.jsonl` is a JSON object with the following fields. 
 
 | Area | Files |
 |------|-------|
-| CLI entry | `cmd/bd/main.go` |
+| CLI entry | `cmd/fbd/main.go` |
 | Storage interface | `internal/storage/storage.go` |
 | SQLite implementation | `internal/storage/sqlite/` |
 | RPC protocol | `internal/rpc/protocol.go`, `server_*.go` |
-| Export logic | `cmd/bd/export.go`, `autoflush.go` |
-| Import logic | `cmd/bd/import.go`, `internal/importer/` |
+| Export logic | `cmd/fbd/export.go`, `autoflush.go` |
+| Import logic | `cmd/fbd/import.go`, `internal/importer/` |
 | Auto-sync | `internal/autoimport/`, `internal/flush/` |
 
 ## Wisps and Molecules
@@ -345,7 +345,7 @@ Each issue in `.beads/issues.jsonl` is a JSON object with the following fields. 
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   bd mol wisp       │───▶│  Wisp Issues    │───▶│  bd mol squash  │
+│   fbd mol wisp       │───▶│  Wisp Issues    │───▶│  fbd mol squash  │
 │ (from template) │    │  (local-only)   │    │  (→ digest)     │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
@@ -379,7 +379,7 @@ This design enables:
 | Can resurrect | Yes (without tombstone) | No (never synced) |
 | Deletion method | `CreateTombstone()` | `DeleteIssue()` (hard delete) |
 
-The `bd mol squash` command uses hard delete intentionally - tombstones would be wasted overhead for data that never leaves the local database.
+The `fbd mol squash` command uses hard delete intentionally - tombstones would be wasted overhead for data that never leaves the local database.
 
 ### Future Directions
 

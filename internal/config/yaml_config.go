@@ -14,11 +14,11 @@ import (
 // rather than the SQLite database. These are "startup" settings that are
 // read before the database is opened.
 //
-// This fixes GH#536: users were confused when `bd config set no-db true`
+// This fixes GH#536: users were confused when `fbd config set no-db true`
 // appeared to succeed but had no effect (because no-db is read from yaml
 // at startup, not from SQLite).
 var YamlOnlyKeys = map[string]bool{
-	// Bootstrap flags (affect how bd starts)
+	// Bootstrap flags (affect how fbd starts)
 	"no-db":             true,
 	"no-daemon":         true,
 	"no-auto-flush":     true,
@@ -40,7 +40,7 @@ var YamlOnlyKeys = map[string]bool{
 	"git.author":      true,
 	"git.no-gpg-sign": true,
 	"no-push":         true,
-	"no-git-ops":      true, // Disable git ops in bd prime session close protocol (GH#593)
+	"no-git-ops":      true, // Disable git ops in fbd prime session close protocol (GH#593)
 
 	// Sync settings
 	"sync-branch": true,
@@ -173,7 +173,7 @@ func findProjectConfigYaml() (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("no .beads/config.yaml found (run 'bd init' first)")
+	return "", fmt.Errorf("no .beads/config.yaml found (run 'fbd init' first)")
 }
 
 // updateYamlKey updates a key in yaml content, handling commented-out keys.

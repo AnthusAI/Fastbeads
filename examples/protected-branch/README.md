@@ -23,10 +23,10 @@ git init my-project
 cd my-project
 
 # Initialize beads with separate sync branch
-bd init --branch beads-metadata --quiet
+fbd init --branch beads-metadata --quiet
 
 # Verify configuration
-bd config get sync.branch
+fbd config get sync.branch
 # Output: beads-metadata
 ```
 
@@ -34,16 +34,16 @@ bd config get sync.branch
 
 ```bash
 # AI agent creates issues normally
-bd create "Implement user authentication" -t feature -p 1
-bd create "Add login page" -t task -p 1
-bd create "Write auth tests" -t task -p 2
+fbd create "Implement user authentication" -t feature -p 1
+fbd create "Add login page" -t task -p 1
+fbd create "Write auth tests" -t task -p 2
 
 # Link tasks to parent feature
-bd link bd-XXXXX --blocks bd-YYYYY  # auth blocks login
-bd link bd-XXXXX --blocks bd-ZZZZZ  # auth blocks tests
+fbd link bd-XXXXX --blocks bd-YYYYY  # auth blocks login
+fbd link bd-XXXXX --blocks bd-ZZZZZ  # auth blocks tests
 
 # Start work
-bd update bd-XXXXX --status in_progress
+fbd update bd-XXXXX --status in_progress
 ```
 
 **Note:** Replace `bd-XXXXX` etc. with actual issue IDs created above.
@@ -52,7 +52,7 @@ bd update bd-XXXXX --status in_progress
 
 ```bash
 # Start daemon with auto-commit
-bd daemon start --auto-commit
+fbd daemon start --auto-commit
 
 # All issue changes are now automatically committed to beads-metadata branch
 ```
@@ -64,7 +64,7 @@ Check what's been committed:
 git log beads-metadata --oneline | head -5
 
 # View diff between main and sync branch
-bd sync --status
+fbd sync --status
 ```
 
 ### 4. Manual Sync (Without Daemon)
@@ -73,11 +73,11 @@ If you're not using the daemon:
 
 ```bash
 # Create or update issues
-bd create "Fix bug in login" -t bug -p 0
-bd update bd-XXXXX --status closed
+fbd create "Fix bug in login" -t bug -p 0
+fbd update bd-XXXXX --status closed
 
 # Manually flush to sync branch
-bd sync --flush-only
+fbd sync --flush-only
 
 # Verify commit
 git log beads-metadata -1
@@ -99,17 +99,17 @@ gh pr create --base main --head beads-metadata \
 # After PR is approved and merged:
 git checkout main
 git pull
-bd import  # Import merged changes to database
+fbd import  # Import merged changes to database
 ```
 
 Option 2: Direct merge (if you have push access):
 
 ```bash
 # Preview merge
-bd sync --merge --dry-run
+fbd sync --merge --dry-run
 
 # Perform merge
-bd sync --merge
+fbd sync --merge
 
 # This will:
 # - Merge beads-metadata into main
@@ -124,14 +124,14 @@ If you have multiple clones or agents:
 
 ```bash
 # Clone 1: Create issue
-bd create "New feature" -t feature -p 1
-bd sync --flush-only  # Commit to beads-metadata
+fbd create "New feature" -t feature -p 1
+fbd sync --flush-only  # Commit to beads-metadata
 git push origin beads-metadata
 
 # Clone 2: Pull changes
 git fetch origin beads-metadata
-bd sync --no-push  # Pull from sync branch and import
-bd list  # See the new feature issue
+fbd sync --no-push  # Pull from sync branch and import
+fbd list  # See the new feature issue
 ```
 
 ## Workflow Summary
@@ -181,7 +181,7 @@ my-project/
 ├── .beads/                    # Main beads directory (in your workspace)
 │   ├── beads.db               # SQLite database
 │   ├── issues.jsonl            # JSONL export
-│   └── bd.sock                # Daemon socket (if running)
+│   └── fbd.sock                # Daemon socket (if running)
 ├── src/                       # Your application code
 │   └── ...
 └── README.md
@@ -197,15 +197,15 @@ my-project/
 
 ### For Humans
 
-- **Review before merging:** Use `bd sync --status` to see what changed
+- **Review before merging:** Use `fbd sync --status` to see what changed
 - **Batch merges:** Don't need to merge after every issue - merge when convenient
 - **PR descriptions:** Link to specific issues in PR body for context
 
 ### For AI Agents
 
-- **No workflow changes:** Agents use `bd create`, `bd update`, etc. as normal
+- **No workflow changes:** Agents use `fbd create`, `fbd update`, etc. as normal
 - **Let daemon handle it:** With `--auto-commit`, agents don't think about sync
-- **Session end:** Run `bd sync` at end of session to ensure everything is committed
+- **Session end:** Run `fbd sync` at end of session to ensure everything is committed
 
 ### Troubleshooting
 
@@ -214,21 +214,21 @@ my-project/
 JSONL is append-only and line-based, so conflicts are rare. If they occur:
 1. Both versions are usually valid - keep both lines
 2. If same issue updated differently, keep the line with newer `updated_at`
-3. After resolving: `bd import` to update database
+3. After resolving: `fbd import` to update database
 
 **"Worktree doesn't exist"**
 
 The daemon creates it automatically on first commit. To create manually:
 ```bash
-bd config get sync.branch  # Verify it's set
-bd daemon stop && bd daemon start          # Daemon will create worktree
+fbd config get sync.branch  # Verify it's set
+fbd daemon stop && fbd daemon start          # Daemon will create worktree
 ```
 
 **"Changes not syncing"**
 
 Make sure:
-- `bd config get sync.branch` returns the same value on all clones
-- Daemon is running: `bd daemon status`
+- `fbd config get sync.branch` returns the same value on all clones
+- Daemon is running: `fbd daemon status`
 - Both clones have fetched: `git fetch origin beads-metadata`
 
 ## Advanced: GitHub Actions Integration
@@ -250,7 +250,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install bd
+      - name: Install fbd
         run: curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
       - name: Check for changes
@@ -278,4 +278,4 @@ jobs:
 
 - [docs/PROTECTED_BRANCHES.md](../../docs/PROTECTED_BRANCHES.md) - Complete guide
 - [AGENTS.md](../../AGENTS.md) - Agent integration instructions
-- [commands/sync.md](../../claude-plugin/commands/sync.md) - `bd sync` command reference
+- [commands/sync.md](../../claude-plugin/commands/sync.md) - `fbd sync` command reference

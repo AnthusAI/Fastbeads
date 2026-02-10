@@ -35,8 +35,8 @@ import (
 	// Import MySQL driver for server mode connections
 	_ "github.com/go-sql-driver/mysql"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/doltutil"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage/doltutil"
 )
 
 // DoltStore implements the Storage interface using Dolt
@@ -258,7 +258,7 @@ func New(ctx context.Context, cfg *Config) (*DoltStore, error) {
 	}
 
 	// Acquire advisory flock before opening dolt (embedded mode only).
-	// This prevents multiple bd processes from competing for dolt's internal LOCK file.
+	// This prevents multiple fbd processes from competing for dolt's internal LOCK file.
 	// Set BD_SKIP_ACCESS_LOCK=1 to bypass flock for testing whether Dolt's internal
 	// locking is sufficient. See bd-39gso for testing plan.
 	var accessLock *AccessLock
@@ -394,7 +394,7 @@ func New(ctx context.Context, cfg *Config) (*DoltStore, error) {
 	// Only applies in server mode (embedded mode doesn't support concurrent writers).
 	if bdBranch := os.Getenv("BD_BRANCH"); bdBranch != "" && cfg.ServerMode {
 		// Force single connection to ensure branch checkout applies to all operations.
-		// This is safe because each polecat is a separate bd process.
+		// This is safe because each polecat is a separate fbd process.
 		db.SetMaxOpenConns(1)
 		db.SetMaxIdleConns(1)
 		if _, err := db.ExecContext(ctx, "CALL DOLT_CHECKOUT(?)", bdBranch); err != nil {

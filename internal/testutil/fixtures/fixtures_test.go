@@ -7,8 +7,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage/sqlite"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func TestLargeSQLite(t *testing.T) {

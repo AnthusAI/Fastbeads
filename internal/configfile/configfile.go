@@ -7,14 +7,19 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/steveyegge/fastbeads/internal/env"
 )
 
 const ConfigFileName = "metadata.json"
 
 type Config struct {
-	Database    string `json:"database"`
-	JSONLExport string `json:"jsonl_export,omitempty"`
-	Backend     string `json:"backend,omitempty"` // "sqlite" (default) or "dolt"
+	Database          string `json:"database"`
+	JSONLExport       string `json:"jsonl_export,omitempty"`
+	Backend           string `json:"backend,omitempty"`    // "sqlite" (default) or "dolt"
+	Storage           string `json:"storage,omitempty"`    // "files" (default) or "jsonl"
+	IssuesDir         string `json:"issues_dir,omitempty"` // Path to issues directory (for files mode)
+	JSONLPathOverride string `json:"jsonl_path,omitempty"` // Path to JSONL file (for jsonl mode)
 
 	// Deletions configuration
 	DeletionsRetentionDays int `json:"deletions_retention_days,omitempty"` // 0 means use default (3 days)
@@ -27,7 +32,7 @@ type Config struct {
 	DoltServerPort int    `json:"dolt_server_port,omitempty"` // Server port (default: 3307)
 	DoltServerUser string `json:"dolt_server_user,omitempty"` // MySQL user (default: root)
 	DoltDatabase   string `json:"dolt_database,omitempty"`    // SQL database name (default: beads)
-	// Note: Password should be set via BEADS_DOLT_PASSWORD env var for security
+	// Note: Password should be set via FBD_DOLT_PASSWORD/BEADS_DOLT_PASSWORD env var for security
 
 	// Stale closed issues check configuration
 	// 0 = disabled (default), positive = threshold in days
@@ -44,6 +49,7 @@ func DefaultConfig() *Config {
 	return &Config{
 		Database:    "beads.db",
 		JSONLExport: "issues.jsonl", // Canonical name (bd-6xd)
+		Storage:     "",
 	}
 }
 
@@ -134,10 +140,63 @@ func (c *Config) DatabasePath(beadsDir string) string {
 }
 
 func (c *Config) JSONLPath(beadsDir string) string {
+	if c.JSONLPathOverride != "" {
+		if filepath.IsAbs(c.JSONLPathOverride) {
+			return c.JSONLPathOverride
+		}
+		return filepath.Join(beadsDir, c.JSONLPathOverride)
+	}
 	if c.JSONLExport == "" {
 		return filepath.Join(beadsDir, "issues.jsonl")
 	}
 	return filepath.Join(beadsDir, c.JSONLExport)
+}
+
+func (c *Config) IssuesDirPath(beadsDir string) string {
+	if c.IssuesDir == "" {
+		return filepath.Join(beadsDir, "issues")
+	}
+	if filepath.IsAbs(c.IssuesDir) {
+		return c.IssuesDir
+	}
+	return filepath.Join(beadsDir, c.IssuesDir)
+}
+
+// ResolveStorageMode determines which file-based storage mode to use.
+// If storage is explicitly set, that value is used.
+// Otherwise, it auto-detects based on the presence of issues dir or JSONL file.
+// Returns empty string if neither exists (callers may fall back to backend storage).
+func (c *Config) ResolveStorageMode(beadsDir string) (string, error) {
+	mode := strings.TrimSpace(strings.ToLower(c.Storage))
+	switch mode {
+	case "":
+		// Auto-detect below.
+	case StorageFiles, StorageJSONL:
+		return mode, nil
+	default:
+		return "", fmt.Errorf("invalid storage mode %q (supported: %s, %s)", c.Storage, StorageFiles, StorageJSONL)
+	}
+
+	issuesDir := c.IssuesDirPath(beadsDir)
+	jsonlPath := c.JSONLPath(beadsDir)
+	issuesDirExists := pathExists(issuesDir)
+	jsonlExists := pathExists(jsonlPath)
+
+	if issuesDirExists && jsonlExists {
+		return "", fmt.Errorf("both issues dir and JSONL file exist (%s, %s); set storage in metadata.json to %q or %q", issuesDir, jsonlPath, StorageFiles, StorageJSONL)
+	}
+	if issuesDirExists {
+		return StorageFiles, nil
+	}
+	if jsonlExists {
+		return StorageJSONL, nil
+	}
+	return "", nil
+}
+
+func pathExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
 }
 
 // DefaultDeletionsRetentionDays is the default retention period for deletion records.
@@ -164,6 +223,12 @@ func (c *Config) GetStaleClosedIssuesDays() int {
 const (
 	BackendSQLite = "sqlite"
 	BackendDolt   = "dolt"
+)
+
+// Storage mode constants
+const (
+	StorageFiles = "files"
+	StorageJSONL = "jsonl"
 )
 
 // BackendCapabilities describes behavioral constraints for a storage backend.
@@ -237,10 +302,10 @@ const (
 
 // IsDoltServerMode returns true if Dolt should connect via sql-server.
 // Server mode is opt-in for high-concurrency scenarios; embedded is the default.
-// Checks the BEADS_DOLT_SERVER_MODE env var first, then falls back to the
+// Checks the FBD_DOLT_SERVER_MODE/BEADS_DOLT_SERVER_MODE env var first, then falls back to the
 // dolt_mode field in metadata.json. Only applies when backend is "dolt".
 func (c *Config) IsDoltServerMode() bool {
-	if os.Getenv("BEADS_DOLT_SERVER_MODE") == "1" && c.GetBackend() == BackendDolt {
+	if env.GetEnvAlias("DOLT_SERVER_MODE") == "1" && c.GetBackend() == BackendDolt {
 		return true
 	}
 	return c.GetBackend() == BackendDolt && strings.ToLower(c.DoltMode) == DoltModeServer
@@ -255,9 +320,9 @@ func (c *Config) GetDoltMode() string {
 }
 
 // GetDoltServerHost returns the Dolt server host.
-// Checks BEADS_DOLT_SERVER_HOST env var first, then config, then default.
+// Checks FBD_DOLT_SERVER_HOST/BEADS_DOLT_SERVER_HOST env var first, then config, then default.
 func (c *Config) GetDoltServerHost() string {
-	if h := os.Getenv("BEADS_DOLT_SERVER_HOST"); h != "" {
+	if h := env.GetEnvAlias("DOLT_SERVER_HOST"); h != "" {
 		return h
 	}
 	if c.DoltServerHost != "" {
@@ -267,9 +332,9 @@ func (c *Config) GetDoltServerHost() string {
 }
 
 // GetDoltServerPort returns the Dolt server port.
-// Checks BEADS_DOLT_SERVER_PORT env var first, then config, then default.
+// Checks FBD_DOLT_SERVER_PORT/BEADS_DOLT_SERVER_PORT env var first, then config, then default.
 func (c *Config) GetDoltServerPort() int {
-	if p := os.Getenv("BEADS_DOLT_SERVER_PORT"); p != "" {
+	if p := env.GetEnvAlias("DOLT_SERVER_PORT"); p != "" {
 		if port, err := strconv.Atoi(p); err == nil {
 			return port
 		}
@@ -281,9 +346,9 @@ func (c *Config) GetDoltServerPort() int {
 }
 
 // GetDoltServerUser returns the Dolt server MySQL user.
-// Checks BEADS_DOLT_SERVER_USER env var first, then config, then default.
+// Checks FBD_DOLT_SERVER_USER/BEADS_DOLT_SERVER_USER env var first, then config, then default.
 func (c *Config) GetDoltServerUser() string {
-	if u := os.Getenv("BEADS_DOLT_SERVER_USER"); u != "" {
+	if u := env.GetEnvAlias("DOLT_SERVER_USER"); u != "" {
 		return u
 	}
 	if c.DoltServerUser != "" {
@@ -293,9 +358,9 @@ func (c *Config) GetDoltServerUser() string {
 }
 
 // GetDoltDatabase returns the Dolt SQL database name.
-// Checks BEADS_DOLT_SERVER_DATABASE env var first, then config, then default.
+// Checks FBD_DOLT_SERVER_DATABASE/BEADS_DOLT_SERVER_DATABASE env var first, then config, then default.
 func (c *Config) GetDoltDatabase() string {
-	if d := os.Getenv("BEADS_DOLT_SERVER_DATABASE"); d != "" {
+	if d := env.GetEnvAlias("DOLT_SERVER_DATABASE"); d != "" {
 		return d
 	}
 	if c.DoltDatabase != "" {

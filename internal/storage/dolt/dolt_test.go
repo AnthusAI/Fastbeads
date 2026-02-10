@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage/doltutil"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage/doltutil"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // testTimeout is the maximum time for any single test operation.

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // SearchIssues finds issues matching query and filters

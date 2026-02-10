@@ -1,7 +1,7 @@
 # Error Handling Audit Report
 **Date:** 2025-11-24
 **Issue:** bd-1qwo
-**Scope:** cmd/bd/*.go
+**Scope:** cmd/fbd/*.go
 
 This document audits error handling patterns across the beads CLI codebase to ensure consistency with the guidelines established in [ERROR_HANDLING.md](../ERROR_HANDLING.md).
 
@@ -87,7 +87,7 @@ if err != nil {
 **sync.go:52-54, 59-60**
 ```go
 if jsonlPath == "" {
-    fmt.Fprintf(os.Stderr, "Error: not in a bd workspace (no .beads directory found)\n")
+    fmt.Fprintf(os.Stderr, "Error: not in a fbd workspace (no .beads directory found)\n")
     os.Exit(1)
 }
 ```
@@ -132,7 +132,7 @@ fmt.Fprintf(os.Stderr, "Error: refusing to export empty database over non-empty 
 fmt.Fprintf(os.Stderr, "  Database has 0 issues, JSONL has %d issues\n", existingCount)
 fmt.Fprintf(os.Stderr, "  This would result in data loss!\n")
 fmt.Fprintf(os.Stderr, "Hint: Use --force to override this safety check, or delete the JSONL file first:\n")
-fmt.Fprintf(os.Stderr, "  bd export -o %s --force\n", output)
+fmt.Fprintf(os.Stderr, "  fbd export -o %s --force\n", output)
 os.Exit(1)
 ```
 
@@ -250,7 +250,7 @@ if err := store.SetMetadata(ctx, "repo_id", repoID); err != nil {
 if err := installGitHooks(); err != nil && !quiet {
     yellow := color.New(color.FgYellow).SprintFunc()
     fmt.Fprintf(os.Stderr, "\n%s Failed to install git hooks: %v\n", yellow("⚠"), err)
-    fmt.Fprintf(os.Stderr, "You can try again with: %s\n\n", color.New(color.FgCyan).Sprint("bd doctor --fix"))
+    fmt.Fprintf(os.Stderr, "You can try again with: %s\n\n", color.New(color.FgCyan).Sprint("fbd doctor --fix"))
 }
 ```
 
@@ -259,7 +259,7 @@ if err := installGitHooks(); err != nil && !quiet {
 if err := installMergeDriver(); err != nil && !quiet {
     yellow := color.New(color.FgYellow).SprintFunc()
     fmt.Fprintf(os.Stderr, "\n%s Failed to install merge driver: %v\n", yellow("⚠"), err)
-    fmt.Fprintf(os.Stderr, "You can try again with: %s\n\n", color.New(color.FgCyan).Sprint("bd doctor --fix"))
+    fmt.Fprintf(os.Stderr, "You can try again with: %s\n\n", color.New(color.FgCyan).Sprint("fbd doctor --fix"))
 }
 ```
 
@@ -489,7 +489,7 @@ if err := TouchDatabaseFile(dbPath, jsonlPath); err != nil {
 
 4. **Add Context to Warnings**
    - Pattern B warnings could benefit from actionable hints
-   - Example (already good): init.go:332-336 suggests `bd doctor --fix`
+   - Example (already good): init.go:332-336 suggests `fbd doctor --fix`
    - Consider adding hints to other warnings where applicable
 
 ### Low Priority
@@ -504,7 +504,7 @@ if err := TouchDatabaseFile(dbPath, jsonlPath); err != nil {
 
 ## Files Not Yet Audited
 
-The following files in cmd/bd/ still need review:
+The following files in cmd/fbd/ still need review:
 - daemon_sync.go
 - update.go
 - list.go
@@ -557,7 +557,7 @@ The codebase demonstrates strong adherence to error handling patterns with a few
 
 ---
 
-## Phase 2 Audit: Additional cmd/bd Files (bd-3gc)
+## Phase 2 Audit: Additional cmd/fbd Files (bd-3gc)
 
 **Date:** 2025-11-28
 **Files Audited:** daemon_sync.go, list.go, show.go, dep.go, label.go, comments.go, delete.go, compact.go, config.go, validate.go
@@ -832,7 +832,7 @@ if err := syncbranch.Set(ctx, store, value); err != nil {
 // validate.go:28-32 - Daemon mode not supported
 if daemonClient != nil {
     fmt.Fprintf(os.Stderr, "Error: validate command not yet supported in daemon mode\n")
-    fmt.Fprintf(os.Stderr, "Use: bd --no-daemon validate\n")
+    fmt.Fprintf(os.Stderr, "Use: fbd --no-daemon validate\n")
     os.Exit(1)
 }
 

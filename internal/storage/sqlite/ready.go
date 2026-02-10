@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // GetReadyWork returns issues with no open blockers.
@@ -48,7 +48,7 @@ func (s *SQLiteStorage) GetReadyWork(ctx context.Context, filter types.WorkFilte
 		whereClauses = append(whereClauses, "i.issue_type NOT IN ('merge-request', 'gate', 'molecule', 'message', 'agent', 'role', 'rig')")
 		// Exclude IDs matching configured patterns
 		// Default patterns: -mol- (molecule steps), -wisp- (ephemeral wisps)
-		// Configure with: bd config set ready.exclude_id_patterns "-mol-,-wisp-"
+		// Configure with: fbd config set ready.exclude_id_patterns "-mol-,-wisp-"
 		// Use --type=task to explicitly include them, or IncludeMolSteps for internal callers
 		if !filter.IncludeMolSteps {
 			patterns := s.getExcludeIDPatterns(ctx)
@@ -814,7 +814,7 @@ func (s *SQLiteStorage) IsBlocked(ctx context.Context, issueID string) (bool, []
 }
 
 // GetNewlyUnblockedByClose returns issues that became unblocked when the given issue was closed.
-// This is used by the --suggest-next flag on bd close to show what work is now available.
+// This is used by the --suggest-next flag on fbd close to show what work is now available.
 // An issue is "newly unblocked" if:
 //   - It had a 'blocks' dependency on the closed issue
 //   - It is now unblocked (not in blocked_issues_cache)

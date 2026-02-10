@@ -12,9 +12,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/git"
-	"github.com/steveyegge/beads/internal/merge"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/git"
+	"github.com/steveyegge/fastbeads/internal/merge"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // EnsureWorktree ensures the sync branch worktree exists if sync-branch is configured.
@@ -190,7 +190,7 @@ func CommitToSyncBranch(ctx context.Context, repoRoot, syncBranch, jsonlPath str
 	}
 
 	// Commit in worktree
-	result.Message = fmt.Sprintf("bd sync: %s", time.Now().Format("2006-01-02 15:04:05"))
+	result.Message = fmt.Sprintf("fbd sync: %s", time.Now().Format("2006-01-02 15:04:05"))
 	if err := commitInWorktree(ctx, worktreePath, normalizedRelPath, result.Message); err != nil {
 		return nil, fmt.Errorf("failed to commit in worktree: %w", err)
 	}
@@ -248,7 +248,7 @@ func preemptiveFetchAndFastForward(ctx context.Context, worktreePath, branch, re
 //  1. Fetch remote changes (don't pull)
 //  2. Find the merge base
 //  3. Extract JSONL from base, local, and remote
-//  4. Perform 3-way content merge using bd's merge algorithm
+//  4. Perform 3-way content merge using fbd's merge algorithm
 //  5. Reset to remote's history (adopt remote commit graph)
 //  6. Commit merged content on top
 //
@@ -398,7 +398,7 @@ func PullFromSyncBranch(ctx context.Context, repoRoot, syncBranch, jsonlPath str
 
 	// Commit merged content if there are changes
 	if hasChanges {
-		message := fmt.Sprintf("bd sync: merge divergent histories (%d local + %d remote commits)",
+		message := fmt.Sprintf("fbd sync: merge divergent histories (%d local + %d remote commits)",
 			localAhead, remoteAhead)
 		if err := commitInWorktree(ctx, worktreePath, jsonlRelPath, message); err != nil {
 			return nil, fmt.Errorf("failed to commit merged content: %w", err)
@@ -678,7 +678,7 @@ func performContentMerge(ctx context.Context, worktreePath, branch, remote, json
 		return nil, fmt.Errorf("failed to write remote file: %w", err)
 	}
 
-	// Perform 3-way merge using bd's merge algorithm
+	// Perform 3-way merge using fbd's merge algorithm
 	// The merge function writes to outputFile (first arg) and returns error if conflicts
 	err = merge.Merge3Way(outputFile, baseFile, localFile, remoteFile, false)
 	if err != nil {
@@ -821,7 +821,7 @@ func commitInWorktree(ctx context.Context, worktreePath, jsonlRelPath, message s
 	}
 
 	// Commit with --no-verify to skip hooks (pre-commit hook would fail in worktree context)
-	// The worktree is internal to bd sync, so we don't need to run bd's pre-commit hook
+	// The worktree is internal to fbd sync, so we don't need to run fbd's pre-commit hook
 	commitCmd := exec.CommandContext(ctx, "git", "-C", worktreePath, "commit", "--no-verify", "-m", message)
 	output, err := commitCmd.CombinedOutput()
 	if err != nil {
@@ -893,7 +893,7 @@ func contentMergeRecovery(ctx context.Context, worktreePath, branch, remote stri
 
 	// Step 6: Commit merged content if there are changes
 	if hasChanges {
-		message := "bd sync: merge divergent histories (content-level recovery)"
+		message := "fbd sync: merge divergent histories (content-level recovery)"
 		if err := commitInWorktree(ctx, worktreePath, jsonlRelPath, message); err != nil {
 			return fmt.Errorf("failed to commit merged content: %w", err)
 		}
@@ -942,7 +942,7 @@ func pushFromWorktree(ctx context.Context, worktreePath, branch string) error {
 		// Push with explicit remote and branch, set upstream if not set
 		cmd := exec.CommandContext(ctx, "git", "-C", worktreePath, "push", "--set-upstream", remote, branch)
 		// Set BD_SYNC_IN_PROGRESS so pre-push hook knows to skip checks (GH#532)
-		// This prevents circular error where hook suggests running bd sync
+		// This prevents circular error where hook suggests running fbd sync
 		cmd.Env = append(os.Environ(), "BD_SYNC_IN_PROGRESS=1")
 
 		// Run with timeout message in case of hanging auth
@@ -972,16 +972,16 @@ The sync branch '%s' has diverged from remote '%s/%s' and automatic content merg
 
 Recovery options:
   1. Reset to remote state (discard local sync changes):
-     bd sync --reset-remote
+     fbd sync --reset-remote
 
   2. Force push local state to remote (overwrites remote):
-     bd sync --force-push
+     fbd sync --force-push
 
   3. Manual recovery in the sync branch worktree:
      cd .git/beads-worktrees/%s
      git status
      # Resolve conflicts manually, then:
-     bd sync
+     fbd sync
 
 Original error: %v
 Merge error: %v`, branch, remote, branch, branch, lastErr, mergeErr)
@@ -1224,7 +1224,7 @@ func GetCurrentBranch(ctx context.Context) (string, error) {
 // IsSyncBranchSameAsCurrent returns true if the sync branch is the same as the current branch.
 // This is used to detect the case where we can't use a worktree because the branch is already
 // checked out. In this case, we should commit directly to the current branch instead.
-// See: https://github.com/steveyegge/beads/issues/519
+// See: https://github.com/steveyegge/fastbeads/issues/519
 func IsSyncBranchSameAsCurrent(ctx context.Context, syncBranch string) bool {
 	currentBranch, err := GetCurrentBranch(ctx)
 	if err != nil {

@@ -1,4 +1,4 @@
-module github.com/steveyegge/beads
+module github.com/steveyegge/fastbeads
 
 go 1.25.6
 

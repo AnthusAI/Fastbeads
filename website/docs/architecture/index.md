@@ -26,12 +26,12 @@ flowchart TD
         D[("beads.db<br/><i>Fast Queries / Derived State</i>")]
     end
 
-    G <-->|"bd sync"| J
+    G <-->|"fbd sync"| J
     J -->|"rebuild"| D
     D -->|"append"| J
 
-    U((👤 User)) -->|"bd create<br/>bd update"| D
-    D -->|"bd list<br/>bd show"| U
+    U((👤 User)) -->|"fbd create<br/>fbd update"| D
+    D -->|"fbd list<br/>fbd show"| U
 
     style GIT fill:#2d5a27,stroke:#4a9c3e,color:#fff
     style JSONL fill:#1a4a6e,stroke:#3a8ac4,color:#fff
@@ -43,7 +43,7 @@ flowchart TD
 
 **JSONL** is the *operational* source of truth—when recovering from database corruption, Beads rebuilds SQLite from JSONL files, not directly from Git commits.
 
-This layered model enables recovery: if SQLite is corrupted but JSONL is intact, run `bd sync --import-only` to rebuild. If JSONL is corrupted, recover it from Git history first.
+This layered model enables recovery: if SQLite is corrupted but JSONL is intact, run `fbd sync --import-only` to rebuild. If JSONL is corrupted, recover it from Git history first.
 :::
 
 ### Layer 1: Git Repository
@@ -68,7 +68,7 @@ JSONL (JSON Lines) files store issue data in an append-only format. This is the 
 - Git-mergeable (append-only reduces conflicts)
 - Portable across systems
 - Can be recovered from Git history
-- **Recovery source**: `bd sync --import-only` rebuilds SQLite from JSONL
+- **Recovery source**: `fbd sync --import-only` rebuilds SQLite from JSONL
 
 ### Layer 3: SQLite Database
 
@@ -80,13 +80,13 @@ SQLite provides fast local queries without network latency. This is *derived sta
 - Instant queries (no network)
 - Complex filtering and sorting
 - Derived from JSONL (always rebuildable)
-- Safe to delete and rebuild: `rm .beads/beads.db* && bd sync --import-only`
+- Safe to delete and rebuild: `rm .beads/beads.db* && fbd sync --import-only`
 
 ## Data Flow
 
 ### Write Path
 ```text
-User runs bd create
+User runs fbd create
     → SQLite updated
     → JSONL appended
     → Git commit (on sync)
@@ -94,14 +94,14 @@ User runs bd create
 
 ### Read Path
 ```text
-User runs bd list
+User runs fbd list
     → SQLite queried
     → Results returned immediately
 ```
 
 ### Sync Path
 ```text
-User runs bd sync
+User runs fbd sync
     → Git pull
     → JSONL merged
     → SQLite rebuilt if needed
@@ -114,13 +114,13 @@ Beads provides specialized sync modes for different recovery scenarios:
 
 #### Standard Sync
 ```bash
-bd sync
+fbd sync
 ```
 Normal bidirectional sync: pulls remote changes, merges JSONL, rebuilds SQLite if needed, pushes local changes.
 
 #### Import-Only Mode
 ```bash
-bd sync --import-only
+fbd sync --import-only
 ```
 Rebuilds the SQLite database from JSONL without pushing changes. Use this when:
 - SQLite is corrupted or missing
@@ -131,7 +131,7 @@ This is the safest recovery option when JSONL is intact.
 
 #### Force Rebuild Mode
 ```bash
-bd sync --force-rebuild
+fbd sync --force-rebuild
 ```
 Forces complete SQLite rebuild from JSONL, discarding any SQLite-only state. Use with caution:
 - More aggressive than `--import-only`
@@ -144,13 +144,13 @@ When working across multiple machines or clones:
 
 1. **Always sync before switching machines**
    ```bash
-   bd sync  # Push changes before leaving
+   fbd sync  # Push changes before leaving
    ```
 
 2. **Pull before creating new issues**
    ```bash
-   bd sync  # Pull changes first on new machine
-   bd create "New issue"
+   fbd sync  # Pull changes first on new machine
+   fbd create "New issue"
    ```
 
 3. **Avoid parallel edits** - If two machines create issues simultaneously without syncing, conflicts may occur
@@ -159,7 +159,7 @@ See [Sync Failures Recovery](/recovery/sync-failures) for data loss prevention i
 
 ## The Daemon
 
-The Beads daemon (`bd daemon`) handles background synchronization:
+The Beads daemon (`fbd daemon`) handles background synchronization:
 
 - Watches for file changes
 - Triggers sync on changes
@@ -175,8 +175,8 @@ The daemon is optional but recommended for multi-agent workflows.
 For CI/CD pipelines, containers, and single-use scenarios, run commands without spawning a daemon:
 
 ```bash
-bd --no-daemon create "CI-generated issue"
-bd --no-daemon sync
+fbd --no-daemon create "CI-generated issue"
+fbd --no-daemon sync
 ```
 
 **When to use `--no-daemon`:**
@@ -195,7 +195,7 @@ When multiple git clones of the same repository run daemons simultaneously, race
 - Worktree-based development workflows
 
 **Prevention:**
-1. Use `bd daemons killall` before switching between clones
+1. Use `fbd daemons killall` before switching between clones
 2. Ensure only one clone's daemon is active at a time
 3. Consider `--no-daemon` mode for automated workflows
 :::
@@ -206,7 +206,7 @@ See [Sync Failures Recovery](/recovery/sync-failures) for daemon race condition 
 
 The three-layer architecture makes recovery straightforward because each layer can rebuild from the one above it:
 
-1. **Lost SQLite?** → Rebuild from JSONL: `bd sync --import-only`
+1. **Lost SQLite?** → Rebuild from JSONL: `fbd sync --import-only`
 2. **Lost JSONL?** → Recover from Git history: `git checkout HEAD~1 -- .beads/issues.jsonl`
 3. **Conflicts?** → Git merge, then rebuild
 
@@ -217,28 +217,28 @@ The following sequence demonstrates how the architecture enables quick recovery.
 This sequence resolves the majority of reported issues:
 
 ```bash
-bd daemons killall           # Stop daemons (prevents race conditions)
+fbd daemons killall           # Stop daemons (prevents race conditions)
 git worktree prune           # Clean orphaned worktrees
 rm .beads/beads.db*          # Remove potentially corrupted database
-bd sync --import-only        # Rebuild from JSONL source of truth
+fbd sync --import-only        # Rebuild from JSONL source of truth
 ```
 
-:::danger Never Use `bd doctor --fix`
-Analysis of 54 GitHub issues revealed that `bd doctor --fix` frequently causes **more damage** than the original problem:
+:::danger Never Use `fbd doctor --fix`
+Analysis of 54 GitHub issues revealed that `fbd doctor --fix` frequently causes **more damage** than the original problem:
 
 - Deletes "circular" dependencies that are actually valid parent-child relationships
 - False positive detection removes legitimate issue links
 - Recovery after `--fix` is harder than recovery from the original issue
 
 **Safe alternatives:**
-- `bd doctor` — Diagnostic only, no changes made
-- `bd blocked` — Check which issues are blocked and why
-- `bd show <issue-id>` — Inspect a specific issue's state
+- `fbd doctor` — Diagnostic only, no changes made
+- `fbd blocked` — Check which issues are blocked and why
+- `fbd show <issue-id>` — Inspect a specific issue's state
 
-If `bd doctor` reports problems, investigate each one manually before taking any action.
+If `fbd doctor` reports problems, investigate each one manually before taking any action.
 :::
 
-See [Recovery](/recovery) for specific procedures and [Database Corruption Recovery](/recovery/database-corruption) for `bd doctor --fix` recovery (Pattern D4).
+See [Recovery](/recovery) for specific procedures and [Database Corruption Recovery](/recovery/database-corruption) for `fbd doctor --fix` recovery (Pattern D4).
 
 ## Design Decisions
 

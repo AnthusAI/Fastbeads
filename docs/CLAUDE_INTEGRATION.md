@@ -5,7 +5,7 @@ This document explains design decisions for Claude Code integration in beads.
 ## Integration Approach
 
 **Recommended: CLI + Hooks** - Beads uses a simple, universal approach to Claude Code integration:
-- `bd prime` command for context injection (~1-2k tokens)
+- `fbd prime` command for context injection (~1-2k tokens)
 - Hooks (SessionStart/PreCompact) for automatic context refresh
 - Direct CLI commands with `--json` flags
 - Optional: Plugin for slash commands and enhanced UX
@@ -25,7 +25,7 @@ This document explains design decisions for Claude Code integration in beads.
 
 **The math:**
 - MCP tool schemas can add 10-50k tokens to context (depending on number of tools)
-- `bd prime` adds ~1-2k tokens of workflow context
+- `fbd prime` adds ~1-2k tokens of workflow context
 - That's 10-50x less context overhead
 
 **When context size doesn't matter:**
@@ -43,8 +43,8 @@ This document explains design decisions for Claude Code integration in beads.
 
 ### Reasons
 
-1. **Redundant with bd prime**
-   - `bd prime` already provides workflow context (~1-2k tokens)
+1. **Redundant with fbd prime**
+   - `fbd prime` already provides workflow context (~1-2k tokens)
    - Skills would duplicate this information
    - More systems = more complexity
 
@@ -66,14 +66,14 @@ This document explains design decisions for Claude Code integration in beads.
 ### If Skills were needed...
 
 They should be:
-- Provided by the beads plugin (not bd core tool)
-- Complementary (not replacing) bd prime
+- Provided by the beads plugin (not fbd core tool)
+- Complementary (not replacing) fbd prime
 - Optional power-user workflows only
 - Opt-in, never required
 
 ### Current approach is better
 
-- ✅ `bd prime` - Universal context injection
+- ✅ `fbd prime` - Universal context injection
 - ✅ Hooks - Automatic context refresh
 - ✅ Plugin - Optional Claude-specific enhancements
 - ✅ MCP - Optional native tool access (legacy)
@@ -85,30 +85,30 @@ Users who want custom Skills can create their own, but beads doesn't ship with o
 
 ```bash
 # Install Claude Code hooks globally
-bd setup claude
+fbd setup claude
 
 # Install for this project only
-bd setup claude --project
+fbd setup claude --project
 
 # Use stealth mode (flush only, no git operations)
-bd setup claude --stealth
+fbd setup claude --stealth
 
 # Check installation status
-bd setup claude --check
+fbd setup claude --check
 
 # Remove hooks
-bd setup claude --remove
+fbd setup claude --remove
 ```
 
 **What it installs:**
-- SessionStart hook: Runs `bd prime` when Claude Code starts a session
-- PreCompact hook: Runs `bd prime` before context compaction to preserve workflow instructions
+- SessionStart hook: Runs `fbd prime` when Claude Code starts a session
+- PreCompact hook: Runs `fbd prime` before context compaction to preserve workflow instructions
 
 ## Related Files
 
-- `cmd/bd/prime.go` - Context generation
-- `cmd/bd/setup/claude.go` - Hook installation
-- `cmd/bd/doctor/claude.go` - Integration verification
+- `cmd/fbd/prime.go` - Context generation
+- `cmd/fbd/setup/claude.go` - Hook installation
+- `cmd/fbd/doctor/claude.go` - Integration verification
 - `docs/CLAUDE.md` - General project guidance for Claude
 
 ## References

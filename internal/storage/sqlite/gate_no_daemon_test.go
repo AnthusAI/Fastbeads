@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // TestGateFieldsPreservedAcrossConnections reproduces beads-70c4:
@@ -72,7 +72,7 @@ func TestGateFieldsPreservedAcrossConnections(t *testing.T) {
 	}
 
 	// Step 2: Open a NEW connection to the same database
-	// (simulating `bd show --no-daemon` opening a new connection)
+	// (simulating `fbd show --no-daemon` opening a new connection)
 	store2, err := New(ctx, dbPath)
 	if err != nil {
 		t.Fatalf("failed to create second store: %v", err)

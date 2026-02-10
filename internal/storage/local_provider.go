@@ -5,7 +5,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // LocalProvider implements types.IssueProvider using a read-only SQLite connection.

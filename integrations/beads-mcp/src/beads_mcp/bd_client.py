@@ -1,4 +1,4 @@
-"""Client for interacting with bd (beads) CLI and daemon."""
+"""Client for interacting with fbd (beads) CLI and daemon."""
 
 import asyncio
 import json
@@ -27,36 +27,36 @@ from .models import (
 
 
 class BdError(Exception):
-    """Base exception for bd CLI errors."""
+    """Base exception for fbd CLI errors."""
 
     pass
 
 
 class BdNotFoundError(BdError):
-    """Raised when bd command is not found."""
+    """Raised when fbd command is not found."""
 
     @staticmethod
     def installation_message(attempted_path: str) -> str:
         """Get helpful installation message.
 
         Args:
-            attempted_path: Path where we tried to find bd
+            attempted_path: Path where we tried to find fbd
 
         Returns:
             Formatted error message with installation instructions
         """
         return (
-            f"bd CLI not found at: {attempted_path}\n\n"
-            "The beads Claude Code plugin requires the bd CLI to be installed separately.\n\n"
-            "Install bd CLI:\n"
+            f"fbd CLI not found at: {attempted_path}\n\n"
+            "The beads Claude Code plugin requires the fbd CLI to be installed separately.\n\n"
+            "Install fbd CLI:\n"
             "  curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash\n\n"
-            "Or visit: https://github.com/steveyegge/beads#installation\n\n"
+            "Or visit: https://github.com/steveyegge/fastbeads#installation\n\n"
             "After installation, restart Claude Code to reload the MCP server."
         )
 
 
 class BdCommandError(BdError):
-    """Raised when bd command fails."""
+    """Raised when fbd command fails."""
 
     stderr: str
     returncode: int
@@ -68,13 +68,13 @@ class BdCommandError(BdError):
 
 
 class BdVersionError(BdError):
-    """Raised when bd version is incompatible with MCP server."""
+    """Raised when fbd version is incompatible with MCP server."""
 
     pass
 
 
 class BdClientBase(ABC):
-    """Abstract base class for bd clients (CLI or daemon)."""
+    """Abstract base class for fbd clients (CLI or daemon)."""
 
     @abstractmethod
     async def ready(self, params: Optional[ReadyWorkParams] = None) -> List[Issue]:
@@ -185,7 +185,7 @@ class BdClientBase(ABC):
 
 
 class BdCliClient(BdClientBase):
-    """Client for calling bd CLI commands and parsing JSON output."""
+    """Client for calling fbd CLI commands and parsing JSON output."""
 
     bd_path: str
     beads_dir: str | None
@@ -205,16 +205,16 @@ class BdCliClient(BdClientBase):
         no_auto_import: bool | None = None,
         working_dir: str | None = None,
     ):
-        """Initialize bd client.
+        """Initialize fbd client.
 
         Args:
-            bd_path: Path to bd executable (optional, loads from config if not provided)
+            bd_path: Path to fbd executable (optional, loads from config if not provided)
             beads_dir: Path to .beads directory (optional, loads from config if not provided)
             beads_db: Path to beads database file (deprecated, optional, loads from config if not provided)
             actor: Actor name for audit trail (optional, loads from config if not provided)
             no_auto_flush: Disable automatic JSONL sync (optional, loads from config if not provided)
             no_auto_import: Disable automatic JSONL import (optional, loads from config if not provided)
-            working_dir: Working directory for bd commands (optional, loads from config/env if not provided)
+            working_dir: Working directory for fbd commands (optional, loads from config/env if not provided)
         """
         config = load_config()
         self.bd_path = bd_path if bd_path is not None else config.beads_path
@@ -226,7 +226,7 @@ class BdCliClient(BdClientBase):
         self.working_dir = working_dir if working_dir is not None else config.beads_working_dir
 
     def _get_working_dir(self) -> str:
-        """Get working directory for bd commands.
+        """Get working directory for fbd commands.
 
         Returns:
             Working directory path, falls back to current directory if not configured
@@ -237,13 +237,13 @@ class BdCliClient(BdClientBase):
         return os.getcwd()
 
     def _global_flags(self) -> list[str]:
-        """Build list of global flags for bd commands.
+        """Build list of global flags for fbd commands.
 
         Returns:
             List of global flag arguments
         """
         flags = []
-        # NOTE: --db flag removed in v0.20.1, bd now auto-discovers database via cwd
+        # NOTE: --db flag removed in v0.20.1, fbd now auto-discovers database via cwd
         # We pass cwd via _run_command instead
         if self.actor:
             flags.extend(["--actor", self.actor])
@@ -254,18 +254,18 @@ class BdCliClient(BdClientBase):
         return flags
 
     async def _run_command(self, *args: str, cwd: str | None = None) -> Any:
-        """Run bd command and parse JSON output.
+        """Run fbd command and parse JSON output.
 
         Args:
-            *args: Command arguments to pass to bd
+            *args: Command arguments to pass to fbd
             cwd: Optional working directory override for this command
 
         Returns:
             Parsed JSON output (dict or list)
 
         Raises:
-            BdNotFoundError: If bd command not found
-            BdCommandError: If bd command fails
+            BdNotFoundError: If fbd command not found
+            BdCommandError: If fbd command fails
         """
         cmd = [self.bd_path, *args, *self._global_flags(), "--json"]
         working_dir = cwd if cwd is not None else self._get_working_dir()
@@ -285,7 +285,7 @@ class BdCliClient(BdClientBase):
             db_info = f"BEADS_DB={self.beads_db} (deprecated)"
         else:
             db_info = "auto-discover"
-        print(f"[beads-mcp] Running bd command: {' '.join(args)}", file=sys.stderr)
+        print(f"[beads-mcp] Running fbd command: {' '.join(args)}", file=sys.stderr)
         print(f"[beads-mcp]   Database: {db_info}", file=sys.stderr)
         print(f"[beads-mcp]   Working dir: {working_dir}", file=sys.stderr)
 
@@ -304,7 +304,7 @@ class BdCliClient(BdClientBase):
 
         if process.returncode != 0:
             raise BdCommandError(
-                f"bd command failed: {stderr.decode()}",
+                f"fbd command failed: {stderr.decode()}",
                 stderr=stderr.decode(),
                 returncode=process.returncode or 1,
             )
@@ -318,16 +318,16 @@ class BdCliClient(BdClientBase):
             return result
         except json.JSONDecodeError as e:
             raise BdCommandError(
-                f"Failed to parse bd JSON output: {e}",
+                f"Failed to parse fbd JSON output: {e}",
                 stderr=stdout_str,
             ) from e
 
     async def _check_version(self) -> None:
-        """Check that bd CLI version meets minimum requirements.
+        """Check that fbd CLI version meets minimum requirements.
 
         Raises:
-            BdVersionError: If bd version is incompatible
-            BdNotFoundError: If bd command not found
+            BdVersionError: If fbd version is incompatible
+            BdNotFoundError: If fbd command not found
         """
         # Minimum required version
         min_version = (0, 9, 0)
@@ -347,16 +347,16 @@ class BdCliClient(BdClientBase):
 
         if process.returncode != 0:
             raise BdCommandError(
-                f"bd version failed: {stderr.decode()}",
+                f"fbd version failed: {stderr.decode()}",
                 stderr=stderr.decode(),
                 returncode=process.returncode or 1,
             )
 
-        # Parse version from output like "bd version 0.9.2"
+        # Parse version from output like "fbd version 0.9.2"
         version_output = stdout.decode().strip()
         match = re.search(r"(\d+)\.(\d+)\.(\d+)", version_output)
         if not match:
-            raise BdVersionError(f"Could not parse bd version from: {version_output}")
+            raise BdVersionError(f"Could not parse fbd version from: {version_output}")
 
         version = tuple(int(x) for x in match.groups())
 
@@ -365,8 +365,8 @@ class BdCliClient(BdClientBase):
             cur_ver_str = ".".join(str(x) for x in version)
             install_cmd = "curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash"
             raise BdVersionError(
-                f"bd version {cur_ver_str} is too old. "
-                f"This MCP server requires bd >= {min_ver_str}. "
+                f"fbd version {cur_ver_str} is too old. "
+                f"This MCP server requires fbd >= {min_ver_str}. "
                 f"Update with: {install_cmd}"
             )
 
@@ -457,7 +457,7 @@ class BdCliClient(BdClientBase):
             BdCommandError: If issue not found
         """
         data = await self._run_command("show", params.issue_id)
-        # bd show returns an array, extract first element
+        # fbd show returns an array, extract first element
         if isinstance(data, list):
             if not data:
                 raise BdCommandError(f"Issue not found: {params.issue_id}")
@@ -533,7 +533,7 @@ class BdCliClient(BdClientBase):
             args.extend(["--external-ref", params.external_ref])
 
         data = await self._run_command(*args)
-        # bd update returns an array, extract first element
+        # fbd update returns an array, extract first element
         if isinstance(data, list):
             if not data:
                 raise BdCommandError(f"Issue not found: {params.issue_id}")
@@ -587,7 +587,7 @@ class BdCliClient(BdClientBase):
         Args:
             params: Dependency parameters
         """
-        # bd dep add doesn't return JSON, just prints confirmation
+        # fbd dep add doesn't return JSON, just prints confirmation
         cmd = [
             self.bd_path,
             "dep",
@@ -621,13 +621,13 @@ class BdCliClient(BdClientBase):
 
         if process.returncode != 0:
             raise BdCommandError(
-                f"bd dep add failed: {stderr.decode()}",
+                f"fbd dep add failed: {stderr.decode()}",
                 stderr=stderr.decode(),
                 returncode=process.returncode or 1,
             )
 
     async def quickstart(self) -> str:
-        """Get bd quickstart guide.
+        """Get fbd quickstart guide.
 
         Returns:
             Quickstart guide text
@@ -648,7 +648,7 @@ class BdCliClient(BdClientBase):
 
         if process.returncode != 0:
             raise BdCommandError(
-                f"bd quickstart failed: {stderr.decode()}",
+                f"fbd quickstart failed: {stderr.decode()}",
                 stderr=stderr.decode(),
                 returncode=process.returncode or 1,
             )
@@ -767,7 +767,7 @@ class BdCliClient(BdClientBase):
         return data
 
     async def init(self, params: InitParams | None = None) -> str:
-        """Initialize bd in current directory.
+        """Initialize fbd in current directory.
 
         Args:
             params: Initialization parameters
@@ -801,7 +801,7 @@ class BdCliClient(BdClientBase):
 
         if process.returncode != 0:
             raise BdCommandError(
-                f"bd init failed: {stderr.decode()}",
+                f"fbd init failed: {stderr.decode()}",
                 stderr=stderr.decode(),
                 returncode=process.returncode or 1,
             )
@@ -823,11 +823,11 @@ def create_bd_client(
     no_auto_import: Optional[bool] = None,
     working_dir: Optional[str] = None,
 ) -> BdClientBase:
-    """Create a bd client (daemon or CLI-based).
+    """Create a fbd client (daemon or CLI-based).
 
     Args:
         prefer_daemon: If True, attempt to use daemon client first, fall back to CLI
-        bd_path: Path to bd executable (for CLI client)
+        bd_path: Path to fbd executable (for CLI client)
         beads_dir: Path to .beads directory (for CLI client)
         beads_db: Path to beads database (deprecated, for CLI client)
         actor: Actor name for audit trail

@@ -4,7 +4,7 @@ title: Installation
 sidebar_position: 1
 ---
 
-# Installing bd
+# Installing fbd
 
 Complete installation guide for all platforms.
 
@@ -56,7 +56,7 @@ sudo dnf install -y libicu-devel libzstd-devel
 If you see `unicode/uregex.h` missing on macOS, `icu4c` is keg-only. Use:
 ```bash
 ICU_PREFIX="$(brew --prefix icu4c)"
-CGO_CFLAGS="-I${ICU_PREFIX}/include" CGO_CPPFLAGS="-I${ICU_PREFIX}/include" CGO_LDFLAGS="-L${ICU_PREFIX}/lib" go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_CFLAGS="-I${ICU_PREFIX}/include" CGO_CPPFLAGS="-I${ICU_PREFIX}/include" CGO_LDFLAGS="-L${ICU_PREFIX}/lib" go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ## Platform-Specific Installation
@@ -70,15 +70,15 @@ brew install beads
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 **From source**:
 ```bash
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ### Linux
@@ -98,7 +98,7 @@ paru -S beads-git
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### FreeBSD
@@ -110,7 +110,7 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### Windows 11
@@ -130,7 +130,7 @@ The script installs a prebuilt Windows release if available. Go is only required
 
 **Via go install**:
 ```pwsh
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 If you see `unicode/uregex.h` missing while building, use the PowerShell install script instead.
@@ -142,24 +142,24 @@ If you see `unicode/uregex.h` missing while building, use the PowerShell install
 The recommended approach for Claude Code, Cursor, Windsurf, and other editors with shell access:
 
 ```bash
-# 1. Install bd CLI (see Quick Install above)
+# 1. Install fbd CLI (see Quick Install above)
 brew install beads
 
 # 2. Initialize in your project
 cd your-project
-bd init --quiet
+fbd init --quiet
 
 # 3. Setup editor integration (choose one)
-bd setup claude   # Claude Code - installs SessionStart/PreCompact hooks
-bd setup cursor   # Cursor IDE - creates .cursor/rules/beads.mdc
-bd setup aider    # Aider - creates .aider.conf.yml
+fbd setup claude   # Claude Code - installs SessionStart/PreCompact hooks
+fbd setup cursor   # Cursor IDE - creates .cursor/rules/beads.mdc
+fbd setup aider    # Aider - creates .aider.conf.yml
 ```
 
 **How it works:**
-- Editor hooks/rules inject `bd prime` automatically on session start
-- `bd prime` provides ~1-2k tokens of workflow context
-- You use `bd` CLI commands directly
-- Git hooks (installed by `bd init`) auto-sync the database
+- Editor hooks/rules inject `fbd prime` automatically on session start
+- `fbd prime` provides ~1-2k tokens of workflow context
+- You use `fbd` CLI commands directly
+- Git hooks (installed by `fbd init`) auto-sync the database
 
 **Why this is recommended:**
 - **Context efficient** - ~1-2k tokens vs 10-50k for MCP tool schemas
@@ -194,37 +194,37 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ## Verifying Installation
 
-After installing, verify bd is working:
+After installing, verify fbd is working:
 
 ```bash
-bd version
-bd help
+fbd version
+fbd help
 ```
 
 ## Troubleshooting
 
-### `bd: command not found`
+### `fbd: command not found`
 
-bd is not in your PATH:
+fbd is not in your PATH:
 
 ```bash
 # Check if installed
-go list -f {{.Target}} github.com/steveyegge/beads/cmd/bd
+go list -f {{.Target}} github.com/steveyegge/fastbeads/cmd/fbd
 
 # Add Go bin to PATH (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$(go env GOPATH)/bin"
 ```
 
-### `zsh: killed bd` or crashes on macOS
+### `zsh: killed fbd` or crashes on macOS
 
 This is typically caused by CGO/SQLite compatibility issues:
 
 ```bash
 # Build with CGO enabled
-CGO_ENABLED=1 go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_ENABLED=1 go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
-## Updating bd
+## Updating fbd
 
 ### Quick install script (macOS/Linux/FreeBSD)
 
@@ -247,7 +247,7 @@ brew upgrade beads
 ### go install
 
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 For post-upgrade steps (hooks, daemons, migrations), see [Upgrading](/getting-started/upgrading).
@@ -256,6 +256,6 @@ For post-upgrade steps (hooks, daemons, migrations), see [Upgrading](/getting-st
 
 After installation:
 
-1. **Initialize a project**: `cd your-project && bd init`
+1. **Initialize a project**: `cd your-project && fbd init`
 2. **Learn the basics**: See [Quick Start](/getting-started/quickstart)
 3. **Configure your agent**: See [IDE Setup](/getting-started/ide-setup)

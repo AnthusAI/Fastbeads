@@ -57,6 +57,6 @@ Agent beads enable:
 
 ## CLI Reference
 
-Run `bd agent --help` for state/heartbeat/show commands.
-Run `bd slot --help` for set/clear/show commands.
-Run `bd create --help` for `--type=agent` and `--type=role` options.
+Run `fbd agent --help` for state/heartbeat/show commands.
+Run `fbd slot --help` for set/clear/show commands.
+Run `fbd create --help` for `--type=agent` and `--type=role` options.

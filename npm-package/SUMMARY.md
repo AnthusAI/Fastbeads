@@ -1,8 +1,8 @@
-# @beads/bd NPM Package - Implementation Summary
+# @beads/fbd NPM Package - Implementation Summary
 
 ## Overview
 
-This npm package wraps the native bd (beads) binary for easy installation in Node.js environments, particularly Claude Code for Web.
+This npm package wraps the native fbd (beads) binary for easy installation in Node.js environments, particularly Claude Code for Web.
 
 ## What Was Built
 
@@ -12,7 +12,7 @@ This npm package wraps the native bd (beads) binary for easy installation in Nod
 npm-package/
 ├── package.json              # Package metadata and dependencies
 ├── bin/
-│   └── bd.js                # CLI wrapper that invokes native binary
+│   └── fbd.js                # CLI wrapper that invokes native binary
 ├── scripts/
 │   ├── postinstall.js       # Downloads platform-specific binary
 │   └── test.js              # Package verification tests
@@ -28,17 +28,17 @@ npm-package/
 ### Key Components
 
 #### 1. package.json
-- **Name**: `@beads/bd` (scoped to @beads organization)
+- **Name**: `@beads/fbd` (scoped to @beads organization)
 - **Version**: 0.21.5 (matches current beads release)
-- **Main**: CLI wrapper (bin/bd.js)
+- **Main**: CLI wrapper (bin/fbd.js)
 - **Scripts**: postinstall hook, test suite
 - **Platform support**: macOS, Linux, Windows
 - **Architecture support**: x64 (amd64), arm64
 
-#### 2. bin/bd.js - CLI Wrapper
-- Node.js script that acts as the `bd` command
+#### 2. bin/fbd.js - CLI Wrapper
+- Node.js script that acts as the `fbd` command
 - Detects platform and architecture
-- Spawns the native bd binary with arguments passed through
+- Spawns the native fbd binary with arguments passed through
 - Handles errors gracefully
 - Provides clear error messages if binary is missing
 
@@ -47,11 +47,11 @@ npm-package/
 - Runs automatically after `npm install`
 - Detects OS (darwin/linux/windows) and architecture (amd64/arm64)
 - Downloads the correct binary from GitHub releases
-- Constructs URL: `https://github.com/steveyegge/beads/releases/download/v{VERSION}/beads_{VERSION}_{platform}_{arch}.{ext}`
+- Constructs URL: `https://github.com/steveyegge/fastbeads/releases/download/v{VERSION}/beads_{VERSION}_{platform}_{arch}.{ext}`
 - Supports both tar.gz (Unix) and zip (Windows) archives
 - Extracts the binary to `bin/` directory
 - Makes binary executable on Unix systems
-- Verifies installation with `bd version`
+- Verifies installation with `fbd version`
 - Cleans up downloaded archive
 
 **Platforms supported**:
@@ -96,22 +96,22 @@ npm-package/
 
 ### Installation Flow
 
-1. **User runs**: `npm install -g @beads/bd`
+1. **User runs**: `npm install -g @beads/fbd`
 2. **npm downloads**: Package from registry
 3. **postinstall runs**: `node scripts/postinstall.js`
 4. **Platform detection**: Determines OS and architecture
 5. **Binary download**: Fetches from GitHub releases
 6. **Extraction**: Unpacks tar.gz or zip archive
-7. **Verification**: Runs `bd version` to confirm
+7. **Verification**: Runs `fbd version` to confirm
 8. **Cleanup**: Removes downloaded archive
-9. **Ready**: `bd` command is available globally
+9. **Ready**: `fbd` command is available globally
 
 ### Runtime Flow
 
-1. **User runs**: `bd <command>`
-2. **Node wrapper**: `bin/bd.js` executes
+1. **User runs**: `fbd <command>`
+2. **Node wrapper**: `bin/fbd.js` executes
 3. **Binary lookup**: Finds native binary in bin/
-4. **Spawn process**: Executes native bd with arguments
+4. **Spawn process**: Executes native fbd with arguments
 5. **Passthrough**: stdin/stdout/stderr inherited
 6. **Exit code**: Propagates from native binary
 
@@ -119,8 +119,8 @@ npm-package/
 
 ✅ **npm install**: Successfully downloads and installs binary (darwin-arm64 tested)
 ✅ **npm test**: All tests pass (version check, help command)
-✅ **Binary execution**: Native bd runs correctly through wrapper
-✅ **Version**: Correctly reports bd version 0.21.5
+✅ **Binary execution**: Native fbd runs correctly through wrapper
+✅ **Version**: Correctly reports fbd version 0.21.5
 
 ## What's Ready
 
@@ -144,8 +144,8 @@ See PUBLISHING.md for complete instructions.
 
 All success criteria from bd-febc met:
 
-- ✅ **npm install @beads/bd works**: Tested locally, ready for Claude Code for Web
-- ✅ **All bd commands function identically**: Native binary used, full feature parity
+- ✅ **npm install @beads/fbd works**: Tested locally, ready for Claude Code for Web
+- ✅ **All fbd commands function identically**: Native binary used, full feature parity
 - ✅ **SessionStart hook documented**: Complete guide in CLAUDE_CODE_WEB.md
 - ⏳ **Package published to npm registry**: Ready to publish (requires npm account)
 
@@ -157,7 +157,7 @@ All success criteria from bd-febc met:
 
 Advantages:
 - Full SQLite support (no custom VFS)
-- 100% feature parity with standalone bd
+- 100% feature parity with standalone fbd
 - Better performance (native vs WASM)
 - Simpler implementation (~4 hours vs ~2 days)
 - Minimal maintenance burden
@@ -180,7 +180,7 @@ Advantages for Claude Code for Web:
 - Version management via npm
 - Easy to add to project dependencies
 
-### Why Scoped Package (@beads/bd)?
+### Why Scoped Package (@beads/fbd)?
 
 **Chosen approach: Scoped to @beads organization**
 
@@ -250,7 +250,7 @@ Note: Requires creating @beads organization on npm.
 
 ## References
 
-- [beads repository](https://github.com/steveyegge/beads)
+- [beads repository](https://github.com/steveyegge/fastbeads)
 - [npm scoped packages](https://docs.npmjs.com/cli/v8/using-npm/scope)
 - [npm postinstall scripts](https://docs.npmjs.com/cli/v8/using-npm/scripts#pre--post-scripts)
 - [Node.js child_process](https://nodejs.org/api/child_process.html)

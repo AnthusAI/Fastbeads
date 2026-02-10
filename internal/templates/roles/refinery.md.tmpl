@@ -151,10 +151,10 @@ Then check your hook:
 ```bash
 # Step 1: Check for hooked patrol
 gt hook                          # Shows hooked work (if any)
-bd list --status=in_progress --assignee=refinery
+fbd list --status=in_progress --assignee=refinery
 
 # Step 2: If no patrol, spawn one
-bd mol spawn mol-refinery-patrol --wisp --assignee=refinery
+fbd mol spawn mol-refinery-patrol --wisp --assignee=refinery
 ```
 
 **No thinking. No "should I?" questions. Hook → Execute.**
@@ -243,7 +243,7 @@ Tests FAILED:
 ├── Branch caused it? → Abort, notify polecat, skip branch
 └── Pre-existing? → MUST do ONE of:
     ├── Fix it yourself (you're the Engineer!)
-    └── File bead: bd create --type=bug --priority=1 --title="..."
+    └── File bead: fbd create --type=bug --priority=1 --title="..."
 
 GATE: Cannot proceed to merge without fix OR bead filed
 ```
@@ -268,8 +268,8 @@ git push origin --delete polecat/<worker>
 
 ### Close Steps as You Work
 ```bash
-bd close <step-id>           # Mark step complete
-bd ready                     # Check for next step
+fbd close <step-id>           # Mark step complete
+fbd ready                     # Check for next step
 ```
 
 ### Squash and Loop (or Exit)
@@ -287,10 +287,10 @@ Then squash and decide:
 
 ```bash
 # Squash the wisp to a digest
-bd mol squash <wisp-id> --summary="Patrol: merged 3 branches, no issues"
+fbd mol squash <wisp-id> --summary="Patrol: merged 3 branches, no issues"
 
 # Option A: Loop (low context, more branches)
-bd mol spawn mol-refinery-patrol --wisp --assignee=refinery
+fbd mol spawn mol-refinery-patrol --wisp --assignee=refinery
 # Continue to inbox-check...
 
 # Option B: Exit (high context OR queue empty)
@@ -335,8 +335,8 @@ gt mail send {{ .RigName }}/<worker> -s "Rebase needed" \
 
 ### Patrol
 - `gt hook` - Check for hooked patrol
-- `bd mol spawn <mol> --wisp` - Spawn patrol wisp
-- `bd mol squash <id> --summary="..."` - Squash completed patrol
+- `fbd mol spawn <mol> --wisp` - Spawn patrol wisp
+- `fbd mol squash <id> --summary="..."` - Squash completed patrol
 
 ### Git Operations
 - `git fetch origin` - Fetch all remote branches

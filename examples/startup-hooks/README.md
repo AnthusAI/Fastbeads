@@ -4,14 +4,14 @@ This directory contains startup hook scripts that help AI agents automatically d
 
 ## bd-version-check.sh
 
-**Purpose:** Automatically detect bd (beads) upgrades and show what changed
+**Purpose:** Automatically detect fbd (beads) upgrades and show what changed
 
 **Features:**
-- ✅ Detects when bd version changes between sessions
-- ✅ Shows `bd info --whats-new` output automatically
+- ✅ Detects when fbd version changes between sessions
+- ✅ Shows `fbd info --whats-new` output automatically
 - ✅ Auto-updates outdated git hooks
 - ✅ Persists version tracking in `.beads/metadata.json`
-- ✅ Works today - no bd code changes required!
+- ✅ Works today - no fbd code changes required!
 
 **Usage:**
 
@@ -40,7 +40,7 @@ Alternatively, manually run at the start of each coding session.
 Add to your shell initialization file:
 ```bash
 # ~/.bashrc or ~/.zshrc
-# Run bd version check when entering a beads project
+# Run fbd version check when entering a beads project
 if [ -d ".beads" ]; then
   source /path/to/beads/examples/startup-hooks/bd-version-check.sh
 fi
@@ -56,13 +56,13 @@ Any AI coding environment that allows custom startup scripts can source this fil
 
 ### Requirements
 
-- **bd (beads)**: Must be installed and in PATH
+- **fbd (beads)**: Must be installed and in PATH
 - **jq**: Required for JSON manipulation (`brew install jq` on macOS, `apt-get install jq` on Ubuntu)
 - **.beads directory**: Must exist in current project
 
 ### How It Works
 
-1. **Version Detection**: Reads current bd version and compares to `.beads/metadata.json`
+1. **Version Detection**: Reads current fbd version and compares to `.beads/metadata.json`
 2. **Change Notification**: If version changed, displays upgrade banner with what's new
 3. **Hook Updates**: Checks for outdated git hooks and auto-updates them
 4. **Persistence**: Updates `metadata.json` with current version for next session
@@ -70,10 +70,10 @@ Any AI coding environment that allows custom startup scripts can source this fil
 ### Example Output
 
 ```
-🔄 bd upgraded: 0.23.0 → 0.24.2
+🔄 fbd upgraded: 0.23.0 → 0.24.2
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🆕 What's New in bd (Current: v0.24.2)
+🆕 What's New in fbd (Current: v0.24.2)
 =============================================================
 
 ## v0.24.2 (2025-11-23)
@@ -87,18 +87,18 @@ Any AI coding environment that allows custom startup scripts can source this fil
 
 💡 Review changes above and adapt your workflow accordingly
 
-🔧 Git hooks outdated. Updating to match bd v0.24.2...
+🔧 Git hooks outdated. Updating to match fbd v0.24.2...
 ✓ Git hooks updated successfully
 ```
 
 ### Edge Cases Handled
 
 - **Not in a beads project**: Silently exits (safe to include in global shell init)
-- **bd not installed**: Silently exits
+- **fbd not installed**: Silently exits
 - **jq not installed**: Shows warning but doesn't break
 - **metadata.json missing**: Auto-creates it
 - **First run**: Sets version without showing upgrade message
-- **bd command fails**: Silently exits
+- **fbd command fails**: Silently exits
 
 ### Troubleshooting
 
@@ -115,4 +115,4 @@ A: Ensure you have write permissions to `.git/hooks/` directory
 
 - **GitHub Discussion #239**: "Upgrading beads: how to let the Agent know"
 - **Parent Epic**: bd-nxgk - Agent upgrade awareness system
-- **AGENTS.md**: See "After Upgrading bd" section for manual workflow
+- **AGENTS.md**: See "After Upgrading fbd" section for manual workflow

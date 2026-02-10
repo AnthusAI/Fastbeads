@@ -3,7 +3,7 @@
 This devcontainer configuration provides a fully-configured development environment for beads with:
 
 - Go 1.23 development environment
-- bd CLI built and installed from source
+- fbd CLI built and installed from source
 - Git hooks automatically installed
 - All dependencies pre-installed
 
@@ -14,7 +14,7 @@ This devcontainer configuration provides a fully-configured development environm
 1. Click the "Code" button on GitHub
 2. Select "Create codespace on main"
 3. Wait for the container to build (~2-3 minutes)
-4. The environment will be ready with bd installed and configured
+4. The environment will be ready with fbd installed and configured
 
 ### VS Code Remote Containers
 
@@ -27,9 +27,9 @@ This devcontainer configuration provides a fully-configured development environm
 
 The `setup.sh` script automatically:
 
-1. Builds bd from source (`go build ./cmd/bd`)
-2. Installs bd to `/usr/local/bin/bd`
-3. Runs `bd init --quiet` (non-interactive initialization)
+1. Builds fbd from source (`go build ./cmd/fbd`)
+2. Installs fbd to `/usr/local/bin/fbd`
+3. Runs `fbd init --quiet` (non-interactive initialization)
 4. Installs git hooks from `examples/git-hooks/`
 5. Downloads Go module dependencies
 
@@ -38,14 +38,14 @@ The `setup.sh` script automatically:
 After the container starts, verify everything works:
 
 ```bash
-# Check bd is installed
-bd --version
+# Check fbd is installed
+fbd --version
 
 # Check for ready tasks
-bd ready
+fbd ready
 
 # View project stats
-bd stats
+fbd stats
 ```
 
 ## Git Configuration
@@ -59,8 +59,8 @@ git config --global user.email "your.email@example.com"
 
 ## Troubleshooting
 
-**bd command not found:**
-- The setup script should install bd automatically
+**fbd command not found:**
+- The setup script should install fbd automatically
 - Manually run: `bash .devcontainer/setup.sh`
 
 **Git hooks not working:**

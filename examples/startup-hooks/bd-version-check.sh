@@ -1,16 +1,16 @@
 #!/bin/bash
 #
-# bd-version-check.sh - Automatic bd upgrade detection for AI agent sessions
+# bd-version-check.sh - Automatic fbd upgrade detection for AI agent sessions
 #
-# This script detects when bd (beads) has been upgraded and automatically shows
+# This script detects when fbd (beads) has been upgraded and automatically shows
 # what changed, helping AI agents adapt their workflows without manual intervention.
 #
 # FEATURES:
-# - Detects bd version changes by comparing to last-seen version
-# - Shows 'bd info --whats-new' output when upgrade detected
+# - Detects fbd version changes by comparing to last-seen version
+# - Shows 'fbd info --whats-new' output when upgrade detected
 # - Auto-updates git hooks if outdated
 # - Persists version in .beads/metadata.json
-# - Zero bd code changes required - works today!
+# - Zero fbd code changes required - works today!
 #
 # INTEGRATION:
 # Add this script to your AI environment's session startup:
@@ -37,7 +37,7 @@
 #   bash examples/startup-hooks/bd-version-check.sh
 #
 # REQUIREMENTS:
-# - bd (beads) installed and in PATH
+# - fbd (beads) installed and in PATH
 # - jq for JSON manipulation
 # - .beads directory exists in current project
 #
@@ -47,8 +47,8 @@ if [ ! -d ".beads" ]; then
   return 0 2>/dev/null || exit 0
 fi
 
-# Check if bd is installed
-if ! command -v bd &> /dev/null; then
+# Check if fbd is installed
+if ! command -v fbd &> /dev/null; then
   return 0 2>/dev/null || exit 0
 fi
 
@@ -58,11 +58,11 @@ if ! command -v jq &> /dev/null; then
   return 0 2>/dev/null || exit 0
 fi
 
-# Get current bd version
-CURRENT_VERSION=$(bd --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+# Get current fbd version
+CURRENT_VERSION=$(fbd --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
 
 if [ -z "$CURRENT_VERSION" ]; then
-  # bd command failed, skip
+  # fbd command failed, skip
   return 0 2>/dev/null || exit 0
 fi
 
@@ -80,12 +80,12 @@ LAST_VERSION=$(jq -r '.last_bd_version // "unknown"' "$METADATA_FILE" 2>/dev/nul
 # Detect version change
 if [ "$CURRENT_VERSION" != "$LAST_VERSION" ] && [ "$LAST_VERSION" != "unknown" ]; then
   echo ""
-  echo "🔄 bd upgraded: $LAST_VERSION → $CURRENT_VERSION"
+  echo "🔄 fbd upgraded: $LAST_VERSION → $CURRENT_VERSION"
   echo ""
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
   # Show what's new
-  bd info --whats-new 2>/dev/null || echo "⚠️  Could not fetch what's new (run 'bd info --whats-new' manually)"
+  fbd info --whats-new 2>/dev/null || echo "⚠️  Could not fetch what's new (run 'fbd info --whats-new' manually)"
 
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
@@ -94,12 +94,12 @@ if [ "$CURRENT_VERSION" != "$LAST_VERSION" ] && [ "$LAST_VERSION" != "unknown" ]
 fi
 
 # Check for outdated git hooks (works even if version didn't change)
-if bd hooks list 2>&1 | grep -q "outdated"; then
-  echo "🔧 Git hooks outdated. Updating to match bd v$CURRENT_VERSION..."
-  if bd hooks install 2>/dev/null; then
+if fbd hooks list 2>&1 | grep -q "outdated"; then
+  echo "🔧 Git hooks outdated. Updating to match fbd v$CURRENT_VERSION..."
+  if fbd hooks install 2>/dev/null; then
     echo "✓ Git hooks updated successfully"
   else
-    echo "⚠️  Failed to update git hooks. Run 'bd hooks install' manually."
+    echo "⚠️  Failed to update git hooks. Run 'fbd hooks install' manually."
   fi
   echo ""
 fi

@@ -1,0 +1,24 @@
+# Test fbd comments command
+
+fbd init --prefix test
+
+# Create an issue
+fbd create 'Issue for comments'
+cp stdout issue.txt
+exec sh -c 'grep -oE "test-[a-z0-9]+" issue.txt > id.txt'
+
+# Add a comment
+exec sh -c 'fbd comments add $(cat id.txt) "This is a test comment"'
+stdout 'Comment added'
+
+# List comments
+exec sh -c 'fbd comments $(cat id.txt)'
+stdout 'This is a test comment'
+
+# Add another comment with author
+exec sh -c 'fbd comments add $(cat id.txt) "Second comment" --author tester'
+stdout 'Comment added'
+
+# Comments on nonexistent issue should fail
+! fbd comments nonexistent-id
+stderr 'no issue found'

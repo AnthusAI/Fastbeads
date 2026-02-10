@@ -47,7 +47,7 @@ This document covers **what to test** and **what not to test**. For how to run t
 
 **When**: PR merge, pre-deploy, nightly
 
-- Full `bd init` → `bd doctor` → `bd doctor --fix` workflow
+- Full `fbd init` → `fbd doctor` → `fbd doctor --fix` workflow
 - Real API calls (to staging)
 - Cross-platform verification
 
@@ -164,9 +164,9 @@ for k, want := range expectedMap {
 Unit tests that execute real commands or heavy I/O when they could mock.
 
 ```go
-// BAD: Actually executes bd killall in unit test
+// BAD: Actually executes fbd killall in unit test
 func TestDaemonFix(t *testing.T) {
-    exec.Command("bd", "killall").Run()
+    exec.Command("fbd", "killall").Run()
     // ...
 }
 

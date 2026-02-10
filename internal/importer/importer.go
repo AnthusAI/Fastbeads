@@ -11,12 +11,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/linear"
-	"github.com/steveyegge/beads/internal/routing"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/env"
+	"github.com/steveyegge/fastbeads/internal/linear"
+	"github.com/steveyegge/fastbeads/internal/routing"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // OrphanHandling is an alias for storage.OrphanHandling for backward compatibility.
@@ -104,6 +105,9 @@ func ImportIssues(ctx context.Context, dbPath string, store storage.Storage, iss
 	// Compute content hashes for all incoming issues
 	// Always recompute to avoid stale/incorrect JSONL hashes
 	for _, issue := range issues {
+		if err := issue.EnsureIdentity(); err != nil {
+			return result, fmt.Errorf("failed to ensure identity for issue %s: %w", issue.ID, err)
+		}
 		issue.ContentHash = issue.ComputeContentHash()
 	}
 
@@ -1564,7 +1568,7 @@ func shouldProtectFromUpdate(issueID string, incomingTime time.Time, protectMap 
 
 // debugLogProtection logs when timestamp-aware protection triggers (for debugging sync issues).
 func debugLogProtection(issueID string, localTime, incomingTime time.Time) {
-	if os.Getenv("BD_DEBUG_SYNC") != "" {
+	if env.GetEnvAlias("DEBUG_SYNC") != "" {
 		fmt.Fprintf(os.Stderr, "[debug] Protected %s: local=%s >= incoming=%s\n",
 			issueID, localTime.Format(time.RFC3339), incomingTime.Format(time.RFC3339))
 	}

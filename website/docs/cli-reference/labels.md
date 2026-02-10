@@ -14,29 +14,29 @@ Commands for managing labels and comments.
 
 ```bash
 # During creation
-bd create "Task" -l "backend,urgent"
+fbd create "Task" -l "backend,urgent"
 
 # To existing issue
-bd update bd-42 --add-label urgent
-bd update bd-42 --add-label "backend,security"
+fbd update bd-42 --add-label urgent
+fbd update bd-42 --add-label "backend,security"
 ```
 
 ### Removing Labels
 
 ```bash
-bd update bd-42 --remove-label urgent
+fbd update bd-42 --remove-label urgent
 ```
 
 ### Listing Labels
 
 ```bash
 # All labels in use
-bd label list
-bd label list --json
+fbd label list
+fbd label list --json
 
 # Issues with specific labels
-bd list --label-any urgent,critical
-bd list --label-all backend,security
+fbd list --label-any urgent,critical
+fbd list --label-all backend,security
 ```
 
 ### Label Conventions
@@ -56,21 +56,21 @@ Suggested label categories:
 ### Adding Comments
 
 ```bash
-bd comment add bd-42 "Working on this now"
-bd comment add bd-42 --message "Found the bug in auth.go:45"
+fbd comment add bd-42 "Working on this now"
+fbd comment add bd-42 --message "Found the bug in auth.go:45"
 ```
 
 ### Listing Comments
 
 ```bash
-bd comment list bd-42
-bd comment list bd-42 --json
+fbd comment list bd-42
+fbd comment list bd-42 --json
 ```
 
 ### Viewing with Issue
 
 ```bash
-bd show bd-42 --full  # Includes comments
+fbd show bd-42 --full  # Includes comments
 ```
 
 ## Filtering by Labels
@@ -79,21 +79,21 @@ bd show bd-42 --full  # Includes comments
 
 ```bash
 # Issues with urgent OR critical
-bd list --label-any urgent,critical
+fbd list --label-any urgent,critical
 ```
 
 ### All Match (AND)
 
 ```bash
 # Issues with BOTH backend AND security
-bd list --label-all backend,security
+fbd list --label-all backend,security
 ```
 
 ### Combined Filters
 
 ```bash
 # Open bugs with urgent label
-bd list --status open --type bug --label-any urgent --json
+fbd list --status open --type bug --label-any urgent --json
 ```
 
 ## Bulk Operations
@@ -103,7 +103,7 @@ bd list --status open --type bug --label-any urgent --json
 ```bash
 # Using shell
 for id in bd-42 bd-43 bd-44; do
-  bd update $id --add-label "sprint-1"
+  fbd update $id --add-label "sprint-1"
 done
 ```
 
@@ -111,9 +111,9 @@ done
 
 ```bash
 # Label all open bugs as needs-triage
-bd list --status open --type bug --json | \
+fbd list --status open --type bug --json | \
   jq -r '.[].id' | \
-  xargs -I {} bd update {} --add-label needs-triage
+  xargs -I {} fbd update {} --add-label needs-triage
 ```
 
 ## Best Practices

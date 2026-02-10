@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**beads** (command: `bd`) is a git-backed issue tracker for AI-supervised coding workflows. We dogfood our own tool.
+**beads** (command: `fbd`) is a git-backed issue tracker for AI-supervised coding workflows. We dogfood our own tool.
 
-**IMPORTANT**: See [AGENTS.md](../AGENTS.md) for complete workflow instructions, bd commands, and development guidelines.
+**IMPORTANT**: See [AGENTS.md](../AGENTS.md) for complete workflow instructions, fbd commands, and development guidelines.
 
 ## Architecture Overview
 
@@ -22,9 +22,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    - Client/server architecture using Unix domain sockets (Windows named pipes)
    - Protocol defined in `protocol.go`
    - Server split into focused files: `server_core.go`, `server_issues_epics.go`, `server_labels_deps_comments.go`, etc.
-   - Per-workspace daemons communicate via `.beads/bd.sock`
+   - Per-workspace daemons communicate via `.beads/fbd.sock`
 
-3. **CLI Layer** (`cmd/bd/`)
+3. **CLI Layer** (`cmd/fbd/`)
    - Cobra-based commands (one file per command: `create.go`, `list.go`, etc.)
    - Commands try daemon RPC first, fall back to direct database access
    - All commands support `--json` for programmatic use
@@ -47,8 +47,8 @@ Remote JSONL (shared across machines)
 - **Hash-based IDs**: Automatic collision prevention (v0.20+)
 
 Core implementation:
-- Export: `cmd/bd/export.go`, `cmd/bd/autoflush.go`
-- Import: `cmd/bd/import.go`, `cmd/bd/autoimport.go`
+- Export: `cmd/fbd/export.go`, `cmd/fbd/autoflush.go`
+- Import: `cmd/fbd/import.go`, `cmd/fbd/autoimport.go`
 - Collision detection: `internal/importer/importer.go`
 
 ### Key Data Types
@@ -65,15 +65,15 @@ See `internal/types/types.go`:
 Each workspace gets its own daemon process:
 - Auto-starts on first command (unless disabled)
 - Handles auto-sync, batching, and background operations
-- Socket at `.beads/bd.sock` (or `.beads/bd.pipe` on Windows)
+- Socket at `.beads/fbd.sock` (or `.beads/fbd.pipe` on Windows)
 - Version checking prevents mismatches after upgrades
-- Manage with `bd daemons` command (see AGENTS.md)
+- Manage with `fbd daemons` command (see AGENTS.md)
 
 ## Common Development Commands
 
 ```bash
 # Build and test
-go build -o bd ./cmd/bd
+go build -o fbd ./cmd/fbd
 go test ./...
 go test -coverprofile=coverage.out ./...
 
@@ -84,25 +84,25 @@ golangci-lint run ./...
 ./scripts/bump-version.sh 0.9.3 --commit
 
 # Local testing
-./bd init --prefix test
-./bd create "Test issue" -p 1
-./bd ready
+./fbd init --prefix test
+./fbd create "Test issue" -p 1
+./fbd ready
 ```
 
 ## Testing Philosophy
 
 - Unit tests live next to implementation (`*_test.go`)
 - Integration tests use real SQLite databases (`:memory:` or temp files)
-- Script-based tests in `cmd/bd/testdata/*.txt` (see `scripttest_test.go`)
+- Script-based tests in `cmd/fbd/testdata/*.txt` (see `scripttest_test.go`)
 - RPC layer has extensive isolation and edge case coverage
 
 ## Important Notes
 
 - **Always read AGENTS.md first** - it has the complete workflow
-- Use `bd --no-daemon` in git worktrees (see AGENTS.md for why)
+- Use `fbd --no-daemon` in git worktrees (see AGENTS.md for why)
 - Install git hooks for zero-lag sync: `./examples/git-hooks/install.sh`
-- Run `bd sync` at end of agent sessions to force immediate flush/commit/push
-- Check for duplicates proactively: `bd duplicates --auto-merge`
+- Run `fbd sync` at end of agent sessions to force immediate flush/commit/push
+- Check for duplicates proactively: `fbd duplicates --auto-merge`
 - Use `--json` flags for all programmatic use
 
 ## Key Files

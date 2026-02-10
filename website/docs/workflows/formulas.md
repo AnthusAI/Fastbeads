@@ -194,20 +194,20 @@ Formulas are searched in order:
 
 ```bash
 # List available formulas
-bd mol list
+fbd mol list
 
 # Pour formula into molecule
-bd pour <formula-name> --var key=value
+fbd pour <formula-name> --var key=value
 
 # Preview what would be created
-bd pour <formula-name> --dry-run
+fbd pour <formula-name> --dry-run
 ```
 
 ## Creating Custom Formulas
 
 1. Create file: `.beads/formulas/my-workflow.formula.toml`
 2. Define structure (see examples above)
-3. Use with: `bd pour my-workflow`
+3. Use with: `fbd pour my-workflow`
 
 ## Example: Release Formula
 

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // UpdateIssueID updates an issue ID and all its references.

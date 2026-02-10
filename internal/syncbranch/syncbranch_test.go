@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
 )
 
 func TestValidateBranchName(t *testing.T) {

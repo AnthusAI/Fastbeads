@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // NOTE: createGraphEdgesFromIssueFields and createGraphEdgesFromUpdates removed
@@ -33,7 +33,7 @@ import (
 // REMOVED: SyncAllCounters - no longer needed with hash IDs
 
 // REMOVED: derivePrefixFromPath was causing duplicate issues with wrong prefix
-// The database should ALWAYS have issue_prefix config set explicitly (by 'bd init' or auto-import)
+// The database should ALWAYS have issue_prefix config set explicitly (by 'fbd init' or auto-import)
 // Never derive prefix from filename - it leads to silent data corruption
 
 // CreateIssue creates a new issue
@@ -57,7 +57,7 @@ func (s *SQLiteStorage) CreateIssue(ctx context.Context, issue *types.Issue, act
 		issue.UpdatedAt = now
 	}
 
-	// Defensive fix for closed_at invariant (GH#523): older versions of bd could
+	// Defensive fix for closed_at invariant (GH#523): older versions of fbd could
 	// close issues without setting closed_at. Fix by using max(created_at, updated_at) + 1s.
 	if issue.Status == types.StatusClosed && issue.ClosedAt == nil {
 		maxTime := issue.CreatedAt
@@ -125,14 +125,14 @@ func (s *SQLiteStorage) CreateIssue(ctx context.Context, issue *types.Issue, act
 	if errors.Is(err, sql.ErrNoRows) || configPrefix == "" {
 		// CRITICAL: Reject operation if issue_prefix config is missing
 		// This prevents duplicate issues with wrong prefix
-		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'bd init --prefix <prefix>' first)")
+		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'fbd init --prefix <prefix>' first)")
 	} else if err != nil {
 		return fmt.Errorf("failed to get config: %w", err)
 	}
 
 	// Determine prefix for ID generation and validation:
 	// 1. PrefixOverride completely replaces config prefix (for cross-rig creation)
-	// 2. IDPrefix appends to config prefix (e.g., "bd" + "wisp" → "bd-wisp")
+	// 2. IDPrefix appends to config prefix (e.g., "fbd" + "wisp" → "bd-wisp")
 	// 3. Otherwise use config prefix as-is
 	prefix := configPrefix
 	if issue.PrefixOverride != "" {
@@ -1303,7 +1303,7 @@ func (s *SQLiteStorage) CloseIssue(ctx context.Context, id string, reason string
 	// Execute in transaction using BEGIN IMMEDIATE (GH#1272 fix)
 	return s.withTx(ctx, func(conn *sql.Conn) error {
 		// NOTE: close_reason is stored in two places:
-		// 1. issues.close_reason - for direct queries (bd show --json, exports)
+		// 1. issues.close_reason - for direct queries (fbd show --json, exports)
 		// 2. events.comment - for audit history (when was it closed, by whom)
 		// Keep both in sync. If refactoring, consider deriving one from the other.
 		result, err := conn.ExecContext(ctx, `

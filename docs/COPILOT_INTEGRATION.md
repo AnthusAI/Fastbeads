@@ -12,7 +12,7 @@ Beads provides a persistent, structured memory for coding agents through the MCP
 
 - VS Code 1.96+ with GitHub Copilot extension
 - GitHub Copilot subscription (Individual, Business, or Enterprise)
-- beads CLI installed (`brew install beads` or `npm install -g @beads/bd`)
+- beads CLI installed (`brew install beads` or `npm install -g @beads/fbd`)
 - Python 3.10+ OR uv package manager
 
 ## Quick Setup
@@ -67,7 +67,7 @@ Create or edit `.vscode/mcp.json` in your project:
 
 ```bash
 cd your-project
-bd init --quiet
+fbd init --quiet
 ```
 
 This creates a `.beads/` directory with the issue database. The init wizard will ask about git hooks—these are optional and you can skip them if unfamiliar.
@@ -79,14 +79,14 @@ Create `.github/copilot-instructions.md`:
 ```markdown
 ## Issue Tracking
 
-This project uses **bd (beads)** for issue tracking.
-Run `bd prime` for workflow context.
+This project uses **fbd (beads)** for issue tracking.
+Run `fbd prime` for workflow context.
 
 **Quick reference:**
-- `bd ready` - Find unblocked work
-- `bd create "Title" --type task --priority 2` - Create issue
-- `bd close <id>` - Complete work
-- `bd sync` - Sync with git (run at session end)
+- `fbd ready` - Find unblocked work
+- `fbd create "Title" --type task --priority 2` - Create issue
+- `fbd close <id>` - Complete work
+- `fbd sync` - Sync with git (run at session end)
 ```
 
 ### Step 5: Restart VS Code
@@ -201,7 +201,7 @@ Initialize beads in your project:
 
 ```bash
 cd your-project
-bd init --quiet
+fbd init --quiet
 ```
 
 ### Changes not persisting
@@ -209,7 +209,7 @@ bd init --quiet
 Run sync at end of session:
 
 ```bash
-bd sync
+fbd sync
 ```
 
 Or ask Copilot: "Sync my beads changes to git"
@@ -226,11 +226,11 @@ For Copilot Enterprise, your organization must enable "MCP servers in Copilot" p
 
 ### What are the git hooks and are they safe?
 
-When you run `bd init`, beads can install git hooks that:
+When you run `fbd init`, beads can install git hooks that:
 - **post-merge**: Import issues when you pull
 - **pre-push**: Sync issues before you push
 
-These hooks are safe—they only read/write the `.beads/` directory and never modify your code. You can opt out with `bd init --no-hooks` or skip them during the interactive setup.
+These hooks are safe—they only read/write the `.beads/` directory and never modify your code. You can opt out with `fbd init --no-hooks` or skip them during the interactive setup.
 
 ### Can I use beads without Copilot?
 

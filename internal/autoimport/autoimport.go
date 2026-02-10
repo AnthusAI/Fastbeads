@@ -12,10 +12,10 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/steveyegge/beads/internal/debug"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/debug"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // Notifier handles user notifications during import
@@ -210,7 +210,7 @@ func checkForMergeConflicts(jsonlData []byte, jsonlPath string) error {
 				"To resolve:\n"+
 				"  1. Resolve the merge conflict in your Git client, OR\n"+
 				"  2. Export from database to regenerate clean JSONL:\n"+
-				"     bd export -o %s\n\n"+
+				"     fbd export -o %s\n\n"+
 				"After resolving, commit the fixed JSONL file.\n", jsonlPath, jsonlPath)
 		}
 	}

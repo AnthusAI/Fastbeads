@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // containsLabel checks if a label exists in the list
@@ -24,7 +24,7 @@ func containsLabel(labels []string, label string) bool {
 }
 
 // parseTimeRPC parses time strings in multiple formats (RFC3339, YYYY-MM-DD, etc.)
-// Matches the parseTimeFlag behavior in cmd/bd/list.go for CLI parity
+// Matches the parseTimeFlag behavior in cmd/fbd/list.go for CLI parity
 func parseTimeRPC(s string) (time.Time, error) {
 	// Try RFC3339 first (ISO 8601 with timezone)
 	if t, err := time.Parse(time.RFC3339, s); err == nil {
@@ -227,7 +227,7 @@ func (s *Server) handleCreate(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 	ctx, cancel := s.reqCtx(req)
@@ -550,7 +550,7 @@ func (s *Server) handleUpdate(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -574,7 +574,7 @@ func (s *Server) handleUpdate(req *Request) Response {
 	if issue.IsTemplate {
 		return Response{
 			Success: false,
-			Error:   fmt.Sprintf("cannot update template %s: templates are read-only; use 'bd molecule instantiate' to create a work item", updateArgs.ID),
+			Error:   fmt.Sprintf("cannot update template %s: templates are read-only; use 'fbd molecule instantiate' to create a work item", updateArgs.ID),
 		}
 	}
 
@@ -667,7 +667,7 @@ func (s *Server) handleUpdate(req *Request) Response {
 	}
 
 	// Auto-add role_type/rig labels for agent beads when these fields are set
-	// This enables filtering queries like: bd list --label=gt:agent --label=role_type:witness
+	// This enables filtering queries like: fbd list --label=gt:agent --label=role_type:witness
 	// Note: We remove old role_type/rig labels first to prevent accumulation
 	// Check for gt:agent label to identify agent beads (Gas Town separation)
 	issueLabels, _ := store.GetLabels(ctx, updateArgs.ID)
@@ -821,7 +821,7 @@ func (s *Server) handleClose(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -927,7 +927,7 @@ func (s *Server) handleDelete(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1096,7 +1096,7 @@ func (s *Server) handleList(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1388,7 +1388,7 @@ func (s *Server) handleCount(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1620,7 +1620,7 @@ func (s *Server) handleResolveID(req *Request) Response {
 	if s.storage == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1654,7 +1654,7 @@ func (s *Server) handleShow(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1714,7 +1714,7 @@ func (s *Server) handleReady(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1784,7 +1784,7 @@ func (s *Server) handleBlocked(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1823,7 +1823,7 @@ func (s *Server) handleStale(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1855,7 +1855,7 @@ func (s *Server) handleStats(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -1889,7 +1889,7 @@ func (s *Server) handleEpicStatus(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 

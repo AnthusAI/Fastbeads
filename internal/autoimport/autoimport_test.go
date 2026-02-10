@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage/memory"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage/memory"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // testNotifier captures notifications for assertions

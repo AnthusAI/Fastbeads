@@ -87,7 +87,7 @@ Bumps the version number across all beads components in a single command.
 ### What It Does
 
 Updates version in all these files:
-- `cmd/bd/version.go` - bd CLI version constant
+- `cmd/fbd/version.go` - fbd CLI version constant
 - `claude-plugin/.claude-plugin/plugin.json` - Plugin version
 - `.claude-plugin/marketplace.json` - Marketplace plugin version
 - `integrations/beads-mcp/pyproject.toml` - MCP server version
@@ -116,7 +116,7 @@ git push origin main
 
 ### Why This Script Exists
 
-Previously, version bumps only updated `cmd/bd/version.go`, leaving other components out of sync. This script ensures all version numbers stay consistent across the project.
+Previously, version bumps only updated `cmd/fbd/version.go`, leaving other components out of sync. This script ensures all version numbers stay consistent across the project.
 
 ### Safety
 
@@ -136,7 +136,7 @@ Signs Windows executables with an Authenticode certificate using osslsigncode.
 
 ```bash
 # Sign a Windows executable
-./scripts/sign-windows.sh path/to/bd.exe
+./scripts/sign-windows.sh path/to/fbd.exe
 
 # Environment variables required for signing:
 export WINDOWS_SIGNING_CERT_PFX_BASE64="<base64-encoded-pfx>"

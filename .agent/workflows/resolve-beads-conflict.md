@@ -4,7 +4,7 @@ description: How to resolve merge conflicts in .beads/issues.jsonl
 
 # Resolving `issues.jsonl` Merge Conflicts
 
-If you encounter a merge conflict in `.beads/issues.jsonl` that doesn't have standard git conflict markers (or if `bd merge` failed automatically), follow this procedure.
+If you encounter a merge conflict in `.beads/issues.jsonl` that doesn't have standard git conflict markers (or if `fbd merge` failed automatically), follow this procedure.
 
 ## 1. Identify the Conflict
 Check if `issues.jsonl` is in conflict:
@@ -25,12 +25,12 @@ git show :2:.beads/issues.jsonl > beads.ours.jsonl
 git show :3:.beads/issues.jsonl > beads.theirs.jsonl
 ```
 
-## 3. Run `bd merge` Manually
-Run the `bd merge` tool manually with the `--debug` flag to see what's happening.
-Syntax: `bd merge <output> <base> <ours> <theirs>`
+## 3. Run `fbd merge` Manually
+Run the `fbd merge` tool manually with the `--debug` flag to see what's happening.
+Syntax: `fbd merge <output> <base> <ours> <theirs>`
 
 ```powershell
-bd merge beads.merged.jsonl beads.base.jsonl beads.ours.jsonl beads.theirs.jsonl --debug
+fbd merge beads.merged.jsonl beads.base.jsonl beads.ours.jsonl beads.theirs.jsonl --debug
 ```
 
 ## 4. Verify the Result

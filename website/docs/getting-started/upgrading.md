@@ -4,19 +4,19 @@ title: Upgrading
 sidebar_position: 4
 ---
 
-# Upgrading bd
+# Upgrading fbd
 
-How to upgrade bd and keep your projects in sync.
+How to upgrade fbd and keep your projects in sync.
 
 ## Checking for Updates
 
 ```bash
 # Current version
-bd version
+fbd version
 
 # What's new in recent versions
-bd info --whats-new
-bd info --whats-new --json  # Machine-readable
+fbd info --whats-new
+fbd info --whats-new --json  # Machine-readable
 ```
 
 ## Upgrading
@@ -27,11 +27,11 @@ Use the command that matches your install method.
 |---|---|---|
 | Quick install script | macOS, Linux, FreeBSD | `curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh \| bash` |
 | PowerShell installer | Windows | `irm https://raw.githubusercontent.com/steveyegge/beads/main/install.ps1 \| iex` |
-| Homebrew | macOS, Linux | `brew upgrade bd` |
-| go install | macOS, Linux, FreeBSD, Windows | `go install github.com/steveyegge/beads/cmd/bd@latest` |
-| npm | macOS, Linux, Windows | `npm update -g @beads/bd` |
-| bun | macOS, Linux, Windows | `bun install -g --trust @beads/bd` |
-| From source (Unix shell) | macOS, Linux, FreeBSD | `git pull && go build -o bd ./cmd/bd` |
+| Homebrew | macOS, Linux | `brew upgrade fbd` |
+| go install | macOS, Linux, FreeBSD, Windows | `go install github.com/steveyegge/fastbeads/cmd/fbd@latest` |
+| npm | macOS, Linux, Windows | `npm update -g @beads/fbd` |
+| bun | macOS, Linux, Windows | `bun install -g --trust @beads/fbd` |
+| From source (Unix shell) | macOS, Linux, FreeBSD | `git pull && go build -o fbd ./cmd/fbd` |
 
 ### Quick install script (macOS/Linux/FreeBSD)
 
@@ -54,7 +54,7 @@ brew upgrade beads
 ### go install
 
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### From Source
@@ -62,8 +62,8 @@ go install github.com/steveyegge/beads/cmd/bd@latest
 ```bash
 cd beads
 git pull
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ## After Upgrading
@@ -72,19 +72,19 @@ sudo mv bd /usr/local/bin/
 
 ```bash
 # 1. Check what changed
-bd info --whats-new
+fbd info --whats-new
 
 # 2. Update git hooks to match new version
-bd hooks install
+fbd hooks install
 
 # 3. Restart all daemons
-bd daemons killall
+fbd daemons killall
 
 # 4. Check for any outdated hooks
-bd info  # Shows warnings if hooks are outdated
+fbd info  # Shows warnings if hooks are outdated
 ```
 
-**Why update hooks?** Git hooks are versioned with bd. Outdated hooks may miss new auto-sync features or bug fixes.
+**Why update hooks?** Git hooks are versioned with fbd. Outdated hooks may miss new auto-sync features or bug fixes.
 
 ## Database Migrations
 
@@ -92,16 +92,16 @@ After major upgrades, check for database migrations:
 
 ```bash
 # Inspect migration plan (AI agents)
-bd migrate --inspect --json
+fbd migrate --inspect --json
 
 # Preview migration changes
-bd migrate --dry-run
+fbd migrate --dry-run
 
 # Apply migrations
-bd migrate
+fbd migrate
 
 # Migrate and clean up old files
-bd migrate --cleanup --yes
+fbd migrate --cleanup --yes
 ```
 
 ## Daemon Version Mismatches
@@ -110,13 +110,13 @@ If you see daemon version mismatch warnings:
 
 ```bash
 # List all running daemons
-bd daemons list --json
+fbd daemons list --json
 
 # Check for version mismatches
-bd daemons health --json
+fbd daemons health --json
 
 # Restart all daemons with new version
-bd daemons killall --json
+fbd daemons killall --json
 ```
 
 ## Troubleshooting Upgrades
@@ -124,20 +124,20 @@ bd daemons killall --json
 ### Old daemon still running
 
 ```bash
-bd daemons killall
+fbd daemons killall
 ```
 
 ### Hooks out of date
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 ### Database schema changed
 
 ```bash
-bd migrate --dry-run
-bd migrate
+fbd migrate --dry-run
+fbd migrate
 ```
 
 ### Import errors after upgrade
@@ -145,6 +145,6 @@ bd migrate
 Check the import configuration:
 
 ```bash
-bd config get import.orphan_handling
-bd import -i .beads/issues.jsonl --orphan-handling allow
+fbd config get import.orphan_handling
+fbd import -i .beads/issues.jsonl --orphan-handling allow
 ```

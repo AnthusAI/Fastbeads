@@ -1,4 +1,4 @@
-# Advanced bd Features
+# Advanced fbd Features
 
 This guide covers advanced features for power users and specific use cases.
 
@@ -19,13 +19,13 @@ Change the issue prefix for all issues in your database. This is useful if your 
 
 ```bash
 # Preview changes without applying
-bd rename-prefix kw- --dry-run
+fbd rename-prefix kw- --dry-run
 
 # Rename from current prefix to new prefix
-bd rename-prefix kw-
+fbd rename-prefix kw-
 
 # JSON output
-bd rename-prefix kw- --json
+fbd rename-prefix kw- --json
 ```
 
 The rename operation:
@@ -44,16 +44,16 @@ The rename operation:
 Example workflow:
 ```bash
 # You have issues like knowledge-work-1, knowledge-work-2, etc.
-bd list  # Shows knowledge-work-* issues
+fbd list  # Shows knowledge-work-* issues
 
 # Preview the rename
-bd rename-prefix kw- --dry-run
+fbd rename-prefix kw- --dry-run
 
 # Apply the rename
-bd rename-prefix kw-
+fbd rename-prefix kw-
 
 # Now you have kw-1, kw-2, etc.
-bd list  # Shows kw-* issues
+fbd list  # Shows kw-* issues
 ```
 
 ## Duplicate Detection
@@ -62,19 +62,19 @@ Find issues with identical content using automated duplicate detection:
 
 ```bash
 # Find all content duplicates in the database
-bd duplicates
+fbd duplicates
 
 # Show duplicates in JSON format
-bd duplicates --json
+fbd duplicates --json
 
 # Automatically merge all duplicates
-bd duplicates --auto-merge
+fbd duplicates --auto-merge
 
 # Preview what would be merged
-bd duplicates --dry-run
+fbd duplicates --dry-run
 
 # Detect duplicates during import
-bd import -i issues.jsonl --dedupe-after
+fbd import -i issues.jsonl --dedupe-after
 ```
 
 **How it works:**
@@ -91,14 +91,14 @@ bd import -i issues.jsonl --dedupe-after
 ━━ Group 1: Fix authentication bug
 → bd-10 (open, P1, 5 references)
   bd-42 (open, P1, 0 references)
-  Suggested: bd merge bd-42 --into bd-10
+  Suggested: fbd merge bd-42 --into bd-10
 
 💡 Run with --auto-merge to execute all suggested merges
 ```
 
 **AI Agent Workflow:**
 
-1. **Periodic scans**: Run `bd duplicates` to check for duplicates
+1. **Periodic scans**: Run `fbd duplicates` to check for duplicates
 2. **During import**: Use `--dedupe-after` to detect duplicates after collision resolution
 3. **Auto-merge**: Use `--auto-merge` to automatically consolidate duplicates
 4. **Manual review**: Use `--dry-run` to preview merges before executing
@@ -109,16 +109,16 @@ Consolidate duplicate issues into a single issue while preserving dependencies a
 
 ```bash
 # Merge bd-42 and bd-43 into bd-41
-bd merge bd-42 bd-43 --into bd-41
+fbd merge bd-42 bd-43 --into bd-41
 
 # Merge multiple duplicates at once
-bd merge bd-10 bd-11 bd-12 --into bd-10
+fbd merge bd-10 bd-11 bd-12 --into bd-10
 
 # Preview merge without making changes
-bd merge bd-42 bd-43 --into bd-41 --dry-run
+fbd merge bd-42 bd-43 --into bd-41 --dry-run
 
 # JSON output
-bd merge bd-42 bd-43 --into bd-41 --json
+fbd merge bd-42 bd-43 --into bd-41 --json
 ```
 
 **What the merge command does:**
@@ -131,18 +131,18 @@ bd merge bd-42 bd-43 --into bd-41 --json
 
 ```bash
 # You discover bd-42 and bd-43 are duplicates of bd-41
-bd show bd-41 bd-42 bd-43
+fbd show bd-41 bd-42 bd-43
 
 # Preview the merge
-bd merge bd-42 bd-43 --into bd-41 --dry-run
+fbd merge bd-42 bd-43 --into bd-41 --dry-run
 
 # Execute the merge
-bd merge bd-42 bd-43 --into bd-41
+fbd merge bd-42 bd-43 --into bd-41
 # ✓ Merged 2 issue(s) into bd-41
 
 # Verify the result
-bd show bd-41  # Now has dependencies from bd-42 and bd-43
-bd dep tree bd-41  # Shows unified dependency tree
+fbd show bd-41  # Now has dependencies from bd-42 and bd-43
+fbd dep tree bd-41  # Shows unified dependency tree
 ```
 
 **Important notes:**
@@ -155,10 +155,10 @@ bd dep tree bd-41  # Shows unified dependency tree
 **AI Agent Workflow:**
 
 When agents discover duplicate issues, they should:
-1. Search for similar issues: `bd list --json | grep "similar text"`
-2. Compare issue details: `bd show bd-41 bd-42 --json`
-3. Merge duplicates: `bd merge bd-42 --into bd-41`
-4. File a discovered-from issue if needed: `bd create "Found duplicates during bd-X" --deps discovered-from:bd-X`
+1. Search for similar issues: `fbd list --json | grep "similar text"`
+2. Compare issue details: `fbd show bd-41 bd-42 --json`
+3. Merge duplicates: `fbd merge bd-42 --into bd-41`
+4. File a discovered-from issue if needed: `fbd create "Found duplicates during bd-X" --deps discovered-from:bd-X`
 
 ## Git Worktrees
 
@@ -168,7 +168,7 @@ When agents discover duplicate issues, they should:
 Git worktrees share the same `.git` directory and thus share the same `.beads` database. The daemon doesn't know which branch each worktree has checked out, which can cause it to commit/push to the wrong branch.
 
 **What you lose without daemon mode:**
-- **Auto-sync** - No automatic commit/push of changes (use `bd sync` manually)
+- **Auto-sync** - No automatic commit/push of changes (use `fbd sync` manually)
 - **MCP server** - The beads-mcp server requires daemon mode for multi-repo support
 - **Background watching** - No automatic detection of remote changes
 
@@ -176,15 +176,15 @@ Git worktrees share the same `.git` directory and thus share the same `.beads` d
 
 1. **Use `--no-daemon` flag** (recommended):
    ```bash
-   bd --no-daemon ready
-   bd --no-daemon create "Fix bug" -p 1
-   bd --no-daemon update bd-42 --status in_progress
+   fbd --no-daemon ready
+   fbd --no-daemon create "Fix bug" -p 1
+   fbd --no-daemon update bd-42 --status in_progress
    ```
 
 2. **Disable daemon via environment variable** (for entire worktree session):
    ```bash
    export BEADS_NO_DAEMON=1
-   bd ready  # All commands use direct mode
+   fbd ready  # All commands use direct mode
    ```
 
 3. **Disable auto-start** (less safe, still warns):
@@ -193,7 +193,7 @@ Git worktrees share the same `.git` directory and thus share the same `.beads` d
    ```
 
 **Automatic Detection:**
-bd automatically detects when you're in a worktree and shows a prominent warning if daemon mode is active. The `--no-daemon` mode works correctly with worktrees since it operates directly on the database without shared state.
+fbd automatically detects when you're in a worktree and shows a prominent warning if daemon mode is active. The `--no-daemon` mode works correctly with worktrees since it operates directly on the database without shared state.
 
 **Why It Matters:**
 The daemon maintains its own view of the current working directory and git state. When multiple worktrees share the same `.beads` database, the daemon may commit changes intended for one branch to a different branch, leading to confusion and incorrect git history.
@@ -236,17 +236,17 @@ repo/
 
 ### Checking Active Location
 
-Use `bd where` to see which database is actually being used:
+Use `fbd where` to see which database is actually being used:
 
 ```bash
-bd where
+fbd where
 # /path/to/main-clone/.beads
 #   (via redirect from /path/to/agent-1/.beads)
-#   prefix: bd
+#   prefix: fbd
 #   database: /path/to/main-clone/.beads/beads.db
 
-bd where --json
-# {"path": "...", "redirected_from": "...", "prefix": "bd", "database_path": "..."}
+fbd where --json
+# {"path": "...", "redirected_from": "...", "prefix": "fbd", "database_path": "..."}
 ```
 
 ### Limitations
@@ -277,12 +277,12 @@ When you encounter the same ID during import, it's an **update operation**, not 
 
 - Hash IDs are content-based and remain stable across updates
 - Same ID + different fields = normal update to existing issue
-- bd automatically applies updates when importing
+- fbd automatically applies updates when importing
 
 **Preview changes before importing:**
 ```bash
 # After git merge or pull
-bd import -i .beads/issues.jsonl --dry-run
+fbd import -i .beads/issues.jsonl --dry-run
 
 # Output shows:
 # Exact matches (idempotent): 15
@@ -307,7 +307,7 @@ git checkout --ours .beads/issues.jsonl    # Keep local version
 # OR manually resolve in editor (keep line with newer updated_at)
 
 # Import the resolved JSONL
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Commit the merge
 git add .beads/issues.jsonl
@@ -324,7 +324,7 @@ For Git merge conflicts in `.beads/issues.jsonl`, consider using **[beads-merge]
 - Leaves remaining conflicts for manual resolution
 - Works as a Git/jujutsu merge driver
 
-After using beads-merge to resolve the git conflict, just run `bd import` to update your database.
+After using beads-merge to resolve the git conflict, just run `fbd import` to update your database.
 
 ## Custom Git Hooks
 
@@ -342,20 +342,20 @@ cd examples/git-hooks
 Create `.git/hooks/pre-commit`:
 ```bash
 #!/bin/bash
-bd export -o .beads/issues.jsonl
+fbd export -o .beads/issues.jsonl
 git add .beads/issues.jsonl
 ```
 
 Create `.git/hooks/post-merge`:
 ```bash
 #!/bin/bash
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 Create `.git/hooks/post-checkout`:
 ```bash
 #!/bin/bash
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 Make hooks executable:
@@ -367,7 +367,7 @@ chmod +x .git/hooks/pre-commit .git/hooks/post-merge .git/hooks/post-checkout
 
 ## Extensible Database
 
-bd uses SQLite, which you can extend with your own tables and queries. This allows you to:
+fbd uses SQLite, which you can extend with your own tables and queries. This allows you to:
 
 - Add custom metadata to issues
 - Build integrations with other tools
@@ -407,10 +407,10 @@ Understanding the role of each component:
 - **SQLite database** - The source of truth for all issues, dependencies, labels
 - **Storage layer** - CRUD operations, dependency resolution, collision detection
 - **Business logic** - Ready work calculation, merge operations, import/export
-- **CLI commands** - Direct database access via `bd` command
+- **CLI commands** - Direct database access via `fbd` command
 
 ### Local Daemon (Per-Project)
-- **Lightweight RPC server** - Runs at `.beads/bd.sock` in each project
+- **Lightweight RPC server** - Runs at `.beads/fbd.sock` in each project
 - **Auto-sync coordination** - Debounced export (5s), git integration, import detection
 - **Process isolation** - Each project gets its own daemon for database safety
 - **LSP model** - Similar to language servers, one daemon per workspace
@@ -419,12 +419,12 @@ Understanding the role of each component:
 
 ### MCP Server (Optional)
 - **Protocol adapter** - Translates MCP calls to daemon RPC or direct CLI
-- **Workspace routing** - Finds correct `.beads/bd.sock` based on working directory
+- **Workspace routing** - Finds correct `.beads/fbd.sock` based on working directory
 - **Stateless** - Doesn't cache or store any issue data itself
-- **Editor integration** - Makes bd available to Claude, Cursor, and other MCP clients
+- **Editor integration** - Makes fbd available to Claude, Cursor, and other MCP clients
 - **Single instance** - One MCP server can route to multiple project daemons
 
-**Key principle**: The daemon and MCP server are thin layers. All heavy lifting (dependency graphs, collision resolution, merge logic) happens in the core bd storage layer.
+**Key principle**: The daemon and MCP server are thin layers. All heavy lifting (dependency graphs, collision resolution, merge logic) happens in the core fbd storage layer.
 
 **Why per-project daemons?**
 - Complete database isolation between projects

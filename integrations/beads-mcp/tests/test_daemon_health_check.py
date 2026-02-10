@@ -114,7 +114,7 @@ async def test_health_check_client_cli_client():
     """Test health check for CLI client (always returns True)."""
     from beads_mcp.bd_client import BdClient
     
-    client = BdClient(bd_path="/usr/bin/bd", beads_db="/tmp/test.db")
+    client = BdClient(bd_path="/usr/bin/fbd", beads_db="/tmp/test.db")
     
     result = await _health_check_client(client)
     

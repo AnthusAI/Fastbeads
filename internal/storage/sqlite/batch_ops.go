@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // validateBatchIssues validates all issues in a batch and sets timestamps if not provided
@@ -35,7 +35,7 @@ func validateBatchIssuesWithCustom(issues []*types.Issue, customStatuses, custom
 			issue.UpdatedAt = now
 		}
 
-		// Defensive fix for closed_at invariant (GH#523): older versions of bd could
+		// Defensive fix for closed_at invariant (GH#523): older versions of fbd could
 		// close issues without setting closed_at. Fix by using max(created_at, updated_at) + 1s.
 		if issue.Status == types.StatusClosed && issue.ClosedAt == nil {
 			maxTime := issue.CreatedAt
@@ -70,7 +70,7 @@ func (s *SQLiteStorage) generateBatchIDs(ctx context.Context, conn *sql.Conn, is
 	err := conn.QueryRowContext(ctx, `SELECT value FROM config WHERE key = ?`, "issue_prefix").Scan(&prefix)
 	if errors.Is(err, sql.ErrNoRows) || prefix == "" {
 		// CRITICAL: Reject operation if issue_prefix config is missing
-		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'bd init --prefix <prefix>' first)")
+		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'fbd init --prefix <prefix>' first)")
 	} else if err != nil {
 		return fmt.Errorf("failed to get config: %w", err)
 	}

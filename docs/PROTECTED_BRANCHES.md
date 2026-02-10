@@ -33,7 +33,7 @@ This guide explains how to use beads with protected branches on platforms like G
 
 ```bash
 cd your-project
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 This creates a `.beads/` directory and configures beads to commit to `beads-sync` instead of `main`.
@@ -50,7 +50,7 @@ git commit -m "Initialize beads issue tracker"
 git push origin main  # Or create a PR if required
 ```
 
-**Files created by `bd init --branch`:**
+**Files created by `fbd init --branch`:**
 
 Files that should be committed to your protected branch (main):
 - `.beads/.gitignore` - Tells git what to ignore in .beads/ directory
@@ -69,7 +69,7 @@ The sync branch (beads-sync) will contain:
 **2. Start the daemon with auto-commit:**
 
 ```bash
-bd daemon start --auto-commit
+fbd daemon start --auto-commit
 ```
 
 The daemon will automatically commit issue changes to the `beads-sync` branch.
@@ -78,10 +78,10 @@ The daemon will automatically commit issue changes to the `beads-sync` branch.
 
 ```bash
 # Check what's changed
-bd sync --status
+fbd sync --status
 
 # Merge to main (creates a pull request or direct merge)
-bd sync --merge
+fbd sync --merge
 ```
 
 That's it! The complete workflow is described below.
@@ -147,7 +147,7 @@ When you update an issue:
 
 ```bash
 cd your-project
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 This will:
@@ -162,10 +162,10 @@ If you already have beads set up and want to switch to a separate branch:
 
 ```bash
 # Set the sync branch
-bd config set sync.branch beads-sync
+fbd config set sync.branch beads-sync
 
 # Start the daemon (it will create the worktree automatically)
-bd daemon start --auto-commit
+fbd daemon start --auto-commit
 ```
 
 ### Daemon Configuration
@@ -174,10 +174,10 @@ For automatic commits to the sync branch:
 
 ```bash
 # Start daemon with auto-commit
-bd daemon start --auto-commit
+fbd daemon start --auto-commit
 
 # Or with auto-commit and auto-push
-bd daemon start --auto-commit --auto-push
+fbd daemon start --auto-commit --auto-push
 ```
 
 **Daemon modes:**
@@ -193,7 +193,7 @@ You can also configure the sync branch via environment variable:
 
 ```bash
 export BEADS_SYNC_BRANCH=beads-sync
-bd daemon start --auto-commit
+fbd daemon start --auto-commit
 ```
 
 This is useful for CI/CD or temporary overrides.
@@ -206,13 +206,13 @@ AI agents work exactly the same way as before:
 
 ```bash
 # Create issues
-bd create "Implement user authentication" -t feature -p 1
+fbd create "Implement user authentication" -t feature -p 1
 
 # Update issues
-bd update bd-a1b2 --status in_progress
+fbd update bd-a1b2 --status in_progress
 
 # Close issues
-bd close bd-a1b2 "Completed authentication"
+fbd close bd-a1b2 "Completed authentication"
 ```
 
 All changes are automatically committed to the `beads-sync` branch by the daemon. No changes are needed to agent workflows!
@@ -223,7 +223,7 @@ All changes are automatically committed to the `beads-sync` branch by the daemon
 
 ```bash
 # See what's changed on the sync branch
-bd sync --status
+fbd sync --status
 ```
 
 This shows the diff between `beads-sync` and `main` (or your current branch).
@@ -231,14 +231,14 @@ This shows the diff between `beads-sync` and `main` (or your current branch).
 **Manual commit (if not using daemon):**
 
 ```bash
-bd sync --flush-only  # Export to JSONL and commit to sync branch
+fbd sync --flush-only  # Export to JSONL and commit to sync branch
 ```
 
 **Pull changes from remote:**
 
 ```bash
 # Pull updates from other collaborators
-bd sync --no-push
+fbd sync --no-push
 ```
 
 This pulls changes from the remote sync branch and imports them to your local database.
@@ -260,7 +260,7 @@ git push origin beads-sync
 # 3. After PR is merged, update your local main
 git checkout main
 git pull
-bd import  # Import the merged changes
+fbd import  # Import the merged changes
 ```
 
 ### Option 2: Direct Merge (If Allowed)
@@ -269,10 +269,10 @@ If you have push access to `main`:
 
 ```bash
 # Check what will be merged
-bd sync --merge --dry-run
+fbd sync --merge --dry-run
 
 # Merge sync branch to main
-bd sync --merge
+fbd sync --merge
 
 # This will:
 # - Switch to main branch
@@ -292,7 +292,7 @@ bd sync --merge
 If you encounter conflicts during merge:
 
 ```bash
-# bd sync --merge will detect conflicts and show:
+# fbd sync --merge will detect conflicts and show:
 Error: Merge conflicts detected
 Conflicting files:
   .beads/issues.jsonl
@@ -301,7 +301,7 @@ To resolve:
 1. Fix conflicts in .beads/issues.jsonl
 2. git add .beads/issues.jsonl
 3. git commit
-4. bd import  # Reimport to sync database
+4. fbd import  # Reimport to sync database
 ```
 
 **Resolving JSONL conflicts:**
@@ -334,7 +334,7 @@ Then:
 ```bash
 git add .beads/issues.jsonl
 git commit -m "Resolve issues.jsonl merge conflict"
-bd import  # Import to database (will use latest timestamp)
+fbd import  # Import to database (will use latest timestamp)
 ```
 
 ## Troubleshooting
@@ -347,7 +347,7 @@ This happens if you created the sync branch independently. Merge with `--allow-u
 git merge beads-sync --allow-unrelated-histories --no-ff
 ```
 
-Or use `bd sync --merge` which handles this automatically.
+Or use `fbd sync --merge` which handles this automatically.
 
 ### "worktree already exists"
 
@@ -361,7 +361,7 @@ rm -rf .git/beads-worktrees/beads-sync
 git worktree prune
 
 # Restart daemon (it will recreate the worktree)
-bd daemon stop && bd daemon start
+fbd daemon stop && fbd daemon start
 ```
 
 ### "branch 'beads-sync' not found"
@@ -389,13 +389,13 @@ Check daemon status and logs:
 
 ```bash
 # Check status
-bd daemon status
+fbd daemon status
 
 # View logs
 tail -f ~/.beads/daemon.log
 
 # Restart daemon
-bd daemon stop && bd daemon start
+fbd daemon stop && fbd daemon start
 ```
 
 Common issues:
@@ -409,13 +409,13 @@ Ensure all clones are configured the same way:
 
 ```bash
 # On each clone, verify:
-bd config get sync.branch  # Should be the same (e.g., beads-sync)
+fbd config get sync.branch  # Should be the same (e.g., beads-sync)
 
 # Pull latest changes
-bd sync --no-push
+fbd sync --no-push
 
 # Check daemon is running
-bd daemon status
+fbd daemon status
 ```
 
 ## FAQ
@@ -429,9 +429,9 @@ No! This is a pure git solution that works on any platform. Just protect your `m
 Yes! Use any branch name except `main` or `master` (git worktrees cannot checkout the same branch in multiple locations):
 
 ```bash
-bd init --branch my-custom-branch
+fbd init --branch my-custom-branch
 # or
-bd config set sync.branch my-custom-branch
+fbd config set sync.branch my-custom-branch
 ```
 
 ### Can I change the branch name later?
@@ -439,8 +439,8 @@ bd config set sync.branch my-custom-branch
 Yes:
 
 ```bash
-bd config set sync.branch new-branch-name
-bd daemon stop && bd daemon start
+fbd config set sync.branch new-branch-name
+fbd daemon stop && fbd daemon start
 ```
 
 The old worktree will remain (no harm), and a new worktree will be created for the new branch.
@@ -450,8 +450,8 @@ The old worktree will remain (no harm), and a new worktree will be created for t
 Unset the sync branch config:
 
 ```bash
-bd config set sync.branch ""
-bd daemon stop && bd daemon start
+fbd config set sync.branch ""
+fbd daemon stop && fbd daemon start
 ```
 
 Beads will go back to committing directly to your current branch.
@@ -462,7 +462,7 @@ Yes! Each collaborator configures their own sync branch:
 
 ```bash
 # All collaborators use the same branch
-bd config set sync.branch beads-sync
+fbd config set sync.branch beads-sync
 ```
 
 Everyone's changes sync via the `beads-sync` branch. Periodically merge to `main` via PR.
@@ -479,10 +479,10 @@ There's no "right" answer - choose what fits your team.
 
 ### Can I review changes before merging?
 
-Yes! Use `bd sync --status` to see what's changed:
+Yes! Use `fbd sync --status` to see what's changed:
 
 ```bash
-bd sync --status
+fbd sync --status
 # Shows diff between beads-sync and main
 ```
 
@@ -501,22 +501,22 @@ Yes, but the daemon will recreate it. If you want to clean up permanently:
 
 ```bash
 # Stop daemon
-bd daemon stop
+fbd daemon stop
 
 # Remove worktree
 git worktree remove .git/beads-worktrees/beads-sync
 
 # Unset sync branch
-bd config set sync.branch ""
+fbd config set sync.branch ""
 ```
 
-### Does this work with `bd sync`?
+### Does this work with `fbd sync`?
 
-Yes! `bd sync` works normally and includes special commands for the merge workflow:
+Yes! `fbd sync` works normally and includes special commands for the merge workflow:
 
-- `bd sync --status` - Show diff between branches
-- `bd sync --merge` - Merge sync branch to main
-- `bd sync --merge --dry-run` - Preview merge
+- `fbd sync --status` - Show diff between branches
+- `fbd sync --merge` - Merge sync branch to main
+- `fbd sync --merge --dry-run` - Preview merge
 
 ### Can AI agents merge automatically?
 
@@ -526,8 +526,8 @@ However, if you want fully automated sync:
 
 ```bash
 # WARNING: This bypasses branch protection!
-bd daemon start --auto-commit --auto-push
-bd sync --merge  # Run periodically (e.g., via cron)
+fbd daemon start --auto-commit --auto-push
+fbd sync --merge  # Run periodically (e.g., via cron)
 ```
 
 ### What if I forget to merge for a long time?
@@ -535,7 +535,7 @@ bd sync --merge  # Run periodically (e.g., via cron)
 No problem! The sync branch accumulates all changes. When you eventually merge:
 
 ```bash
-bd sync --merge
+fbd sync --merge
 ```
 
 All accumulated changes will be merged at once. Git history will show the full timeline.
@@ -560,19 +560,19 @@ jobs:
         with:
           fetch-depth: 0  # Full history
 
-      - name: Install bd
+      - name: Install fbd
         run: |
           curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
       - name: Pull changes
         run: |
           git fetch origin beads-sync
-          bd sync --no-push
+          fbd sync --no-push
 
       - name: Merge to main (if changes)
         run: |
-          if bd sync --status | grep -q 'ahead'; then
-            bd sync --merge
+          if fbd sync --status | grep -q 'ahead'; then
+            fbd sync --merge
             git push origin main
           fi
 ```
@@ -630,10 +630,10 @@ You can use different sync branches for different purposes:
 
 ```bash
 # Development branch
-bd config set sync.branch beads-dev
+fbd config set sync.branch beads-dev
 
 # Production branch
-bd config set sync.branch beads-prod
+fbd config set sync.branch beads-prod
 ```
 
 Switch between them as needed.
@@ -652,7 +652,7 @@ git fetch upstream
 # Merge upstream beads-sync to yours
 git checkout beads-sync
 git merge upstream/beads-sync
-bd import  # Import merged changes
+fbd import  # Import merged changes
 ```
 
 ### Custom Worktree Location
@@ -667,17 +667,17 @@ If you have an existing beads setup committing to `main`:
 
 1. **Set sync branch:**
    ```bash
-   bd config set sync.branch beads-sync
+   fbd config set sync.branch beads-sync
    ```
 
 2. **Restart daemon:**
    ```bash
-   bd daemon stop && bd daemon start
+   fbd daemon stop && fbd daemon start
    ```
 
 3. **Verify:**
    ```bash
-   bd config get sync.branch  # Should show: beads-sync
+   fbd config get sync.branch  # Should show: beads-sync
    ```
 
 Future commits will go to `beads-sync`. Historical commits on `main` are preserved.
@@ -688,16 +688,16 @@ If you want to stop using a sync branch:
 
 1. **Unset sync branch:**
    ```bash
-   bd config set sync.branch ""
+   fbd config set sync.branch ""
    ```
 
 2. **Restart daemon:**
    ```bash
-   bd daemon stop && bd daemon start
+   fbd daemon stop && fbd daemon start
    ```
 
 Future commits will go to your current branch (e.g., `main`).
 
 ---
 
-**Need help?** Open an issue at https://github.com/steveyegge/beads/issues
+**Need help?** Open an issue at https://github.com/steveyegge/fastbeads/issues

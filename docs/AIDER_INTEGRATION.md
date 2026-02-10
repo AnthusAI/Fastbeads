@@ -7,9 +7,9 @@ This guide explains how to integrate [Aider](https://aider.chat/) with Beads for
 Aider is an AI pair programming tool that works in your terminal. Unlike autonomous AI agents like Claude Code, **Aider requires explicit user confirmation** to run commands via the `/run` command.
 
 The beads integration for Aider:
-- Creates `.aider.conf.yml` with bd workflow instructions
+- Creates `.aider.conf.yml` with fbd workflow instructions
 - Provides `.aider/README.md` with quick reference
-- Instructs the AI to **suggest** bd commands (not run them automatically)
+- Instructs the AI to **suggest** fbd commands (not run them automatically)
 - Works with aider's human-in-the-loop design philosophy
 
 ## Installation
@@ -18,25 +18,25 @@ The beads integration for Aider:
 
 ```bash
 # Install beads CLI
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 
 # Initialize in your project
 cd your-project
-bd init --quiet
+fbd init --quiet
 ```
 
 ### 2. Setup Aider Integration
 
 ```bash
 # Install aider integration files
-bd setup aider
+fbd setup aider
 
 # Verify installation
-bd setup aider --check
+fbd setup aider --check
 ```
 
 This creates:
-- `.aider.conf.yml` - Instructions for the AI about bd workflow
+- `.aider.conf.yml` - Instructions for the AI about fbd workflow
 - `.aider/README.md` - Quick reference guide
 
 ### 3. Install Aider
@@ -64,12 +64,12 @@ pipx install aider-chat
    You: What issues are ready to work on?
 
    Aider: Let me check the available work. Run:
-   /run bd ready
+   /run fbd ready
    ```
 
 3. **Run the suggested command:**
    ```
-   /run bd ready
+   /run fbd ready
    ```
 
 4. **Choose an issue and ask AI to claim it:**
@@ -77,30 +77,30 @@ pipx install aider-chat
    You: Let's work on bd-42
 
    Aider: Great choice! To claim it, run:
-   /run bd update bd-42 --status in_progress
+   /run fbd update bd-42 --status in_progress
    ```
 
 ### During Development
 
-The AI will suggest appropriate bd commands as you work:
+The AI will suggest appropriate fbd commands as you work:
 
 - **Create issues for bugs you find:**
   ```
   You: I found a bug in the auth code
 
   Aider: Let's track that. Run:
-  /run bd create "Fix auth bug in login handler" --description="Login fails with 500 when password contains quotes" -t bug -p 1
+  /run fbd create "Fix auth bug in login handler" --description="Login fails with 500 when password contains quotes" -t bug -p 1
   ```
 
 - **Link discovered work:**
   ```
   Aider: Since we found this while working on bd-42, run:
-  /run bd create "Fix auth bug" --description="..." -p 1 --deps discovered-from:bd-42
+  /run fbd create "Fix auth bug" --description="..." -p 1 --deps discovered-from:bd-42
   ```
 
 - **Check issue details:**
   ```
-  /run bd show bd-42
+  /run fbd show bd-42
   ```
 
 ### Completing Work
@@ -111,10 +111,10 @@ When you're done:
 You: This issue is complete
 
 Aider: Great! Mark it complete by running:
-/run bd close bd-42 --reason "Implemented login fix and added tests"
+/run fbd close bd-42 --reason "Implemented login fix and added tests"
 
 Then sync to git:
-/run bd sync
+/run fbd sync
 ```
 
 ## Configuration
@@ -125,26 +125,26 @@ The config file contains instructions for the AI:
 
 ```yaml
 # Core workflow rules:
-# 1. Track ALL work in bd (never use markdown TODOs)
-# 2. Suggest 'bd ready' to find available work
-# 3. Suggest 'bd create' for new issues/tasks/bugs
-# 4. Suggest 'bd sync' at end of session
+# 1. Track ALL work in fbd (never use markdown TODOs)
+# 2. Suggest 'fbd ready' to find available work
+# 3. Suggest 'fbd create' for new issues/tasks/bugs
+# 4. Suggest 'fbd sync' at end of session
 # 5. ALWAYS suggest commands - user will run them via /run
 ```
 
 You can customize this file to add project-specific instructions.
 
-### Aider Commands vs bd Commands
+### Aider Commands vs fbd Commands
 
 **Aider commands** start with `/` and control aider itself:
 - `/run <command>` - Run a shell command
 - `/add <file>` - Add file to context
 - `/help` - Show aider help
 
-**bd commands** are run via `/run`:
-- `/run bd ready` - Check available work
-- `/run bd create "..."` - Create an issue
-- `/run bd show bd-42` - View issue details
+**fbd commands** are run via `/run`:
+- `/run fbd ready` - Check available work
+- `/run fbd create "..."` - Create an issue
+- `/run fbd show bd-42` - View issue details
 
 ## Common Patterns
 
@@ -152,43 +152,43 @@ You can customize this file to add project-specific instructions.
 
 ```bash
 # Check what's available
-/run bd ready
+/run fbd ready
 
 # Claim an issue
-/run bd update bd-abc --status in_progress
+/run fbd update bd-abc --status in_progress
 ```
 
 ### Discovering Work
 
 ```bash
 # Create a new issue
-/run bd create "Refactor auth module" --description="Current auth code has tight coupling" -t task -p 2
+/run fbd create "Refactor auth module" --description="Current auth code has tight coupling" -t task -p 2
 
 # Link it to current work
-/run bd dep add bd-new --type discovered-from --target bd-abc
+/run fbd dep add bd-new --type discovered-from --target bd-abc
 ```
 
 ### Completing Work
 
 ```bash
 # Close the issue
-/run bd close bd-abc --reason "Implemented and tested"
+/run fbd close bd-abc --reason "Implemented and tested"
 
 # Sync to git
-/run bd sync
+/run fbd sync
 ```
 
 ### Checking Status
 
 ```bash
 # View issue details
-/run bd show bd-abc
+/run fbd show bd-abc
 
 # List all open issues
-/run bd list --status=open
+/run fbd list --status=open
 
 # Check dependencies
-/run bd dep tree bd-abc
+/run fbd dep tree bd-abc
 ```
 
 ## Comparison: Aider vs Claude Code
@@ -197,14 +197,14 @@ You can customize this file to add project-specific instructions.
 
 - ✅ User must confirm all commands via `/run`
 - ✅ Full control over what gets executed
-- ✅ AI **suggests** bd commands
+- ✅ AI **suggests** fbd commands
 - ⚠️ More manual interaction required
 
 ### Claude Code (Autonomous)
 
-- ✅ AI directly executes bd commands
+- ✅ AI directly executes fbd commands
 - ✅ Faster workflow (no confirmation needed)
-- ✅ Hooks auto-inject bd context
+- ✅ Hooks auto-inject fbd context
 - ⚠️ Less user control over command execution
 
 **Both approaches work well with beads!** Choose based on your preference for automation vs. control.
@@ -216,49 +216,49 @@ You can customize this file to add project-specific instructions.
 Instead of running commands yourself, ask the AI:
 ```
 You: How do I check what work is available?
-Aider: Run `/run bd ready` to see all unblocked issues
+Aider: Run `/run fbd ready` to see all unblocked issues
 ```
 
 ### 2. Let the AI Track Work
 
-The AI knows the bd workflow and will suggest appropriate commands:
+The AI knows the fbd workflow and will suggest appropriate commands:
 ```
 You: I'm starting work on the login feature
 Aider: First, let's claim it. Run:
-/run bd update bd-xyz --status in_progress
+/run fbd update bd-xyz --status in_progress
 ```
 
-### 3. Use bd prime for Context
+### 3. Use fbd prime for Context
 
 Get the full workflow guide:
 ```bash
-/run bd prime
+/run fbd prime
 ```
 
-The AI will read this and have complete context about bd commands.
+The AI will read this and have complete context about fbd commands.
 
 ### 4. Create Aliases
 
 Add to your shell config for faster commands:
 ```bash
-alias bdr='/run bd ready'
-alias bdc='/run bd create'
-alias bds='/run bd sync'
+alias bdr='/run fbd ready'
+alias bdc='/run fbd create'
+alias bds='/run fbd sync'
 ```
 
 Then in aider:
 ```
-bdr                    # Instead of /run bd ready
-bdc "Fix bug" -t bug  # Instead of /run bd create "Fix bug" -t bug
+bdr                    # Instead of /run fbd ready
+bdc "Fix bug" -t bug  # Instead of /run fbd create "Fix bug" -t bug
 ```
 
 ## Troubleshooting
 
-### "The AI isn't suggesting bd commands"
+### "The AI isn't suggesting fbd commands"
 
 1. Check that `.aider.conf.yml` exists:
    ```bash
-   bd setup aider --check
+   fbd setup aider --check
    ```
 
 2. Reload aider to pick up the config:
@@ -268,28 +268,28 @@ bdc "Fix bug" -t bug  # Instead of /run bd create "Fix bug" -t bug
    aider
    ```
 
-3. Explicitly ask about bd:
+3. Explicitly ask about fbd:
    ```
    You: What should I use for issue tracking?
-   Aider: This project uses Beads (bd) for issue tracking...
+   Aider: This project uses Beads (fbd) for issue tracking...
    ```
 
 ### "Commands are failing"
 
 Make sure you're in a beads-initialized directory:
 ```bash
-/run bd doctor
+/run fbd doctor
 ```
 
 If not initialized:
 ```bash
-/run bd init --quiet
+/run fbd init --quiet
 ```
 
 ### "I want to remove the integration"
 
 ```bash
-bd setup aider --remove
+fbd setup aider --remove
 ```
 
 This removes `.aider.conf.yml` and `.aider/README.md`.
@@ -298,32 +298,32 @@ This removes `.aider.conf.yml` and `.aider/README.md`.
 
 ### Multi-File Context
 
-Aider can track multiple files. Combine with bd:
+Aider can track multiple files. Combine with fbd:
 
 ```
 You: Add the auth files to context and check for related issues
 
-/run bd list --json | grep -i auth
+/run fbd list --json | grep -i auth
 /add src/auth/*.py
 ```
 
 ### Batch Operations
 
-Run multiple bd commands in sequence:
+Run multiple fbd commands in sequence:
 ```bash
 # In your shell (not aider)
-bd ready && bd show bd-42 && bd update bd-42 --status in_progress
+fbd ready && fbd show bd-42 && fbd update bd-42 --status in_progress
 ```
 
 ### Integration with Git
 
-Aider handles git commits. bd tracks issues. They work together:
+Aider handles git commits. fbd tracks issues. They work together:
 
-1. Claim issue: `/run bd update bd-42 --status in_progress`
+1. Claim issue: `/run fbd update bd-42 --status in_progress`
 2. Make changes with aider
 3. Aider commits changes
-4. Complete issue: `/run bd close bd-42`
-5. Sync issues: `/run bd sync`
+4. Complete issue: `/run fbd close bd-42`
+5. Sync issues: `/run fbd sync`
 
 ## Example Session
 
@@ -333,7 +333,7 @@ $ aider
 You: What issues are ready to work on?
 
 Aider: Let me check. Run:
-/run bd ready
+/run fbd ready
 
 📋 Ready work (3 issues with no blockers):
 1. [P1] bd-42: Fix login bug
@@ -343,12 +343,12 @@ Aider: Let me check. Run:
 You: Let's work on bd-42
 
 Aider: Great! First claim it:
-/run bd update bd-42 --status in_progress
+/run fbd update bd-42 --status in_progress
 
 You: Can you show me the details?
 
 Aider: Run:
-/run bd show bd-42
+/run fbd show bd-42
 
 [Shows issue details]
 
@@ -363,15 +363,15 @@ You: Fix the bug described in the issue
 You: Looks good! Mark it complete
 
 Aider: Run:
-/run bd close bd-42 --reason "Fixed login bug - added input validation"
+/run fbd close bd-42 --reason "Fixed login bug - added input validation"
 
 Then sync:
-/run bd sync
+/run fbd sync
 ```
 
 ## References
 
 - [Aider Documentation](https://aider.chat/docs/)
-- [Beads Documentation](https://github.com/steveyegge/beads)
-- [AGENTS.md](../AGENTS.md) - Complete bd workflow guide
+- [Beads Documentation](https://github.com/steveyegge/fastbeads)
+- [AGENTS.md](../AGENTS.md) - Complete fbd workflow guide
 - [QUICKSTART.md](QUICKSTART.md) - Quick start guide

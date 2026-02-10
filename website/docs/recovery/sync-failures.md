@@ -1,16 +1,16 @@
 ---
 sidebar_position: 5
 title: Sync Failures
-description: Recover from bd sync failures
+description: Recover from fbd sync failures
 ---
 
 # Sync Failures Recovery
 
-This runbook helps you recover from `bd sync` failures.
+This runbook helps you recover from `fbd sync` failures.
 
 ## Symptoms
 
-- `bd sync` hangs or times out
+- `fbd sync` hangs or times out
 - Network-related error messages
 - "failed to push" or "failed to pull" errors
 - Daemon not responding
@@ -19,10 +19,10 @@ This runbook helps you recover from `bd sync` failures.
 
 ```bash
 # Check daemon status
-bd daemon status
+fbd daemon status
 
 # Check sync state
-bd status
+fbd status
 
 # View daemon logs
 cat .beads/daemon.log | tail -50
@@ -32,7 +32,7 @@ cat .beads/daemon.log | tail -50
 
 **Step 1:** Stop the daemon
 ```bash
-bd daemon stop
+fbd daemon stop
 ```
 
 **Step 2:** Check for lock files
@@ -44,18 +44,18 @@ rm -f .beads/*.lock
 
 **Step 3:** Force a fresh sync
 ```bash
-bd doctor --fix
+fbd doctor --fix
 ```
 
 **Step 4:** Restart daemon
 ```bash
-bd daemon start
+fbd daemon start
 ```
 
 **Step 5:** Verify sync works
 ```bash
-bd sync
-bd status
+fbd sync
+fbd status
 ```
 
 ## Common Causes
@@ -64,11 +64,11 @@ bd status
 |-------|----------|
 | Network timeout | Retry with better connection |
 | Stale lock file | Remove lock after stopping daemon |
-| Corrupted state | Use `bd doctor --fix` |
+| Corrupted state | Use `fbd doctor --fix` |
 | Git conflicts | See [Merge Conflicts](/recovery/merge-conflicts) |
 
 ## Prevention
 
 - Ensure stable network before sync
 - Let sync complete before closing terminal
-- Use `bd daemon stop` before system shutdown
+- Use `fbd daemon stop` before system shutdown

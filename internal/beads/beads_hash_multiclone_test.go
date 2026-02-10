@@ -13,21 +13,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/testutil"
+	"github.com/steveyegge/fastbeads/internal/testutil"
 )
 
 var testBDBinary string
 
 func TestMain(m *testing.M) {
-	// Build bd binary once for all tests
-	binName := "bd"
+	// Build fbd binary once for all tests
+	binName := "fbd"
 	if runtime.GOOS == "windows" {
 		binName = "bd.exe"
 	}
 
 	tmpDir, err := os.MkdirTemp("", "bd-test-bin-*")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create temp dir for bd binary: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Failed to create temp dir for fbd binary: %v\n", err)
 		os.Exit(1)
 	}
 	defer os.RemoveAll(tmpDir)
@@ -42,10 +42,10 @@ func TestMain(m *testing.M) {
 	modRoot := strings.TrimSpace(string(modRootOut))
 
 	testBDBinary = filepath.Join(tmpDir, binName)
-	cmd := exec.Command("go", "build", "-o", testBDBinary, "./cmd/bd")
-	cmd.Dir = modRoot // Build from module root where ./cmd/bd exists
+	cmd := exec.Command("go", "build", "-o", testBDBinary, "./cmd/fbd")
+	cmd.Dir = modRoot // Build from module root where ./cmd/fbd exists
 	if out, err := cmd.CombinedOutput(); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to build bd binary: %v\n%s\n", err, out)
+		fmt.Fprintf(os.Stderr, "Failed to build fbd binary: %v\n%s\n", err, out)
 		os.Exit(1)
 	}
 
@@ -55,7 +55,7 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-// getBDPath returns the test bd binary path
+// getBDPath returns the test fbd binary path
 func getBDPath() string {
 	if testBDBinary != "" {
 		return testBDBinary
@@ -64,16 +64,16 @@ func getBDPath() string {
 	if runtime.GOOS == "windows" {
 		return "./bd.exe"
 	}
-	return "./bd"
+	return "./fbd"
 }
 
-// getBDCommand returns the platform-specific command to run bd from current dir
+// getBDCommand returns the platform-specific command to run fbd from current dir
 // Always uses forward slashes for sh script compatibility (Git for Windows uses sh)
 func getBDCommand() string {
 	if runtime.GOOS == "windows" {
 		return "./bd.exe"
 	}
-	return "./bd"
+	return "./fbd"
 }
 
 // TestHashIDs_MultiCloneConverge verifies that hash-based IDs work correctly
@@ -88,7 +88,7 @@ func TestHashIDs_MultiCloneConverge(t *testing.T) {
 
 	bdPath := getBDPath()
 	if _, err := os.Stat(bdPath); err != nil {
-		t.Fatalf("bd binary not found at %s", bdPath)
+		t.Fatalf("fbd binary not found at %s", bdPath)
 	}
 
 	// Setup remote and 3 clones
@@ -141,7 +141,7 @@ func TestHashIDs_IdenticalContentDedup(t *testing.T) {
 
 	bdPath := getBDPath()
 	if _, err := os.Stat(bdPath); err != nil {
-		t.Fatalf("bd binary not found at %s", bdPath)
+		t.Fatalf("fbd binary not found at %s", bdPath)
 	}
 
 	// Setup remote and 2 clones

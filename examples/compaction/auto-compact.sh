@@ -38,15 +38,15 @@ if [ -z "$ANTHROPIC_API_KEY" ]; then
   exit 1
 fi
 
-# Check bd is installed
-if ! command -v bd &> /dev/null; then
-  echo "❌ Error: bd command not found"
+# Check fbd is installed
+if ! command -v fbd &> /dev/null; then
+  echo "❌ Error: fbd command not found"
   exit 1
 fi
 
 # Check eligible issues
 echo "Checking eligible issues (Tier $TIER)..."
-ELIGIBLE=$(bd admin compact --dry-run --all --tier "$TIER" --json 2>/dev/null | jq '. | length' || echo "0")
+ELIGIBLE=$(fbd admin compact --dry-run --all --tier "$TIER" --json 2>/dev/null | jq '. | length' || echo "0")
 
 if [ -z "$ELIGIBLE" ] || [ "$ELIGIBLE" = "null" ]; then
   ELIGIBLE=0
@@ -61,18 +61,18 @@ fi
 
 if [ "$DRY_RUN" = true ]; then
   echo "🔍 Dry run mode - showing candidates:"
-  bd admin compact --dry-run --all --tier "$TIER"
+  fbd admin compact --dry-run --all --tier "$TIER"
   exit 0
 fi
 
 # Run compaction
 echo "🗜️  Compacting $ELIGIBLE issues (Tier $TIER)..."
-bd admin compact --all --tier "$TIER"
+fbd admin compact --all --tier "$TIER"
 
 # Show stats
 echo
 echo "📊 Statistics:"
-bd admin compact --stats
+fbd admin compact --stats
 
 echo
 echo "✅ Auto-compaction complete"

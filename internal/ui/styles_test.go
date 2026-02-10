@@ -26,7 +26,7 @@ func TestRenderBasicStyles(t *testing.T) {
 			{"skip icon", RenderSkipIcon(), MutedStyle.Render(IconSkip)},
 			{"info icon", RenderInfoIcon(), AccentStyle.Render(IconInfo)},
 			{"bold", RenderBold("bold"), BoldStyle.Render("bold")},
-			{"command", RenderCommand("bd prime"), CommandStyle.Render("bd prime")},
+			{"command", RenderCommand("fbd prime"), CommandStyle.Render("fbd prime")},
 		}
 		for _, tc := range cases {
 			t.Run(tc.name, func(t *testing.T) {
@@ -155,8 +155,8 @@ func TestRenderCommandAndCategoryAreUppercaseSafe(t *testing.T) {
 		t.Fatalf("category should uppercase input, got %q", got)
 	}
 
-	cmd := RenderCommand("bd prime")
-	if !strings.Contains(cmd, "bd prime") {
+	cmd := RenderCommand("fbd prime")
+	if !strings.Contains(cmd, "fbd prime") {
 		t.Fatalf("command output missing text: %q", cmd)
 	}
 }

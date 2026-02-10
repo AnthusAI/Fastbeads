@@ -12,7 +12,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // issuesQuery is the GraphQL query for fetching issues with all required fields.

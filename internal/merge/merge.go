@@ -36,7 +36,7 @@ import (
 	"slices"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // Issue embeds types.Issue to prevent field drift (GH#1481).
@@ -499,7 +499,7 @@ func merge3WayWithTTL(base, left, right []Issue, ttl time.Duration, debug bool) 
 		}
 	}
 
-	// Sort by ID for deterministic output (matches bd export behavior)
+	// Sort by ID for deterministic output (matches fbd export behavior)
 	slices.SortFunc(result, func(a, b Issue) int {
 		return cmp.Compare(a.ID, b.ID)
 	})

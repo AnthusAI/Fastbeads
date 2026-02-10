@@ -17,7 +17,7 @@ function getPlatformInfo() {
 
   let platformName;
   let archName;
-  let binaryName = 'bd';
+  let binaryName = 'fbd';
 
   // Map Node.js platform names to GitHub release names
   switch (platform) {
@@ -32,7 +32,7 @@ function getPlatformInfo() {
       break;
     case 'win32':
       platformName = 'windows';
-      binaryName = 'bd.exe';
+      binaryName = 'fbd.exe';
       break;
     default:
       throw new Error(`Unsupported platform: ${platform}`);
@@ -178,7 +178,7 @@ async function install() {
   try {
     const { platformName, archName, binaryName } = getPlatformInfo();
 
-    console.log(`Installing bd v${VERSION} for ${platformName}-${archName}...`);
+    console.log(`Installing fbd v${VERSION} for ${platformName}-${archName}...`);
 
     // Determine destination paths
     const binDir = path.join(__dirname, '..', 'bin');
@@ -190,15 +190,15 @@ async function install() {
     }
 
     // Construct download URL
-    // Format: https://github.com/steveyegge/beads/releases/download/v0.21.5/beads_0.21.5_darwin_amd64.tar.gz
+    // Format: https://github.com/steveyegge/fastbeads/releases/download/v0.21.5/beads_0.21.5_darwin_amd64.tar.gz
     const releaseVersion = VERSION;
     const archiveExt = platformName === 'windows' ? 'zip' : 'tar.gz';
     const archiveName = `beads_${releaseVersion}_${platformName}_${archName}.${archiveExt}`;
-    const downloadUrl = `https://github.com/steveyegge/beads/releases/download/v${releaseVersion}/${archiveName}`;
+    const downloadUrl = `https://github.com/steveyegge/fastbeads/releases/download/v${releaseVersion}/${archiveName}`;
     const archivePath = path.join(binDir, archiveName);
 
     // Download the archive
-    console.log(`Downloading bd binary...`);
+    console.log(`Downloading fbd binary...`);
     await downloadFile(downloadUrl, archivePath);
 
     // Extract the archive based on platform
@@ -214,18 +214,18 @@ async function install() {
     // Verify the binary works
     try {
       const output = execSync(`"${binaryPath}" version`, { encoding: 'utf8' });
-      console.log(`✓ bd installed successfully: ${output.trim()}`);
+      console.log(`✓ fbd installed successfully: ${output.trim()}`);
     } catch (err) {
       throw new Error(`Binary verification failed: ${err.message}`);
     }
 
   } catch (err) {
-    console.error(`Error installing bd: ${err.message}`);
+    console.error(`Error installing fbd: ${err.message}`);
     console.error('');
     console.error('Installation failed. You can try:');
-    console.error('1. Installing manually from: https://github.com/steveyegge/beads/releases');
+    console.error('1. Installing manually from: https://github.com/steveyegge/fastbeads/releases');
     console.error('2. Using the install script: curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash');
-    console.error('3. Opening an issue: https://github.com/steveyegge/beads/issues');
+    console.error('3. Opening an issue: https://github.com/steveyegge/fastbeads/issues');
     process.exit(1);
   }
 }

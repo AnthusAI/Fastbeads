@@ -4,36 +4,36 @@ package recipes
 // This content is written to all file-based recipes.
 const Template = `# Beads Issue Tracking
 
-This project uses [Beads (bd)](https://github.com/steveyegge/beads) for issue tracking.
+This project uses [Beads (fbd)](https://github.com/steveyegge/fastbeads) for issue tracking.
 
 ## Core Rules
 
-- Track ALL work in bd (never use markdown TODOs or comment-based task lists)
-- Use ` + "`bd ready`" + ` to find available work
-- Use ` + "`bd create`" + ` to track new issues/tasks/bugs
-- Use ` + "`bd sync`" + ` at end of session to sync with git remote
+- Track ALL work in fbd (never use markdown TODOs or comment-based task lists)
+- Use ` + "`fbd ready`" + ` to find available work
+- Use ` + "`fbd create`" + ` to track new issues/tasks/bugs
+- Use ` + "`fbd sync`" + ` at end of session to sync with git remote
 - Git hooks auto-sync on commit/merge
 
 ## Quick Reference
 
 ` + "```bash" + `
-bd prime                              # Load complete workflow context
-bd ready                              # Show issues ready to work (no blockers)
-bd list --status=open                 # List all open issues
-bd create --title="..." --type=task   # Create new issue
-bd update <id> --status=in_progress   # Claim work
-bd close <id>                         # Mark complete
-bd dep add <issue> <depends-on>       # Add dependency
-bd sync                               # Sync with git remote
+fbd prime                              # Load complete workflow context
+fbd ready                              # Show issues ready to work (no blockers)
+fbd list --status=open                 # List all open issues
+fbd create --title="..." --type=task   # Create new issue
+fbd update <id> --status=in_progress   # Claim work
+fbd close <id>                         # Mark complete
+fbd dep add <issue> <depends-on>       # Add dependency
+fbd sync                               # Sync with git remote
 ` + "```" + `
 
 ## Workflow
 
-1. Check for ready work: ` + "`bd ready`" + `
-2. Claim an issue: ` + "`bd update <id> --status=in_progress`" + `
+1. Check for ready work: ` + "`fbd ready`" + `
+2. Claim an issue: ` + "`fbd update <id> --status=in_progress`" + `
 3. Do the work
-4. Mark complete: ` + "`bd close <id>`" + `
-5. Sync: ` + "`bd sync`" + ` (or let git hooks handle it)
+4. Mark complete: ` + "`fbd close <id>`" + `
+5. Sync: ` + "`fbd sync`" + ` (or let git hooks handle it)
 
 ## Issue Types
 
@@ -53,7 +53,7 @@ bd sync                               # Sync with git remote
 
 ## Context Loading
 
-Run ` + "`bd prime`" + ` to get complete workflow documentation in AI-optimized format.
+Run ` + "`fbd prime`" + ` to get complete workflow documentation in AI-optimized format.
 
-For detailed docs: see AGENTS.md, QUICKSTART.md, or run ` + "`bd --help`" + `
+For detailed docs: see AGENTS.md, QUICKSTART.md, or run ` + "`fbd --help`" + `
 `

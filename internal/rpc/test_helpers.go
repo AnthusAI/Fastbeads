@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
 )
 
 // newTestStore creates a SQLite store with issue_prefix configured (bd-166)

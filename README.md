@@ -1,13 +1,13 @@
-# bd - Beads
+# fbd - Beads
 
 **Distributed, git-backed graph issue tracker for AI agents.**
 
 **Platforms:** macOS, Linux, Windows, FreeBSD
 
 [![License](https://img.shields.io/github/license/steveyegge/beads)](LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/steveyegge/beads)](https://goreportcard.com/report/github.com/steveyegge/beads)
-[![Release](https://img.shields.io/github/v/release/steveyegge/beads)](https://github.com/steveyegge/beads/releases)
-[![npm version](https://img.shields.io/npm/v/@beads/bd)](https://www.npmjs.com/package/@beads/bd)
+[![Go Report Card](https://goreportcard.com/badge/github.com/steveyegge/fastbeads)](https://goreportcard.com/report/github.com/steveyegge/fastbeads)
+[![Release](https://img.shields.io/github/v/release/steveyegge/beads)](https://github.com/steveyegge/fastbeads/releases)
+[![npm version](https://img.shields.io/npm/v/@beads/fbd)](https://www.npmjs.com/package/@beads/fbd)
 [![PyPI](https://img.shields.io/pypi/v/beads-mcp)](https://pypi.org/project/beads-mcp/)
 
 Beads provides a persistent, structured memory for coding agents. It replaces messy markdown plans with a dependency-aware graph, allowing agents to handle long-horizon tasks without losing context.
@@ -20,10 +20,10 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 
 # Initialize in YOUR project
 cd your-project
-bd init
+fbd init
 
 # Tell your agent
-echo "Use 'bd' for task tracking" >> AGENTS.md
+echo "Use 'fbd' for task tracking" >> AGENTS.md
 ```
 
 **Note:** Beads is a CLI tool you install once and use everywhere. You don't need to clone this repository into your project.
@@ -42,11 +42,11 @@ echo "Use 'bd' for task tracking" >> AGENTS.md
 
 | Command | Action |
 | --- | --- |
-| `bd ready` | List tasks with no open blockers. |
-| `bd create "Title" -p 0` | Create a P0 task. |
-| `bd update <id> --claim` | Atomically claim a task (sets assignee + in_progress). |
-| `bd dep add <child> <parent>` | Link tasks (blocks, related, parent-child). |
-| `bd show <id>` | View task details and audit trail. |
+| `fbd ready` | List tasks with no open blockers. |
+| `fbd create "Title" -p 0` | Create a P0 task. |
+| `fbd update <id> --claim` | Atomically claim a task (sets assignee + in_progress). |
+| `fbd dep add <child> <parent>` | Link tasks (blocks, related, parent-child). |
+| `fbd show <id>` | View task details and audit trail. |
 
 ## 🔗 Hierarchy & Workflow
 
@@ -56,18 +56,18 @@ Beads supports hierarchical IDs for epics:
 * `bd-a3f8.1` (Task)
 * `bd-a3f8.1.1` (Sub-task)
 
-**Stealth Mode:** Run `bd init --stealth` to use Beads locally without committing files to the main repo. Perfect for personal use on shared projects.
+**Stealth Mode:** Run `fbd init --stealth` to use Beads locally without committing files to the main repo. Perfect for personal use on shared projects.
 
 **Contributor vs Maintainer:** When working on open-source projects:
 
-* **Contributors** (forked repos): Run `bd init --contributor` to route planning issues to a separate repo (e.g., `~/.beads-planning`). Keeps experimental work out of PRs.
+* **Contributors** (forked repos): Run `fbd init --contributor` to route planning issues to a separate repo (e.g., `~/.beads-planning`). Keeps experimental work out of PRs.
 * **Maintainers** (write access): Beads auto-detects maintainer role via SSH URLs or HTTPS with credentials. Only need `git config beads.role maintainer` if using GitHub HTTPS without credentials but you have write access.
 
 ## 📦 Installation
 
-* **npm:** `npm install -g @beads/bd`
+* **npm:** `npm install -g @beads/fbd`
 * **Homebrew:** `brew install beads`
-* **Go:** `go install github.com/steveyegge/beads/cmd/bd@latest`
+* **Go:** `go install github.com/steveyegge/fastbeads/cmd/fbd@latest`
 
 **Requirements:** Linux, FreeBSD, macOS, or Windows.
 

@@ -1,11 +1,11 @@
 # Git Integration Guide
 
-**For:** AI agents and developers managing bd git workflows  
+**For:** AI agents and developers managing fbd git workflows  
 **Version:** 0.21.0+
 
 ## Overview
 
-bd integrates deeply with git for issue tracking synchronization. This guide covers merge conflict resolution, intelligent merge drivers, git worktrees, and protected branch workflows.
+fbd integrates deeply with git for issue tracking synchronization. This guide covers merge conflict resolution, intelligent merge drivers, git worktrees, and protected branch workflows.
 
 ## Git Worktrees
 
@@ -30,16 +30,16 @@ The daemon maintains its own view of the current working directory and git state
 **1. Use `--no-daemon` flag (recommended):**
 
 ```bash
-bd --no-daemon ready
-bd --no-daemon create "Fix bug" -p 1
-bd --no-daemon update bd-42 --status in_progress
+fbd --no-daemon ready
+fbd --no-daemon create "Fix bug" -p 1
+fbd --no-daemon update bd-42 --status in_progress
 ```
 
 **2. Disable daemon via environment (entire session):**
 
 ```bash
 export BEADS_NO_DAEMON=1
-bd ready  # All commands use direct mode
+fbd ready  # All commands use direct mode
 ```
 
 **3. Disable auto-start (less safe, still warns):**
@@ -50,7 +50,7 @@ export BEADS_AUTO_START_DAEMON=false
 
 ### Automatic Detection & Warnings
 
-bd automatically detects worktrees and shows prominent warnings if daemon mode is active:
+fbd automatically detects worktrees and shows prominent warnings if daemon mode is active:
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════╗
@@ -63,7 +63,7 @@ bd automatically detects worktrees and shows prominent warnings if daemon mode i
 ║ Worktree git dir: /path/to/shared/.git                                   ║
 ║                                                                          ║
 ║ RECOMMENDED SOLUTIONS:                                                   ║
-║   1. Use --no-daemon flag:    bd --no-daemon <command>                   ║
+║   1. Use --no-daemon flag:    fbd --no-daemon <command>                   ║
 ║   2. Disable daemon mode:     export BEADS_NO_DAEMON=1                   ║
 ╚══════════════════════════════════════════════════════════════════════════╝
 ```
@@ -107,16 +107,16 @@ Git conflicts in `.beads/issues.jsonl` happen when:
 
 ### Automatic Detection
 
-bd automatically detects conflict markers and shows clear resolution steps:
+fbd automatically detects conflict markers and shows clear resolution steps:
 
 ```bash
-# bd import rejects files with conflict markers
-bd import -i .beads/issues.jsonl
+# fbd import rejects files with conflict markers
+fbd import -i .beads/issues.jsonl
 # Error: JSONL file contains git conflict markers
 # Resolve with: git checkout --theirs .beads/issues.jsonl
 
 # Validate for conflicts
-bd validate --checks=conflicts
+fbd validate --checks=conflicts
 ```
 
 Conflict markers detected: `<<<<<<<`, `=======`, `>>>>>>>`
@@ -128,26 +128,26 @@ Conflict markers detected: `<<<<<<<`, `=======`, `>>>>>>>`
 
 # Option 1: Accept their version (remote)
 git checkout --theirs .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Option 2: Keep our version (local)
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Option 3: Manual resolution in editor
 # Edit .beads/issues.jsonl to remove conflict markers
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Commit the merge
 git add .beads/issues.jsonl
 git commit
 ```
 
-**Note:** `bd import` automatically handles updates - same ID with different content is a normal update operation. No special flags needed. If you accidentally modified the same issue in both branches, just pick whichever version is more complete.
+**Note:** `fbd import` automatically handles updates - same ID with different content is a normal update operation. No special flags needed. If you accidentally modified the same issue in both branches, just pick whichever version is more complete.
 
 ## Intelligent Merge Driver (Auto-Configured)
 
-**As of v0.21+**, bd automatically configures its own merge driver during `bd init`. This uses the beads-merge algorithm (by @neongreen, vendored into bd) to provide intelligent JSONL merging.
+**As of v0.21+**, fbd automatically configures its own merge driver during `fbd init`. This uses the beads-merge algorithm (by @neongreen, vendored into fbd) to provide intelligent JSONL merging.
 
 ### What It Does
 
@@ -158,16 +158,16 @@ git commit
   - Dependencies → union
   - Status/priority → 3-way merge
 - **Conflict markers** only for unresolvable conflicts
-- **Auto-configured** during `bd init` (both interactive and `--quiet` modes)
+- **Auto-configured** during `fbd init` (both interactive and `--quiet` modes)
 
 ### Auto-Configuration
 
-**Happens automatically during `bd init`:**
+**Happens automatically during `fbd init`:**
 
 ```bash
 # These are configured automatically:
-git config merge.beads.driver "bd merge %A %O %A %B"
-git config merge.beads.name "bd JSONL merge driver"
+git config merge.beads.driver "fbd merge %A %O %A %B"
+git config merge.beads.name "fbd JSONL merge driver"
 
 # .gitattributes entry added:
 # .beads/issues.jsonl merge=beads
@@ -178,8 +178,8 @@ git config merge.beads.name "bd JSONL merge driver"
 **If you skipped merge driver with `--skip-merge-driver`:**
 
 ```bash
-git config merge.beads.driver "bd merge %A %O %A %B"
-git config merge.beads.name "bd JSONL merge driver"
+git config merge.beads.driver "fbd merge %A %O %A %B"
+git config merge.beads.name "fbd JSONL merge driver"
 echo ".beads/issues.jsonl merge=beads" >> .gitattributes
 ```
 
@@ -203,7 +203,7 @@ During `git merge`, beads-merge:
 
 ```toml
 [merge-tools.beads-merge]
-program = "bd"
+program = "fbd"
 merge-args = ["merge", "$output", "$base", "$left", "$right"]
 merge-conflict-exit-codes = [1]
 ```
@@ -213,20 +213,20 @@ Then resolve with:
 jj resolve --tool=beads-merge .beads/issues.jsonl
 ```
 
-**Note:** This only works for `.beads/issues.jsonl` since `bd merge` is a specialized JSONL merge tool.
+**Note:** This only works for `.beads/issues.jsonl` since `fbd merge` is a specialized JSONL merge tool.
 
 ## Protected Branch Workflows
 
-**If your repository uses protected branches** (GitHub, GitLab, etc.), bd can commit to a separate branch instead of `main`:
+**If your repository uses protected branches** (GitHub, GitLab, etc.), fbd can commit to a separate branch instead of `main`:
 
 ### Configuration
 
 ```bash
 # Initialize with separate sync branch
-bd init --branch beads-sync
+fbd init --branch beads-sync
 
 # Or configure existing setup
-bd config set sync.branch beads-sync
+fbd config set sync.branch beads-sync
 ```
 
 ### How It Works
@@ -240,9 +240,9 @@ bd config set sync.branch beads-sync
 
 ```bash
 # Agents work normally - no changes needed!
-bd create "Fix authentication" -t bug -p 1
-bd update bd-a1b2 --status in_progress
-bd close bd-a1b2 "Fixed"
+fbd create "Fix authentication" -t bug -p 1
+fbd update bd-a1b2 --status in_progress
+fbd close bd-a1b2 "Fixed"
 ```
 
 All changes automatically commit to `beads-sync` branch (if daemon is running with `--auto-commit`).
@@ -251,14 +251,14 @@ All changes automatically commit to `beads-sync` branch (if daemon is running wi
 
 ```bash
 # Check what's changed
-bd sync --status
+fbd sync --status
 
 # Option 1: Create pull request
 git push origin beads-sync
 # Then create PR on GitHub/GitLab
 
 # Option 2: Direct merge (if allowed)
-bd sync --merge
+fbd sync --merge
 ```
 
 ### Benefits
@@ -311,13 +311,13 @@ See [PROTECTED_BRANCHES.md](PROTECTED_BRANCHES.md) for complete setup guide, tro
 **With pre-push hook:**
 - JSONL always reflects database state
 - All workspaces stay synchronized
-- No manual `bd sync` needed
+- No manual `fbd sync` needed
 
 See [examples/git-hooks/README.md](../examples/git-hooks/README.md) for details.
 
 ### Implementation Details
 
-#### Hook Installation (`cmd/bd/hooks.go`)
+#### Hook Installation (`cmd/fbd/hooks.go`)
 
 The `installHooks()` function:
 - Writes embedded hook scripts to the `.git/hooks/` directory
@@ -342,16 +342,16 @@ In **git worktrees**, `.git` is a file containing `gitdir: /path/to/actual/git/d
 
 This difference breaks code that assumes `.git` is always a directory. Using `getGitDir()` ensures hooks work correctly in both cases.
 
-#### Hook Detection (`cmd/bd/init.go`)
+#### Hook Detection (`cmd/fbd/init.go`)
 
 The `detectExistingHooks()` function scans for existing hooks and classifies them:
 
-- **bd hooks**: Identified by "bd (beads) pre-commit hook" comment in content
+- **fbd hooks**: Identified by "fbd (beads) pre-commit hook" comment in content
 - **pre-commit framework hooks**: Detected by "pre-commit framework" or "pre-commit.com" in content
 - **Custom hooks**: Any other existing hook
 
-This classification allows bd to:
-- Avoid re-installing already-installed bd hooks
+This classification allows fbd to:
+- Avoid re-installing already-installed fbd hooks
 - Support chaining with pre-commit framework hooks
 - Warn when overwriting custom hooks
 
@@ -421,7 +421,7 @@ This approach ensures tests work correctly in both normal repos and git worktree
 
 **Setup:**
 ```bash
-bd init --contributor  # Interactive wizard
+fbd init --contributor  # Interactive wizard
 ```
 
 See [MULTI_REPO_MIGRATION.md](MULTI_REPO_MIGRATION.md) for complete guide.
@@ -447,7 +447,7 @@ See [MULTI_REPO_MIGRATION.md](MULTI_REPO_MIGRATION.md) for complete guide.
 
 **Setup:**
 ```bash
-bd init --team  # Interactive wizard
+fbd init --team  # Interactive wizard
 ```
 
 See [MULTI_REPO_MIGRATION.md](MULTI_REPO_MIGRATION.md) for complete guide.
@@ -473,7 +473,7 @@ For the Dolt backend, use `dolt.auto-commit` / `--dolt-auto-commit` to control *
 
 ```bash
 # Force immediate sync (bypass debounce)
-bd sync
+fbd sync
 
 # What it does:
 # 1. Export pending changes to JSONL
@@ -483,16 +483,16 @@ bd sync
 # 5. Push to remote
 ```
 
-**ALWAYS run `bd sync` at end of agent sessions** to ensure changes are committed/pushed.
+**ALWAYS run `fbd sync` at end of agent sessions** to ensure changes are committed/pushed.
 
 ### Disable Automatic Sync
 
 ```bash
 # Disable auto-flush (no export until manual sync)
-bd --no-auto-flush ready
+fbd --no-auto-flush ready
 
 # Disable auto-import (no import on file changes)
-bd --no-auto-import ready
+fbd --no-auto-import ready
 
 # Disable both (manual sync only)
 export BEADS_NO_DAEMON=1  # Direct mode
@@ -503,13 +503,13 @@ export BEADS_NO_DAEMON=1  # Direct mode
 ### Recommended .gitignore
 
 ```
-# bd database (not tracked - JSONL is source of truth)
+# fbd database (not tracked - JSONL is source of truth)
 .beads/beads.db
 .beads/beads.db-*
-.beads/bd.sock
-.beads/bd.pipe
+.beads/fbd.sock
+.beads/fbd.pipe
 
-# bd daemon state
+# fbd daemon state
 .beads/.exclusive-lock
 
 # Git worktrees (if using protected branches)
@@ -521,14 +521,14 @@ export BEADS_NO_DAEMON=1  # Direct mode
 **IMPORTANT:** The `.gitattributes` file should be **committed to git**, not ignored. It configures merge behavior for the entire team.
 
 ```
-# Intelligent merge driver for JSONL (auto-configured by bd init)
+# Intelligent merge driver for JSONL (auto-configured by fbd init)
 .beads/issues.jsonl merge=beads
 
 # Treat JSONL as text for diffs
 .beads/*.jsonl text diff
 ```
 
-This file is automatically created by `bd init` and is essential for:
+This file is automatically created by `fbd init` and is essential for:
 - Preventing spurious merge conflicts in `.beads/issues.jsonl`
 - Enabling field-level 3-way merging instead of line-by-line
 - Ensuring all team members get intelligent JSONL merging
@@ -553,7 +553,7 @@ WARN Database timestamp older than JSONL, importing...
 ```bash
 # Normal after git pull - auto-import handles it
 # If stuck, force import:
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ### Issue: "Database is ahead of JSONL"
@@ -567,7 +567,7 @@ WARN JSONL timestamp older than database, exporting...
 ```bash
 # Normal after local changes - auto-export handles it
 # If stuck, force export:
-bd sync
+fbd sync
 ```
 
 ### Issue: Merge conflicts every time
@@ -582,7 +582,7 @@ bd sync
 git config merge.beads.driver
 
 # Reinstall if missing
-bd init --skip-db  # Only reconfigure git, don't touch database
+fbd init --skip-db  # Only reconfigure git, don't touch database
 
 # Verify .gitattributes
 grep "issues.jsonl" .gitattributes
@@ -598,12 +598,12 @@ grep "issues.jsonl" .gitattributes
 **Solutions:**
 ```bash
 # Agent A: Ensure changes were pushed
-bd sync
+fbd sync
 git push
 
 # Agent B: Force import
 git pull
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Check git hooks installed (prevent future issues)
 ./examples/git-hooks/install.sh

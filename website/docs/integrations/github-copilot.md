@@ -49,7 +49,7 @@ How to use beads with GitHub Copilot in VS Code.
 
 3. Initialize beads:
    ```bash
-   bd init --quiet
+   fbd init --quiet
    ```
 
 4. Reload VS Code
@@ -93,14 +93,14 @@ Optionally add `.github/copilot-instructions.md`:
 ```markdown
 ## Issue Tracking
 
-This project uses **bd (beads)** for issue tracking.
-Run `bd prime` for workflow context.
+This project uses **fbd (beads)** for issue tracking.
+Run `fbd prime` for workflow context.
 
 Quick reference:
-- `bd ready` - Find unblocked work
-- `bd create "Title" --type task --priority 2` - Create issue
-- `bd close <id>` - Complete work
-- `bd sync` - Sync with git
+- `fbd ready` - Find unblocked work
+- `fbd create "Title" --type task --priority 2` - Create issue
+- `fbd close <id>` - Complete work
+- `fbd sync` - Sync with git
 ```
 
 ## Troubleshooting
@@ -125,7 +125,7 @@ uv tool install beads-mcp --force
 ### No database found
 
 ```bash
-bd init --quiet
+fbd init --quiet
 ```
 
 ## FAQ
@@ -136,10 +136,10 @@ bd init --quiet
 
 ### What about git hooks?
 
-Git hooks are optional. They auto-sync issues but you can skip them during `bd init` and manually run `bd sync` instead.
+Git hooks are optional. They auto-sync issues but you can skip them during `fbd init` and manually run `fbd sync` instead.
 
 ## See Also
 
 - [MCP Server](/integrations/mcp-server) - Detailed MCP configuration
 - [Installation](/getting-started/installation) - Full install guide
-- [Detailed Copilot Guide](https://github.com/steveyegge/beads/blob/main/docs/COPILOT_INTEGRATION.md) - Comprehensive documentation
+- [Detailed Copilot Guide](https://github.com/steveyegge/fastbeads/blob/main/docs/COPILOT_INTEGRATION.md) - Comprehensive documentation

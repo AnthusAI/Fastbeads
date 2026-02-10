@@ -46,7 +46,7 @@ linters:
           - gosec
         text: "G306"
       # G304: Safe file reads from known JSONL and error paths
-      - path: 'cmd/bd/autoflush\.go|cmd/bd/daemon_autostart\.go|cmd/bd/doctor/fix/sync_branch\.go|cmd/bd/doctor/git\.go|cmd/bd/rename_prefix\.go|cmd/bd/sync_merge\.go|internal/beads/beads\.go|internal/daemon/discovery\.go|internal/daemonrunner/sync\.go|internal/syncbranch/worktree\.go'
+      - path: 'cmd/fbd/autoflush\.go|cmd/fbd/daemon_autostart\.go|cmd/fbd/doctor/fix/sync_branch\.go|cmd/fbd/doctor/git\.go|cmd/fbd/rename_prefix\.go|cmd/fbd/sync_merge\.go|internal/beads/beads\.go|internal/daemon/discovery\.go|internal/daemonrunner/sync\.go|internal/syncbranch/worktree\.go'
         linters:
           - gosec
         text: "G304"
@@ -55,27 +55,27 @@ linters:
           - gosec
         text: "G302.*0700|G301.*0750"
       # G302/G306: JSONL files and error logs need 0644 for debugging/sharing
-      - path: 'cmd/bd/autoflush\.go|cmd/bd/daemon\.go|cmd/bd/daemon_sync_branch\.go|cmd/bd/resolve_conflicts\.go|cmd/bd/setup\.go|internal/daemon/registry\.go|internal/daemonrunner/daemon\.go|internal/git/worktree\.go'
+      - path: 'cmd/fbd/autoflush\.go|cmd/fbd/daemon\.go|cmd/fbd/daemon_sync_branch\.go|cmd/fbd/resolve_conflicts\.go|cmd/fbd/setup\.go|internal/daemon/registry\.go|internal/daemonrunner/daemon\.go|internal/git/worktree\.go'
         linters:
           - gosec
         text: "G306"
       # G306: Git hooks must be executable (0700)
-      - path: 'cmd/bd/init\.go'
+      - path: 'cmd/fbd/init\.go'
         linters:
           - gosec
         text: "G306.*0700"
       # G204: Safe subprocess launches with validated arguments
-      - path: 'cmd/bd/daemon_autostart\.go|cmd/bd/daemon_sync_branch\.go|cmd/bd/doctor\.go|cmd/bd/doctor/fix/sync_branch\.go|cmd/bd/gate\.go|cmd/bd/gate_discover\.go|cmd/bd/jira\.go|cmd/bd/migrate_sync\.go|cmd/bd/show\.go|cmd/bd/sync\.go|internal/git/worktree\.go|internal/syncbranch/worktree\.go'
+      - path: 'cmd/fbd/daemon_autostart\.go|cmd/fbd/daemon_sync_branch\.go|cmd/fbd/doctor\.go|cmd/fbd/doctor/fix/sync_branch\.go|cmd/fbd/gate\.go|cmd/fbd/gate_discover\.go|cmd/fbd/jira\.go|cmd/fbd/migrate_sync\.go|cmd/fbd/show\.go|cmd/fbd/sync\.go|internal/git/worktree\.go|internal/syncbranch/worktree\.go'
         linters:
           - gosec
         text: 'G204'
       # G104: Deferred file closes - errors are non-critical
-      - path: 'cmd/bd/show\.go'
+      - path: 'cmd/fbd/show\.go'
         linters:
           - gosec
         text: "G104.*Close"
       # G115: Safe integer conversions in backoff calculations
-      - path: 'cmd/bd/daemon_autostart\.go'
+      - path: 'cmd/fbd/daemon_autostart\.go'
         linters:
           - gosec
         text: "G115"
@@ -91,27 +91,27 @@ linters:
         text: "Error return value of .*(Close|Rollback|RemoveAll|Setenv|Unsetenv|Chdir|MkdirAll|Remove|Write|SetReadDeadline|SetDeadline|Start|Stop).* is not checked"
 
       # unparam: Placeholder functions that may return errors in future implementation
-      - path: 'cmd/bd/jira\.go'
+      - path: 'cmd/fbd/jira\.go'
         linters:
           - unparam
         text: 'reimportConflicts|resolveConflictsByTimestamp'
       # unparam: readOnly param kept for API symmetry with fix/sqlite_open.go
-      - path: 'cmd/bd/doctor/sqlite_open\.go'
+      - path: 'cmd/fbd/doctor/sqlite_open\.go'
         linters:
           - unparam
         text: 'readOnly'
       # unparam: childrenMap return computed for future parent-child display
-      - path: 'cmd/bd/list\.go'
+      - path: 'cmd/fbd/list\.go'
         linters:
           - unparam
         text: 'buildBlockingMaps.*childrenMap'
       # unparam: truncateID maxLen kept for readability
-      - path: 'cmd/bd/migrate\.go'
+      - path: 'cmd/fbd/migrate\.go'
         linters:
           - unparam
         text: 'truncateID.*maxLen'
       # misspell: "cancelled" is intentional - matching GitHub API response values
-      - path: 'cmd/bd/gate\.go'
+      - path: 'cmd/fbd/gate\.go'
         linters:
           - misspell
         text: 'cancelled'

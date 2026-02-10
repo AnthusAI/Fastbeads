@@ -135,7 +135,7 @@ Once configured, use naturally:
 Create an issue for fixing the login bug with priority 1
 ```
 
-The MCP server translates to appropriate `bd` commands.
+The MCP server translates to appropriate `fbd` commands.
 
 ## Trade-offs
 
@@ -177,7 +177,7 @@ pip install beads-mcp
 ls -la .beads/
 
 # Initialize if needed
-bd init --quiet
+fbd init --quiet
 ```
 
 ## See Also

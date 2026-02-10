@@ -32,8 +32,8 @@ Routes define which repository handles which issues:
 Pin work to specific agents:
 
 ```bash
-bd pin bd-42 --for agent-1 --start
-bd hook --agent agent-1  # Show pinned work
+fbd pin bd-42 --for agent-1 --start
+fbd hook --agent agent-1  # Show pinned work
 ```
 
 ### Cross-repo Dependencies
@@ -41,7 +41,7 @@ bd hook --agent agent-1  # Show pinned work
 Track dependencies across repositories:
 
 ```bash
-bd dep add bd-42 external:other-repo/bd-100
+fbd dep add bd-42 external:other-repo/bd-100
 ```
 
 ## Architecture

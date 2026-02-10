@@ -23,11 +23,11 @@ WINGET_DIR="$SCRIPT_DIR/../winget"
 
 # Get SHA256 from release checksums
 echo "Fetching SHA256 for v$VERSION..."
-SHA256=$(curl -sL "https://github.com/steveyegge/beads/releases/download/v$VERSION/checksums.txt" | grep windows | awk '{print $1}')
+SHA256=$(curl -sL "https://github.com/steveyegge/fastbeads/releases/download/v$VERSION/checksums.txt" | grep windows | awk '{print $1}')
 
 if [ -z "$SHA256" ]; then
     echo "Error: Could not find Windows checksum for v$VERSION"
-    echo "Make sure the release exists: https://github.com/steveyegge/beads/releases/tag/v$VERSION"
+    echo "Make sure the release exists: https://github.com/steveyegge/fastbeads/releases/tag/v$VERSION"
     exit 1
 fi
 
@@ -56,11 +56,11 @@ PackageVersion: $VERSION
 InstallerType: zip
 NestedInstallerType: portable
 NestedInstallerFiles:
-  - RelativeFilePath: bd.exe
-    PortableCommandAlias: bd
+  - RelativeFilePath: fbd.exe
+    PortableCommandAlias: fbd
 Installers:
   - Architecture: x64
-    InstallerUrl: https://github.com/steveyegge/beads/releases/download/v$VERSION/beads_${VERSION}_windows_amd64.zip
+    InstallerUrl: https://github.com/steveyegge/fastbeads/releases/download/v$VERSION/beads_${VERSION}_windows_amd64.zip
     InstallerSha256: $SHA256
 ManifestType: installer
 ManifestVersion: 1.6.0
@@ -74,19 +74,19 @@ PackageVersion: $VERSION
 PackageLocale: en-US
 Publisher: Steve Yegge
 PublisherUrl: https://github.com/steveyegge
-PublisherSupportUrl: https://github.com/steveyegge/beads/issues
+PublisherSupportUrl: https://github.com/steveyegge/fastbeads/issues
 Author: Steve Yegge
 PackageName: beads
-PackageUrl: https://github.com/steveyegge/beads
+PackageUrl: https://github.com/steveyegge/fastbeads
 License: MIT
-LicenseUrl: https://github.com/steveyegge/beads/blob/main/LICENSE
+LicenseUrl: https://github.com/steveyegge/fastbeads/blob/main/LICENSE
 Copyright: Copyright (c) 2024 Steve Yegge
 ShortDescription: Distributed, git-backed graph issue tracker for AI agents
 Description: |
-  beads (bd) is a distributed, git-backed graph issue tracker designed for AI-supervised coding workflows.
+  beads (fbd) is a distributed, git-backed graph issue tracker designed for AI-supervised coding workflows.
   It provides a persistent, structured memory for coding agents, replacing messy markdown plans with a
   dependency-aware graph that allows agents to handle long-horizon tasks without losing context.
-Moniker: bd
+Moniker: fbd
 Tags:
   - issue-tracker
   - ai
@@ -94,7 +94,7 @@ Tags:
   - git
   - cli
   - developer-tools
-ReleaseNotesUrl: https://github.com/steveyegge/beads/releases/tag/v$VERSION
+ReleaseNotesUrl: https://github.com/steveyegge/fastbeads/releases/tag/v$VERSION
 ManifestType: defaultLocale
 ManifestVersion: 1.6.0
 EOF

@@ -2,13 +2,14 @@ package storage
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"time"
+
+	"github.com/steveyegge/fastbeads/internal/env"
 )
 
 // SQLiteConnString builds a SQLite connection string with standard pragmas.
-// It honors the BD_LOCK_TIMEOUT env var for busy timeout (default 30s).
+// It honors the FBD_LOCK_TIMEOUT/BD_LOCK_TIMEOUT env var for busy timeout (default 30s).
 // If readOnly is true, the connection is opened in read-only mode.
 // If path is already a file: URI, pragmas are appended only if absent.
 func SQLiteConnString(path string, readOnly bool) string {
@@ -17,9 +18,9 @@ func SQLiteConnString(path string, readOnly bool) string {
 		return ""
 	}
 
-	// Best-effort: honor the same env var viper uses (BD_LOCK_TIMEOUT).
+	// Best-effort: honor the same env var viper uses (FBD_LOCK_TIMEOUT/BD_LOCK_TIMEOUT).
 	busy := 30 * time.Second
-	if v := strings.TrimSpace(os.Getenv("BD_LOCK_TIMEOUT")); v != "" {
+	if v := strings.TrimSpace(env.GetEnvAlias("LOCK_TIMEOUT")); v != "" {
 		if d, err := time.ParseDuration(v); err == nil {
 			busy = d
 		}

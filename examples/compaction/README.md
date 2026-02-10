@@ -134,11 +134,11 @@ export BD_REPO_PATH="$(pwd)"
 
 ## Troubleshooting
 
-### Script says "bd command not found"
+### Script says "fbd command not found"
 
-Ensure bd is in PATH:
+Ensure fbd is in PATH:
 ```bash
-which bd
+which fbd
 export PATH="$PATH:/usr/local/bin"
 ```
 
@@ -171,7 +171,7 @@ Track compaction costs:
 
 ```bash
 # Show stats after compaction
-bd admin compact --stats
+fbd admin compact --stats
 
 # Estimate monthly cost
 # (issues_compacted / 1000) * $1.00

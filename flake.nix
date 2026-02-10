@@ -1,5 +1,5 @@
 {
-  description = "beads (bd) - An issue tracker designed for AI-supervised coding workflows";
+  description = "beads (fbd) - An issue tracker designed for AI-supervised coding workflows";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -23,58 +23,55 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          bdBase = pkgs.callPackage ./default.nix { inherit pkgs self; };
+          fbdBase = pkgs.callPackage ./default.nix { inherit pkgs self; };
           # Wrap the base package with shell completions baked in
-          bd = pkgs.stdenv.mkDerivation {
+          fbd = pkgs.stdenv.mkDerivation {
             pname = "beads";
-            version = bdBase.version;
+            version = fbdBase.version;
 
             phases = [ "installPhase" ];
 
             installPhase = ''
               mkdir -p $out/bin
-              cp ${bdBase}/bin/bd $out/bin/bd
-
-              # Create 'beads' alias symlink
-              ln -s bd $out/bin/beads
+              cp ${fbdBase}/bin/fbd $out/bin/fbd
 
               # Generate shell completions
               mkdir -p $out/share/fish/vendor_completions.d
               mkdir -p $out/share/bash-completion/completions
               mkdir -p $out/share/zsh/site-functions
 
-              $out/bin/bd completion fish > $out/share/fish/vendor_completions.d/bd.fish
-              $out/bin/bd completion bash > $out/share/bash-completion/completions/bd
-              $out/bin/bd completion zsh > $out/share/zsh/site-functions/_bd
+              $out/bin/fbd completion fish > $out/share/fish/vendor_completions.d/fbd.fish
+              $out/bin/fbd completion bash > $out/share/bash-completion/completions/fbd
+              $out/bin/fbd completion zsh > $out/share/zsh/site-functions/_fbd
             '';
 
-            meta = bdBase.meta;
+            meta = fbdBase.meta;
           };
         in
         {
           packages = {
-            default = bd;
+            default = fbd;
 
             # Keep separate completion packages for users who only want specific shells
-            fish-completions = pkgs.runCommand "bd-fish-completions" { } ''
+            fish-completions = pkgs.runCommand "fbd-fish-completions" { } ''
               mkdir -p $out/share/fish/vendor_completions.d
-              ln -s ${bd}/share/fish/vendor_completions.d/bd.fish $out/share/fish/vendor_completions.d/bd.fish
+              ln -s ${fbd}/share/fish/vendor_completions.d/fbd.fish $out/share/fish/vendor_completions.d/fbd.fish
             '';
 
-            bash-completions = pkgs.runCommand "bd-bash-completions" { } ''
+            bash-completions = pkgs.runCommand "fbd-bash-completions" { } ''
               mkdir -p $out/share/bash-completion/completions
-              ln -s ${bd}/share/bash-completion/completions/bd $out/share/bash-completion/completions/bd
+              ln -s ${fbd}/share/bash-completion/completions/fbd $out/share/bash-completion/completions/fbd
             '';
 
-            zsh-completions = pkgs.runCommand "bd-zsh-completions" { } ''
+            zsh-completions = pkgs.runCommand "fbd-zsh-completions" { } ''
               mkdir -p $out/share/zsh/site-functions
-              ln -s ${bd}/share/zsh/site-functions/_bd $out/share/zsh/site-functions/_bd
+              ln -s ${fbd}/share/zsh/site-functions/_fbd $out/share/zsh/site-functions/_fbd
             '';
           };
 
           apps.default = {
             type = "app";
-            program = "${self.packages.${system}.default}/bin/bd";
+            program = "${self.packages.${system}.default}/bin/fbd";
           };
 
           devShells.default = pkgs.mkShell {

@@ -75,7 +75,7 @@ Even at 25% collision *probability*, the *expected number* of actual collisions 
 
 ## Alternative Thresholds
 
-You can customize the threshold with `bd config set max_collision_prob <value>`:
+You can customize the threshold with `fbd config set max_collision_prob <value>`:
 
 ### Conservative (10% threshold)
 

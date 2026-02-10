@@ -1,6 +1,6 @@
 #!/bin/bash
 # Integration test for GH#1224 - SQLite WAL mode on WSL2 Docker bind mounts
-# This test verifies that bd properly handles database creation on problematic paths
+# This test verifies that fbd properly handles database creation on problematic paths
 
 set -e
 
@@ -26,7 +26,7 @@ native_test_dir="$tmpdir/native_test"
 mkdir -p "$native_test_dir"
 cd "$native_test_dir"
 git init > /dev/null 2>&1 || true
-bd init -q > /dev/null 2>&1 || echo "Note: bd init may fail in test env, but database setup is what matters"
+fbd init -q > /dev/null 2>&1 || echo "Note: fbd init may fail in test env, but database setup is what matters"
 if [ -f ".beads/beads.db" ]; then
     echo "✓ Database created successfully in native filesystem"
 else
@@ -51,11 +51,11 @@ if [ -d "/mnt/wsl" ]; then
     if mkdir -p "$docker_test_dir" 2>/dev/null; then
         cd "$docker_test_dir"
         git init > /dev/null 2>&1 || true
-        # Try to use bd on this path
-        if bd version > /dev/null 2>&1; then
+        # Try to use fbd on this path
+        if fbd version > /dev/null 2>&1; then
             echo "✓ Docker bind mount path handled correctly (WAL mode disabled)"
         else
-            echo "Note: bd version check may fail in test env"
+            echo "Note: fbd version check may fail in test env"
         fi
         cd /
         rm -rf "$docker_test_dir" 2>/dev/null || true

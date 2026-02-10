@@ -13,11 +13,11 @@
 #
 # Usage:
 #   ./sign-windows.sh <path-to-exe>
-#   ./sign-windows.sh dist/bd-windows-amd64_windows_amd64_v1/bd.exe
+#   ./sign-windows.sh dist/fbd-windows-amd64_windows_amd64_v1/fbd.exe
 #
 # For GoReleaser integration, add to .goreleaser.yml:
 #   builds:
-#     - id: bd-windows-amd64
+#     - id: fbd-windows-amd64
 #       hooks:
 #         post:
 #           - ./scripts/sign-windows.sh "{{ .Path }}"
@@ -103,7 +103,7 @@ osslsigncode sign \
     -pkcs12 "$CERT_FILE" \
     -pass "$WINDOWS_SIGNING_CERT_PASSWORD" \
     -n "beads - AI-supervised issue tracker" \
-    -i "https://github.com/steveyegge/beads" \
+    -i "https://github.com/steveyegge/fastbeads" \
     -t "$TIMESTAMP_SERVER" \
     -in "$EXE_PATH" \
     -out "${EXE_PATH}.signed"

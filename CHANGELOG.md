@@ -17,11 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`bd search` content and null-check filters** - Filter issues by description content and metadata presence (`--has`, `--no`) (bd-au0.5)
-- **`bd promote` command** - Promote wisps to persistent beads (gt-7mqd.9)
-- **`bd todo` command** - Lightweight task management for quick personal tracking
-- **`bd find-duplicates` command** - AI-powered duplicate issue detection (bd-581b80b3)
-- **`bd validate` command** - Data-integrity health checks, integrated into `bd doctor --check=validate` (bd-e108)
+- **`fbd search` content and null-check filters** - Filter issues by description content and metadata presence (`--has`, `--no`) (bd-au0.5)
+- **`fbd promote` command** - Promote wisps to persistent beads (gt-7mqd.9)
+- **`fbd todo` command** - Lightweight task management for quick personal tracking
+- **`fbd find-duplicates` command** - AI-powered duplicate issue detection (bd-581b80b3)
+- **`fbd validate` command** - Data-integrity health checks, integrated into `fbd doctor --check=validate` (bd-e108)
 - **Dolt fail-fast TCP check** - Quick connectivity check before MySQL protocol initialization
 - **Windows PE version info** - Embedded version metadata reduces antivirus false positives (bd-t4u1)
 - **Centralized AI model config** - `ai.model` config key with `DefaultAIModel()` helper
@@ -30,8 +30,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Embedded Dolt mode removed** - Server-only Dolt connections now; embedded driver fully removed (bd-esqfe). Windows Dolt backend connects via MySQL protocol. **Note: reverted post-release — see [Unreleased]**
-- **`bd init` defaults to chaining hooks** - No longer prompts; chains by default (bd-bxha)
-- **Homebrew formula name** - `bd doctor` now correctly suggests `brew upgrade beads` instead of `brew upgrade bd`
+- **`fbd init` defaults to chaining hooks** - No longer prompts; chains by default (bd-bxha)
+- **Homebrew formula name** - `fbd doctor` now correctly suggests `brew upgrade beads` instead of `brew upgrade fbd`
 - **Doctor output** - Summary-first layout with improved formatting (bd-4qfb)
 - **JSON output standardized** - Consistent JSON format across all commands (bd-au0.7)
 - **Go toolchain** - Downgraded from 1.25.7 to 1.25.5 for Nix compatibility. **Note: back to 1.25.7 after embedded Dolt restore — see [Unreleased]**
@@ -47,8 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **RPC: daemon socket path** - Use ShortSocketPath for status/health/metrics commands
 - **Daemon: YAML config parsing** - Recognize both hyphenated and underscored daemon config keys (e.g., `auto-sync` and `auto_sync`)
 - **Daemon: stderr redirect** - Removed unsafe global os.Stderr replacement during import
-- **Daemon: daemon stop suggestion** - `bd doctor` fix suggestions now include workspace path argument
-- **Doctor: role check** - Falls back to database config for users who set role via `bd config set`
+- **Daemon: daemon stop suggestion** - `fbd doctor` fix suggestions now include workspace path argument
+- **Doctor: role check** - Falls back to database config for users who set role via `fbd config set`
 - **Doctor: gastown detection** - Auto-detect gastown mode when routes.jsonl exists
 - **Doctor: routing mode** - Accept `explicit` as valid routing mode alongside auto/maintainer/contributor
 - **Doctor: Dolt conflicts query** - Use correct `table` column name (not `table_name`)
@@ -72,8 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Config: beads.role** - Write to git config instead of SQLite
 - **Config: viper guard** - Log when viper uninitialized in getConfigList
 - **Config: BD_BACKEND blocked** - Block env var to prevent data fragmentation (bd-hevyw)
-- **`bd list` output** - Separate parent-child from blocks display; `--all` disables default limit
-- **`bd dep list` routing** - Fix cross-rig routing from town root (bd-ciouf)
+- **`fbd list` output** - Separate parent-child from blocks display; `--all` disables default limit
+- **`fbd dep list` routing** - Fix cross-rig routing from town root (bd-ciouf)
 - **Cross-prefix ID resolution** - Support multi-repo scenarios (GH#1513)
 - **Staleness checks** - Added to export, graph, history, gate list commands
 - **Gitignore template** - Add `.jsonl.lock` to template and requiredPatterns
@@ -92,15 +92,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Label pattern and regex filtering** - New `--label-pattern` (glob) and `--label-regex` flags for `bd list` and `bd ready`. Filter issues by label patterns like `tech-*` or regex like `tech-(debt|legacy)` (#1491)
-- **Simple query language** - Complex filtering via a simple query syntax for `bd list`
-- **`beads` command alias** - Installer now creates a `beads` alias alongside `bd`
+- **Label pattern and regex filtering** - New `--label-pattern` (glob) and `--label-regex` flags for `fbd list` and `fbd ready`. Filter issues by label patterns like `tech-*` or regex like `tech-(debt|legacy)` (#1491)
+- **Simple query language** - Complex filtering via a simple query syntax for `fbd list`
+- **`beads` command alias** - Installer now creates a `beads` alias alongside `fbd`
 - **spec_id field** - New field for linking issues to specification documents (#1372)
 - **Wisp type field** - `wisp_type` column for TTL-based compaction of ephemeral molecules
 - **Dolt schema migration runner** - Automated schema migrations for Dolt backend
-- **Dolt migration validation in bd doctor** - Checks for Dolt migration health
-- **Agent-managed Dolt upgrade path** - `bd migrate` support for Dolt upgrades
-- **`--metadata` flag for bd update** - Update issue metadata from CLI via JSON (#1417, bd-0vud2)
+- **Dolt migration validation in fbd doctor** - Checks for Dolt migration health
+- **Agent-managed Dolt upgrade path** - `fbd migrate` support for Dolt upgrades
+- **`--metadata` flag for fbd update** - Update issue metadata from CLI via JSON (#1417, bd-0vud2)
 - **UpdateIssue metadata via json.RawMessage** - Programmatic metadata updates (#1417)
 - **BD_SKIP_ACCESS_LOCK env var** - For Dolt lock testing scenarios
 - **Orphan branch support for sync-branch migration** - Cleaner sync branch setup
@@ -109,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **`bd ready` now shows only open issues** - Excludes in_progress, matching `bd list --ready` behavior. Shows work that is truly available to claim
+- **`fbd ready` now shows only open issues** - Excludes in_progress, matching `fbd list --ready` behavior. Shows work that is truly available to claim
 - **release.sh is now a molecule gateway** - Creates a release wisp instead of running a batch script
 - **Merge driver embeds types.Issue** - Prevents field drift between merge driver and core types (#1481)
 
@@ -118,7 +118,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **JSONL file locking** - Prevents race conditions in concurrent writes and incremental exports
 - **WAL checkpoint robustness** - Retry logic for SQLite WAL checkpointing
 - **Merge driver field drift** - Driver now preserves all issue fields including spec_id, metadata, and dependencies (#1480, #1481, #1482)
-- **Atomic bd claim** - Compare-and-swap semantics prevent race conditions (#1474)
+- **Atomic fbd claim** - Compare-and-swap semantics prevent race conditions (#1474)
 - **BEADS_DIR routing** - Respects BEADS_DIR over prefix routing in show/close/update commands
 - **Dolt-native sync fixes** - Disabled JSONL sync exports, auto-flush, and imports in dolt-native mode to prevent conflicts
 - **Daemon auto-import** - Proper JSONL import on startup with hash update; check changes AFTER pulling
@@ -127,9 +127,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dolt lock contention** - Advisory flock prevents zombie processes; scoped migration helpers
 - **Dolt connection stability** - Retry logic for transient errors, timeout on embedded close, fix for nested query bad connections
 - **Dolt FK constraint** - Removed FK constraint on depends_on_id for external references
-- **bd list --tree deduplication** - Children no longer appear multiple times
-- **bd show relates-to display** - Correctly displays and deduplicates RELATED section
-- **bd cleanup --hard** - Always prunes tombstones immediately
+- **fbd list --tree deduplication** - Children no longer appear multiple times
+- **fbd show relates-to display** - Correctly displays and deduplicates RELATED section
+- **fbd cleanup --hard** - Always prunes tombstones immediately
 - **Formula TOML vars** - Accept simple string vars in [vars] section
 - **config.yaml fallback** - Custom types work in daemon mode
 - **Content-based merge for daemon pulls** - Prevents spurious conflicts (GH#1358)
@@ -167,13 +167,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GitLab backend for bidirectional issue sync** - Full GitLab integration for syncing beads issues with GitLab
   - REST API client wrapper with pagination, rate limiting, and context cancellation
   - Bidirectional sync: pull from GitLab, push to GitLab with conflict detection
-  - `bd gitlab sync`, `bd gitlab status`, `bd gitlab projects` subcommands
+  - `fbd gitlab sync`, `fbd gitlab status`, `fbd gitlab projects` subcommands
   - GitLab-to-beads mapping with path-based IDs and collision handling
   - Conflict resolution strategies for concurrent edits
   - Integration and unit test suites
 
-- **Key-value store** - New `bd kv` subcommand for persistent key-value storage
-  - `bd kv get`, `bd kv set`, `bd kv delete`, `bd kv list` commands
+- **Key-value store** - New `fbd kv` subcommand for persistent key-value storage
+  - `fbd kv get`, `fbd kv set`, `fbd kv delete`, `fbd kv list` commands
   - Key validation and proper exit codes on missing keys
 
 - **Per-issue JSON metadata field** - Optional metadata field on issues (SQLite + Dolt) (#1407)
@@ -181,22 +181,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Events JSONL export** - Opt-in event audit trail export via `events-export` config
 
 - **Role configuration** - Explicit role configuration via git for agent and user roles
-  - `bd init` interactive contributor role prompt
+  - `fbd init` interactive contributor role prompt
   - UserRole detection in RepoContext
   - Agent roles configurable via config (bd-hx8w)
 
 - **Dolt improvements**
-  - Dolt-specific diagnostics and performance profiling in `bd doctor`
-  - Auto-detect Dolt server and enable server mode during `bd init`
+  - Dolt-specific diagnostics and performance profiling in `fbd doctor`
+  - Auto-detect Dolt server and enable server mode during `fbd init`
   - Env var overrides for Dolt server connection settings
-  - `bd backend` and `bd sync mode` subcommands for inspecting storage config
+  - `fbd backend` and `fbd sync mode` subcommands for inspecting storage config
 
 - **CLI improvements**
   - `comment_count` in issue JSON views (list, ready, search)
   - Comment timestamps with time display and `--local-time` flag
-  - Hint to view step instructions in `bd mol current` output (#1403)
-  - Resolve external refs in `bd dep list` for cross-rig dependencies
-  - Inline blocking dependency display in `bd list` output
+  - Hint to view step instructions in `fbd mol current` output (#1403)
+  - Resolve external refs in `fbd dep list` for cross-rig dependencies
+  - Inline blocking dependency display in `fbd list` output
 
 - **Jira sync** - `pull_prefix` and `push_prefix` config options for flexible prefix mapping
 
@@ -206,7 +206,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Separation of concerns** - Removed Gas Town-specific code from beads core
   - Removed Gas Town role detection from hooks
-  - Removed `--role-type` flag from `bd create`
+  - Removed `--role-type` flag from `fbd create`
   - Removed Gas Town actor validation from validation layer
   - Generalized RoleType to be project-agnostic
 
@@ -227,7 +227,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Graceful server-to-embedded fallback when Dolt server unreachable
   - Detect and clean stale Dolt lock files
   - Skip JSONL staleness check in dolt-native mode
-  - Backend detection in all `bd doctor` fix functions
+  - Backend detection in all `fbd doctor` fix functions
   - Use `GetDoltDatabase()` instead of raw config for server mode
   - Factory-based storage creation for backend awareness
   - Fix for stale JSONL in dolt-native mode
@@ -248,12 +248,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Ignore undeclared handlebars in formula description text (#1394)
   - Exclude ephemeral issues from Linear sync push (#1397)
   - Allow event type in CreateIssue validation (#1398)
-  - Update MCP Stats model to match `bd stats --json` output (#1392)
+  - Update MCP Stats model to match `fbd stats --json` output (#1392)
   - Handle EINVAL from chmod on Unix sockets in containers (#1399)
   - Correct error message for `--gated` flag (#1391)
   - Check rows.Err() in SQLite GetAllEventsSince
   - Exclude tombstones from external_ref uniqueness validation
-  - Handle nil pointer dereference in `bd restore` with invalid issue ID
+  - Handle nil pointer dereference in `fbd restore` with invalid issue ID
   - Make daemon start idempotent (#1334)
   - YAML config support for daemon auto-sync settings (#1294)
   - Use IsValidWithCustom for `--type` validation (#1356)
@@ -275,7 +275,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Note:** Dolt is not enabled by default. We encourage users to try it out and report feedback!
   - Auto-commit on write commands with explicit commit authors (#1267)
   - Server mode for multi-client access - enables multiple processes to share a Dolt database
-  - `bd doctor --server` flag for Dolt server mode health checks
+  - `fbd doctor --server` flag for Dolt server mode health checks
   - Server mode configuration in metadata.json schema
   - Comprehensive test suite for Dolt storage backend (#1299)
   - Lock retry and stale lock cleanup for operational reliability (#1260)
@@ -283,11 +283,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - See docs/DOLT.md for setup guide
 
 - **New command flags**
-  - `bd activity --details/-d` for full issue information in activity feed (#1317)
-  - `bd export --id` and `--parent` filters for targeted exports (#1292)
-  - `bd update --append-notes` flag to append to existing notes (#1304)
-  - `bd update --ephemeral` and `--persistent` flags (#1263)
-  - `bd show --id` flag for IDs that look like flags
+  - `fbd activity --details/-d` for full issue information in activity feed (#1317)
+  - `fbd export --id` and `--parent` filters for targeted exports (#1292)
+  - `fbd update --append-notes` flag to append to existing notes (#1304)
+  - `fbd update --ephemeral` and `--persistent` flags (#1263)
+  - `fbd show --id` flag for IDs that look like flags
 
 - **Doctor improvements**
   - `--server` flag for Dolt server mode health checks
@@ -322,7 +322,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Add sync-branch guard to daemon code paths (#1271)
 
 - **List command fixes**
-  - Optimize `bd list --json` to fetch only needed dependencies (#1316)
+  - Optimize `fbd list --json` to fetch only needed dependencies (#1316)
   - Prevent nil pointer panic in watch mode with daemon (#1324)
   - Populate dependencies field in JSON output (#1296, #1300)
 
@@ -337,10 +337,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Use withTx helper for remaining transaction entry points (#1276)
 
 - **Other fixes**
-  - `bd gate add-waiter` now functions correctly (#1265)
+  - `fbd gate add-waiter` now functions correctly (#1265)
   - Respect BEADS_DIR environment variable in init (#1273)
   - Find molecules attached to hooked issues (#1302)
-  - Separate parent-child deps from blocking deps in `bd show` (#1293)
+  - Separate parent-child deps from blocking deps in `fbd show` (#1293)
   - PrefixOverride now respected in transaction storage layer (#1257)
   - Prime command defaults to beads, avoids TodoWrite/TaskCreate (#1289)
   - Build: `make install` now properly builds, signs, and installs to ~/.local/bin
@@ -356,24 +356,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Dolt federation for multi-repo sync** - Peer-to-peer issue synchronization across repositories
-  - `bd federation sync` command for syncing with configured peers
-  - `bd federation status` shows connection and sync state
+  - `fbd federation sync` command for syncing with configured peers
+  - `fbd federation status` shows connection and sync state
   - SQL-server mode for daemon (`--federation` flag) enables peer connections
   - SQL user authentication for secure peer-to-peer sync
   - Doctor federation health checks validate connectivity and sync state
   - See docs/FEDERATION.md for setup guide
 
 - **SQLite to Dolt migration** - Migrate existing repos to version-controlled storage
-  - `bd migrate dolt` converts SQLite database to Dolt backend
+  - `fbd migrate dolt` converts SQLite database to Dolt backend
   - Preserves full issue history during migration
   - Automatic JSONL bootstrap for routes and interactions
 
 - **New commands**
-  - `bd children <id>` - Display child issues for a parent
-  - `bd rename <old-id> <new-id>` - Rename issue IDs
-  - `bd view` - Alias for `bd show` command (#1249)
-  - `bd config validate` - Validate sync configuration
-  - `bd mol seed --patrol` - Seed patrol molecules (#1149)
+  - `fbd children <id>` - Display child issues for a parent
+  - `fbd rename <old-id> <new-id>` - Rename issue IDs
+  - `fbd view` - Alias for `fbd show` command (#1249)
+  - `fbd config validate` - Validate sync configuration
+  - `fbd mol seed --patrol` - Seed patrol molecules (#1149)
 
 - **Sync improvements**
   - Per-field merge strategies for fine-grained conflict resolution
@@ -382,7 +382,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `sync.mode` configuration to control sync behavior
 
 - **CLI conveniences**
-  - `-m` flag as alias for `--description` in `bd create`
+  - `-m` flag as alias for `--description` in `fbd create`
   - `--type` and `--exclude-type` flags for Linear sync filtering (#1205)
   - `--tree --parent` combination for hierarchical display (#1211)
 
@@ -396,10 +396,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Per-worktree export state tracking** - Each worktree maintains independent sync state
 
-- **Automatic multi-repo hydration in `bd init --contributor`** - Routing and hydration now configured together
-  - `bd init --contributor` automatically adds planning repo to `repos.additional`
-  - Routed issues appear in `bd list` immediately after setup
-  - No manual `bd repo add` required for contributor workflow
+- **Automatic multi-repo hydration in `fbd init --contributor`** - Routing and hydration now configured together
+  - `fbd init --contributor` automatically adds planning repo to `repos.additional`
+  - Routed issues appear in `fbd list` immediately after setup
+  - No manual `fbd repo add` required for contributor workflow
 
 - **Doctor improvements**
   - Routing+hydration mismatch detection - warns when routing configured without hydration
@@ -427,8 +427,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Health checks now properly detect and handle database file replacements
   - Prevents "sql: database is closed" errors
 
-- **Routed issues invisible in `bd list` (split-brain bug)** - Auto-flush JSONL after routing (#1251)
-  - `bd create` now flushes JSONL immediately in target repo
+- **Routed issues invisible in `fbd list` (split-brain bug)** - Auto-flush JSONL after routing (#1251)
+  - `fbd create` now flushes JSONL immediately in target repo
   - Hydration now sees new issues immediately
 
 - **WSL2 Docker Desktop compatibility** - Detect bind mounts and disable WAL mode (#1224)
@@ -436,7 +436,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Daemon stack overflow** - Prevent recursion in handleStaleLock (#1238)
 
-- **Molecule steps excluded from `bd ready`** - Filter out non-actionable items (#1246)
+- **Molecule steps excluded from `fbd ready`** - Filter out non-actionable items (#1246)
 
 - **Tree ordering stabilization** - Consistent `--tree` output (#1228)
 
@@ -456,7 +456,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Routing store cleanup** - Close original store before replacing (#1215)
 
-- **Worktree redirect paths** - Correct path computation in `bd worktree create` (#1217)
+- **Worktree redirect paths** - Correct path computation in `fbd worktree create` (#1217)
 
 - **Sync-branch worktree** - Use worktree for `--full --no-pull` (#1183)
 
@@ -477,7 +477,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Troubleshooting guide for common issues
 
 - **Contributor vs maintainer setup** - Added to README.md
-  - Clarifies when to use `bd init --contributor`
+  - Clarifies when to use `fbd init --contributor`
   - Documents role configuration options
 ## [0.48.0] - 2026-01-17
 
@@ -487,17 +487,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enables pluggable backends (SQLite, Dolt) with unified API
   - Supports time-travel queries and branching semantics
 
-- **`bd sync` command specification** - Formalized sync workflow implementation
+- **`fbd sync` command specification** - Formalized sync workflow implementation
   - Clearer separation between export, import, and merge phases
 
-- **`bd types` command** - List valid issue types (#1102)
+- **`fbd types` command** - List valid issue types (#1102)
   - Shows all available types with descriptions
 
 - **"enhancement" type alias** - Alternative name for "feature" type
   - Matches GitHub issue label conventions
 
-- **`bd close -m` flag** - Alias for `--reason` (git commit convention)
-  - More intuitive for git users: `bd close <id> -m "reason"`
+- **`fbd close -m` flag** - Alias for `--reason` (git commit convention)
+  - More intuitive for git users: `fbd close <id> -m "reason"`
 
 - **RepoContext API** - Centralized git operations context (#1102)
   - Consistent git directory handling across codebase
@@ -505,7 +505,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Dolt backend improvements (WIP)**
   - Automatic bootstrap from JSONL on first access
   - Git hook infrastructure for Dolt operations
-  - `bd compact --dolt` flag for Dolt garbage collection
+  - `fbd compact --dolt` flag for Dolt garbage collection
 
 ### Fixed
 
@@ -518,7 +518,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Prevents closing issues with children/dependencies
 
 - **Worktree exclude paths** - Use --git-common-dir for correct paths (GH#1053)
-  - Fixes `bd init --stealth` in git worktrees
+  - Fixes `fbd init --stealth` in git worktrees
 
 - **Daemon git.author config** - Apply configured author to sync commits
   - Respects `git.author` config and `BD_GIT_AUTHOR` env var
@@ -563,11 +563,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Dolt backend (experimental)** - Version-controlled issue storage with time-travel
-  - `bd init --backend=dolt` enables Dolt-based storage
+  - `fbd init --backend=dolt` enables Dolt-based storage
   - Full version history for issues with branch/merge semantics
   - See docs/DOLT.md for migration guide
 
-- **`bd show --children` flag** - Display child issues inline with parent
+- **`fbd show --children` flag** - Display child issues inline with parent
   - Shows hierarchical structure in issue details
 
 - **Comprehensive NixOS support** - Improved Nix flake and home-manager integration
@@ -577,19 +577,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - **Release workflow modernized** - bump-version.sh replaced with molecule pointer
-  - Use `bd mol wisp beads-release --var version=X.Y.Z` for releases
+  - Use `fbd mol wisp beads-release --var version=X.Y.Z` for releases
   - New `scripts/update-versions.sh` for quick local version bumps
 
 ### Fixed
 
-- **Redirect + sync-branch incompatibility** - bd sync works correctly in redirected repos (bd-wayc3)
+- **Redirect + sync-branch incompatibility** - fbd sync works correctly in redirected repos (bd-wayc3)
   - Worktree git status failures resolved
   - Proper handling of .beads/redirect during sync operations
 
 - **Doctor project-level settings** - Detects plugins/hooks/MCP in .claude/settings.json
   - No longer misses project-scoped configurations
 
-- **Contributor routing** - `bd init --contributor` correctly sets up routing (#1088)
+- **Contributor routing** - `fbd init --contributor` correctly sets up routing (#1088)
   - Fork workflows now properly configure sync.remote=upstream
 
 ### Documentation
@@ -601,9 +601,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`bd list --ready` flag** - Show only issues with no blockers (bd-ihu31)
+- **`fbd list --ready` flag** - Show only issues with no blockers (bd-ihu31)
   - Filters to issues that are immediately actionable
-  - Equivalent to `bd ready` but integrated into list command
+  - Equivalent to `fbd ready` but integrated into list command
 
 - **Markdown rendering in comments** - Comment text now renders Markdown (#1019)
   - Enhanced readability for formatted notes and descriptions
@@ -639,12 +639,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Hyphenated prefix validation** - Support hyphens in ValidateIDFormat (#1013)
   - Prefixes like `my-project-` now validate correctly
 
-- **Git worktree initialization** - Prevent bd init inside git worktrees (#1026)
+- **Git worktree initialization** - Prevent fbd init inside git worktrees (#1026)
   - Avoids configuration issues when initializing in worktree directories
 
 ### Documentation
 
-- **bd reset clarification** - Document command behavior and workarounds (GH#922)
+- **fbd reset clarification** - Document command behavior and workarounds (GH#922)
   - Clearer guidance on reset command usage
 
 ## [0.47.0] - 2026-01-11
@@ -656,28 +656,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Field-level conflict merging reduces manual intervention
   - Base state tracking for better change detection
 
-- **`bd resolve-conflicts` command** - Resolve JSONL merge conflict markers (bd-7e7ddffa)
+- **`fbd resolve-conflicts` command** - Resolve JSONL merge conflict markers (bd-7e7ddffa)
   - Mechanical mode uses updated_at timestamps for deterministic resolution
   - Closed status wins over open, higher priority wins
   - Notes concatenated, dependencies unioned
   - Dry-run mode and JSON output for agent integration
 
-- **`bd create --dry-run`** - Preview issue creation without side effects (bd-0hi7)
+- **`fbd create --dry-run`** - Preview issue creation without side effects (bd-0hi7)
   - Shows what would be created in human-readable or JSON format
   - Works with --rig/--prefix flags
 
-- **Gate auto-discovery** - Auto-discover workflow run ID in `bd gate check` (bd-fbkd)
+- **Gate auto-discovery** - Auto-discover workflow run ID in `fbd gate check` (bd-fbkd)
   - Queries GitHub directly when await_id is a workflow name hint
   - ZFC-compliant: takes most recent run deterministically
 
 - **Linear project filter** - `linear.project_id` config for sync (#938)
   - Fetch only issues from a specific project instead of all team issues
 
-- **`bd ready --gated`** - Gate-resume discovery for molecules (bd-lhalq)
+- **`fbd ready --gated`** - Gate-resume discovery for molecules (bd-lhalq)
   - Find molecules waiting on gates for automatic resumption
 
 - **Multi-repo custom types** - Trust and discover types across repositories (bd-62g22, bd-9ji4z)
-  - `bd doctor` discovers custom types from multiple repos
+  - `fbd doctor` discovers custom types from multiple repos
   - Non-built-in types trusted during hydration
 
 - **Visual UX improvements** - Enhanced display for list tree, graph, and show commands
@@ -687,9 +687,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Read-only commands auto-import on stale DB (#977, #982)
   - Cold-start bootstrap for read commands
 
-- **Batch molecule operations** - `bd mol burn` supports multiple molecules (feat(mol))
+- **Batch molecule operations** - `fbd mol burn` supports multiple molecules (feat(mol))
 
-- **Redirect health checks** - `bd doctor` validates redirect configurations
+- **Redirect health checks** - `fbd doctor` validates redirect configurations
 
 - **Schema extensions** - New fields for HOP integration
   - `crystallizes` column in sqlite storage
@@ -701,7 +701,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Daemon mode completeness** - Several daemon mode gaps closed (GH#952)
   - `--due` and `--defer` flags now work in daemon mode (#953)
-  - `bd dep add/remove --json` returns proper JSON output (#961)
+  - `fbd dep add/remove --json` returns proper JSON output (#961)
   - `DeferUntil` field parsed correctly in daemon handleCreate (#950)
   - Silence deprecation warnings in `--json` mode (#1039a691)
 
@@ -714,7 +714,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Windows fixes**
   - Infinite loop in findLocalBeadsDir/findOriginalBeadsDir (GH#996)
-  - `bd init` no longer hangs when not in a git repo (#991)
+  - `fbd init` no longer hangs when not in a git repo (#991)
   - Daemon stop/kill uses proper Windows API (GH#992)
   - SQLite uses DELETE mode on WSL2 Windows filesystem (GH#920)
 
@@ -728,7 +728,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Nil pointer panic in dep --json mode (GH#998)
 
 - **Doctor improvements**
-  - Recognize bd shims when external manager config exists (GH#946)
+  - Recognize fbd shims when external manager config exists (GH#946)
   - Detect lefthook jobs syntax (GH#981)
   - Add .sync.lock and sync_base.jsonl to gitignore (#980)
 
@@ -747,7 +747,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Migrate sync works in git worktree environments (#970)
 
 - **Misc fixes**
-  - `bd edit` parses EDITOR with args (GH#987)
+  - `fbd edit` parses EDITOR with args (GH#987)
   - Use SearchIssues for ID resolution (GH#942)
   - Respect hierarchy.max-depth config setting (GH#995, #997)
   - Add timeout to daemon request context to prevent hangs
@@ -766,7 +766,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Documentation
 
 - Add lazybeads (Bubble Tea TUI by @codegangsta) to community tools (#951)
-- Fix `bd quickstart` link to database extension documentation (#939)
+- Fix `fbd quickstart` link to database extension documentation (#939)
 
 ## [0.46.0] - 2026-01-06
 
@@ -796,11 +796,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Android/Termux support** - Native ARM64 binaries for Android (#887)
 
-- **Deep pre-commit framework integration** - `bd doctor` checks pre-commit hook configs (bd-28r5)
+- **Deep pre-commit framework integration** - `fbd doctor` checks pre-commit hook configs (bd-28r5)
 
 - **Rig identity bead type** - New `rig` bead type for Gas Town rig tracking (gt-zmznh)
 
-- **`--filter-parent` alias** - Alternative to `--parent` in `bd list` (bd-3p4u)
+- **`--filter-parent` alias** - Alternative to `--parent` in `fbd list` (bd-3p4u)
 
 - **Unified auto-sync config** - Simpler daemon configuration for agent workflows (#904)
 
@@ -808,10 +808,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **External hook manager detection** - `bd doctor` now detects lefthook, husky, pre-commit, and other hook managers
-  - Checks if external managers have `bd hooks run` integration configured
-  - Reports which hooks have bd integration vs which are missing
-  - `bd doctor --fix` uses `--chain` flag when external managers detected to preserve existing hooks
+- **External hook manager detection** - `fbd doctor` now detects lefthook, husky, pre-commit, and other hook managers
+  - Checks if external managers have `fbd hooks run` integration configured
+  - Reports which hooks have fbd integration vs which are missing
+  - `fbd doctor --fix` uses `--chain` flag when external managers detected to preserve existing hooks
   - Supports YAML, TOML, and JSON config formats for lefthook
   - Detects active manager from git hooks when multiple managers present
 
@@ -827,10 +827,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Doctor improvements**
   - Recognize lowercase 's' skip-worktree flag (#931)
   - Improve messaging for detection-only hook managers (bd-par1)
-  - Align duplicate detection with `bd duplicates` (bd-sali)
+  - Align duplicate detection with `fbd duplicates` (bd-sali)
   - Query metadata table instead of config for last_import_time (#916)
 
-- **Update prefix routing** - `bd update` now routes like `bd show` (bd-618f)
+- **Update prefix routing** - `fbd update` now routes like `fbd show` (bd-618f)
 
 - **Formula phase** - beads-release formula marked as vapor phase (gt-mjsjv)
 
@@ -851,14 +851,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Recipe-based setup architecture** - Major refactor of `bd init` (bd-i3ed)
+- **Recipe-based setup architecture** - Major refactor of `fbd init` (bd-i3ed)
   - Modular, composable setup via recipes
   - Cleaner separation of init concerns
 
 - **Gate evaluation system** - Phases 2-4
-  - `bd gate check` for timer and GitHub gate evaluation (GH#884)
-  - `bd gate discover` for auto-discovery of gh:run await_id (bd-z6kw)
-  - `bd gate add-waiter` and `bd gate show` for phase handoff
+  - `fbd gate check` for timer and GitHub gate evaluation (GH#884)
+  - `fbd gate discover` for auto-discovery of gh:run await_id (bd-z6kw)
+  - `fbd gate add-waiter` and `fbd gate show` for phase handoff
   - Cross-rig bead gate support
   - Gate-aware beads-release.formula v2 (bd-r24e)
   - Merge-slot gate for serialized conflict resolution
@@ -873,7 +873,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Sync improvements**
   - Detect uncommitted JSONL changes before sync (GH#885)
-  - `bd doctor` sync divergence check for JSONL/SQLite/git
+  - `fbd doctor` sync divergence check for JSONL/SQLite/git
   - `BD_DEBUG_SYNC` env for protection debugging
 
 - **`PRIME.md` override** - Workflow customization (GH#876)
@@ -881,16 +881,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Daemon config** - `daemon.auto_*` settings in config.yaml (GH#871)
 
-- **Compound visualization** - `bd mol show` displays compound structure (bd-iw4z)
+- **Compound visualization** - `fbd mol show` displays compound structure (bd-iw4z)
 
 - **`/handoff` skill** - Session cycling slash command (bd-xwvo)
 
 ### Fixed
 
-- **`bd ready` now shows in_progress issues** (#894)
+- **`fbd ready` now shows in_progress issues** (#894)
   - Previously filtered out your active work
 
-- **`bd show` displays external_ref field** in text output (#899)
+- **`fbd show` displays external_ref field** in text output (#899)
 
 - **macOS case-insensitive path handling** (GH#880)
   - Worktree validation, daemon paths, git operations
@@ -905,7 +905,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`close_reason` preserved** during merge/sync (GH#891)
 
-- **Parent hub contamination** during `bd init` (GH#896)
+- **Parent hub contamination** during `fbd init` (GH#896)
 
 - **NoDb mode** - Set cmdCtx.StoreActive correctly (GH#897)
 
@@ -916,9 +916,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Detect missing git repo, improve daemon startup message (#890)
   - Skip JSONL tracking checks in sync-branch mode (GH#858)
 
-- **`bd rename-prefix`** - Sync JSONL before and after (#893)
+- **`fbd rename-prefix`** - Sync JSONL before and after (#893)
 
-- **`sync.remote` config** now respected in `bd sync` (GH#872)
+- **`sync.remote` config** now respected in `fbd sync` (GH#872)
 
 - **Snapshot protection** made timestamp-aware (GH#865)
 
@@ -934,15 +934,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Submodule detection** - Correct main repo root detection (#849)
 
-- **`bd merge` output** sorted by issue id (#859)
+- **`fbd merge` output** sorted by issue id (#859)
 
-- **Auto-create agent bead** when `bd agent state` called on non-existent agent
+- **Auto-create agent bead** when `fbd agent state` called on non-existent agent
 
 - **Windows zip extraction** - Add retry logic for npm install
 
 - **Cycle detection** runs in daemon mode for --blocks flag
 
-- **`bd slot set`** cross-beads prefix routing (bd-hmeb)
+- **`fbd slot set`** cross-beads prefix routing (bd-hmeb)
 
 - **`git status` noise** - Hide issues.jsonl when sync.branch configured (GH#870)
 
@@ -970,19 +970,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Gate steps that require human approval before proceeding
   - Foundation for workflow control points
 
-- **`bd lint` command** - Template validation
+- **`fbd lint` command** - Template validation
   - Validate issue templates against schema
-  - `--validate` flag also added to `bd create`
+  - `--validate` flag also added to `fbd create`
 
-- **`bd ready --pretty`** - Formatted output
+- **`fbd ready --pretty`** - Formatted output
   - Human-friendly display of ready work
 
 ### Fixed
 
-- **Cross-rig routing** - `bd close` and `bd update` now support cross-rig operations via prefix routing
+- **Cross-rig routing** - `fbd close` and `fbd update` now support cross-rig operations via prefix routing
 - **Agent ID validation** - Now accepts any rig prefix (GH#827)
-- **`bd sync` in bare repo worktrees** - Fixed exit 128 error (GH#827)
-- **`bd --no-db dep tree`** - Now shows complete tree (GH#836)
+- **`fbd sync` in bare repo worktrees** - Fixed exit 128 error (GH#827)
+- **`fbd --no-db dep tree`** - Now shows complete tree (GH#836)
 - **`.beads/last-touched`** - Restored to gitignore template (GH#838)
 
 ## [0.42.0] - 2025-12-30
@@ -993,19 +993,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Standard endpoint for AI agents to discover project info
   - Helps LLM-powered tools understand your project
 
-- **`bd preflight` command** - PR readiness checks
+- **`fbd preflight` command** - PR readiness checks
   - Static checklist for pre-commit/pre-push verification
   - Phase 1 implementation with test, lint, and version checks planned
 
-- **`--claim` flag for `bd update`** - Work queue semantics
+- **`--claim` flag for `fbd update`** - Work queue semantics
   - Atomic claim-and-assign for multi-agent coordination
   - Prevents race conditions in work assignment
 
-- **`bd state` and `bd set-state`** - Label-based state management
+- **`fbd state` and `fbd set-state`** - Label-based state management
   - Helper commands for operational state patterns
   - Documents labels-as-state pattern
 
-- **`bd activity --town`** - Cross-rig activity feed
+- **`fbd activity --town`** - Cross-rig activity feed
   - Aggregated view across all rigs in town
   - Better visibility into multi-rig workflows
 
@@ -1028,10 +1028,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Git hook chaining** now works correctly (GH#816)
 - **`.beads/redirect` not committed** - Prevents worktree conflicts (GH#814)
-- **`bd sync` with sync-branch** - Fixes worktree copy direction (GH#810, #812)
+- **`fbd sync` with sync-branch** - Fixes worktree copy direction (GH#810, #812)
 - **`sync.branch` validation** - Rejects main/master as sync branch (GH#807)
 - **Read operations read-only** - No more database writes on list/ready/show (GH#804)
-- **`bd list` defaults** - Non-closed issues, 50 limit to protect context (GH#788)
+- **`fbd list` defaults** - Non-closed issues, 50 limit to protect context (GH#788)
 - **External direct-commit bypass** - When sync.branch configured (bd-n663)
 - **Migration 022 syntax** - SQL error on v0.30.3 upgrade path
 - **MCP redirect support** - Plugin follows .beads/redirect files
@@ -1044,35 +1044,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`bd swarm` commands** - Multi-agent batch work coordination
-  - `bd swarm create` - Create swarm from epic with children
-  - `bd swarm status` - Show swarm progress and blocked work
-  - `bd swarm validate` - Validate swarm structure and dependencies
+- **`fbd swarm` commands** - Multi-agent batch work coordination
+  - `fbd swarm create` - Create swarm from epic with children
+  - `fbd swarm status` - Show swarm progress and blocked work
+  - `fbd swarm validate` - Validate swarm structure and dependencies
   - N+1 query fix for blocked checks (performance optimization)
 
-- **`bd repair` command** - Orphaned reference repair
+- **`fbd repair` command** - Orphaned reference repair
   - Detect and repair orphaned foreign key references
   - Support for comments/events orphan detection
   - `--json` flag for machine-readable output
   - Transaction safety with backup and dirty_issues marking
 
-- **`bd compact --purge-tombstones`** - Dependency-aware cleanup
+- **`fbd compact --purge-tombstones`** - Dependency-aware cleanup
   - Remove tombstones while respecting dependency order
   - Safe cleanup that won't break DAG structure
 
-- **`bd init --from-jsonl`** - Manual cleanup preservation
+- **`fbd init --from-jsonl`** - Manual cleanup preservation
   - Initialize database from curated JSONL file
   - Preserves manual edits made to JSONL
 
-- **`bd human` command** - Focused help menu
+- **`fbd human` command** - Focused help menu
   - Human-friendly command reference
   - Quick overview without CLI verbosity
 
-- **`bd show --short`** - Compact output mode
+- **`fbd show --short`** - Compact output mode
   - Brief issue summary for scripting
   - Less verbose than default format
 
-- **`bd delete --reason`** - Audit trail for deletions
+- **`fbd delete --reason`** - Audit trail for deletions
   - Optional reason stored in activity log
   - Better traceability for issue cleanup
 
@@ -1094,15 +1094,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Variables like `--var files=a.go,b.go` now work correctly
   - Parser respects quoted values
 
-- **`bd sync` in bare repo worktrees** (GH#785)
+- **`fbd sync` in bare repo worktrees** (GH#785)
   - Fixed sync failure when working in worktrees of bare repos
   - Correctly detects git configuration
 
-- **`bd delete --cascade` recursive deletion** (GH#787)
+- **`fbd delete --cascade` recursive deletion** (GH#787)
   - Now properly deletes all transitive dependents
   - Previously only deleted direct children
 
-- **`bd doctor` pre-push hook detection** (GH#799)
+- **`fbd doctor` pre-push hook detection** (GH#799)
   - No longer falsely reports hook issues
   - Correctly identifies bd-managed hooks
 
@@ -1130,7 +1130,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixes path normalization for similar prefix names
   - e.g., `beads` vs `beads-sync`
 
-- **`bd doctor --fix` redirect handling**
+- **`fbd doctor --fix` redirect handling**
   - Properly follows .beads/redirect files
   - Limited verbose output for cleaner runs
 
@@ -1138,10 +1138,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **CLI command consolidation** - Reduced surface area
   - Grouped related commands under parent commands
-  - Cleaner `bd --help` output
+  - Cleaner `fbd --help` output
 
 - **Code organization** - File size limits
-  - Split large cmd/bd files to meet 800-line limit
+  - Split large cmd/fbd files to meet 800-line limit
   - init.go: 1928 → 705 lines
   - Improved maintainability
 
@@ -1167,19 +1167,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`bd worktree` command** - Parallel development support
+- **`fbd worktree` command** - Parallel development support
   - Manage git worktrees with beads integration
   - Enables working on multiple issues simultaneously
 
-- **`bd slot` commands** - Agent bead slot management
+- **`fbd slot` commands** - Agent bead slot management
   - Track agent assignments with dedicated slot operations
   - Supports multi-agent orchestration workflows
 
-- **`bd agent state` command** - ZFC-compliant state reporting
+- **`fbd agent state` command** - ZFC-compliant state reporting
   - Report agent state in standardized format
   - Enables machine-readable status checks
 
-- **`bd doctor --deep`** - Full graph integrity validation
+- **`fbd doctor --deep`** - Full graph integrity validation
   - Deep validation of bead dependency graphs
   - Includes agent bead integrity checks
 
@@ -1214,22 +1214,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 The following commands are deprecated and will be removed in v1.0.0:
 
-- **`bd relate`** → use `bd dep relate` instead
-- **`bd unrelate`** → use `bd dep unrelate` instead
-- **`bd daemons`** → use `bd daemon <subcommand>` instead
-- **`bd cleanup`** → use `bd admin cleanup` instead
-- **`bd compact`** → use `bd admin compact` instead
-- **`bd reset`** → use `bd admin reset` instead
-- **`bd comment`** → use `bd comments add` instead
-- **`bd template`** → use `bd mol` instead
-- **`bd templates`** → use `bd formula list` instead
-- **`bd template show`** → use `bd mol show` instead
-- **`bd template bond`** → use `bd mol bond` instead
-- **`bd detect-pollution`** → use `bd doctor --check=pollution` instead
-- **`bd migrate-hash-ids`** → use `bd migrate hash-ids` instead
-- **`bd migrate-tombstones`** → use `bd migrate tombstones` instead
-- **`bd migrate-sync`** → use `bd migrate sync` instead
-- **`bd migrate-issues`** → use `bd migrate issues` instead
+- **`fbd relate`** → use `fbd dep relate` instead
+- **`fbd unrelate`** → use `fbd dep unrelate` instead
+- **`fbd daemons`** → use `fbd daemon <subcommand>` instead
+- **`fbd cleanup`** → use `fbd admin cleanup` instead
+- **`fbd compact`** → use `fbd admin compact` instead
+- **`fbd reset`** → use `fbd admin reset` instead
+- **`fbd comment`** → use `fbd comments add` instead
+- **`fbd template`** → use `fbd mol` instead
+- **`fbd templates`** → use `fbd formula list` instead
+- **`fbd template show`** → use `fbd mol show` instead
+- **`fbd template bond`** → use `fbd mol bond` instead
+- **`fbd detect-pollution`** → use `fbd doctor --check=pollution` instead
+- **`fbd migrate-hash-ids`** → use `fbd migrate hash-ids` instead
+- **`fbd migrate-tombstones`** → use `fbd migrate tombstones` instead
+- **`fbd migrate-sync`** → use `fbd migrate sync` instead
+- **`fbd migrate-issues`** → use `fbd migrate issues` instead
 
 All deprecated commands continue to work but print a warning. Update your scripts
 and muscle memory before v1.0.0 to avoid breakage.
@@ -1242,31 +1242,31 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Activity feed improvements** - Better context
   - Shows title and assignee in activity entries
-  - More informative `bd activity` output
+  - More informative `fbd activity` output
 
 ## [0.39.1] - 2025-12-27
 
 ### Added
 
-- **`bd where` command** - Show active beads location
+- **`fbd where` command** - Show active beads location
   - Displays the resolved database path after following redirects
   - Helpful for debugging multi-rig setups
 
-- **`--parent` flag for `bd update`** - Reparent issues
-  - Move issues between epics with `bd update <id> --parent=<new-parent>`
+- **`--parent` flag for `fbd update`** - Reparent issues
+  - Move issues between epics with `fbd update <id> --parent=<new-parent>`
   - Supports clearing parent with `--parent=none`
 
-- **Redirect info in `bd prime`** - Multi-clone support
+- **Redirect info in `fbd prime`** - Multi-clone support
   - Shows when database is redirected to another location
   - Improves visibility into routing behavior
 
 ### Fixed
 
 - **Doctor follows redirects** - Multi-clone compatibility
-  - `bd doctor` now correctly follows database redirects
+  - `fbd doctor` now correctly follows database redirects
   - Prevents false negatives when running from rig roots
 
-- **Remove 8-char prefix limit** (GH#770) - `bd rename-prefix`
+- **Remove 8-char prefix limit** (GH#770) - `fbd rename-prefix`
   - Removed arbitrary length restriction on issue prefixes
   - Allows longer, more descriptive prefixes
 
@@ -1289,40 +1289,40 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **`bd orphans` command** (GH#767) - Detect orphaned issues
+- **`fbd orphans` command** (GH#767) - Detect orphaned issues
   - Finds issues mentioned in git commits that were never closed
-  - DRY refactoring of orphan detection from `bd doctor`
+  - DRY refactoring of orphan detection from `fbd doctor`
   - Helps maintain issue hygiene in larger projects
 
-- **`bd admin` parent command** - Consolidated admin tools
-  - `bd admin cleanup` - Clean up unused data
-  - `bd admin compact` - Compact the database
-  - `bd admin reset` - Reset to initial state
+- **`fbd admin` parent command** - Consolidated admin tools
+  - `fbd admin cleanup` - Clean up unused data
+  - `fbd admin compact` - Compact the database
+  - `fbd admin reset` - Reset to initial state
   - Reduces top-level command clutter
 
-- **`--prefix` flag for `bd create`** - Cross-rig issue creation
+- **`--prefix` flag for `fbd create`** - Cross-rig issue creation
   - Create issues in other rigs from any directory
-  - Accepts prefix (`bd-`), short form (`bd`), or rig name (`beads`)
+  - Accepts prefix (`bd-`), short form (`fbd`), or rig name (`beads`)
   - Works with existing routes.jsonl routing
 
 ### Changed
 
-- **`bd mol catalog` → `bd formula list`** - Command rename
+- **`fbd mol catalog` → `fbd formula list`** - Command rename
   - Aligns with formula-based terminology
-  - `bd formula list` shows available molecule templates
+  - `fbd formula list` shows available molecule templates
 
-- **`bd info --thanks`** - Relocated thanks command
-  - Contributors list moved under `bd info`
+- **`fbd info --thanks`** - Relocated thanks command
+  - Contributors list moved under `fbd info`
   - Reduces command namespace pollution
 
 - **Removed unused commands**
-  - `bd pin`, `bd unpin`, `bd hook` removed
+  - `fbd pin`, `fbd unpin`, `fbd hook` removed
   - Functionality covered by orchestrator molecule commands
   - Cleaner separation between beads (data) and orchestration
 
-- **`bd doctor --check=pollution`** - Integrated test pollution check
+- **`fbd doctor --check=pollution`** - Integrated test pollution check
   - Detects test artifacts left in production database
-  - Previously standalone `bd detect-pollution` command
+  - Previously standalone `fbd detect-pollution` command
 
 ### Fixed
 
@@ -1353,20 +1353,20 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **Prefix-based routing** - Cross-rig command routing
-  - `bd` commands auto-route to correct rig based on issue ID prefix
+  - `fbd` commands auto-route to correct rig based on issue ID prefix
   - Routes stored in `~/gt/.beads/routes.jsonl`
   - Enables seamless multi-rig workflows from any directory
 
 - **Cross-rig ID auto-resolve** - Smarter dependency handling
-  - `bd dep add` auto-resolves issue IDs across different rigs
+  - `fbd dep add` auto-resolves issue IDs across different rigs
   - No need to specify full paths for cross-rig dependencies
 
-- **`bd mol pour/wisp` subcommands** - Reorganized command hierarchy
-  - `bd mol pour` for persistent molecules
-  - `bd mol wisp` for ephemeral workflows
-  - Cleaner organization under `bd mol` namespace
+- **`fbd mol pour/wisp` subcommands** - Reorganized command hierarchy
+  - `fbd mol pour` for persistent molecules
+  - `fbd mol wisp` for ephemeral workflows
+  - Cleaner organization under `fbd mol` namespace
 
-- **Comments display in `bd show`** (GH#177) - Enhanced issue details
+- **Comments display in `fbd show`** (GH#177) - Enhanced issue details
   - Comments now visible in issue output
   - Shows full discussion thread for issues
 
@@ -1375,7 +1375,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Useful for multi-agent workflows
 
 - **Database corruption recovery** (GH#753) - Robust doctor repairs
-  - `bd doctor --fix` can now auto-repair corrupted SQLite databases
+  - `fbd doctor --fix` can now auto-repair corrupted SQLite databases
   - JSONL integrity checks detect and fix malformed entries
   - Git hygiene checks for stale branches
 
@@ -1389,11 +1389,11 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Changed
 
 - **CLI consolidation** - Reduced top-level command clutter
-  - `bd cleanup`, `bd compact`, `bd reset` → `bd admin cleanup|compact|reset`
-  - `bd migrate-*` → `bd migrate hash-ids|issues|sync|tombstones`
-  - `bd cook` → `bd formula cook`
-  - `bd detect-pollution` → `bd doctor --check=pollution`
-  - `bd quickstart` hidden, use docs/QUICKSTART.md instead
+  - `fbd cleanup`, `fbd compact`, `fbd reset` → `fbd admin cleanup|compact|reset`
+  - `fbd migrate-*` → `fbd migrate hash-ids|issues|sync|tombstones`
+  - `fbd cook` → `fbd formula cook`
+  - `fbd detect-pollution` → `fbd doctor --check=pollution`
+  - `fbd quickstart` hidden, use docs/QUICKSTART.md instead
   - Hidden aliases maintain backwards compatibility with deprecation notices
 
 - **Sync backoff and tips consolidation** (GH#753) - Smarter daemon
@@ -1401,23 +1401,23 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Tips consolidated from multiple sources
 
 - **Wisp/Ephemeral naming finalized** - `wisp` is canonical
-  - `bd mol wisp` is the correct command
+  - `fbd mol wisp` is the correct command
   - Internal API uses "ephemeral" but CLI uses "wisp"
 
 ### Fixed
 
 - **Comments display position** (GH#756) - Formatting fix
   - Comments now display outside dependents block
-  - Proper visual hierarchy in `bd show` output
+  - Proper visual hierarchy in `fbd show` output
 
 - **no-db mode storeActive** (GH#761) - JSONL-only fix
   - `storeActive` correctly set in no-database mode
   - Fixes issues with JSONL-only installations
 
 - **`--resolution` alias** (GH#746) - Backwards compatibility
-  - Restored `--resolution` as alias for `--reason` on `bd close`
+  - Restored `--resolution` as alias for `--reason` on `fbd close`
 
-- **`bd graph` with daemon** (GH#751) - Daemon compatibility
+- **`fbd graph` with daemon** (GH#751) - Daemon compatibility
   - Graph generation works when daemon is running
   - No more conflicts between graph and daemon operations
 
@@ -1429,7 +1429,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Checks for existing columns before adding
 
 - **Routed ID daemon bypass** - Cross-rig show
-  - `bd show` with routed IDs bypasses daemon correctly
+  - `fbd show` with routed IDs bypasses daemon correctly
   - Storage connections closed per iteration to prevent leaks
 
 - **Modern git init** (GH#753) - Test compatibility
@@ -1449,16 +1449,16 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **Gate commands** - Async coordination for agent workflows
-  - `bd gate create` - Create gates with await conditions (gh:run, gh:pr, timer, human, mail)
-  - `bd gate eval` - Evaluate timer and GitHub gates (checks run completion, PR merge)
-  - `bd gate approve` - Approve human gates
-  - `bd gate show/list/close/wait` - Full gate lifecycle management
+  - `fbd gate create` - Create gates with await conditions (gh:run, gh:pr, timer, human, mail)
+  - `fbd gate eval` - Evaluate timer and GitHub gates (checks run completion, PR merge)
+  - `fbd gate approve` - Approve human gates
+  - `fbd gate show/list/close/wait` - Full gate lifecycle management
 
-- **`bd close --suggest-next`** (GH#679) - Smart workflow continuation
+- **`fbd close --suggest-next`** (GH#679) - Smart workflow continuation
   - Shows newly unblocked issues after closing
   - Helps agents find next actionable work
 
-- **`bd ready/blocked --parent`** (GH#743) - Epic-scoped filtering
+- **`fbd ready/blocked --parent`** (GH#743) - Epic-scoped filtering
   - Filter issues by parent bead or epic
   - Enables focused work within a subtree
 
@@ -1486,17 +1486,17 @@ and muscle memory before v1.0.0 to avoid breakage.
   - `for-each` - Expand steps for each item in a collection
   - Enables dynamic workflows based on runtime state
 
-- **`bd formula list/show`** - Formula discovery commands
-  - `bd formula list` - List available formulas in search paths
-  - `bd formula show <name>` - Display formula definition and metadata
+- **`fbd formula list/show`** - Formula discovery commands
+  - `fbd formula list` - List available formulas in search paths
+  - `fbd formula show <name>` - Display formula definition and metadata
 
-- **`bd mol stale`** - Detect complete-but-unclosed molecules
+- **`fbd mol stale`** - Detect complete-but-unclosed molecules
   - Finds molecules where all children are closed but molecule is open
   - Helps identify forgotten cleanup tasks
 
 - **Stale molecules check in doctor** - Proactive detection
-  - `bd doctor` now warns about stale molecules
-  - Integrated with `bd mol stale` detection
+  - `fbd doctor` now warns about stale molecules
+  - Integrated with `fbd mol stale` detection
 
 - **Distinct ID prefixes** - Clear entity type identification
   - Protos: `bd-proto-xxx` prefix
@@ -1505,8 +1505,8 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Makes entity type immediately visible in IDs
 
 - **`no-git-ops` config** (GH#593) - Manual git control
-  - `bd config set no-git-ops true` to disable auto git operations
-  - `bd prime` outputs stealth-mode protocol when enabled
+  - `fbd config set no-git-ops true` to disable auto git operations
+  - `fbd prime` outputs stealth-mode protocol when enabled
   - Useful for custom git workflows or manual commit review
 
 ### Changed
@@ -1516,9 +1516,9 @@ and muscle memory before v1.0.0 to avoid breakage.
   - JSON provides better tooling support and validation
   - Existing YAML formulas need migration
 
-- **Removed `bd mol run`** - Orchestration delegated to orchestrator
+- **Removed `fbd mol run`** - Orchestration delegated to orchestrator
   - Molecule execution now handled by orchestrator commands
-  - `bd` focuses on issue tracking primitives
+  - `fbd` focuses on issue tracking primitives
   - Use orchestrator's molecule runner for execution
 
 - **Simplified wisp architecture** - Single database model
@@ -1549,15 +1549,15 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Improves installation success on Windows
 
 - **installed_plugins.json v2 format** (GH#741) - Claude Code compatibility
-  - `bd doctor` now handles both v1 and v2 plugin file formats
+  - `fbd doctor` now handles both v1 and v2 plugin file formats
   - Fixes "cannot unmarshal array" error on newer Claude Code versions
 
 - **git.IsWorktree() hang on Windows** (GH#727) - Init safety
   - Added isGitRepo() guard before calling git.IsWorktree()
-  - Fixes `bd init` hanging outside git repositories on Windows
+  - Fixes `fbd init` hanging outside git repositories on Windows
 
-- **Skill files deleted by bd sync** (GH#738) - Sync safety
-  - `bd sync` no longer deletes skill files in .claude/
+- **Skill files deleted by fbd sync** (GH#738) - Sync safety
+  - `fbd sync` no longer deletes skill files in .claude/
   - Prevents accidental removal of Claude Code configuration
 
 - **doctor check false positives** (GH#709) - Cleaner diagnostics
@@ -1568,7 +1568,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - All commands respect `--json` flag for error output
   - Errors return proper JSON structure when flag is set
 
-- **bd sync commits non-.beads files** - Sync isolation
+- **fbd sync commits non-.beads files** - Sync isolation
   - Sync operations now only commit .beads/ directory changes
   - Prevents unintended commits of working directory files
 
@@ -1593,7 +1593,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - IDs like `bd-mol-xxx` instead of `bdmol-xxx`
 
 - **mol run hierarchical children** (bd-c8d5, bd-drcx) - Complete loading
-  - `bd mol run` loads all hierarchical children
+  - `fbd mol run` loads all hierarchical children
   - Supports title lookup for molecule identification
 
 - **Wisps excluded from sync** (bd-687g, bd-9avq) - Export correctness
@@ -1615,35 +1615,35 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **Formula system** (bd-weu8, bd-wa2l) - Declarative workflow templates
-  - `bd cook <formula>` - Execute a formula template with variable interpolation
+  - `fbd cook <formula>` - Execute a formula template with variable interpolation
   - Formula files (`.formula.json`) support inheritance via `extends`
   - `needs` and `waits_for` fields for dependency declarations
   - `--prefix` flag for custom issue prefix when cooking
   - Search paths: `.beads/formulas/`, `~/.beads/formulas/`, `~/gt/.beads/formulas/`
 
 - **Gate issue type** - Async coordination primitives
-  - `bd gate create <name>` - Create a gate for coordinating parallel work
-  - `bd gate open <id>` - Open a gate (unblock waiters)
-  - `bd gate close <id>` - Close a gate (block new work)
+  - `fbd gate create <name>` - Create a gate for coordinating parallel work
+  - `fbd gate open <id>` - Open a gate (unblock waiters)
+  - `fbd gate close <id>` - Close a gate (block new work)
   - Gates integrate with `waits-for` dependencies for fanout patterns
 
-- **`bd list` viewer enhancements** (#729) - Built-in terminal UI
+- **`fbd list` viewer enhancements** (#729) - Built-in terminal UI
   - `--pretty` - Colorized, formatted output for human viewing
   - `--watch` - Live-updating view (refreshes on changes)
 
-- **`bd search` filters** - Enhanced search capabilities
+- **`fbd search` filters** - Enhanced search capabilities
   - `--after`, `--before` - Date range filtering
   - `--priority` - Exact priority match
   - `--content` - Full-text content search
 
-- **`bd compact --prune`** - Standalone tombstone pruning
+- **`fbd compact --prune`** - Standalone tombstone pruning
   - Prune old tombstones without full compaction
   - Configurable retention period
 
-- **`bd export --priority`** - Exact priority filter for exports
+- **`fbd export --priority`** - Exact priority filter for exports
 
-- **`--resolution` alias** (GH#721) - Alternative to `--reason` on `bd close`
-  - `bd close bd-42 --resolution "Fixed in commit abc123"`
+- **`--resolution` alias** (GH#721) - Alternative to `--reason` on `fbd close`
+  - `fbd close bd-42 --resolution "Fixed in commit abc123"`
 
 - **Database size check in doctor** (#724) - Issue count threshold warnings
   - Warns when issue count exceeds configurable threshold
@@ -1662,7 +1662,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - `GetWorkerStatus` - Query worker health and current task
 
 - **Cross-database molecule spawning**
-  - `bd mol run` can spawn in external beads databases
+  - `fbd mol run` can spawn in external beads databases
   - Enables cross-project workflow orchestration
 
 - **Config-based close hooks** - Custom scripts on issue close
@@ -1671,12 +1671,12 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Changed
 
-- **Removed `bd mol spawn`** - Use pour/wisp only
-  - `bd pour <proto>` for persistent molecules
-  - `bd wisp create <proto>` for ephemeral molecules
+- **Removed `fbd mol spawn`** - Use pour/wisp only
+  - `fbd pour <proto>` for persistent molecules
+  - `fbd wisp create <proto>` for ephemeral molecules
   - Simplifies mental model: pour = liquid (persistent), wisp = vapor (ephemeral)
 
-- **`bd ready` excludes workflow types** - Cleaner ready queue
+- **`fbd ready` excludes workflow types** - Cleaner ready queue
   - Gates and other workflow coordination types excluded by default
   - Use `--include-workflow` to see all types
 
@@ -1707,7 +1707,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Fixes sync to wrong remote when multiple remotes configured
 
 - **Export requires -o flag** (#733) - Explicit output control
-  - `bd export` now requires `-o` flag to write to file
+  - `fbd export` now requires `-o` flag to write to file
   - Prevents accidental stdout pollution in scripts
 
 - **YAML config key normalization** (#732) - Consistent config parsing
@@ -1728,7 +1728,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Fixes "file in use" errors on Windows
 
 - **Template commands with daemon** - Daemon mode compatibility
-  - `bd pour`, `bd wisp create` work correctly with daemon running
+  - `fbd pour`, `fbd wisp create` work correctly with daemon running
 
 - **Startup config to config.yaml** (GH#536) - Config persistence
   - Startup wizard writes to config.yaml, not SQLite
@@ -1739,7 +1739,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Fixes issue ID extraction with complex prefixes
 
 - **`--pour` flag in bond operations** - Phase control
-  - `bd mol bond --pour` correctly forces liquid phase
+  - `fbd mol bond --pour` correctly forces liquid phase
 
 - **Stealth mode gitignore** (GH#704) - Local-only exclusion
   - Uses `.git/info/exclude` instead of global gitignore
@@ -1756,7 +1756,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Epic children can no longer depend on their parent epic
   - Blocks a common AI mistake: LLMs use temporal reasoning for "phases" and invert dependencies
   - Example: "Phase 1 before Phase 2" triggers "Phase 1 blocks Phase 2" → WRONG
-  - Correct model: "Phase 2 needs Phase 1" → `bd dep add phase2 phase1`
+  - Correct model: "Phase 2 needs Phase 1" → `fbd dep add phase2 phase1`
   - Clear error message explains the anti-pattern when detected
 
 ### Improved
@@ -1786,40 +1786,40 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **Dynamic molecule bonding** - Attach templates to running molecules at runtime
-  - `bd mol bond <proto> <target> --ref <issue-id>` - Inject template steps dynamically
+  - `fbd mol bond <proto> <target> --ref <issue-id>` - Inject template steps dynamically
   - Enables responsive workflows: attach error recovery, expand scope mid-execution
   - Templates can reference existing issue data via `--ref` for variable interpolation
 
-- **`bd activity` command** - Real-time state feed for workflow monitoring
+- **`fbd activity` command** - Real-time state feed for workflow monitoring
   - Stream mutation events as they happen (JSON format)
   - Monitor molecule progress without polling
   - Useful for dashboards, debugging, and automation
 
 - **`waits-for` dependency type** - Fanout coordination gates
-  - `bd dep add <gate> <step> --type waits-for` - Gate waits for all steps
+  - `fbd dep add <gate> <step> --type waits-for` - Gate waits for all steps
   - Unlike `blocks`, waits-for is used for parallel coordination (fan-in pattern)
   - Gate unblocks only when ALL waits-for dependencies complete
 
 - **Parallel step detection** - Auto-identify parallelizable work
   - Molecules automatically detect steps that can run concurrently
-  - `bd mol show` displays parallel-capable step groups
+  - `fbd mol show` displays parallel-capable step groups
   - Helps agents optimize execution order
 
 - **Molecule navigation commands** (bd-sal9, bd-ieyy) - Track progress through workflows
-  - `bd mol current` - Show current step and molecule progress
-  - `bd close --continue` - Auto-advance to next step in molecule
-  - `bd close --no-auto` - Close without auto-claiming next step
+  - `fbd mol current` - Show current step and molecule progress
+  - `fbd close --continue` - Auto-advance to next step in molecule
+  - `fbd close --no-auto` - Close without auto-claiming next step
 
-- **`bd list --parent` flag** - Filter issues by parent
-  - `bd list --parent=bd-xyz --status=open` shows open children of bd-xyz
+- **`fbd list --parent` flag** - Filter issues by parent
+  - `fbd list --parent=bd-xyz --status=open` shows open children of bd-xyz
   - Useful for epic progress tracking and molecule step listing
 
 - **Conditional bond type** - Run steps only when predecessors fail
-  - `bd mol bond --type conditional-blocks` for error-handling workflows
+  - `fbd mol bond --type conditional-blocks` for error-handling workflows
   - Step B runs only if step A fails (useful for fallback paths)
 
 - **External dependency display** - Show cross-project deps in tree view
-  - `bd dep tree` now displays external dependencies with repo prefix
+  - `fbd dep tree` now displays external dependencies with repo prefix
   - Satisfied external deps filtered from blocked issues
 
 - **Performance optimization indexes** (bd-bha9, bd-a9y3) - Faster queries for large databases
@@ -1829,12 +1829,12 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Changed
 
 - **Consolidated doctor --fix** (GH#715, bd-bqcc) - Single command for all fixes
-  - `bd doctor --fix` now handles: hooks, permissions, sync branch, schema
-  - Removed individual `bd migrate`, `bd hooks install` suggestions
+  - `fbd doctor --fix` now handles: hooks, permissions, sync branch, schema
+  - Removed individual `fbd migrate`, `fbd hooks install` suggestions
   - Daemon health check integrated into doctor flow
 
 - **Auto_pull config** (GH#707) - Periodic remote sync in event-driven mode
-  - `bd config set daemon.auto_pull true` enables pull every 5 minutes
+  - `fbd config set daemon.auto_pull true` enables pull every 5 minutes
   - Prevents staleness when git changes happen outside daemon's watch
 
 ### Fixed
@@ -1851,7 +1851,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Added file-based migration lock to prevent concurrent schema changes
   - Retry logic when migration lock is held by another process
 
-- **bd create -f with daemon** (GH#719) - File flag now works in daemon mode
+- **fbd create -f with daemon** (GH#719) - File flag now works in daemon mode
   - `-f/--file` flag properly forwarded through RPC
 
 - **FindJSONLInDir interactions.jsonl** (GH#709) - No longer picks wrong file
@@ -1875,33 +1875,33 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **Wisp commands** - Full ephemeral molecule management
-  - `bd wisp create <proto>` - Instantiate proto as ephemeral wisp (solid→vapor)
-  - `bd wisp list` - List all wisps with stale detection
-  - `bd wisp gc` - Garbage collect orphaned wisps
+  - `fbd wisp create <proto>` - Instantiate proto as ephemeral wisp (solid→vapor)
+  - `fbd wisp list` - List all wisps with stale detection
+  - `fbd wisp gc` - Garbage collect orphaned wisps
   - Wisps have Wisp=true flag and are not exported to JSONL (never sync)
 
 - **Chemistry UX commands** - Phase-aware molecule operations
-  - `bd pour <proto>` - Instantiate proto as persistent mol (solid→liquid)
-  - `bd mol bond --wisp` - Force spawn as vapor when attaching to mol
-  - `bd mol bond --pour` - Force spawn as liquid when attaching to wisp
+  - `fbd pour <proto>` - Instantiate proto as persistent mol (solid→liquid)
+  - `fbd mol bond --wisp` - Force spawn as vapor when attaching to mol
+  - `fbd mol bond --pour` - Force spawn as liquid when attaching to wisp
   - Squash clears Wisp flag, promoting to persistent (exported to JSONL)
 
 - **Cross-project dependencies** (bd-66w1, bd-om4a) - Reference issues across repos
   - `external:<repo>:<id>` dependency syntax
-  - `bd ship <id> --to <repo>` - Ship issues to other beads repos
-  - `bd ready` filters by external dependency satisfaction
+  - `fbd ship <id> --to <repo>` - Ship issues to other beads repos
+  - `fbd ready` filters by external dependency satisfaction
   - Configure additional repos in `.beads/config.yaml`
 
-- **Orphan detection in bd doctor** - Find issues with missing parents
+- **Orphan detection in fbd doctor** - Find issues with missing parents
   - Detects parent-child relationships pointing to deleted issues
   - Suggests fix commands for orphaned issues
 
 ### Changed
 
-- **Multi-repo config uses YAML** (GH#683) - `bd repo add/remove` now writes to `.beads/config.yaml`
+- **Multi-repo config uses YAML** (GH#683) - `fbd repo add/remove` now writes to `.beads/config.yaml`
   - Fixes disconnect where CLI wrote to DB but hydration read from YAML
-  - `bd repo remove` now cleans up hydrated issues from removed repo
-  - Breaking: `bd repo add` no longer accepts optional alias argument
+  - `fbd repo remove` now cleans up hydrated issues from removed repo
+  - Breaking: `fbd repo add` no longer accepts optional alias argument
 
 ### Fixed
 
@@ -1919,7 +1919,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Ephemeral → Wisp rename** - Aligns with Steam Engine metaphor (wisps = ephemeral vapor)
   - JSON field changed from `ephemeral` to `wisp` (breaking change for API consumers)
-  - CLI flag changed from `--ephemeral` to `--wisp` on `bd cleanup`
+  - CLI flag changed from `--ephemeral` to `--wisp` on `fbd cleanup`
   - SQLite column remains `ephemeral` (no migration needed)
 
 ### Fixed
@@ -1931,10 +1931,10 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **Wisp molecules** - Support for ephemeral wisps
-  - `bd wisp create` creates wisp issues that live only in SQLite
+  - `fbd wisp create` creates wisp issues that live only in SQLite
   - Wisp issues never export to JSONL (prevents zombie resurrection)
-  - Use `bd pour` for persistent mols, `bd wisp create` for ephemeral wisps
-  - `bd mol squash` compresses wisp children into a digest issue
+  - Use `fbd pour` for persistent mols, `fbd wisp create` for ephemeral wisps
+  - `fbd mol squash` compresses wisp children into a digest issue
   - `--summary` flag allows agents to provide AI-generated summaries
 
 ### Fixed
@@ -1962,15 +1962,15 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Fixed
 
 - **Pin field not in allowed update fields**
-  - `bd update --pinned` was failing with "invalid field" error
+  - `fbd update --pinned` was failing with "invalid field" error
   - Added `pinned` to allowedUpdateFields and importer
 
 ## [0.32.0] - 2025-12-20
 
 ### Changed
 
-- **Removed `bd mail` commands** - Mail is orchestration, not data plane
-  - Removed: `bd mail send`, `bd mail inbox`, `bd mail read`, `bd mail ack`, `bd mail reply`
+- **Removed `fbd mail` commands** - Mail is orchestration, not data plane
+  - Removed: `fbd mail send`, `fbd mail inbox`, `fbd mail read`, `fbd mail ack`, `fbd mail reply`
   - The underlying data model is unchanged: `type=message`, `Sender`, `Ephemeral`, `replies_to` fields remain
   - Orchestration tools should implement mail interfaces on top of the beads data model
   - This follows the principle that beads is a data store, not a workflow engine
@@ -1978,7 +1978,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Fixed
 
 - **Symlink preservation in atomicWriteFile** (PR#665) - Thanks @qmx
-  - `bd setup claude` no longer clobbers nix/home-manager managed `~/.claude/settings.json`
+  - `fbd setup claude` no longer clobbers nix/home-manager managed `~/.claude/settings.json`
   - New `ResolveForWrite()` helper writes to symlink target instead of replacing symlink
 
 - **Broken link in examples** (GH#666) - Fixed LABELS.md link in multiple-personas example
@@ -1987,21 +1987,21 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **`bd defer` / `bd undefer` commands** - New "deferred" status for icebox issues
+- **`fbd defer` / `fbd undefer` commands** - New "deferred" status for icebox issues
   - Issues that are deliberately postponed, not blocked by dependencies
-  - Deferred issues excluded from `bd ready` and shown with ❄️ snowflake styling
+  - Deferred issues excluded from `fbd ready` and shown with ❄️ snowflake styling
   - Full support in MCP server, graph views, and statistics
 
 - **Agent audit trail** (GH#649) - Append-only logging for AI agent interactions
   - New `.beads/interactions.jsonl` audit file
-  - `bd audit record` - Log LLM calls, tool calls, or pipe JSON via stdin
-  - `bd audit label <id>` - Append quality labels (good/bad) for dataset curation
-  - `bd compact --audit` - Optionally log compaction prompts/responses
+  - `fbd audit record` - Log LLM calls, tool calls, or pipe JSON via stdin
+  - `fbd audit label <id>` - Append quality labels (good/bad) for dataset curation
+  - `fbd compact --audit` - Optionally log compaction prompts/responses
   - Audit entries are immutable; labels create new referencing entries
 
 - **Directory-aware label scoping** (GH#541) - Auto-filter issues by directory in monorepos
   - Configure `directory.labels` to map paths to label filters
-  - `bd ready` and `bd list` auto-apply when in matching directories
+  - `fbd ready` and `fbd list` auto-apply when in matching directories
   - Example: `packages/maverick: maverick` shows only maverick-labeled issues
 
 - **Molecules catalog** - Separate storage for template molecules
@@ -2023,16 +2023,16 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Changed
 
-- **`bd stats` merged into `bd status`** (GH#644) - Consolidated status commands
+- **`fbd stats` merged into `fbd status`** (GH#644) - Consolidated status commands
   - `stats` now an alias for `status`
   - Colorized output with emoji header
   - Shows all statistics (tombstones, pinned, epics, lead time)
   - Added `--no-activity` flag to skip git activity parsing
 
-- **Thin hook shims** (GH#615) - Hooks now delegate to `bd hooks run`
+- **Thin hook shims** (GH#615) - Hooks now delegate to `fbd hooks run`
   - Eliminates hook version drift after upgrades
-  - No more manual `bd hooks install --force` needed
-  - Shims use `# bd-shim v1` marker (format version, not bd version)
+  - No more manual `fbd hooks install --force` needed
+  - Shims use `# bd-shim v1` marker (format version, not fbd version)
 
 - **MCP context tool consolidation** - Merged 3 tools into 1
   - Combined `set_context`, `where_am_i`, `init` into single `context` tool
@@ -2062,7 +2062,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Fixed
 
-- **`bd graph` nil pointer crash** (#657) - Fixed crash when running `bd graph` on epics
+- **`fbd graph` nil pointer crash** (#657) - Fixed crash when running `fbd graph` on epics
   - `renderGraph()` was passed `nil` instead of the subgraph, causing panic in `computeDependencyCounts()`
 
 - **Windows npm installer file lock** (#652) - Fixed installation failure on Windows
@@ -2073,7 +2073,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **`bd graph` dependency counts** - Graph command shows dependency counts using subgraph formatting
+- **`fbd graph` dependency counts** - Graph command shows dependency counts using subgraph formatting
 - **`types.StatusPinned`** - New status for persistent beads that survive cleanup
 
 ### Fixed
@@ -2087,29 +2087,29 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Removed
 
-- **YAML simple template system** - Removed `--from-template` flag from `bd create`
+- **YAML simple template system** - Removed `--from-template` flag from `fbd create`
   - Deleted embedded templates: `bug.yaml`, `epic.yaml`, `feature.yaml`
   - Templates are now purely Beads-based (epics with `template` label)
-  - Use `bd template instantiate <id>` for template workflows
+  - Use `fbd template instantiate <id>` for template workflows
 
 ## [0.30.4] - 2025-12-18
 
 ### Added
 
-- **`bd template instantiate`** - Create beads issues from YAML workflow templates
-  - `bd template instantiate <file.yaml>` - Create issues from workflow definitions
+- **`fbd template instantiate`** - Create beads issues from YAML workflow templates
+  - `fbd template instantiate <file.yaml>` - Create issues from workflow definitions
   - `--assignee <identity>` flag for auto-assignment during instantiation
   - Supports multi-issue workflows with dependency chains
   - Templates define issue properties (title, type, priority, dependencies)
 
 ### Changed
 
-- **`bd mail inbox --identity`** - Fixed to properly filter by identity parameter
+- **`fbd mail inbox --identity`** - Fixed to properly filter by identity parameter
 
 ### Fixed
 
 - **Orphan detection warnings** - No longer warns about closed issues or tombstones
-  - Previously `bd doctor` reported false positives for completed dependencies
+  - Previously `fbd doctor` reported false positives for completed dependencies
 
 ### Removed
 
@@ -2138,7 +2138,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **`bd setup droid`** (GH#598) - Factory.ai (Droid) IDE support
+- **`fbd setup droid`** (GH#598) - Factory.ai (Droid) IDE support
   - Configure beads for use with Factory.ai's Droid
   - Contributed by @jordanhubbard
 
@@ -2148,20 +2148,20 @@ and muscle memory before v1.0.0 to avoid breakage.
   - New dependency types: `replies-to`, `relates-to`, `duplicates`, `supersedes`
   - Schema migration 019 (automatic on first use)
 
-- **`bd mail` commands** - Inter-agent messaging
-  - `bd mail send <recipient> -s <subject> -m <body>` - Send messages
-  - `bd mail inbox` - List open messages for your identity
-  - `bd mail read <id>` - Display message content
-  - `bd mail ack <id>` - Acknowledge (close) messages
-  - `bd mail reply <id> -m <body>` - Reply to messages (creates threads)
+- **`fbd mail` commands** - Inter-agent messaging
+  - `fbd mail send <recipient> -s <subject> -m <body>` - Send messages
+  - `fbd mail inbox` - List open messages for your identity
+  - `fbd mail read <id>` - Display message content
+  - `fbd mail ack <id>` - Acknowledge (close) messages
+  - `fbd mail reply <id> -m <body>` - Reply to messages (creates threads)
   - Identity via `BEADS_IDENTITY` env var or `.beads/config.json`
 
 - **Graph link commands** - Knowledge graph relationships
-  - `bd relate <id1> <id2>` - Create bidirectional "see also" links
-  - `bd unrelate <id1> <id2>` - Remove relates_to links
-  - `bd duplicate <id> --of <canonical>` - Mark issue as duplicate (closes it)
-  - `bd supersede <old> --with <new>` - Mark issue as superseded (closes it)
-  - `bd show --thread` - View message threads via replies_to chain
+  - `fbd relate <id1> <id2>` - Create bidirectional "see also" links
+  - `fbd unrelate <id1> <id2>` - Remove relates_to links
+  - `fbd duplicate <id> --of <canonical>` - Mark issue as duplicate (closes it)
+  - `fbd supersede <old> --with <new>` - Mark issue as superseded (closes it)
+  - `fbd show --thread` - View message threads via replies_to chain
 
 - **Hooks system** - Extensible event notifications
   - `.beads/hooks/on_create` - Runs after issue creation
@@ -2170,7 +2170,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - `.beads/hooks/on_message` - Runs after message send
   - Hooks receive issue ID, event type as args, full JSON on stdin
 
-- **`bd cleanup --wisp` flag** - Clean up transient messages
+- **`fbd cleanup --wisp` flag** - Clean up transient messages
   - Deletes only closed issues with `wisp=true`
   - Useful for cleaning up messages after swarms complete
 
@@ -2198,42 +2198,42 @@ and muscle memory before v1.0.0 to avoid breakage.
 - Windows installation command in upgrade instructions (GH#589)
   - Contributed by @alexx-ftw
 
-- Aligned `bd prime` guidance with skill's hybrid TodoWrite approach
+- Aligned `fbd prime` guidance with skill's hybrid TodoWrite approach
 
 ## [0.30.1] - 2025-12-16
 
 ### Added
 
-- **`bd reset` command** (GH#505) - Complete beads removal from a repository
+- **`fbd reset` command** (GH#505) - Complete beads removal from a repository
   - Removes `.beads/` directory and all associated data
   - Cleans up git hooks installed by beads
   - Use `--force` to skip confirmation prompt
 
-- **`bd cleanup --hard` flag** - Bypass tombstone TTL safety
+- **`fbd cleanup --hard` flag** - Bypass tombstone TTL safety
   - Immediately removes tombstones regardless of age
   - Use when you need to force-clean deleted issues
 
-- **`bd update --type` flag** (GH#522) - Change issue type after creation
+- **`fbd update --type` flag** (GH#522) - Change issue type after creation
   - Convert between task, bug, feature, epic types
-  - Example: `bd update bd-xyz --type epic`
+  - Example: `fbd update bd-xyz --type epic`
 
-- **`bd q` silent quick-capture mode** (GH#540)
+- **`fbd q` silent quick-capture mode** (GH#540)
   - Capture issues silently without output
   - Ideal for scripting and automation
 
-- **`bd sync --check` flag** - Pre-sync integrity checks
+- **`fbd sync --check` flag** - Pre-sync integrity checks
   - Validates database state before syncing
   - Catches potential issues early
 
-- **`bd show` displays dependent issue status** (#583)
+- **`fbd show` displays dependent issue status** (#583)
   - Shows status for all blocked-by and blocking issues
   - Better visibility into dependency chains
 
-- **`bd daemon --status` shows config** (#569)
+- **`fbd daemon --status` shows config** (#569)
   - Displays daemon configuration in status output
   - Contributed by @crcatala
 
-- **`bd daemon --stop-all`** - Kill all daemon processes
+- **`fbd daemon --stop-all`** - Kill all daemon processes
   - Useful for cleanup when multiple daemons are running
 
 - **Auto-disable daemon in git worktrees** (#567)
@@ -2250,10 +2250,10 @@ and muscle memory before v1.0.0 to avoid breakage.
 - **Inline tombstones for soft-delete**
   - Deleted issues become tombstones with `status: "tombstone"` in `issues.jsonl`
   - Full audit trail: `deleted_at`, `deleted_by`, `delete_reason`, `original_type`
-  - TTL-based expiration (default 30 days) with automatic pruning via `bd compact`
+  - TTL-based expiration (default 30 days) with automatic pruning via `fbd compact`
   - Proper 3-way merge support: fresh tombstones win, expired tombstones allow resurrection
 
-- **`bd migrate-tombstones` command**
+- **`fbd migrate-tombstones` command**
   - Converts legacy `deletions.jsonl` entries to inline tombstones
   - Archives old file as `deletions.jsonl.migrated`
 
@@ -2266,7 +2266,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Fixed
 
 - **Multi-hyphen prefix parsing** (GH#405) - Prefixes like `my-cool-project` now work correctly
-- **`bd sync` on sync branch** (GH#519) - Fixed sync when already on the sync branch
+- **`fbd sync` on sync branch** (GH#519) - Fixed sync when already on the sync branch
 - **Pre-commit hook with removed `.beads`** (GH#483) - No longer blocks commits after beads removal
 - **Priority format error messages** (GH#517) - Clearer guidance on P0-P4 format
 - **Status naming consistency** (GH#444) - Uses `in_progress` everywhere
@@ -2301,13 +2301,13 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **`--estimate` / `-e` flag for `bd create` and `bd update` (GH #443)**
+- **`--estimate` / `-e` flag for `fbd create` and `fbd update` (GH #443)**
   - Add time estimates to issues in minutes
-  - Example: `bd create "My task" --estimate 120` (2 hours)
-  - Example: `bd update bd-xyz --estimate 60` (1 hour)
+  - Example: `fbd create "My task" --estimate 120` (2 hours)
+  - Example: `fbd update bd-xyz --estimate 60` (1 hour)
   - Enables planning and prioritization features in vscode-beads
 
-- **`bd doctor` improvements**
+- **`fbd doctor` improvements**
   - SQLite integrity check - Detects database corruption
   - Configuration value validation - Validates config settings
   - Stale sync branch detection - Warns about abandoned beads-sync branches
@@ -2321,7 +2321,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Fixed
 
-- **`bd sync` safety improvements**
+- **`fbd sync` safety improvements**
   - Auto-push after merge with safety check
   - Handle diverged histories with content-based merge
   - Multiple safety check enhancements
@@ -2333,7 +2333,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 - **3-char all-letter base36 hash support (GH #446)**
   - Fixes prefix extraction for edge case hashes like "bd-abc"
 
-- **`bd ready` message fix**
+- **`fbd ready` message fix**
   - Shows correct message when all issues are closed
 
 - **Version notification spam fix**
@@ -2345,23 +2345,23 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Documentation
 
 - Added perles and vscode-beads to Third-Party Tools
-- Encourage batch close and parallel creation in `bd prime` output
+- Encourage batch close and parallel creation in `fbd prime` output
 
 ## [0.28.0] - 2025-12-01
 
 ### Added
 
-- **`bd daemon --local` flag (#433)** - Run daemon without git operations
+- **`fbd daemon --local` flag (#433)** - Run daemon without git operations
   - Ideal for multi-repo setups where git sync happens externally
   - Prevents daemon from triggering git commits/pushes
   - Use with worktrees or when beads sync is handled by another process
 
-- **`bd daemon --foreground` flag** - Run daemon in foreground mode
+- **`fbd daemon --foreground` flag** - Run daemon in foreground mode
   - For systemd/supervisord/launchd integration
   - Logs to stdout instead of background file
   - Process stays attached to terminal
 
-- **`bd migrate-sync` command** - Migrate to sync.branch workflow
+- **`fbd migrate-sync` command** - Migrate to sync.branch workflow
   - Moves beads data to a dedicated sync branch
   - Keeps main branch clean of .beads/ commits
   - Automated setup of sync.branch configuration
@@ -2379,13 +2379,13 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Parent-Child Dependency UX (GH #440)**
   - Fixed backwards documentation in DEPENDENCIES.md
-  - `bd show` now displays epic children under "Children" not "Blocks"
+  - `fbd show` now displays epic children under "Children" not "Blocks"
   - Clearer UI labels for dependency relationships
 
 - **sync.branch Workflow Fixes**
   - Fixed .beads/ restoration from branch after sync
   - Prevents final flush after sync.branch restore
-  - `bd doctor` now detects when on sync branch
+  - `fbd doctor` now detects when on sync branch
 
 - **Jira API Migration**
   - Updated from deprecated Jira API v2 to v3
@@ -2417,14 +2417,14 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Fixes bug where `git reset --hard origin/main` would lose all issues
 
 - **Fix Fresh Clone Initialization**
-  - `bd init` now works on fresh clones that have JSONL but no database
+  - `fbd init` now works on fresh clones that have JSONL but no database
   - Auto-detects issue prefix from existing JSONL (no `--prefix` flag needed)
   - Prevents "database not found" errors on first run in a cloned repository
   
 - **Import Warning for Deleted Issues**
   - New warning message when issues are skipped due to deletions manifest
   - Helps users understand why expected issues aren't being imported
-  - Warns user to check `bd deleted` for history of removed issues
+  - Warns user to check `fbd deleted` for history of removed issues
 
 - **Extract Issue Prefix for 3-char Hashes (#425)**
   - `ExtractIssuePrefix()` now handles base36 hashes as short as 3 characters
@@ -2441,12 +2441,12 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Status validation ensures only configured statuses are used
   - Backwards compatible: open/in_progress/closed always work
 
-- **Contributor Fork Workflows**: `bd init --contributor` now auto-configures `sync.remote=upstream`
+- **Contributor Fork Workflows**: `fbd init --contributor` now auto-configures `sync.remote=upstream`
   - Syncs issues from upstream rather than origin
   - Ideal for contributors working on forks
 
 - **Git Worktree Support**: Full support for git worktrees (#416)
-  - `bd hooks install` now works correctly in worktrees
+  - `fbd hooks install` now works correctly in worktrees
   - Helpful message when entering worktree repo without beads initialized
   - Hooks properly detect worktree vs main repository
 
@@ -2454,11 +2454,11 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Periodic health checks detect stale database state
   - Auto-recovery from detected inconsistencies
 
-- **Fresh Clone Detection**: `bd doctor` now detects fresh clones
-  - Suggests `bd init` when JSONL exists but no database
+- **Fresh Clone Detection**: `fbd doctor` now detects fresh clones
+  - Suggests `fbd init` when JSONL exists but no database
   - Improved onboarding experience for new contributors
 
-- **bd sync --squash**: Batch multiple sync commits into one
+- **fbd sync --squash**: Batch multiple sync commits into one
   - Reduces commit noise when syncing frequently
   - Optional flag for cleaner git history
 
@@ -2501,7 +2501,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Changed
 
 - **Documentation**: Fixed birthday paradox threshold explanation in README
-- **Documentation**: Corrected `bd dep add` syntax and semantics
+- **Documentation**: Corrected `fbd dep add` syntax and semantics
 
 ### Community
 
@@ -2528,7 +2528,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Fixed
 
 - **CRITICAL: Reverse ZFC Check**: Prevents stale database from corrupting JSONL
-  - Root cause: `bd sync` exports DB to JSONL before pulling from remote
+  - Root cause: `fbd sync` exports DB to JSONL before pulling from remote
   - If local DB is stale (fewer issues than JSONL), stale data would corrupt the JSONL
   - Added reverse ZFC check: detects when JSONL has >20% more issues than DB
   - When detected, imports JSONL first to sync database before any export
@@ -2538,11 +2538,11 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **bd doctor --check-health**: Lightweight health checks for startup hooks (3fe94f2)
+- **fbd doctor --check-health**: Lightweight health checks for startup hooks (3fe94f2)
   - Quick, silent health checks (exit 0 on success, non-zero on issues)
   - Checks: version mismatch, sync.branch config, outdated hooks
   - New `hints.doctor` config option to suppress doctor hints globally
-  - Git hooks now call `bd doctor --check-health` in post-merge/post-checkout
+  - Git hooks now call `fbd doctor --check-health` in post-merge/post-checkout
 
 - **--no-git-history Flag**: Prevent spurious deletions during import/sync (5506486)
   - Use when git history is unreliable (shallow clones, squash merges)
@@ -2572,8 +2572,8 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Issue ID extraction now correctly handles multi-part prefixes
   - Example: `my-app-123` correctly extracts prefix `my-app`
 
-- **bd sync Commit Scope**
-  - `bd sync` now only commits `.beads/` files, not other staged files
+- **fbd sync Commit Scope**
+  - `fbd sync` now only commits `.beads/` files, not other staged files
   - Prevents accidental commits of unrelated staged changes
 
 - **Auto-Import to Wrong File**
@@ -2582,7 +2582,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Deletions.jsonl Handling**
   - Git hooks now properly stage deletions.jsonl for cross-clone propagation
-  - bd doctor no longer warns about deletions.jsonl
+  - fbd doctor no longer warns about deletions.jsonl
   - Prevent rebase failures from deletions.jsonl writes
 
 - **Defense-in-Depth**
@@ -2596,7 +2596,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Changed
 
-- **Stealth Mode**: Removed global gitattributes setup from `bd init --stealth` (#391)
+- **Stealth Mode**: Removed global gitattributes setup from `fbd init --stealth` (#391)
   - Stealth mode now purely local with no global git configuration
 
 - **Pre-Push Hook Error Message**: Improved clarity when sync fails (#390)
@@ -2626,13 +2626,13 @@ and muscle memory before v1.0.0 to avoid breakage.
 - **Zombie Resurrection Prevention**: Stale clones can no longer resurrect deleted issues
   - New JSONL sanitization step (3.6) after git pull removes deleted issues before import
   - Prevents git's 3-way merge from re-adding issues that were deleted elsewhere
-  - New `bd doctor` check 18: "Deletions Manifest" detects missing/empty manifest
-  - New `bd doctor --fix` hydrates deletions.jsonl from git history for pre-v0.25.0 deletions
+  - New `fbd doctor` check 18: "Deletions Manifest" detects missing/empty manifest
+  - New `fbd doctor --fix` hydrates deletions.jsonl from git history for pre-v0.25.0 deletions
   - ID validation prevents false positives from non-issue JSON fields
 
 ### Fixed
 
-- **bd sync commit scope**: Now commits entire `.beads/` directory before pull
+- **fbd sync commit scope**: Now commits entire `.beads/` directory before pull
   - Previously only committed beads.jsonl, leaving metadata.json unstaged
   - Fixes "You have unstaged changes" error during `git pull --rebase`
 
@@ -2644,18 +2644,18 @@ and muscle memory before v1.0.0 to avoid breakage.
   - New `.beads/deletions.jsonl` tracks deleted issues with timestamp, actor, reason
   - Import automatically purges issues that were deleted in other clones
   - Git history fallback for pruned deletion records (self-healing)
-  - New `bd deleted` command to view deletion audit trail
+  - New `fbd deleted` command to view deletion audit trail
   - Auto-compact during sync (opt-in via `deletions.auto_compact: true`)
   - Configurable retention period (`deletions.retention_days`, default 7)
   - Local unpushed work protected from accidental deletion
   - Full documentation in docs/DELETIONS.md
 
-- **Stealth Mode**: New `bd init --stealth` flag for invisible beads usage (#381)
+- **Stealth Mode**: New `fbd init --stealth` flag for invisible beads usage (#381)
   - Adds `.beads/` to project's `.gitignore` automatically
   - Useful for personal issue tracking in shared repos without affecting collaborators
-  - All bd functionality works normally, just not committed to git
+  - All fbd functionality works normally, just not committed to git
 
-- **Ephemeral Branch Sync**: New `bd sync --from-main` flag
+- **Ephemeral Branch Sync**: New `fbd sync --from-main` flag
   - Syncs from main branch without pushing to remote
   - Ideal for feature branches that sync issues from main
   - Prevents pushing local branch changes to origin
@@ -2680,17 +2680,17 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Respects `--json` and `--quiet` flags
   - Deterministic testing via `BEADS_TIP_SEED` env var
 
-- **Sorting for bd list and bd search**: New `--sort` and `--reverse` flags
+- **Sorting for fbd list and fbd search**: New `--sort` and `--reverse` flags
   - Sort by: priority, created, updated, closed, status, id, title, type, assignee
   - Smart defaults: priority ascending (P0 first), dates descending (newest first)
   - Works with all existing filters
 
-- **Claude Integration Verification**: New bd doctor checks
-  - `CheckBdInPath`: verifies 'bd' is in PATH (needed for hooks)
+- **Claude Integration Verification**: New fbd doctor checks
+  - `CheckBdInPath`: verifies 'fbd' is in PATH (needed for hooks)
   - `CheckDocumentationBdPrimeReference`: detects version mismatches in docs
 
 - **ARM Linux Support**: GoReleaser now builds for linux/arm64 (PR #371 by @tjg184)
-  - Enables bd on ARM-based Linux systems like Raspberry Pi, AWS Graviton
+  - Enables fbd on ARM-based Linux systems like Raspberry Pi, AWS Graviton
 
 - **Orphan Detection Migration**: Identifies orphaned child issues
   - Detects issues with hierarchical IDs where parent no longer exists
@@ -2709,8 +2709,8 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Eliminates spurious failures under normal concurrent usage
   - Context cancellation respected between retry attempts
 
-- **bd import Argument Validation**: Helpful error for common mistake
-  - Running `bd import file.jsonl` (without `-i`) now shows clear error
+- **fbd import Argument Validation**: Helpful error for common mistake
+  - Running `fbd import file.jsonl` (without `-i`) now shows clear error
   - Previously silently read from stdin, confusing users with "0 created"
 
 - **ZFC Import Export Skip**: Preserve JSONL source of truth
@@ -2726,9 +2726,9 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Changed
 
-- **bd daemon UX**: New `--start` flag, help text when no args
-  - `bd daemon` now shows help instead of immediately starting
-  - Use `bd daemon --start` to explicitly start
+- **fbd daemon UX**: New `--start` flag, help text when no args
+  - `fbd daemon` now shows help instead of immediately starting
+  - Use `fbd daemon --start` to explicitly start
   - Auto-start still works (uses `--start` internally)
   - More discoverable for new users
 
@@ -2754,7 +2754,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 ### Added
 
 - **BD_GUIDE.md Generation**: Version-stamped documentation for AI agents (bd-woro, 9e16469)
-  - New `--output` flag for `bd onboard` command generates BD_GUIDE.md
+  - New `--output` flag for `fbd onboard` command generates BD_GUIDE.md
   - Separates bd-specific instructions from project-specific instructions
   - Auto-generated header with version stamp warns against manual editing
   - Detects outdated BD_GUIDE.md and suggests regeneration after upgrades
@@ -2762,7 +2762,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Configurable Export Error Policies**: Flexible error handling for export operations (bd-exug, e3e0a04)
   - Four policies: strict (fail-fast), best-effort (skip with warnings), partial (retry then skip), required-core (fail on core data only)
-  - Per-project configuration via `bd config set export.error_policy`
+  - Per-project configuration via `fbd config set export.error_policy`
   - Separate policy for auto-exports via `auto_export.error_policy`
   - Retry with exponential backoff for transient failures
   - Optional export manifests documenting completeness
@@ -2770,23 +2770,23 @@ and muscle memory before v1.0.0 to avoid breakage.
 - **Command Set Standardization**: Complete flag and feature consistency overhaul (bd-au0, 273a4d1)
   - Global verbosity flags: `--verbose/-v` and `--quiet/-q` across all commands
   - Standardized `--dry-run` flag behavior across all commands
-  - Label operations added to `bd update`: `--add-labels` and `--remove-labels`
-  - Enhanced `bd export` with comprehensive filters (assignee, type, labels, priority, dates)
-  - Enhanced `bd search` with date and priority filters
-  - Improved documentation for `bd clean` vs `bd cleanup` disambiguation
+  - Label operations added to `fbd update`: `--add-labels` and `--remove-labels`
+  - Enhanced `fbd export` with comprehensive filters (assignee, type, labels, priority, dates)
+  - Enhanced `fbd search` with date and priority filters
+  - Improved documentation for `fbd clean` vs `fbd cleanup` disambiguation
 
 - **Auto-Migration on Version Bump**: Automatic database schema updates (bd-jgxi, 7796f5c)
-  - Database version automatically synced when bd CLI is upgraded
-  - Eliminates recurring "version mismatch" warnings in bd doctor
+  - Database version automatically synced when fbd CLI is upgraded
+  - Eliminates recurring "version mismatch" warnings in fbd doctor
   - Best-effort and silent to avoid disrupting commands
 
-- **Version Tracking Validation**: Comprehensive bd doctor checks (bd-u4sb, d8f3eb0)
+- **Version Tracking Validation**: Comprehensive fbd doctor checks (bd-u4sb, d8f3eb0)
   - Validates metadata.json exists with valid LastBdVersion field
   - Warns if LastBdVersion is very old (>10 minor versions behind)
   - Ensures version tracking system is working correctly
 
 - **Git Hooks Executable Validation**: Hook reliability improvements (bd-fwul, 1c715bc)
-  - bd doctor now validates git hooks have executable bit set
+  - fbd doctor now validates git hooks have executable bit set
   - Prevents silent hook failures from incorrect permissions
 
 - **Socket Cleanup Race Condition Fix**: Daemon reliability improvement (bd-4owj, 18f8105)
@@ -2815,7 +2815,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Metadata JSONL Path Auto-Detection**: Fix configuration mismatches (bd-afd, d1641c7)
   - Auto-detects actual JSONL file when metadata.json is recreated
-  - bd doctor --fix now includes DatabaseConfig() auto-repair
+  - fbd doctor --fix now includes DatabaseConfig() auto-repair
   - Prefers beads.jsonl over issues.jsonl (canonical name)
   - Prevents mismatches after git clean, merge conflicts, or rebases
 
@@ -2823,10 +2823,10 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Removed mtime fast-path in hasJSONLChanged() causing false negatives
   - Git doesn't preserve mtime on checkout, causing incorrect change detection
   - Now always uses content hash for reliable comparison
-  - Prevents bd sync from overwriting pulled JSONL and resurrecting deleted issues
+  - Prevents fbd sync from overwriting pulled JSONL and resurrecting deleted issues
 
 - **ZFC (JSONL First Consistency)**: Fix stale DB overwriting JSONL on sync (bd-l0r, 1ba068f, 2e4171a, 949ab42)
-  - bd sync now detects stale DB (>50% divergence from JSONL) and imports first
+  - fbd sync now detects stale DB (>50% divergence from JSONL) and imports first
   - After ZFC import, skips export to prevent overwriting JSONL source of truth
   - Fixes bug where DB with 688 issues would overwrite JSONL with 62 issues after pull
   - JSONL is source of truth after git pull - DB syncs to match, not vice versa
@@ -2840,7 +2840,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Eliminates "zombie issues" that never die
 
 - **JSONL Merge Conflict Auto-Resolution**: Streamlined rebase workflow (bd-cwmt, 3cf5e26)
-  - bd sync now auto-resolves JSONL conflicts during rebase
+  - fbd sync now auto-resolves JSONL conflicts during rebase
   - Detects rebase state and JSONL-only conflicts
   - Auto-exports from DB and continues rebase automatically
   - Eliminates manual conflict resolution in common scenarios
@@ -2856,15 +2856,15 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Reduced query count from ~201 to ~3-5 for 100 issues
   - Eliminated per-issue loops in handleExport() and triggerExport()
 
-- **Sync Branch Auto-Configuration**: Prevent bd sync failures after init (bd-flil, bd-rsua, a4c38d5, 83609d5)
-  - bd init now auto-sets sync.branch to current git branch
-  - bd doctor detects missing sync.branch config and provides --fix
+- **Sync Branch Auto-Configuration**: Prevent fbd sync failures after init (bd-flil, bd-rsua, a4c38d5, 83609d5)
+  - fbd init now auto-sets sync.branch to current git branch
+  - fbd doctor detects missing sync.branch config and provides --fix
   - All branch detection uses 'git symbolic-ref' to work in fresh repos
-  - Fixes 'bd sync --status' error after fresh bd init
+  - Fixes 'fbd sync --status' error after fresh fbd init
 
 - **Merge Driver Auto-Repair**: Fix stale git configurations (bd-3sz0, bd-tbz3, 1c8dd49)
-  - Detects old bd versions (<0.24.0) with invalid %L/%R placeholders
-  - Auto-repairs during bd init and bd doctor --fix
+  - Detects old fbd versions (<0.24.0) with invalid %L/%R placeholders
+  - Auto-repairs during fbd init and fbd doctor --fix
   - Git only supports %O (base), %A (current), %B (other) placeholders
   - Supports both canonical (issues.jsonl) and legacy (beads.jsonl) filenames
 
@@ -2889,14 +2889,14 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Changed
 
-- **bd init Defaults**: Better out-of-box experience (bd-bxha, ec4117d)
+- **fbd init Defaults**: Better out-of-box experience (bd-bxha, ec4117d)
   - Git hooks and merge driver now installed by default
   - Removed interactive prompts (simpler workflow)
   - New opt-out flags: `--skip-hooks` and `--skip-merge-driver`
-  - Shows warning messages on failure with suggestion to run bd doctor --fix
+  - Shows warning messages on failure with suggestion to run fbd doctor --fix
 
-- **bd init Validation**: Automatic setup verification (bd-zwtq, 3a36d0b)
-  - Runs bd doctor diagnostics at end of bd init
+- **fbd init Validation**: Automatic setup verification (bd-zwtq, 3a36d0b)
+  - Runs fbd doctor diagnostics at end of fbd init
   - Immediately identifies configuration problems before user encounters them
   - Catches: missing hooks, unconfigured merge driver, missing docs, metadata issues
 
@@ -2942,7 +2942,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Prevents test hangs from uninitialized context
   - Improved test reliability and isolation
 
-- **JSONL Configuration**: Improved bd doctor JSONL checks to focus on real problems (87ee3a6)
+- **JSONL Configuration**: Improved fbd doctor JSONL checks to focus on real problems (87ee3a6)
   - Reduces false positives in JSONL validation
   - Better detection of actual configuration issues
 
@@ -2957,12 +2957,12 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **bd search**: Date and priority filters (787fb4e)
+- **fbd search**: Date and priority filters (787fb4e)
   - `--created-after`, `--created-before` for date filtering
   - `--priority-min`, `--priority-max` for priority range filtering
   - Enables more precise search queries
 
-- **bd count**: New command for counting and grouping issues (d7f4189)
+- **fbd count**: New command for counting and grouping issues (d7f4189)
   - Count issues by status, priority, type, or labels
   - Helpful for generating statistics and reports
 
@@ -2986,15 +2986,15 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Changed
 
-- **bd list**: Accept both integer and P-format for priority flags (2e2b8d7)
+- **fbd list**: Accept both integer and P-format for priority flags (2e2b8d7)
   - `--priority 1` and `--priority P1` now both work
   - More flexible CLI input for priority filtering
 
-- **bd update**: Added `--body` flag as alias for `--description` (bb5a480)
+- **fbd update**: Added `--body` flag as alias for `--description` (bb5a480)
   - More intuitive flag name for updating issue descriptions
   - Both flags work identically for backward compatibility
 
-- **bd update**: Added label operations (3065db2)
+- **fbd update**: Added label operations (3065db2)
   - `--add-labels` and `--remove-labels` flags
   - Simplifies label management in update operations
 
@@ -3002,7 +3002,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Provides project-specific guidance for GitHub Copilot
   - Improves AI-assisted development experience
 
-- **Documentation**: Moved design/audit docs from cmd/bd to docs/ (ce433bb)
+- **Documentation**: Moved design/audit docs from cmd/fbd to docs/ (ce433bb)
   - Better organization of project documentation
   - Clearer separation of code and documentation
 
@@ -3031,28 +3031,28 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 ### Added
 
-- **bd doctor --fix**: Automatic repair functionality (bd-ykd9, 7806937)
-  - Automatically fixes issues detected by `bd doctor`
+- **fbd doctor --fix**: Automatic repair functionality (bd-ykd9, 7806937)
+  - Automatically fixes issues detected by `fbd doctor`
   - Repairs common database inconsistencies without manual intervention
 
-- **bd clean**: Remove temporary merge artifacts (e8355c2)
+- **fbd clean**: Remove temporary merge artifacts (e8355c2)
   - Cleans up `.base`, `.ours`, `.theirs` snapshot files
   - Helps maintain clean `.beads/` directory after merges
 
-- **bd cleanup**: Enhanced bulk deletion command
+- **fbd cleanup**: Enhanced bulk deletion command
   - Delete multiple closed issues efficiently
   - Improved from previous versions with better performance
 
-- **.beads/README.md Generation**: Auto-generated during `bd init` (bd-m7ge, e1c8853)
+- **.beads/README.md Generation**: Auto-generated during `fbd init` (bd-m7ge, e1c8853)
   - Provides project-specific beads documentation
   - Helps new contributors understand the setup
 
 - **blocked_issues_cache Table**: Performance optimization for GetReadyWork (62c1f42, ed23f8f)
   - Caches blocked issue relationships
-  - Dramatically improves `bd ready` performance on large databases
+  - Dramatically improves `fbd ready` performance on large databases
 
 - **Commit Hash in Version Output**: Enhanced version reporting (bd-hpt5, 7c96142)
-  - `bd version` now shows git commit hash
+  - `fbd version` now shows git commit hash
   - Helps identify exact build for debugging
 
 - **Auto-detection of Issue Prefix**: Scans git history to detect prefix (#277, 8f37904)
@@ -3074,8 +3074,8 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Cleaned up 497+ resurrected issues from production database
   - Prevents data corruption from improper JSONL replay
 
-- **Critical: bd sync Auto-resolves Conflicts** (bd-ca0b, a1e5075)
-  - `bd sync` now automatically resolves conflicts instead of failing
+- **Critical: fbd sync Auto-resolves Conflicts** (bd-ca0b, a1e5075)
+  - `fbd sync` now automatically resolves conflicts instead of failing
   - Dramatically improves multi-agent workflow reliability
   - Eliminates manual conflict resolution in most cases
 
@@ -3084,7 +3084,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Uses content-based comparison instead of timestamp-only
   - Prevents unnecessary imports that would corrupt state
 
-- **Critical: bd sync DB Changes After Import** (81c741b)
+- **Critical: fbd sync DB Changes After Import** (81c741b)
   - Ensures database changes are properly applied after import
   - Fixes desync issues between JSONL and database
 
@@ -3129,15 +3129,15 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Fixed daemon export leaving JSONL newer than database
   - Ensures proper sync between export and database state
 
-- **bd doctor Hash ID Detection** (GH#322, 8c1f865)
+- **fbd doctor Hash ID Detection** (GH#322, 8c1f865)
   - Fixed doctor incorrectly diagnosing hash IDs as sequential
   - Improved detection logic for ID format validation
 
 - **ResolvePartialID Handling** (GH#336, 4432af0)
-  - Improved ResolvePartialID / ResolveID handling for `bd show`
+  - Improved ResolvePartialID / ResolveID handling for `fbd show`
   - Better partial ID matching and error messages
 
-- **bd sync Windows Upstream Detection** (#281, 1deaad1)
+- **fbd sync Windows Upstream Detection** (#281, 1deaad1)
   - Fixed upstream branch detection on Windows
   - Improved cross-platform compatibility
 
@@ -3186,7 +3186,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 - **Performance Improvements** (#319, 690c73f):
   - Optimized GetReadyWork to use blocked_issues_cache (ed23f8f)
-  - Replaced N+1 label queries with bulk fetch in `bd list` (968d9e2)
+  - Replaced N+1 label queries with bulk fetch in `fbd list` (968d9e2)
   - Cache invalidation for blocked_issues_cache (614ba8a)
   - Significant speedup for large databases
 
@@ -3196,7 +3196,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Comprehensive functional tests
 
 - **Auto-upgrade .beads/.gitignore** (#300, f4a2f87)
-  - Automatically upgrades .gitignore on bd operations
+  - Automatically upgrades .gitignore on fbd operations
   - Ensures latest patterns are always applied
 
 - **Code Refactoring**:
@@ -3206,7 +3206,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Improved code organization and maintainability
 
 - **Documentation Improvements**:
-  - Document files created by bd init and clarify .gitattributes (721274b, e7fd1dd)
+  - Document files created by fbd init and clarify .gitattributes (721274b, e7fd1dd)
   - How to resolve merge conflicts in .beads/beads.jsonl (4985a68)
   - Document MCP tools loading issue in Claude Code (GH#346, 79b8dbe)
   - Add uv prerequisite to Claude Code plugin docs (#293, a020c6c)
@@ -3245,7 +3245,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - Eliminated expensive recursive queries
   - Dramatically faster for large dependency graphs
 
-- **bd list N+1 Query Elimination** (968d9e2)
+- **fbd list N+1 Query Elimination** (968d9e2)
   - Replaced per-issue label queries with bulk fetch
   - Significant speedup when listing many labeled issues
 
@@ -3264,7 +3264,7 @@ and muscle memory before v1.0.0 to avoid breakage.
   - #296: Fix DB mtime update after import
   - #294: Fix compact command in daemon mode
   - #293: Add uv prerequisite documentation
-  - #281: Fix bd sync Windows upstream detection
+  - #281: Fix fbd sync Windows upstream detection
   - #277: Auto-detection of issue prefix from git history
 
 - **Dependency Updates**:
@@ -3282,7 +3282,7 @@ and muscle memory before v1.0.0 to avoid breakage.
 
 This release represents a major stability and performance improvement with **179 commits** since 0.23.1. Key themes:
 - **Reliability**: Fixed critical auto-import resurrection bug and multiple daemon issues
-- **Performance**: Significant optimizations for `bd ready` and `bd list`
+- **Performance**: Significant optimizations for `fbd ready` and `fbd list`
 - **AI Agent Support**: Improved context propagation and error handling
 - **Cross-platform**: Better Windows and macOS support
 - **Developer Experience**: Auto-detection, better error messages, improved docs
@@ -3291,15 +3291,15 @@ This release represents a major stability and performance improvement with **179
 
 ### Fixed
 
-- **#263: Database mtime not updated after import causing false `bd doctor` warnings**
-  - When `bd sync --import-only` completed, SQLite WAL mode wouldn't update the main database file's mtime
-  - This caused `bd doctor` to incorrectly warn "JSONL is newer than database" even when perfectly synced
+- **#263: Database mtime not updated after import causing false `fbd doctor` warnings**
+  - When `fbd sync --import-only` completed, SQLite WAL mode wouldn't update the main database file's mtime
+  - This caused `fbd doctor` to incorrectly warn "JSONL is newer than database" even when perfectly synced
   - Now updates database mtime after imports to prevent false warnings
 
 - **#261: SQLite URI missing 'file:' prefix causing version detection failures**
   - Without 'file:' scheme, SQLite treated `?mode=ro` as part of filename instead of connection option
   - Created bogus files like `beads.db?mode=ro`
-  - Caused `bd doctor` to incorrectly report "version pre-0.17.5 (very old)" on modern databases
+  - Caused `fbd doctor` to incorrectly report "version pre-0.17.5 (very old)" on modern databases
 
 - **bd-17d5: Conflict marker false positives on JSON-encoded content**
   - Issues containing JSON strings with `<<<<<<<` would trigger false conflict marker detection
@@ -3328,7 +3328,7 @@ This release represents a major stability and performance improvement with **179
   - 30s HTTP timeout prevents hangs, full message reading, --importance validation, server-side filtering
 
 - **Remove noisy version field from metadata.json**
-  - Eliminated redundant version mismatch warnings on every bd upgrade
+  - Eliminated redundant version mismatch warnings on every fbd upgrade
   - Daemon version checking via RPC is sufficient
 
 ### Added
@@ -3347,17 +3347,17 @@ This release represents a major stability and performance improvement with **179
   - Automated git traffic benchmark showing **98.5% reduction in git traffic** compared to git-only sync
   - Bash-agent integration example
 
-- **bd info --whats-new**: Agent version awareness for quick upgrade summaries
+- **fbd info --whats-new**: Agent version awareness for quick upgrade summaries
   - Shows last 3 versions with workflow-impacting changes
   - Supports `--json` flag for machine-readable output
   - Helps agents understand what changed without re-reading full docs
 
-- **bd hooks install**: Embedded git hooks command
+- **fbd hooks install**: Embedded git hooks command
   - Replaces external install script with native command
-  - Git hooks now embedded in bd binary
-  - Works for all bd users, not just source repo users
+  - Git hooks now embedded in fbd binary
+  - Works for all fbd users, not just source repo users
 
-- **bd cleanup**: Bulk deletion command for closed issues
+- **fbd cleanup**: Bulk deletion command for closed issues
   - Agent-driven compaction for large databases
   - Removes closed issues older than specified threshold
 
@@ -3368,7 +3368,7 @@ This release represents a major stability and performance improvement with **179
   - No manual intervention required
   - Warning message added to zombie issues.jsonl file
 
-- **Auto-import on Missing Database** (ab4ec90): `bd import` now auto-initializes database when missing
+- **Auto-import on Missing Database** (ab4ec90): `fbd import` now auto-initializes database when missing
 - **Daemon Crash Recovery**: Panic handler with socket cleanup prevents orphaned processes
 - **Stale Database Exports**: ID-based staleness detection prevents exporting stale data
 - **Windows MCP Subprocess Timeout**: Fix for git detection on Windows
@@ -3379,7 +3379,7 @@ This release represents a major stability and performance improvement with **179
 - **Auto-import During Delete**: Disable auto-import during delete operations to prevent conflicts
 - **MCP Workspace Context**: Auto-detect workspace from CWD
 - **Import Sync Warning**: Warn when import syncs with working tree but not git HEAD
-- **GH#254**: `bd init` now detects and chains with existing git hooks
+- **GH#254**: `fbd init` now detects and chains with existing git hooks
 - **GH#249**: Add nil storage checks to prevent RPC daemon crashes
 - **GH#252**: Fix SQLite driver name mismatch causing "unknown driver" errors
 - **Nested .beads Directories**: Prevent creating nested .beads directories
@@ -3388,14 +3388,14 @@ This release represents a major stability and performance improvement with **179
 ### Changed
 
 - **Agent Affordances** (observations from agents using beads):
-  - **bd new**: Added as alias for `bd create` command (agents often tried this)
-  - **bd list**: Changed default to one-line-per-issue format to prevent agent miscounting; added `--long` flag for previous detailed format
+  - **fbd new**: Added as alias for `fbd create` command (agents often tried this)
+  - **fbd list**: Changed default to one-line-per-issue format to prevent agent miscounting; added `--long` flag for previous detailed format
 
 - **Developer Experience**:
   - Extracted supplemental docs from AGENTS.md for better organization
   - Added warning for working tree vs git HEAD sync mismatches
   - Completion commands now work without database
-  - Config included in `bd info` JSON output
+  - Config included in `fbd info` JSON output
   - Python cache files added to .gitignore
   - RPC diagnostics available via `BD_RPC_DEBUG` env var
   - Reduced RPC dial timeout from 2s to 200ms for fast-fail
@@ -3411,27 +3411,27 @@ This release represents a major stability and performance improvement with **179
 
 - **Release Automation**:
   - Automatic Homebrew formula update in release workflow
-  - Gitignore Formula/bd.rb (auto-generated, real source is homebrew-beads tap)
+  - Gitignore Formula/fbd.rb (auto-generated, real source is homebrew-beads tap)
 
 - **Other**:
   - Added `docs/` directory to links (#242)
   - RPC monitoring solution with web UI as implementation example (#244)
-  - Remove old install.sh script, replaced by `bd hooks install`
+  - Remove old install.sh script, replaced by `fbd hooks install`
   - Remove vc.db exclusion from FindDatabasePath filter
 
 ## [0.22.1] - 2025-11-06
 
 ### Added
 
-- **Vendored beads-merge by @neongreen**: Native `bd merge` command for intelligent JSONL merging
+- **Vendored beads-merge by @neongreen**: Native `fbd merge` command for intelligent JSONL merging
   - Vendored beads-merge algorithm into `internal/merge/` with full attribution and MIT license
-  - New `bd merge` command as native wrapper (no external binary needed)
-  - Same field-level 3-way merge algorithm, now built into bd
-  - Auto-configured during `bd init` (both interactive and `--quiet` modes)
+  - New `fbd merge` command as native wrapper (no external binary needed)
+  - Same field-level 3-way merge algorithm, now built into fbd
+  - Auto-configured during `fbd init` (both interactive and `--quiet` modes)
   - Thanks to @neongreen for permission to vendor: https://github.com/neongreen/mono/issues/240
   - Original tool: https://github.com/neongreen/mono/tree/main/beads-merge
 
-- **Git Hook Version Detection** (bd-iou5, 991c624): `bd info` now detects outdated git hooks
+- **Git Hook Version Detection** (bd-iou5, 991c624): `fbd info` now detects outdated git hooks
   - Adds version markers to all git hook templates (pre-commit, post-merge, pre-push)
   - Warns when installed hooks are outdated or missing
   - Suggests running `examples/git-hooks/install.sh` to update
@@ -3440,7 +3440,7 @@ This release represents a major stability and performance improvement with **179
 - **Public API for External Extensions** (8f676a4): Extensibility improvements for third-party tools
 - **Multi-Repo Patterns Documentation** (e73f89e): Comprehensive guide for AI agents working across multiple repositories
 - **Snapshot Versioning** (a891ebe): Add versioning and timestamp validation for snapshots
-- `--clear-duplicate-external-refs` flag for `bd import` command (9de98cf)
+- `--clear-duplicate-external-refs` flag for `fbd import` command (9de98cf)
 
 ### Fixed
 
@@ -3451,7 +3451,7 @@ This release represents a major stability and performance improvement with **179
 - **Pre-Push Hook** (3ba245e): Fix pre-push hook blocking instead of exporting
 - **Hash ID Recognition** (c924731, 055f1d9): Fix `isHashID` to recognize Base36 hash IDs and IDs without a-f letters
 - **Git Merge Artifacts** (41b1a21): Ignore merge artifacts in `.beads/.gitignore`
-- **bd status Command** (1edf3c6): Now uses git history for recent activity detection
+- **fbd status Command** (1edf3c6): Now uses git history for recent activity detection
 - **Performance**: Add raw string equality short-circuit before jsonEquals (5c1f441)
 
 ### Changed
@@ -3485,18 +3485,18 @@ This release represents a major stability and performance improvement with **179
 
 - **Intelligent Merge Driver** (bd-omx1, 52c5059): Auto-configured git merge driver for JSONL conflict resolution
   - Vendors beads-merge algorithm for field-level 3-way merging
-  - Automatically configured during `bd init` (both interactive and `--quiet` modes)
+  - Automatically configured during `fbd init` (both interactive and `--quiet` modes)
   - Matches issues by identity (id + created_at + created_by)
   - Smart field merging: timestamps→max, dependencies→union, status/priority→3-way
   - Eliminates most git merge conflicts in `.beads/beads.jsonl`
 
-- **Onboarding Wizards** (b230a22): New `bd init` workflows for different collaboration models
-  - `bd init --contributor`: OSS contributor wizard (separate planning repo)
-  - `bd init --team`: Team collaboration wizard (branch-based workflow)
+- **Onboarding Wizards** (b230a22): New `fbd init` workflows for different collaboration models
+  - `fbd init --contributor`: OSS contributor wizard (separate planning repo)
+  - `fbd init --team`: Team collaboration wizard (branch-based workflow)
   - Interactive setup with fork detection and remote configuration
   - Auto-configures sync settings for each workflow
 
-- **Migration Tools** (349817a): New `bd migrate-issues` command for cross-repo issue migration
+- **Migration Tools** (349817a): New `fbd migrate-issues` command for cross-repo issue migration
   - Migrate issues between repositories while preserving dependencies
   - Source filtering (by label, priority, status, type)
   - Automatic remote repo detection and push
@@ -3507,12 +3507,12 @@ This release represents a major stability and performance improvement with **179
   - Multiple personas (designer, frontend dev, backend dev)
   - Best practices for complex projects
 
-- **Dependency Status** (3acaf1d): Show blocker status in `bd show` output
+- **Dependency Status** (3acaf1d): Show blocker status in `fbd show` output
   - Displays "Blocked by N open issues" when dependencies exist
   - Shows "Ready to work (no blockers)" when unblocked
 
-- **DevContainer Support** (247e659): Automatic bd setup in GitHub Codespaces
-  - Pre-configured Go environment with bd pre-installed
+- **DevContainer Support** (247e659): Automatic fbd setup in GitHub Codespaces
+  - Pre-configured Go environment with fbd pre-installed
   - Auto-detects existing `.beads/` and imports on startup
 
 - **Landing the Plane Protocol** (095e40d): Session-ending checklist for AI agents
@@ -3523,13 +3523,13 @@ This release represents a major stability and performance improvement with **179
 
 - **SearchIssues N+1 Query** (bd-5ots, e90e485): Eliminated N+1 query bug in label loading
   - Batch-loads labels for all issues in one query
-  - Significant performance improvement for `bd list` with many labeled issues
+  - Significant performance improvement for `fbd list` with many labeled issues
 
 - **Sync Validation** (bd-9bsx, 5438485): Prevent infinite dirty loop in auto-sync
   - Added export verification to detect write failures
   - Ensures JSONL line count matches database after export
 
-- **bd edit Direct Mode** (GH #227, d4c73c3): Force `bd edit` to always use direct mode
+- **fbd edit Direct Mode** (GH #227, d4c73c3): Force `fbd edit` to always use direct mode
   - Prevents daemon interference with interactive editor sessions
   - Resolves hang issues when editing in terminals
 
@@ -3556,7 +3556,7 @@ This release represents a major stability and performance improvement with **179
   - Accepts both `--priority 1` and `--priority P1`
   - More intuitive for GitHub/Jira users
 
-- **--label Alias** (85ca8c3): Added `--label` as alias for `--labels` in `bd create`
+- **--label Alias** (85ca8c3): Added `--label` as alias for `--labels` in `fbd create`
   - Both singular and plural forms now work
   - Improved CLI ergonomics
 
@@ -3578,7 +3578,7 @@ This release represents a major stability and performance improvement with **179
 
 ### Added
 
-- **Epic/Child Filtering** (bd-zkl, fbe790a): New `bd list` filters for hierarchical issue queries
+- **Epic/Child Filtering** (bd-zkl, fbe790a): New `fbd list` filters for hierarchical issue queries
   - `--ancestor <id>`: Filter by ancestor issue (shows all descendants)
   - `--parent <id>`: Filter by direct parent issue
   - `--epic <id>`: Alias for `--ancestor` (more intuitive for epic-based workflows)
@@ -3609,7 +3609,7 @@ This release represents a major stability and performance improvement with **179
   - Resolves brew installation issues
 
 - **npm Package Versioning** (626d51d): Added npm-package to version bump script
-  - Ensures `@beads/bd` npm package stays in sync with CLI releases
+  - Ensures `@beads/fbd` npm package stays in sync with CLI releases
   - Prevents version mismatches across distribution channels
 
 - **Linting** (52cf2af): Fixed golangci-lint errors
@@ -3662,7 +3662,7 @@ This release represents a major stability and performance improvement with **179
 
 ### Added
 
-- **npm Package**: Created `@beads/bd` npm package for Node.js/Claude Code for Web integration
+- **npm Package**: Created `@beads/fbd` npm package for Node.js/Claude Code for Web integration
   - Native binary downloads from GitHub releases
   - Integration tests and release documentation
   - Postinstall script for platform-specific binary installation
@@ -3671,7 +3671,7 @@ This release represents a major stability and performance improvement with **179
   - Create multiple issues from a single file
   - Structured format for bulk issue creation
 
-- **`bd comment` Alias**: Convenient shorthand for `bd comments add`
+- **`fbd comment` Alias**: Convenient shorthand for `fbd comments add`
 
 ### Changed
 
@@ -3685,12 +3685,12 @@ This release represents a major stability and performance improvement with **179
   - Prevents database corruption from malformed URIs
   - Fixed `:memory:` database connection strings
 
-- **`bd init --no-db` Behavior** (GH #210): Now correctly creates `metadata.json` and `config.yaml`
+- **`fbd init --no-db` Behavior** (GH #210): Now correctly creates `metadata.json` and `config.yaml`
   - Previously failed to set `no-db: true` flag
   - Improved metadata-only initialization workflow
 
 - **Symlink Path Resolution**: Fixed `findDatabaseInTree` to properly resolve symlinks
-- **Epic Hierarchy Display**: Fixed `bd show` command to correctly display epic child relationships
+- **Epic Hierarchy Display**: Fixed `fbd show` command to correctly display epic child relationships
 - **CI Stability**: Fixed performance thresholds, test eligibility, and lint errors
 
 ### Dependencies
@@ -3703,10 +3703,10 @@ This release represents a major stability and performance improvement with **179
 ### Fixed
 
 - **Critical Double JSON Encoding Bug** (bd-1048, bd-4ec8): Fixed widespread bug in daemon RPC calls where `ResolveID` responses were incorrectly converted using `string(resp.Data)` instead of `json.Unmarshal`. This caused IDs to become double-quoted (`"\"bd-1048\""`) and database lookups to fail. Affected commands:
-  - `bd show` - nil pointer dereference and 3 instances of double encoding
-  - `bd dep add/remove/tree` - 5 instances
-  - `bd label add/remove/list` - 3 instances  
-  - `bd reopen` - 1 instance
+  - `fbd show` - nil pointer dereference and 3 instances of double encoding
+  - `fbd dep add/remove/tree` - 5 instances
+  - `fbd label add/remove/list` - 3 instances  
+  - `fbd reopen` - 1 instance
   
   All 12 instances fixed with proper JSON unmarshaling.
 
@@ -3715,10 +3715,10 @@ This release represents a major stability and performance improvement with **179
 ### Added
 
 - **New Commands**:
-  - `bd status` - Database overview command showing issue counts and stats
-  - `bd comment` - Convenient alias for `bd comments add`
-  - `bd daemons restart` - Restart specific daemon without manual kill/start
-  - `--json` flag for `bd stale` command
+  - `fbd status` - Database overview command showing issue counts and stats
+  - `fbd comment` - Convenient alias for `fbd comments add`
+  - `fbd daemons restart` - Restart specific daemon without manual kill/start
+  - `--json` flag for `fbd stale` command
 
 - **Protected Branch Workflow**:
   - `BEADS_DIR` environment variable for custom database location
@@ -3730,8 +3730,8 @@ This release represents a major stability and performance improvement with **179
 
 - **Migration & Validation**:
   - Migration inspection tools for AI agents
-  - Conflict marker detection in `bd import` and `bd validate`
-  - Git hooks health check in `bd doctor`
+  - Conflict marker detection in `fbd import` and `fbd validate`
+  - Git hooks health check in `fbd doctor`
   - External reference (`external_ref`) UNIQUE constraint and validation
   - `external_ref` now primary matching key for import updates
 
@@ -3744,18 +3744,18 @@ This release represents a major stability and performance improvement with **179
   - Critical daemon race condition causing stale exports
 
 - **Configuration & Migration**:
-  - `bd migrate` now detects and sets missing `issue_prefix` config
+  - `fbd migrate` now detects and sets missing `issue_prefix` config
   - Config system refactored (renamed `config.json` → `metadata.json`)
   - Config version update in migrate command
 
 - **Daemon & RPC**:
-  - `bd doctor --json` flag not working
-  - `bd import` now flushes JSONL immediately for daemon visibility
+  - `fbd doctor --json` flag not working
+  - `fbd import` now flushes JSONL immediately for daemon visibility
   - Panic recovery in RPC `handleConnection`
   - Daemon auto-upgrades database version instead of exiting
 
 - **Windows Compatibility**:
-  - Windows test failures (path handling, bd binary references)
+  - Windows test failures (path handling, fbd binary references)
   - Windows CI: forward slashes in git hook shell scripts
   - TestMetricsSnapshot/uptime flakiness on Windows
 
@@ -3790,7 +3790,7 @@ This release represents a major stability and performance improvement with **179
   - 5-character hashes for 500-1,500 issues  
   - 6-character hashes for 1,500-10,000 issues
   - Progressive length extension prevents collisions with birthday paradox math
-  - **Migration required**: Run `bd migrate` to upgrade schema (removes `issue_counters` table)
+  - **Migration required**: Run `fbd migrate` to upgrade schema (removes `issue_counters` table)
   - Existing databases continue working - migration is opt-in
   - Dramatically reduces merge conflicts in multi-worker/multi-branch workflows
   - Eliminates ID collision issues when multiple agents create issues concurrently
@@ -3814,7 +3814,7 @@ This release represents a major stability and performance improvement with **179
 
 **For users upgrading from 0.20.0 or earlier:**
 
-1. Run `bd migrate` to detect and upgrade old database schemas
+1. Run `fbd migrate` to detect and upgrade old database schemas
 2. Database continues to work without migration, but you'll see warnings
 3. Hash IDs provide better multi-worker reliability at the cost of non-numeric IDs
 4. Old sequential IDs like `bd-152` become hash IDs like `bd-f14c`
@@ -3827,17 +3827,17 @@ See README.md for hash ID format details and birthday paradox collision analysis
 - **Hash-Based IDs**: New collision-resistant ID system (bd-168, bd-166, bd-167)
   - 6-character hash IDs with progressive 7/8-char fallback on collision
   - Opt-in via `.beads/config.toml` with `id_mode = "hash"`
-  - Migration tool: `bd migrate --to-hash-ids` for existing databases
+  - Migration tool: `fbd migrate --to-hash-ids` for existing databases
   - Prefix-optional ID parsing (e.g., `bd-abc123` or just `abc123`)
   - Hierarchical child ID generation for discovered-from relationships
-- **Substring ID Matching**: All bd commands now support partial ID matching
-  - `bd show abc` matches any ID containing "abc" (e.g., `bd-abc123`)
+- **Substring ID Matching**: All fbd commands now support partial ID matching
+  - `fbd show abc` matches any ID containing "abc" (e.g., `bd-abc123`)
   - Ambiguous matches show helpful error with all candidates
 - **Daemon Registry**: Multi-daemon management for multiple workspaces
-  - `bd daemons list` shows all running daemons across workspaces
-  - `bd daemons health` detects version mismatches and stale sockets
-  - `bd daemons logs <workspace>` for per-daemon log viewing
-  - `bd daemons killall` to restart all daemons after upgrades
+  - `fbd daemons list` shows all running daemons across workspaces
+  - `fbd daemons health` detects version mismatches and stale sockets
+  - `fbd daemons logs <workspace>` for per-daemon log viewing
+  - `fbd daemons killall` to restart all daemons after upgrades
 
 ### Fixed
 - **Test Stability**: Deprecated sequence-ID collision tests
@@ -3848,9 +3848,9 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Renamed `exclude` to `exclude-patterns` for v3 format
 
 ### Changed
-- **Multiple bd Detection**: Warning when multiple bd binaries in PATH (PR #182)
+- **Multiple fbd Detection**: Warning when multiple fbd binaries in PATH (PR #182)
   - Prevents confusion from version conflicts
-  - Shows locations of all bd binaries found
+  - Shows locations of all fbd binaries found
 
 ## [0.17.7] - 2025-10-26
 
@@ -3863,7 +3863,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.17.2] - 2025-10-25
 
 ### Added
-- **Configurable Sort Policy**: `bd ready --sort` flag for work queue ordering
+- **Configurable Sort Policy**: `fbd ready --sort` flag for work queue ordering
   - `hybrid` (default): Priority-weighted by staleness
   - `priority`: Strict priority ordering for autonomous systems
   - `oldest`: Pure FIFO for long-tail work
@@ -3890,13 +3890,13 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.17.0] - 2025-10-24
 
 ### Added
-- **Git Hooks**: Automatic installation prompt during `bd init`
+- **Git Hooks**: Automatic installation prompt during `fbd init`
   - Eliminates race condition between auto-flush and git commits
   - Pre-commit hook: Flushes pending changes immediately before commit
   - Post-merge hook: Imports updated JSONL after pull/merge
   - Optional installation with Y/n prompt (defaults to yes)
   - See [examples/git-hooks/README.md](examples/git-hooks/README.md) for details
-- **Duplicate Detection**: New `bd duplicates` command for finding and merging duplicate issues (bd-119, bd-203)
+- **Duplicate Detection**: New `fbd duplicates` command for finding and merging duplicate issues (bd-119, bd-203)
   - Automated duplicate detection with content-based matching
   - `--auto-merge` flag for batch merging duplicates
   - `--dry-run` mode to preview merges before execution
@@ -3912,7 +3912,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
 
 ### Fixed
 - **Critical**: Database reinitialization data loss bug (bd-130, DATABASE_REINIT_BUG.md)
-  - Fixed bug where removing `.beads/` and running `bd init` would lose git-tracked issues
+  - Fixed bug where removing `.beads/` and running `fbd init` would lose git-tracked issues
   - Now correctly imports from JSONL during initialization
   - Added comprehensive tests (later reverted due to CI issues on Windows/Nix)
 - **Critical**: Foreign key constraint regression (bd-62, GH #144)
@@ -3929,14 +3929,14 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Auto-import no longer updates timestamps on unchanged dependencies
   - Eliminates perpetually dirty JSONL from metadata changes
 - **Bug**: Import reporting accuracy (bd-49, bd-88)
-  - `bd import` now correctly reports "X updated, Y unchanged" instead of "0 updated"
+  - `fbd import` now correctly reports "X updated, Y unchanged" instead of "0 updated"
   - Better visibility into import operation results
 - **Bug**: Memory database handling
   - Fixed :memory: database connection with shared cache mode
   - Proper URL construction for in-memory testing
 
 ### Changed
-- **Removed**: Deprecated `bd repos` command
+- **Removed**: Deprecated `fbd repos` command
   - Global daemon architecture removed in favor of per-project daemons
   - Eliminated cross-project database confusion
 - **Documentation**: Major reorganization and improvements
@@ -3946,7 +3946,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
 
 ### Performance
 - Test coverage improvements: 46.0% → 57.7% (+11.7%)
-  - Added tests for RPC, storage, cmd/bd helpers
+  - Added tests for RPC, storage, cmd/fbd helpers
   - New test files: coverage_test.go, helpers_test.go, epics_test.go
 
 ### Community
@@ -3979,7 +3979,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
 - **Configuration Migration**: Unified config management with Viper (bd-40-44, bd-78)
   - Migrated from manual env var handling to Viper
   - Bound all global flags to Viper for consistency
-  - Kept `bd config` independent from Viper for modularity
+  - Kept `fbd config` independent from Viper for modularity
   - Added comprehensive configuration tests
 - **Documentation Refactor**: Improved documentation structure
   - Condensed main README
@@ -3993,7 +3993,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.15.0] - 2025-10-23
 
 ### Added
-- **Configuration System**: New `bd config` command for managing configuration (GH #115)
+- **Configuration System**: New `fbd config` command for managing configuration (GH #115)
   - Environment variable definitions with validation
   - Configuration file support (TOML/YAML/JSON)
   - Get/set/list/unset commands for user-friendly management
@@ -4005,7 +4005,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - `update(status="closed")` now routes to `close()` tool to respect approval workflows
   - `update(status="open")` now routes to `reopen()` tool to respect approval workflows
   - Prevents bypass of Claude Code approval settings for lifecycle events
-  - bd CLI remains unopinionated; routing happens only in MCP layer
+  - fbd CLI remains unopinionated; routing happens only in MCP layer
   - Users can now safely auto-approve benign updates (priority, notes) without exposing closure bypass
 
 ## [0.14.0] - 2025-10-22
@@ -4049,26 +4049,26 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.11.0] - 2025-10-22
 
 ### Added
-- **Issue Merging**: New `bd merge` command for consolidating duplicate issues (bd-7, bd-11-17)
+- **Issue Merging**: New `fbd merge` command for consolidating duplicate issues (bd-7, bd-11-17)
   - Merge multiple source issues into a single target issue
   - Automatically migrates all dependencies and dependents to target
   - Updates text references (bd-X mentions) across all issue fields
   - Closes source issues with "Merged into bd-Y" reason
   - Supports `--dry-run` for validation without changes
-  - Example: `bd merge bd-42 bd-43 --into bd-41`
+  - Example: `fbd merge bd-42 bd-43 --into bd-41`
 - **Multi-ID Operations**: Batch operations for increased efficiency (bd-195, #101)
-  - `bd update`: Update multiple issues at once
-  - `bd show`: View multiple issues in single call
-  - `bd label add/remove`: Apply labels to multiple issues
-  - `bd close`: Close multiple issues with one command
-  - `bd reopen`: Reopen multiple issues together
-  - Example: `bd close bd-1 bd-2 bd-3 --reason "Done"`
+  - `fbd update`: Update multiple issues at once
+  - `fbd show`: View multiple issues in single call
+  - `fbd label add/remove`: Apply labels to multiple issues
+  - `fbd close`: Close multiple issues with one command
+  - `fbd reopen`: Reopen multiple issues together
+  - Example: `fbd close bd-1 bd-2 bd-3 --reason "Done"`
 - **Daemon RPC Improvements**: Enhanced sync operations
-  - `bd sync` now works correctly in daemon mode
+  - `fbd sync` now works correctly in daemon mode
   - Export operations properly supported via RPC
   - Prevents database access conflicts during sync
 - **Acceptance Criteria Alias**: Added `--acceptance-criteria` flag (bd-228, #102)
-  - Backward-compatible alias for `--acceptance` in `bd update`
+  - Backward-compatible alias for `--acceptance` in `fbd update`
   - Improves clarity and matches field name
 
 ### Fixed
@@ -4079,7 +4079,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Added database isolation canary tests
 - **Critical**: Daemon cache staleness
   - Daemon now detects external database modifications via mtime check
-  - Prevents serving stale data after external `bd import`, `rm bd.db`, etc.
+  - Prevents serving stale data after external `fbd import`, `rm fbd.db`, etc.
   - Cache automatically invalidates when DB file changes
 - **Critical**: Counter desync after deletions
   - Issue counters now sync correctly after bulk deletions
@@ -4088,7 +4088,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Fixed label operations failing silently in daemon mode
   - Fixed dependency operations not saving in daemon mode
   - Both now correctly propagate through RPC layer
-- **Daemon sync support**: `bd sync` command now works in daemon mode
+- **Daemon sync support**: `fbd sync` command now works in daemon mode
   - Previously crashed with nil pointer when daemon running
   - Export operations now properly routed through RPC
 - **Acceptance flag normalization**: Unified `--acceptance` flag behavior (bd-228, #102)
@@ -4101,10 +4101,10 @@ See README.md for hash ID format details and birthday paradox collision analysis
 
 ### Changed
 - **BREAKING**: Removed global daemon socket fallback
-  - Each project now must use its own local daemon (.beads/bd.sock)
+  - Each project now must use its own local daemon (.beads/fbd.sock)
   - Prevents cross-project daemon connections and database pollution
-  - Migration: Stop any global daemon and restart with `bd daemon` in each project
-  - Warning displayed if old global socket (~/.beads/bd.sock) is found
+  - Migration: Stop any global daemon and restart with `fbd daemon` in each project
+  - Warning displayed if old global socket (~/.beads/fbd.sock) is found
 - **Database cleanup**: Project database cleaned from 1000+ to 55 issues
   - Removed accumulated test pollution from stress testing
   - Renumbered issues for clean ID space (bd-1 through bd-55)
@@ -4116,9 +4116,9 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.10.0] - 2025-10-20
 
 ### Added
-- **Agent Onboarding**: New `bd onboard` command for agent-first documentation
-  - Outputs structured instructions for agents to integrate bd into documentation
-  - Bootstrap workflow: Add 'BEFORE ANYTHING ELSE: run bd onboard' to AGENTS.md
+- **Agent Onboarding**: New `fbd onboard` command for agent-first documentation
+  - Outputs structured instructions for agents to integrate fbd into documentation
+  - Bootstrap workflow: Add 'BEFORE ANYTHING ELSE: run fbd onboard' to AGENTS.md
   - Agent adapts instructions to existing project structure
   - More agentic approach vs. direct string replacement
   - Updates README with new bootstrap workflow
@@ -4141,12 +4141,12 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.9.10] - 2025-10-18
 
 ### Added
-- **Label Filtering**: Enhanced `bd list` command with label-based filtering
+- **Label Filtering**: Enhanced `fbd list` command with label-based filtering
   - `--label` (or `-l`): Filter by multiple labels with AND semantics (must have ALL)
   - `--label-any`: Filter by multiple labels with OR semantics (must have AT LEAST ONE)
   - Examples:
-    - `bd list --label backend,urgent`: Issues with both 'backend' AND 'urgent'
-    - `bd list --label-any frontend,backend`: Issues with either 'frontend' OR 'backend'
+    - `fbd list --label backend,urgent`: Issues with both 'backend' AND 'urgent'
+    - `fbd list --label-any frontend,backend`: Issues with either 'frontend' OR 'backend'
   - Works in both daemon and direct modes
   - Includes comprehensive test coverage
 - **Log Rotation**: Automatic daemon log rotation with configurable limits
@@ -4154,9 +4154,9 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Configurable via environment variables: `BEADS_DAEMON_LOG_MAX_SIZE`, `BEADS_DAEMON_LOG_MAX_BACKUPS`, `BEADS_DAEMON_LOG_MAX_AGE`, `BEADS_DAEMON_LOG_COMPRESS`
   - Optional compression of rotated logs
   - Defaults: 50MB max size, 7 backups, 30 day retention, compression enabled
-- **Batch Deletion**: Enhanced `bd delete` command with batch operations
-  - Delete multiple issues at once: `bd delete bd-1 bd-2 bd-3 --force`
-  - Read from file: `bd delete --from-file deletions.txt --force`
+- **Batch Deletion**: Enhanced `fbd delete` command with batch operations
+  - Delete multiple issues at once: `fbd delete bd-1 bd-2 bd-3 --force`
+  - Read from file: `fbd delete --from-file deletions.txt --force`
   - Dry-run mode: `--dry-run` to preview deletions before execution
   - Cascade mode: `--cascade` to recursively delete all dependents
   - Force mode: `--force` to orphan dependents instead of failing
@@ -4164,7 +4164,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Comprehensive statistics: tracks deleted issues, dependencies, labels, and events
 
 ### Fixed
-- **Critical**: `bd list --status all` showing 0 issues
+- **Critical**: `fbd list --status all` showing 0 issues
   - Status filter now treats "all" as special value meaning "show all statuses"
   - Previously treated "all" as literal status value, matching no issues
 
@@ -4177,14 +4177,14 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Serializes SQLite writes and batches git operations to prevent concurrent access issues
   - Resolves database corruption, git lock contention, and ID counter conflicts with multiple agents
   - Comprehensive integration tests and stress testing with 4+ concurrent agents
-- **Issue Deletion**: `bd delete` command for removing issues with comprehensive cleanup
+- **Issue Deletion**: `fbd delete` command for removing issues with comprehensive cleanup
   - Safely removes issues from database and JSONL export
   - Cleans up dependencies and references to deleted issues
   - Works correctly with git-based workflows
-- **Issue Restoration**: `bd restore` command for recovering compacted/deleted issues
+- **Issue Restoration**: `fbd restore` command for recovering compacted/deleted issues
   - Restores issues from git history when needed
   - Preserves references and dependency relationships
-- **Prefix Renaming**: `bd rename-prefix` command for batch ID prefix changes
+- **Prefix Renaming**: `fbd rename-prefix` command for batch ID prefix changes
   - Updates all issue IDs and text references throughout the database
   - Useful for project rebranding or namespace changes
 - **Comprehensive Testing**: Added scripttest-based integration tests (#59)
@@ -4242,26 +4242,26 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ## [0.9.8] - 2025-10-16
 
 ### Added
-- **Background Daemon Mode**: `bd daemon` command for continuous auto-sync (#bd-386)
+- **Background Daemon Mode**: `fbd daemon` command for continuous auto-sync (#bd-386)
   - Watches for changes and automatically exports to JSONL
   - Monitors git repository for incoming changes and auto-imports
   - Production-ready with graceful shutdown, PID file management, and signal handling
   - Eliminates manual export/import in active development workflows
-- **Git Synchronization**: `bd sync` command for automated git workflows (#bd-378)
+- **Git Synchronization**: `fbd sync` command for automated git workflows (#bd-378)
   - One-command sync: stage, commit, pull, push JSONL changes
   - Automatic merge conflict resolution with collision remapping
   - Status reporting shows sync progress and any issues
   - Ideal for distributed teams and CI/CD integration
-- **Issue Compaction**: `bd compact` command to summarize old closed issues (bd-254-264)
+- **Issue Compaction**: `fbd compact` command to summarize old closed issues (bd-254-264)
   - AI-powered summarization using Claude Haiku
   - Reduces database size while preserving essential information
   - Configurable thresholds for age, dependencies, and references
-  - Compaction status visible in `bd show` output
-- **Label and Title Filtering**: Enhanced `bd list` command (#45, bd-269)
-  - Filter by labels: `bd list --label bug,critical`
-  - Filter by title: `bd list --title "auth"`
+  - Compaction status visible in `fbd show` output
+- **Label and Title Filtering**: Enhanced `fbd list` command (#45, bd-269)
+  - Filter by labels: `fbd list --label bug,critical`
+  - Filter by title: `fbd list --title "auth"`
   - Combine with status/priority filters
-- **List Output Formats**: `bd list --format` flag for custom output (PR #46)
+- **List Output Formats**: `fbd list --format` flag for custom output (PR #46)
   - Format options: `default`, `compact`, `detailed`, `json`
   - Better integration with scripts and automation tools
 - **MCP Reopen Support**: Reopen closed issues via MCP server
@@ -4281,7 +4281,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Nested transactions could corrupt database state
   - Fixed with proper transaction boundary handling
 - **Critical**: Concurrent temp file collisions (bd-306, bd-373)
-  - Multiple `bd` processes would collide on shared `.tmp` filename
+  - Multiple `fbd` processes would collide on shared `.tmp` filename
   - Now uses PID suffix for temp files: `.beads/issues.jsonl.tmp.12345`
 - **Critical**: Circular dependency detection gaps
   - Some cycle patterns were missed by detection algorithm
@@ -4296,7 +4296,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - After remapping, ID counters weren't updated
   - Could cause duplicate IDs in subsequent creates
 - **Bug**: NULL handling in statistics for empty databases (PR #37)
-  - `bd stats` would crash on newly initialized databases
+  - `fbd stats` would crash on newly initialized databases
   - Fixed NULL value handling in GetStatistics
 
 ### Changed
@@ -4316,24 +4316,24 @@ See README.md for hash ID format details and birthday paradox collision analysis
 - Merged PR #37: Fix NULL handling in statistics
 - Merged PR #38: Nix flake for declarative builds
 - Merged PR #40: MCP integration test fixes
-- Merged PR #45: Label and title filtering for bd list
-- Merged PR #46: Add --format flag to bd list
+- Merged PR #45: Label and title filtering for fbd list
+- Merged PR #46: Add --format flag to fbd list
 - Merged PR #47: Error handling consistency
 - Merged PR #48: Cyclomatic complexity reduction
 
 ## [0.9.2] - 2025-10-14
 
 ### Added
-- **One-Command Dependency Creation**: `--deps` flag for `bd create` (#18)
+- **One-Command Dependency Creation**: `--deps` flag for `fbd create` (#18)
   - Create issues with dependencies in a single command
   - Format: `--deps type:id` or just `--deps id` (defaults to blocks)
   - Multiple dependencies: `--deps discovered-from:bd-20,blocks:bd-15`
   - Whitespace-tolerant parsing
   - Particularly useful for AI agents creating discovered-from issues
 - **External Reference Tracking**: `external_ref` field for linking to external trackers
-  - Link bd issues to GitHub, Jira, Linear, etc.
-  - Example: `bd create "Issue" --external-ref gh-42`
-  - `bd update` supports updating external references
+  - Link fbd issues to GitHub, Jira, Linear, etc.
+  - Example: `fbd create "Issue" --external-ref gh-42`
+  - `fbd update` supports updating external references
   - Tracked in JSONL for git portability
 - **Metadata Storage**: Internal metadata table for system state
   - Stores import hash for idempotent auto-import
@@ -4347,7 +4347,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Demonstrates custom table creation
   - Shows cross-layer queries joining with issues
   - Includes test suite and documentation
-- **Issue Type Display**: `bd list` now shows issue type in output (#17)
+- **Issue Type Display**: `fbd list` now shows issue type in output (#17)
   - Better visibility: `bd-1 [P1] [bug] open`
   - Helps distinguish bugs from features at a glance
 
@@ -4389,7 +4389,7 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - `--no-auto-flush` and `--no-auto-import` flags for manual control
   - Comprehensive test coverage for auto-flush/import
 - **ID Space Partitioning**: Explicit ID assignment for parallel workers
-  - `bd create --id worker1-100` for controlling ID allocation
+  - `fbd create --id worker1-100` for controlling ID allocation
   - Enables multiple agents to work without conflicts
   - Documented in CLAUDE.md for agent workflows
 - **Auto-Migration System**: Seamless database schema upgrades
@@ -4440,8 +4440,8 @@ See README.md for hash ID format details and birthday paradox collision analysis
   - Idempotent import (exact matches detected)
   - Collision detection (same ID, different content)
 - **Ready Work Algorithm**: Find issues with no open blockers
-  - `bd ready` command shows unblocked work
-  - `bd blocked` command shows what's waiting
+  - `fbd ready` command shows unblocked work
+  - `fbd blocked` command shows what's waiting
 - **Dependency Management**: Four dependency types
   - `blocks`: Hard blocker (affects ready work)
   - `related`: Soft relationship
@@ -4487,8 +4487,8 @@ See README.md for hash ID format details and birthday paradox collision analysis
 - Event audit trail
 - Full-text search
 - Statistics and reporting
-- `bd init` for project initialization
-- `bd quickstart` interactive tutorial
+- `fbd init` for project initialization
+- `fbd quickstart` interactive tutorial
 
 ---
 
@@ -4505,35 +4505,35 @@ See README.md for hash ID format details and birthday paradox collision analysis
 ### Upgrading to 0.9.8
 
 No breaking changes. All changes are backward compatible:
-- **bd daemon**: New optional background service for auto-sync workflows
-- **bd sync**: New optional git integration command
-- **bd compact**: New optional command for issue summarization (requires Anthropic API key)
-- **--format flag**: Optional new feature for `bd list`
-- **Label/title filters**: Optional new filters for `bd list`
+- **fbd daemon**: New optional background service for auto-sync workflows
+- **fbd sync**: New optional git integration command
+- **fbd compact**: New optional command for issue summarization (requires Anthropic API key)
+- **--format flag**: Optional new feature for `fbd list`
+- **Label/title filters**: Optional new filters for `fbd list`
 - **Bug fixes**: All critical fixes are transparent to users
 
 Simply pull the latest version and rebuild:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 # or
-git pull && go build -o bd ./cmd/bd
+git pull && go build -o fbd ./cmd/fbd
 ```
 
-**Note**: The `bd compact` command requires an Anthropic API key in `$ANTHROPIC_API_KEY` environment variable. All other features work without any additional setup.
+**Note**: The `fbd compact` command requires an Anthropic API key in `$ANTHROPIC_API_KEY` environment variable. All other features work without any additional setup.
 
 ### Upgrading to 0.9.2
 
 No breaking changes. All changes are backward compatible:
-- **--deps flag**: Optional new feature for `bd create`
+- **--deps flag**: Optional new feature for `fbd create`
 - **external_ref**: Optional field, existing issues unaffected
 - **Metadata table**: Auto-migrates on first use
 - **Bug fixes**: All critical fixes are transparent to users
 
 Simply pull the latest version and rebuild:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 # or
-git pull && go build -o bd ./cmd/bd
+git pull && go build -o fbd ./cmd/fbd
 ```
 
 ### Upgrading to 0.9.1
@@ -4550,13 +4550,13 @@ If you're upgrading from 0.9.0, simply pull the latest version. Your existing da
 No breaking changes. The JSONL export format is backward compatible.
 
 If you have issues in your database:
-1. Run `bd export -o .beads/issues.jsonl` to create the text file
+1. Run `fbd export -o .beads/issues.jsonl` to create the text file
 2. Commit `.beads/issues.jsonl` to git
 3. Add `.beads/*.db` to `.gitignore`
 
 New collaborators can clone the repo and run:
 ```bash
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 The SQLite database will be automatically populated from the JSONL file.
@@ -4565,4 +4565,4 @@ The SQLite database will be automatically populated from the JSONL file.
 
 See open issues tagged with milestone markers for planned features in upcoming releases.
 
-For version 1.0, see: `bd dep tree bd-8` (the 1.0 milestone epic)
+For version 1.0, see: `fbd dep tree bd-8` (the 1.0 milestone epic)

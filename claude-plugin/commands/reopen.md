@@ -9,11 +9,11 @@ Sets status to 'open' and clears the closed_at timestamp. Emits a Reopened event
 
 ## Usage
 
-- **Reopen single**: `bd reopen bd-42`
-- **Reopen multiple**: `bd reopen bd-42 bd-43 bd-44`
-- **With reason**: `bd reopen bd-42 --reason "Found regression"`
+- **Reopen single**: `fbd reopen bd-42`
+- **Reopen multiple**: `fbd reopen bd-42 bd-43 bd-44`
+- **With reason**: `fbd reopen bd-42 --reason "Found regression"`
 
-More explicit than `bd update --status open` - specifically designed for reopening workflow.
+More explicit than `fbd update --status open` - specifically designed for reopening workflow.
 
 Common reasons for reopening:
 - Regression found

@@ -28,24 +28,24 @@ Beads supports Dolt as an alternative storage backend to SQLite. Dolt provides v
 
 ```bash
 # Embedded mode (single writer)
-bd init --backend dolt
+fbd init --backend dolt
 
 # Server mode (multi-writer)
 gt dolt start                    # Start the Dolt server
-bd init --backend dolt --server  # Initialize with server mode
+fbd init --backend dolt --server  # Initialize with server mode
 ```
 
 ### Migrate Existing Project to Dolt
 
 ```bash
 # Preview the migration
-bd migrate --to-dolt --dry-run
+fbd migrate --to-dolt --dry-run
 
 # Run the migration
-bd migrate --to-dolt
+fbd migrate --to-dolt
 
 # Optionally clean up SQLite files
-bd migrate --to-dolt --cleanup
+fbd migrate --to-dolt --cleanup
 ```
 
 Migration creates backups automatically. Your original SQLite database is preserved as `beads.backup-pre-dolt-*.db`.
@@ -55,7 +55,7 @@ Migration creates backups automatically. Your original SQLite database is preser
 If you need to revert:
 
 ```bash
-bd migrate --to-sqlite
+fbd migrate --to-sqlite
 ```
 
 ## Modes of Operation
@@ -124,22 +124,22 @@ The daemon in federation mode exposes two ports:
 
 ```bash
 # Start daemon in federation mode
-bd daemon start --federation
+fbd daemon start --federation
 
 # Add a peer
-bd federation add-peer town-beta 192.168.1.100:8080/beads
+fbd federation add-peer town-beta 192.168.1.100:8080/beads
 
 # With authentication
-bd federation add-peer town-beta host:8080/beads --user sync-bot
+fbd federation add-peer town-beta host:8080/beads --user sync-bot
 
 # Sync with all peers
-bd federation sync
+fbd federation sync
 
 # Handle conflicts
-bd federation sync --strategy theirs  # or 'ours'
+fbd federation sync --strategy theirs  # or 'ours'
 
 # Check status
-bd federation status
+fbd federation status
 ```
 
 ### Topologies
@@ -156,7 +156,7 @@ Peer credentials are AES-256 encrypted, stored locally, and used automatically d
 
 ```bash
 # Credentials prompted interactively
-bd federation add-peer name url --user admin
+fbd federation add-peer name url --user admin
 
 # Stored in federation_peers table (encrypted)
 ```
@@ -165,13 +165,13 @@ bd federation add-peer name url --user admin
 
 ```bash
 # Check federation health
-bd doctor --deep
+fbd doctor --deep
 
 # Verify peer connectivity
-bd federation status
+fbd federation status
 
 # View daemon federation logs
-bd daemon logs | grep -i federation
+fbd daemon logs | grep -i federation
 ```
 
 ## Contributor Onboarding (Clone Bootstrap)
@@ -179,7 +179,7 @@ bd daemon logs | grep -i federation
 When someone clones a repository that uses Dolt backend:
 
 1. They see the `issues.jsonl` file (committed to git)
-2. On first `bd` command (e.g., `bd list`), bootstrap runs automatically
+2. On first `fbd` command (e.g., `fbd list`), bootstrap runs automatically
 3. JSONL is imported into a fresh Dolt database
 4. Work continues normally
 
@@ -192,8 +192,8 @@ When someone clones a repository that uses Dolt backend:
 ### Verifying Bootstrap Worked
 
 ```bash
-bd list              # Should show issues
-bd vc log            # Should show "Bootstrap from JSONL" commit
+fbd list              # Should show issues
+fbd vc log            # Should show "Bootstrap from JSONL" commit
 ```
 
 ## Git Hooks Integration
@@ -209,10 +209,10 @@ Dolt uses specialized hooks for JSONL synchronization:
 
 ```bash
 # Recommended for Dolt projects
-bd hooks install --beads
+fbd hooks install --beads
 
 # Or shared across team
-bd hooks install --shared
+fbd hooks install --shared
 ```
 
 ### How Hooks Work
@@ -234,8 +234,8 @@ The branch-then-merge pattern provides better conflict resolution than line-base
 ### Verifying Hooks
 
 ```bash
-bd hooks list        # Shows installed hooks
-bd doctor            # Checks hook health
+fbd hooks list        # Shows installed hooks
+fbd doctor            # Checks hook health
 ```
 
 ## Troubleshooting
@@ -257,19 +257,19 @@ gt dolt status       # Check if running
 
 ### Bootstrap Not Running
 
-**Symptom:** `bd list` shows nothing on fresh clone.
+**Symptom:** `fbd list` shows nothing on fresh clone.
 
 **Check:**
 ```bash
 ls .beads/issues.jsonl     # Should exist
 ls .beads/dolt/            # Should NOT exist (pre-bootstrap)
-BD_DEBUG=1 bd list         # See bootstrap output
+BD_DEBUG=1 fbd list         # See bootstrap output
 ```
 
 **Force bootstrap:**
 ```bash
 rm -rf .beads/dolt         # Remove broken state
-bd list                    # Re-triggers bootstrap
+fbd list                    # Re-triggers bootstrap
 ```
 
 ### Database Corruption
@@ -278,22 +278,22 @@ bd list                    # Re-triggers bootstrap
 
 **Diagnosis:**
 ```bash
-bd doctor                  # Basic checks
-bd doctor --deep           # Full validation
-bd doctor --server         # Server mode checks (if applicable)
+fbd doctor                  # Basic checks
+fbd doctor --deep           # Full validation
+fbd doctor --server         # Server mode checks (if applicable)
 ```
 
 **Recovery options:**
 
 1. **Repair what's fixable:**
    ```bash
-   bd doctor --fix
+   fbd doctor --fix
    ```
 
 2. **Nuclear option (rebuild from JSONL):**
    ```bash
    rm -rf .beads/dolt
-   bd sync                  # Rebuilds from JSONL
+   fbd sync                  # Rebuilds from JSONL
    ```
 
 3. **Restore from backup:**
@@ -308,14 +308,14 @@ bd doctor --server         # Server mode checks (if applicable)
 
 **Check:**
 ```bash
-bd hooks list              # See what's installed
+fbd hooks list              # See what's installed
 git config core.hooksPath  # May override .git/hooks
-bd doctor                  # Checks hook health
+fbd doctor                  # Checks hook health
 ```
 
 **Reinstall:**
 ```bash
-bd hooks install --beads --force
+fbd hooks install --beads --force
 ```
 
 ### Migration Failed Halfway
@@ -329,7 +329,7 @@ ls .beads/*.db .beads/dolt/
 
 # If Dolt looks incomplete, restart migration
 rm -rf .beads/dolt
-bd migrate --to-dolt
+fbd migrate --to-dolt
 
 # If you want to abandon migration
 rm -rf .beads/dolt
@@ -345,7 +345,7 @@ Embedded mode is single-writer. If you need concurrent access:
 ```bash
 # Switch to server mode
 gt dolt start
-bd config set dolt.mode server
+fbd config set dolt.mode server
 ```
 
 ## Configuration Reference
@@ -392,21 +392,21 @@ Dolt maintains its own version history, separate from Git:
 
 ```bash
 # View Dolt commit history
-bd vc log
+fbd vc log
 
 # Show diff between Dolt commits
-bd vc diff HEAD~1 HEAD
+fbd vc diff HEAD~1 HEAD
 
 # Create manual checkpoint
-bd vc commit -m "Checkpoint before refactor"
+fbd vc commit -m "Checkpoint before refactor"
 ```
 
 ### Auto-Commit Behavior
 
-In **embedded mode** (default), each `bd` write command creates a Dolt commit:
+In **embedded mode** (default), each `fbd` write command creates a Dolt commit:
 
 ```bash
-bd create "New issue"    # Creates issue + Dolt commit
+fbd create "New issue"    # Creates issue + Dolt commit
 ```
 
 In **server mode**, auto-commit defaults to OFF because the server manages its
@@ -416,9 +416,9 @@ concurrent load causes 'database is read only' errors.
 Override for batch operations (embedded) or explicit commits (server):
 
 ```bash
-bd --dolt-auto-commit off create "Issue 1"
-bd --dolt-auto-commit off create "Issue 2"
-bd vc commit -m "Batch: created issues"
+fbd --dolt-auto-commit off create "Issue 1"
+fbd --dolt-auto-commit off create "Issue 2"
+fbd vc commit -m "Batch: created issues"
 ```
 
 ## Server Management (Gas Town)
@@ -457,8 +457,8 @@ These are safe to delete once you've verified Dolt is working:
 
 ```bash
 # Verify Dolt works
-bd list
-bd doctor
+fbd list
+fbd doctor
 
 # Then clean up (after appropriate waiting period)
 rm .beads/*.backup-*.db

@@ -100,7 +100,7 @@ type Formula struct {
 	Pointcuts []*Pointcut `json:"pointcuts,omitempty"`
 
 	// Phase indicates the recommended instantiation phase: "liquid" (pour) or "vapor" (wisp).
-	// If "vapor", bd pour will warn and suggest using bd mol wisp instead.
+	// If "vapor", fbd pour will warn and suggest using fbd mol wisp instead.
 	// Patrol and release workflows should typically use "vapor" since they're operational.
 	Phase string `json:"phase,omitempty"`
 
@@ -228,8 +228,8 @@ type Step struct {
 	Children []*Step `json:"children,omitempty"`
 
 	// Gate defines an async wait condition for this step.
-	// When set, bd cook creates a gate issue that blocks this step.
-	// Close the gate issue (bd close bd-xxx.gate-stepid) to unblock.
+	// When set, fbd cook creates a gate issue that blocks this step.
+	// Close the gate issue (fbd close bd-xxx.gate-stepid) to unblock.
 	Gate *Gate `json:"gate,omitempty"`
 
 	// Loop defines iteration for this step.
@@ -253,7 +253,7 @@ type Step struct {
 }
 
 // Gate defines an async wait condition for formula steps.
-// When a step has a Gate, bd cook creates a gate issue that blocks the step.
+// When a step has a Gate, fbd cook creates a gate issue that blocks the step.
 // The gate must be closed (manually or via watchers) to unblock the step.
 type Gate struct {
 	// Type is the condition type: gh:run, gh:pr, timer, human, mail.

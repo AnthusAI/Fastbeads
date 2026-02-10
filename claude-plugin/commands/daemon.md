@@ -7,9 +7,9 @@ Manage the per-project background daemon that handles database connections and s
 
 ## Per-Project Daemon (LSP Model)
 
-Each project runs its own daemon at `.beads/bd.sock` for complete database isolation.
+Each project runs its own daemon at `.beads/fbd.sock` for complete database isolation.
 
-> On Windows this file stores the daemon's loopback TCP endpoint metadata—leave it in place so bd can reconnect.
+> On Windows this file stores the daemon's loopback TCP endpoint metadata—leave it in place so fbd can reconnect.
 
 **Why per-project daemons?**
 - Complete database isolation between projects
@@ -25,7 +25,7 @@ Each project runs its own daemon at `.beads/bd.sock` for complete database isola
 - Working in a team with git remote sync
 - Want automatic commit/push of issue changes
 - Need background auto-sync (5-second debounce)
-- Making frequent bd commands (performance benefit from connection pooling)
+- Making frequent fbd commands (performance benefit from connection pooling)
 
 **❌ You DON'T need daemon mode if:**
 - Solo developer with local-only tracking
@@ -33,17 +33,17 @@ Each project runs its own daemon at `.beads/bd.sock` for complete database isola
 - Running one-off commands or scripts
 - Debugging database issues (direct mode is simpler)
 
-**Local-only users:** Direct mode (default without daemon) is perfectly fine. The daemon mainly helps with git sync automation. You can still use `bd sync` manually when needed.
+**Local-only users:** Direct mode (default without daemon) is perfectly fine. The daemon mainly helps with git sync automation. You can still use `fbd sync` manually when needed.
 
 **Performance note:** For most operations, the daemon provides minimal performance benefit. The main value is automatic JSONL export (5s debounce) and optional git sync (--auto-commit, --auto-push).
 
 ## Common Operations
 
-- **Start**: `bd daemon start` (or auto-starts on first `bd` command)
-- **Stop**: `bd daemon stop`
-- **Status**: `bd daemon status`
-- **Health**: `bd daemon status --all` - shows uptime, cache stats, performance metrics
-- **Metrics**: `bd daemon --metrics` - detailed operational telemetry
+- **Start**: `fbd daemon start` (or auto-starts on first `fbd` command)
+- **Stop**: `fbd daemon stop`
+- **Status**: `fbd daemon status`
+- **Health**: `fbd daemon status --all` - shows uptime, cache stats, performance metrics
+- **Metrics**: `fbd daemon --metrics` - detailed operational telemetry
 
 ## Sync Options
 

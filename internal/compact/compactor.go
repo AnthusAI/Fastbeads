@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 const (

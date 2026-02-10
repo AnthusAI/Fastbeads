@@ -143,11 +143,11 @@ git log origin/main..HEAD                # Check for unpushed commits
 
 ### Beads (read-mostly)
 ```bash
-bd show <id>                             # Issue details
-bd list --status=in_progress             # Active work in rig
+fbd show <id>                             # Issue details
+fbd list --status=in_progress             # Active work in rig
 ```
 
-**Prefix-based routing:** `bd show gt-xyz` works from anywhere - routes via `~/gt/.beads/routes.jsonl`.
+**Prefix-based routing:** `fbd show gt-xyz` works from anywhere - routes via `~/gt/.beads/routes.jsonl`.
 
 ---
 
@@ -170,8 +170,8 @@ gt mail inbox
 gt mol attach-from-mail <mail-id>
 
 # Step 4: Still nothing? Create patrol wisp
-bd mol wisp create mol-witness-patrol
-bd update <wisp-id> --status=hooked --assignee={{ .RigName }}/witness
+fbd mol wisp create mol-witness-patrol
+fbd update <wisp-id> --status=hooked --assignee={{ .RigName }}/witness
 ```
 
 **Work hooked → Execute. No exceptions.**
@@ -202,13 +202,13 @@ Discover your steps at runtime - don't memorize them:
 
 ```bash
 # What step am I on?
-bd ready
+fbd ready
 
 # What does this step require?
-bd show <step-id>
+fbd show <step-id>
 
 # Mark step complete, move to next
-bd close <step-id>
+fbd close <step-id>
 ```
 
 Each step has:
@@ -288,7 +288,7 @@ Your handoff state is tracked in a pinned bead: `witness Handoff`
 
 On startup, check for attached work:
 ```bash
-bd show gt-w98d  # witness Handoff bead
+fbd show gt-w98d  # witness Handoff bead
 ```
 
 ---
@@ -296,8 +296,8 @@ bd show gt-w98d  # witness Handoff bead
 ## Gotchas
 
 **Temporal language inverts dependencies.** "Phase 1 blocks Phase 2" is backwards.
-- WRONG: `bd dep add phase1 phase2` (temporal: "1 before 2")
-- RIGHT: `bd dep add phase2 phase1` (requirement: "2 needs 1")
+- WRONG: `fbd dep add phase1 phase2` (temporal: "1 before 2")
+- RIGHT: `fbd dep add phase2 phase1` (requirement: "2 needs 1")
 
 **Use `gt nudge`, never raw `tmux send-keys`** - it drops the Enter key.
 

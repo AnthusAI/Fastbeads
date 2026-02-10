@@ -171,8 +171,8 @@ type = "human"
 ### Check Gate Status
 
 ```bash
-bd show bd-xyz.3  # Shows gate state
-bd show bd-xyz.3 --json | jq '.gate'
+fbd show bd-xyz.3  # Shows gate state
+fbd show bd-xyz.3 --json | jq '.gate'
 ```
 
 ### Manual Gate Override
@@ -180,13 +180,13 @@ bd show bd-xyz.3 --json | jq '.gate'
 For human gates:
 
 ```bash
-bd gate approve bd-xyz.3 --approver "team-lead"
+fbd gate approve bd-xyz.3 --approver "team-lead"
 ```
 
 ### Skip Gate (Emergency)
 
 ```bash
-bd gate skip bd-xyz.3 --reason "Emergency deploy"
+fbd gate skip bd-xyz.3 --reason "Emergency deploy"
 ```
 
 ## waits-for Dependency

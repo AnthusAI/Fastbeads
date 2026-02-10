@@ -6,6 +6,8 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/steveyegge/fastbeads/internal/env"
 )
 
 // freshnessChecker monitors the database file for external modifications.
@@ -115,7 +117,7 @@ func (fc *freshnessChecker) Check() bool {
 
 // debugPrintf conditionally logs debug messages when BD_DEBUG_FRESHNESS is set
 var debugPrintf = func(format string, args ...interface{}) {
-	if os.Getenv("BD_DEBUG_FRESHNESS") != "" {
+	if env.GetEnvAlias("DEBUG_FRESHNESS") != "" {
 		log.Printf("[freshness] "+format, args...)
 	}
 }

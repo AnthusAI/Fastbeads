@@ -25,13 +25,13 @@ If you prefer step-by-step control:
 1. **Kill all running daemons (CRITICAL)**:
    ```bash
    # Kill by process name
-   pkill -f "bd.*daemon"
+   pkill -f "fbd.*daemon"
    
    # Verify no daemons are running
-   pgrep -lf "bd.*daemon" || echo "No daemons running ✓"
+   pgrep -lf "fbd.*daemon" || echo "No daemons running ✓"
    
    # Alternative: find and kill by socket
-   find ~/.config -name "bd.sock" -type f 2>/dev/null | while read sock; do
+   find ~/.config -name "fbd.sock" -type f 2>/dev/null | while read sock; do
      echo "Found daemon socket: $sock"
    done
    ```
@@ -45,14 +45,14 @@ If you prefer step-by-step control:
    ```bash
    TMPDIR=/tmp go test ./...
    golangci-lint run ./...
-   TMPDIR=/tmp go build -o bd ./cmd/bd
-   ./bd version  # Verify it shows new version
+   TMPDIR=/tmp go build -o fbd ./cmd/fbd
+   ./fbd version  # Verify it shows new version
    ```
 
 3. **Skip local install** (avoid go install vs brew conflicts):
-   - Use `./bd` directly from the repo for testing
-   - Your system bd will be updated via brew after Homebrew formula update
-   - Or temporarily: `alias bd="$PWD/bd"` if needed
+   - Use `./fbd` directly from the repo for testing
+   - Your system fbd will be updated via brew after Homebrew formula update
+   - Or temporarily: `alias fbd="$PWD/fbd"` if needed
 
 4. **Update CHANGELOG.md**:
    - Add version heading: `## [0.9.X] - YYYY-MM-DD`
@@ -76,7 +76,7 @@ git push origin main
 ```
 
 This updates:
-- `cmd/bd/version.go`
+- `cmd/fbd/version.go`
 - `.claude-plugin/plugin.json`
 - `.claude-plugin/marketplace.json`
 - `integrations/beads-mcp/pyproject.toml`
@@ -86,8 +86,8 @@ This updates:
 
 **IMPORTANT**: After version bump, rebuild the local binary:
 ```bash
-go build -o bd ./cmd/bd
-./bd version  # Should show new version
+go build -o fbd ./cmd/fbd
+./fbd version  # Should show new version
 ```
 
 ## Publish to All Channels
@@ -110,7 +110,7 @@ The automation requires this secret to be configured:
 
 **PYPI_API_TOKEN**: Your PyPI API token
 1. Generate token at https://pypi.org/manage/account/token/
-2. Add to GitHub at https://github.com/steveyegge/beads/settings/secrets/actions
+2. Add to GitHub at https://github.com/steveyegge/fastbeads/settings/secrets/actions
 3. Name: `PYPI_API_TOKEN`
 4. Value: `pypi-...` (your full token)
 
@@ -140,22 +140,22 @@ The Homebrew formula is now in homebrew-core and updates automatically via GitHu
 ```bash
 brew update
 brew upgrade beads  # Or: brew install beads
-bd version  # Should show v0.9.X
+fbd version  # Should show v0.9.X
 ```
 
-**Note:** If you have an old bd binary from `go install` in your PATH, remove it to avoid conflicts:
+**Note:** If you have an old fbd binary from `go install` in your PATH, remove it to avoid conflicts:
 ```bash
-# Find where bd is installed
-which bd
+# Find where fbd is installed
+which fbd
 
-# If it's in a Go toolchain path (e.g., ~/go/bin/bd or mise-managed Go), remove it
+# If it's in a Go toolchain path (e.g., ~/go/bin/fbd or mise-managed Go), remove it
 # Common locations:
-rm ~/go/bin/bd                                    # Standard go install location
-rm ~/.local/share/mise/installs/go/*/bin/bd      # mise-managed Go installs
+rm ~/go/bin/fbd                                    # Standard go install location
+rm ~/.local/share/mise/installs/go/*/bin/fbd      # mise-managed Go installs
 
 # Verify you're using the correct version
-which bd        # Should show /opt/homebrew/bin/bd or your package manager's path
-bd version      # Should show the latest version
+which fbd        # Should show /opt/homebrew/bin/fbd or your package manager's path
+fbd version      # Should show the latest version
 ```
 
 ### 4. GitHub Releases (Automated)
@@ -174,30 +174,30 @@ Just push your tag and wait ~5 minutes:
 git push origin v0.9.X
 ```
 
-Monitor at: https://github.com/steveyegge/beads/actions
+Monitor at: https://github.com/steveyegge/fastbeads/actions
 
-The release will appear at: https://github.com/steveyegge/beads/releases
+The release will appear at: https://github.com/steveyegge/fastbeads/releases
 
 ## Post-Release
 
 1. **Kill old daemons again**:
    ```bash
-   pkill -f "bd.*daemon"
-   pgrep -lf "bd.*daemon" || echo "No daemons running ✓"
+   pkill -f "fbd.*daemon"
+   pgrep -lf "fbd.*daemon" || echo "No daemons running ✓"
    ```
    This ensures your local machine picks up the new version immediately.
 
 2. **Verify installations**:
    ```bash
    # Homebrew
-   brew update && brew upgrade beads && bd version
+   brew update && brew upgrade beads && fbd version
    
    # PyPI
    pip install --upgrade beads-mcp
    beads-mcp --help
    
    # Check daemon version matches client
-   bd version --daemon  # Should match client version after first command
+   fbd version --daemon  # Should match client version after first command
    ```
 
 3. **Announce** (optional):

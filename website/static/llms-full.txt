@@ -11,7 +11,7 @@
 
 # Beads Documentation
 
-**Beads** (`bd`) is a git-backed issue tracker designed for AI-supervised coding workflows.
+**Beads** (`fbd`) is a git-backed issue tracker designed for AI-supervised coding workflows.
 
 ## Why Beads?
 
@@ -19,7 +19,7 @@ Traditional issue trackers (Jira, GitHub Issues) weren't designed for AI agents.
 
 - **AI-native workflows** - Hash-based IDs prevent collisions when multiple agents work concurrently
 - **Git-backed storage** - Issues sync via JSONL files, enabling collaboration across branches
-- **Dependency-aware execution** - `bd ready` shows only unblocked work
+- **Dependency-aware execution** - `fbd ready` shows only unblocked work
 - **Formula system** - Declarative templates for repeatable workflows
 - **Multi-agent coordination** - Routing, gates, and molecules for complex workflows
 
@@ -34,13 +34,13 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 
 # Initialize in your project
 cd your-project
-bd init --quiet
+fbd init --quiet
 
 # Create your first issue
-bd create "Set up database" -p 1 -t task
+fbd create "Set up database" -p 1 -t task
 
 # See ready work
-bd ready
+fbd ready
 ```
 
 ## Core Concepts
@@ -60,15 +60,15 @@ Beads is optimized for AI coding agents:
 
 ```bash
 # Always use --json for programmatic access
-bd list --json
-bd show bd-42 --json
+fbd list --json
+fbd show bd-42 --json
 
 # Track discovered work during implementation
-bd create "Found bug in auth" --description="Details..." \
+fbd create "Found bug in auth" --description="Details..." \
   --deps discovered-from:bd-100 --json
 
 # Sync at end of session
-bd sync
+fbd sync
 ```
 
 See the [Claude Code integration](/integrations/claude-code) for detailed agent instructions.
@@ -87,7 +87,7 @@ The magic is automatic synchronization between a local SQLite database and git-t
 
 ## Next Steps
 
-- [Installation](/getting-started/installation) - Get bd installed
+- [Installation](/getting-started/installation) - Get fbd installed
 - [Quick Start](/getting-started/quickstart) - Create your first issues
 - [CLI Reference](/cli-reference) - All available commands
 - [Workflows](/workflows) - Formulas, molecules, and gates
@@ -107,22 +107,22 @@ The recommended approach for Claude Code:
 
 ```bash
 # Setup Claude Code integration
-bd setup claude
+fbd setup claude
 ```
 
 This installs:
-- **SessionStart hook** - Runs `bd prime` when Claude Code starts
-- **PreCompact hook** - Ensures `bd sync` before context compaction
+- **SessionStart hook** - Runs `fbd prime` when Claude Code starts
+- **PreCompact hook** - Ensures `fbd sync` before context compaction
 
 **How it works:**
-1. SessionStart hook runs `bd prime` automatically
-2. `bd prime` injects ~1-2k tokens of workflow context
-3. You use `bd` CLI commands directly
+1. SessionStart hook runs `fbd prime` automatically
+2. `fbd prime` injects ~1-2k tokens of workflow context
+3. You use `fbd` CLI commands directly
 4. Git hooks auto-sync the database
 
 **Verify installation:**
 ```bash
-bd setup claude --check
+fbd setup claude --check
 ```
 
 ### Manual Setup
@@ -132,8 +132,8 @@ If you prefer manual configuration, add to your Claude Code hooks:
 ```json
 {
   "hooks": {
-    "SessionStart": ["bd prime"],
-    "PreCompact": ["bd sync"]
+    "SessionStart": ["fbd prime"],
+    "PreCompact": ["fbd sync"]
   }
 }
 ```
@@ -142,36 +142,36 @@ If you prefer manual configuration, add to your Claude Code hooks:
 
 ```bash
 # Setup Cursor integration
-bd setup cursor
+fbd setup cursor
 ```
 
 This creates `.cursor/rules/beads.mdc` with beads-aware rules.
 
 **Verify:**
 ```bash
-bd setup cursor --check
+fbd setup cursor --check
 ```
 
 ## Aider
 
 ```bash
 # Setup Aider integration
-bd setup aider
+fbd setup aider
 ```
 
 This creates/updates `.aider.conf.yml` with beads context.
 
 **Verify:**
 ```bash
-bd setup aider --check
+fbd setup aider --check
 ```
 
-## Context Injection with `bd prime`
+## Context Injection with `fbd prime`
 
-All integrations use `bd prime` to inject context:
+All integrations use `fbd prime` to inject context:
 
 ```bash
-bd prime
+fbd prime
 ```
 
 This outputs a compact (~1-2k tokens) workflow reference including:
@@ -217,7 +217,7 @@ See [MCP Server](/integrations/mcp-server) for detailed configuration.
 Ensure git hooks are installed for auto-sync:
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 This installs:
@@ -227,7 +227,7 @@ This installs:
 
 **Check hook status:**
 ```bash
-bd info  # Shows warnings if hooks are outdated
+fbd info  # Shows warnings if hooks are outdated
 ```
 
 ## Verifying Your Setup
@@ -236,16 +236,16 @@ Run a complete health check:
 
 ```bash
 # Check version
-bd version
+fbd version
 
 # Check daemon
-bd info
+fbd info
 
 # Check hooks
-bd hooks status
+fbd hooks status
 
 # Check editor integration
-bd setup claude --check   # or cursor, aider
+fbd setup claude --check   # or cursor, aider
 ```
 
 </document>
@@ -253,7 +253,7 @@ bd setup claude --check   # or cursor, aider
 <document path="docs/getting-started/installation.md">
 
 
-# Installing bd
+# Installing fbd
 
 Complete installation guide for all platforms.
 
@@ -294,15 +294,15 @@ brew install beads
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 **From source**:
 ```bash
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ### Linux
@@ -322,7 +322,7 @@ paru -S beads-git
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### FreeBSD
@@ -334,7 +334,7 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 
 **Via go install**:
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### Windows 11
@@ -352,7 +352,7 @@ irm https://raw.githubusercontent.com/steveyegge/beads/main/install.ps1 | iex
 
 **Via go install**:
 ```pwsh
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ## IDE and Editor Integrations
@@ -362,24 +362,24 @@ go install github.com/steveyegge/beads/cmd/bd@latest
 The recommended approach for Claude Code, Cursor, Windsurf, and other editors with shell access:
 
 ```bash
-# 1. Install bd CLI (see Quick Install above)
+# 1. Install fbd CLI (see Quick Install above)
 brew install beads
 
 # 2. Initialize in your project
 cd your-project
-bd init --quiet
+fbd init --quiet
 
 # 3. Setup editor integration (choose one)
-bd setup claude   # Claude Code - installs SessionStart/PreCompact hooks
-bd setup cursor   # Cursor IDE - creates .cursor/rules/beads.mdc
-bd setup aider    # Aider - creates .aider.conf.yml
+fbd setup claude   # Claude Code - installs SessionStart/PreCompact hooks
+fbd setup cursor   # Cursor IDE - creates .cursor/rules/beads.mdc
+fbd setup aider    # Aider - creates .aider.conf.yml
 ```
 
 **How it works:**
-- Editor hooks/rules inject `bd prime` automatically on session start
-- `bd prime` provides ~1-2k tokens of workflow context
-- You use `bd` CLI commands directly
-- Git hooks (installed by `bd init`) auto-sync the database
+- Editor hooks/rules inject `fbd prime` automatically on session start
+- `fbd prime` provides ~1-2k tokens of workflow context
+- You use `fbd` CLI commands directly
+- Git hooks (installed by `fbd init`) auto-sync the database
 
 **Why this is recommended:**
 - **Context efficient** - ~1-2k tokens vs 10-50k for MCP tool schemas
@@ -414,37 +414,37 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ## Verifying Installation
 
-After installing, verify bd is working:
+After installing, verify fbd is working:
 
 ```bash
-bd version
-bd help
+fbd version
+fbd help
 ```
 
 ## Troubleshooting
 
-### `bd: command not found`
+### `fbd: command not found`
 
-bd is not in your PATH:
+fbd is not in your PATH:
 
 ```bash
 # Check if installed
-go list -f {{.Target}} github.com/steveyegge/beads/cmd/bd
+go list -f {{.Target}} github.com/steveyegge/fastbeads/cmd/fbd
 
 # Add Go bin to PATH (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$(go env GOPATH)/bin"
 ```
 
-### `zsh: killed bd` or crashes on macOS
+### `zsh: killed fbd` or crashes on macOS
 
 This is typically caused by CGO/SQLite compatibility issues:
 
 ```bash
 # Build with CGO enabled
-CGO_ENABLED=1 go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_ENABLED=1 go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
-## Updating bd
+## Updating fbd
 
 ### Homebrew
 
@@ -455,14 +455,14 @@ brew upgrade beads
 ### go install
 
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ## Next Steps
 
 After installation:
 
-1. **Initialize a project**: `cd your-project && bd init`
+1. **Initialize a project**: `cd your-project && fbd init`
 2. **Learn the basics**: See [Quick Start](/getting-started/quickstart)
 3. **Configure your agent**: See [IDE Setup](/getting-started/ide-setup)
 
@@ -481,19 +481,19 @@ First time in a repository:
 
 ```bash
 # Basic setup
-bd init
+fbd init
 
 # For AI agents (non-interactive)
-bd init --quiet
+fbd init --quiet
 
 # OSS contributor (fork workflow)
-bd init --contributor
+fbd init --contributor
 
 # Team member (branch workflow)
-bd init --team
+fbd init --team
 
 # Protected main branch (GitHub/GitLab)
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 The wizard will:
@@ -507,12 +507,12 @@ The wizard will:
 
 ```bash
 # Create a few issues
-bd create "Set up database" -p 1 -t task
-bd create "Create API" -p 2 -t feature
-bd create "Add authentication" -p 2 -t feature
+fbd create "Set up database" -p 1 -t task
+fbd create "Create API" -p 2 -t feature
+fbd create "Add authentication" -p 2 -t feature
 
 # List them
-bd list
+fbd list
 ```
 
 **Note:** Issue IDs are hash-based (e.g., `bd-a1b2`, `bd-f14c`) to prevent collisions when multiple agents/branches work concurrently.
@@ -523,16 +523,16 @@ For large features, use hierarchical IDs to organize work:
 
 ```bash
 # Create epic (generates parent hash ID)
-bd create "Auth System" -t epic -p 1
+fbd create "Auth System" -t epic -p 1
 # Returns: bd-a3f8e9
 
 # Create child tasks (automatically get .1, .2, .3 suffixes)
-bd create "Design login UI" -p 1       # bd-a3f8e9.1
-bd create "Backend validation" -p 1    # bd-a3f8e9.2
-bd create "Integration tests" -p 1     # bd-a3f8e9.3
+fbd create "Design login UI" -p 1       # bd-a3f8e9.1
+fbd create "Backend validation" -p 1    # bd-a3f8e9.2
+fbd create "Integration tests" -p 1     # bd-a3f8e9.3
 
 # View hierarchy
-bd dep tree bd-a3f8e9
+fbd dep tree bd-a3f8e9
 ```
 
 Output:
@@ -549,13 +549,13 @@ Dependency tree for bd-a3f8e9:
 
 ```bash
 # API depends on database
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # Auth depends on API
-bd dep add bd-3 bd-2
+fbd dep add bd-3 bd-2
 
 # View the tree
-bd dep tree bd-3
+fbd dep tree bd-3
 ```
 
 Output:
@@ -570,7 +570,7 @@ Dependency tree for bd-3:
 ## Find Ready Work
 
 ```bash
-bd ready
+fbd ready
 ```
 
 Output:
@@ -586,13 +586,13 @@ Only bd-1 is ready because bd-2 and bd-3 are blocked!
 
 ```bash
 # Start working on bd-1
-bd update bd-1 --status in_progress
+fbd update bd-1 --status in_progress
 
 # Complete it
-bd close bd-1 --reason "Database setup complete"
+fbd close bd-1 --reason "Database setup complete"
 
 # Check ready work again
-bd ready
+fbd ready
 ```
 
 Now bd-2 is ready!
@@ -601,10 +601,10 @@ Now bd-2 is ready!
 
 ```bash
 # See blocked issues
-bd blocked
+fbd blocked
 
 # View statistics
-bd stats
+fbd stats
 ```
 
 ## Database Location
@@ -615,10 +615,10 @@ The JSONL file `.beads/issues.jsonl` is git-tracked and syncs automatically.
 
 ## Next Steps
 
-- Add labels: `bd create "Task" -l "backend,urgent"`
-- Filter ready work: `bd ready --priority 1`
-- Search issues: `bd list --status open`
-- Detect cycles: `bd dep cycles`
+- Add labels: `fbd create "Task" -l "backend,urgent"`
+- Filter ready work: `fbd ready --priority 1`
+- Search issues: `fbd list --status open`
+- Detect cycles: `fbd dep cycles`
 - See [CLI Reference](/cli-reference) for all commands
 
 </document>
@@ -626,19 +626,19 @@ The JSONL file `.beads/issues.jsonl` is git-tracked and syncs automatically.
 <document path="docs/getting-started/upgrading.md">
 
 
-# Upgrading bd
+# Upgrading fbd
 
-How to upgrade bd and keep your projects in sync.
+How to upgrade fbd and keep your projects in sync.
 
 ## Checking for Updates
 
 ```bash
 # Current version
-bd version
+fbd version
 
 # What's new in recent versions
-bd info --whats-new
-bd info --whats-new --json  # Machine-readable
+fbd info --whats-new
+fbd info --whats-new --json  # Machine-readable
 ```
 
 ## Upgrading
@@ -652,7 +652,7 @@ brew upgrade beads
 ### go install
 
 ```bash
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### From Source
@@ -660,8 +660,8 @@ go install github.com/steveyegge/beads/cmd/bd@latest
 ```bash
 cd beads
 git pull
-go build -o bd ./cmd/bd
-sudo mv bd /usr/local/bin/
+go build -o fbd ./cmd/fbd
+sudo mv fbd /usr/local/bin/
 ```
 
 ## After Upgrading
@@ -670,19 +670,19 @@ sudo mv bd /usr/local/bin/
 
 ```bash
 # 1. Check what changed
-bd info --whats-new
+fbd info --whats-new
 
 # 2. Update git hooks to match new version
-bd hooks install
+fbd hooks install
 
 # 3. Restart all daemons
-bd daemons killall
+fbd daemons killall
 
 # 4. Check for any outdated hooks
-bd info  # Shows warnings if hooks are outdated
+fbd info  # Shows warnings if hooks are outdated
 ```
 
-**Why update hooks?** Git hooks are versioned with bd. Outdated hooks may miss new auto-sync features or bug fixes.
+**Why update hooks?** Git hooks are versioned with fbd. Outdated hooks may miss new auto-sync features or bug fixes.
 
 ## Database Migrations
 
@@ -690,16 +690,16 @@ After major upgrades, check for database migrations:
 
 ```bash
 # Inspect migration plan (AI agents)
-bd migrate --inspect --json
+fbd migrate --inspect --json
 
 # Preview migration changes
-bd migrate --dry-run
+fbd migrate --dry-run
 
 # Apply migrations
-bd migrate
+fbd migrate
 
 # Migrate and clean up old files
-bd migrate --cleanup --yes
+fbd migrate --cleanup --yes
 ```
 
 ## Daemon Version Mismatches
@@ -708,13 +708,13 @@ If you see daemon version mismatch warnings:
 
 ```bash
 # List all running daemons
-bd daemons list --json
+fbd daemons list --json
 
 # Check for version mismatches
-bd daemons health --json
+fbd daemons health --json
 
 # Restart all daemons with new version
-bd daemons killall --json
+fbd daemons killall --json
 ```
 
 ## Troubleshooting Upgrades
@@ -722,20 +722,20 @@ bd daemons killall --json
 ### Old daemon still running
 
 ```bash
-bd daemons killall
+fbd daemons killall
 ```
 
 ### Hooks out of date
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 ### Database schema changed
 
 ```bash
-bd migrate --dry-run
-bd migrate
+fbd migrate --dry-run
+fbd migrate
 ```
 
 ### Import errors after upgrade
@@ -743,8 +743,8 @@ bd migrate
 Check the import configuration:
 
 ```bash
-bd config get import.orphan_handling
-bd import -i .beads/issues.jsonl --orphan-handling allow
+fbd config get import.orphan_handling
+fbd import -i .beads/issues.jsonl --orphan-handling allow
 ```
 
 </document>
@@ -793,8 +793,8 @@ Four types of relationships:
 Background process per workspace:
 - Auto-starts on first command
 - Handles auto-sync with 5s debounce
-- Socket at `.beads/bd.sock`
-- Manage with `bd daemons` commands
+- Socket at `.beads/fbd.sock`
+- Manage with `fbd daemons` commands
 
 ### JSONL Sync
 
@@ -835,9 +835,9 @@ Beads runs a background daemon for auto-sync and performance.
 ## Overview
 
 Each workspace gets its own daemon process:
-- Auto-starts on first `bd` command
+- Auto-starts on first `fbd` command
 - Handles database ↔ JSONL synchronization
-- Listens on `.beads/bd.sock` (Unix) or `.beads/bd.pipe` (Windows)
+- Listens on `.beads/fbd.sock` (Unix) or `.beads/fbd.pipe` (Windows)
 - Version checking prevents mismatches after upgrades
 
 ## How It Works
@@ -858,25 +858,25 @@ Without daemon, commands access the database directly (slower, no auto-sync).
 
 ```bash
 # List all running daemons
-bd daemons list
-bd daemons list --json
+fbd daemons list
+fbd daemons list --json
 
 # Check health and version mismatches
-bd daemons health
-bd daemons health --json
+fbd daemons health
+fbd daemons health --json
 
 # View daemon logs
-bd daemons logs . -n 100
+fbd daemons logs . -n 100
 
 # Restart all daemons
-bd daemons killall
-bd daemons killall --json
+fbd daemons killall
+fbd daemons killall --json
 ```
 
 ## Daemon Info
 
 ```bash
-bd info
+fbd info
 ```
 
 Shows:
@@ -890,8 +890,8 @@ Shows:
 Use `--no-daemon` flag to bypass the daemon:
 
 ```bash
-bd --no-daemon ready
-bd --no-daemon list
+fbd --no-daemon ready
+fbd --no-daemon list
 ```
 
 **When to disable:**
@@ -907,7 +907,7 @@ Event-driven mode replaces 5-second polling with instant reactivity:
 ```bash
 # Enable globally
 export BEADS_DAEMON_MODE=events
-bd daemons killall  # Restart to apply
+fbd daemons killall  # Restart to apply
 ```
 
 **Benefits:**
@@ -917,7 +917,7 @@ bd daemons killall  # Restart to apply
 
 **How to verify:**
 ```bash
-bd info | grep "daemon mode"
+fbd info | grep "daemon mode"
 ```
 
 ## Troubleshooting
@@ -926,33 +926,33 @@ bd info | grep "daemon mode"
 
 ```bash
 # Check if socket exists
-ls -la .beads/bd.sock
+ls -la .beads/fbd.sock
 
 # Try direct mode
-bd --no-daemon info
+fbd --no-daemon info
 
 # Restart daemon
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### Version mismatch
 
-After upgrading bd:
+After upgrading fbd:
 
 ```bash
-bd daemons killall
-bd info  # Should show matching versions
+fbd daemons killall
+fbd info  # Should show matching versions
 ```
 
 ### Sync not happening
 
 ```bash
 # Force sync
-bd sync
+fbd sync
 
 # Check daemon logs
-bd daemons logs . -n 50
+fbd daemons logs . -n 50
 
 # Verify git status
 git status .beads/
@@ -962,13 +962,13 @@ git status .beads/
 
 ```bash
 # Kill all daemons
-bd daemons killall
+fbd daemons killall
 
 # Remove stale socket
-rm -f .beads/bd.sock
+rm -f .beads/fbd.sock
 
 # Restart
-bd info
+fbd info
 ```
 
 ## Configuration
@@ -977,13 +977,13 @@ Daemon behavior can be configured:
 
 ```bash
 # Set sync debounce interval
-bd config set daemon.sync_interval 10s
+fbd config set daemon.sync_interval 10s
 
 # Disable auto-start
-bd config set daemon.auto_start false
+fbd config set daemon.auto_start false
 
 # Set log level
-bd config set daemon.log_level debug
+fbd config set daemon.log_level debug
 ```
 
 See [Configuration](/reference/configuration) for all options.
@@ -1029,7 +1029,7 @@ IDs are generated from:
 
 ```bash
 # Create issue - ID assigned automatically
-bd create "Fix authentication bug"
+fbd create "Fix authentication bug"
 # Returns: bd-7x2f
 
 # The ID is deterministic for same content+timestamp
@@ -1041,13 +1041,13 @@ For epics and subtasks:
 
 ```bash
 # Parent epic
-bd create "Auth System" -t epic
+fbd create "Auth System" -t epic
 # Returns: bd-a3f8e9
 
 # Children auto-increment
-bd create "Design UI" --parent bd-a3f8e9    # bd-a3f8e9.1
-bd create "Backend" --parent bd-a3f8e9      # bd-a3f8e9.2
-bd create "Tests" --parent bd-a3f8e9        # bd-a3f8e9.3
+fbd create "Design UI" --parent bd-a3f8e9    # bd-a3f8e9.1
+fbd create "Backend" --parent bd-a3f8e9      # bd-a3f8e9.2
+fbd create "Tests" --parent bd-a3f8e9        # bd-a3f8e9.3
 ```
 
 Benefits:
@@ -1060,14 +1060,14 @@ Benefits:
 Configure ID prefix and length:
 
 ```bash
-# Set prefix (default: bd)
-bd config set id.prefix myproject
+# Set prefix (default: fbd)
+fbd config set id.prefix myproject
 
 # Set hash length (default: 4)
-bd config set id.hash_length 6
+fbd config set id.hash_length 6
 
 # New issues use new format
-bd create "Test"
+fbd create "Test"
 # Returns: myproject-a1b2c3
 ```
 
@@ -1081,21 +1081,21 @@ While rare, collisions are handled automatically:
 
 ```bash
 # Check for collisions
-bd info --schema --json | jq '.collision_count'
+fbd info --schema --json | jq '.collision_count'
 ```
 
 ## Working with IDs
 
 ```bash
 # Partial ID matching
-bd show a1b2     # Finds bd-a1b2...
-bd show auth     # Fuzzy match by title
+fbd show a1b2     # Finds bd-a1b2...
+fbd show auth     # Fuzzy match by title
 
 # Full ID required for ambiguous cases
-bd show bd-a1b2c3d4
+fbd show bd-a1b2c3d4
 
 # List with full IDs
-bd list --full-ids
+fbd list --full-ids
 ```
 
 ## Migration from Sequential IDs
@@ -1104,10 +1104,10 @@ If migrating from a system with sequential IDs:
 
 ```bash
 # Import preserves original IDs in metadata
-bd import -i old-issues.json
+fbd import -i old-issues.json
 
 # View original ID
-bd show bd-new --json | jq '.original_id'
+fbd show bd-new --json | jq '.original_id'
 ```
 
 ## Best Practices
@@ -1131,7 +1131,7 @@ Understanding the issue model in beads.
 Every issue has:
 
 ```bash
-bd show bd-42 --json
+fbd show bd-42 --json
 ```
 
 ```json
@@ -1172,18 +1172,18 @@ bd show bd-42 --json
 
 ```bash
 # Basic issue
-bd create "Fix login bug" -t bug -p 1
+fbd create "Fix login bug" -t bug -p 1
 
 # With description
-bd create "Add password reset" \
+fbd create "Add password reset" \
   --description="Users need to reset forgotten passwords via email" \
   -t feature -p 2
 
 # With labels
-bd create "Update dependencies" -t chore -l "maintenance,security"
+fbd create "Update dependencies" -t chore -l "maintenance,security"
 
 # JSON output for agents
-bd create "Task" -t task --json
+fbd create "Task" -t task --json
 ```
 
 ## Dependencies
@@ -1194,16 +1194,16 @@ The `blocks` relationship affects the ready queue:
 
 ```bash
 # Add dependency: bd-2 depends on bd-1
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # View dependencies
-bd dep tree bd-2
+fbd dep tree bd-2
 
 # See blocked issues
-bd blocked
+fbd blocked
 
 # See ready work (not blocked)
-bd ready
+fbd ready
 ```
 
 ### Structural Relationships
@@ -1212,14 +1212,14 @@ These don't affect the ready queue:
 
 ```bash
 # Parent-child (epic subtasks)
-bd create "Epic" -t epic
-bd create "Subtask" --parent bd-42
+fbd create "Epic" -t epic
+fbd create "Subtask" --parent bd-42
 
 # Discovered-from (found during work)
-bd create "Found bug" --deps discovered-from:bd-42
+fbd create "Found bug" --deps discovered-from:bd-42
 
 # Related (soft link)
-bd relate bd-1 bd-2
+fbd relate bd-1 bd-2
 ```
 
 ### Dependency Types
@@ -1237,67 +1237,67 @@ For large features, use hierarchical IDs:
 
 ```bash
 # Create epic
-bd create "Auth System" -t epic -p 1
+fbd create "Auth System" -t epic -p 1
 # Returns: bd-a3f8e9
 
 # Child tasks auto-number
-bd create "Design login UI" --parent bd-a3f8e9     # bd-a3f8e9.1
-bd create "Backend validation" --parent bd-a3f8e9  # bd-a3f8e9.2
+fbd create "Design login UI" --parent bd-a3f8e9     # bd-a3f8e9.1
+fbd create "Backend validation" --parent bd-a3f8e9  # bd-a3f8e9.2
 
 # View hierarchy
-bd dep tree bd-a3f8e9
+fbd dep tree bd-a3f8e9
 ```
 
 ## Updating Issues
 
 ```bash
 # Change status
-bd update bd-42 --status in_progress
+fbd update bd-42 --status in_progress
 
 # Change priority
-bd update bd-42 --priority 0
+fbd update bd-42 --priority 0
 
 # Add labels
-bd update bd-42 --add-label urgent
+fbd update bd-42 --add-label urgent
 
 # Multiple changes
-bd update bd-42 --status in_progress --priority 1 --add-label "in-review"
+fbd update bd-42 --status in_progress --priority 1 --add-label "in-review"
 ```
 
 ## Closing Issues
 
 ```bash
 # Simple close
-bd close bd-42
+fbd close bd-42
 
 # With reason
-bd close bd-42 --reason "Implemented in PR #123"
+fbd close bd-42 --reason "Implemented in PR #123"
 
 # JSON output
-bd close bd-42 --json
+fbd close bd-42 --json
 ```
 
 ## Searching and Filtering
 
 ```bash
 # By status
-bd list --status open
-bd list --status in_progress
+fbd list --status open
+fbd list --status in_progress
 
 # By priority
-bd list --priority 1
-bd list --priority 0,1  # Multiple
+fbd list --priority 1
+fbd list --priority 0,1  # Multiple
 
 # By type
-bd list --type bug
-bd list --type feature,task
+fbd list --type bug
+fbd list --type feature,task
 
 # By label
-bd list --label-any urgent,critical
-bd list --label-all backend,security
+fbd list --label-any urgent,critical
+fbd list --label-all backend,security
 
 # Combined filters
-bd list --status open --priority 1 --type bug --json
+fbd list --status open --priority 1 --type bug --json
 ```
 
 </document>
@@ -1333,14 +1333,14 @@ Remote JSONL (shared across machines)
 Triggers:
 - Any database change
 - After 5 second debounce (batches multiple changes)
-- Manual `bd sync`
+- Manual `fbd sync`
 
 ```bash
 # Force immediate export
-bd sync
+fbd sync
 
 # Check what would be exported
-bd export --dry-run
+fbd export --dry-run
 ```
 
 ### Import (JSONL → SQLite)
@@ -1348,14 +1348,14 @@ bd export --dry-run
 Triggers:
 - After `git pull` (via git hooks)
 - When JSONL is newer than database
-- Manual `bd import`
+- Manual `fbd import`
 
 ```bash
 # Force import
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Preview import
-bd import -i .beads/issues.jsonl --dry-run
+fbd import -i .beads/issues.jsonl --dry-run
 ```
 
 ## Git Hooks
@@ -1363,7 +1363,7 @@ bd import -i .beads/issues.jsonl --dry-run
 Install hooks for seamless sync:
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 Hooks installed:
@@ -1375,13 +1375,13 @@ Hooks installed:
 
 ```bash
 # Full sync cycle: export + commit + push
-bd sync
+fbd sync
 
 # Just export
-bd export
+fbd export
 
 # Just import
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ## Conflict Resolution
@@ -1394,7 +1394,7 @@ The beads merge driver handles JSONL conflicts automatically:
 
 ```bash
 # Install merge driver
-bd init  # Prompts for merge driver setup
+fbd init  # Prompts for merge driver setup
 ```
 
 The driver:
@@ -1409,8 +1409,8 @@ Manual resolution:
 ```bash
 # After merge conflict
 git checkout --ours .beads/issues.jsonl   # or --theirs
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 ```
 
 ## Orphan Handling
@@ -1419,16 +1419,16 @@ When importing issues with missing parents:
 
 ```bash
 # Configure orphan handling
-bd config set import.orphan_handling allow     # Import anyway (default)
-bd config set import.orphan_handling resurrect # Restore deleted parents
-bd config set import.orphan_handling skip      # Skip orphans
-bd config set import.orphan_handling strict    # Fail on orphans
+fbd config set import.orphan_handling allow     # Import anyway (default)
+fbd config set import.orphan_handling resurrect # Restore deleted parents
+fbd config set import.orphan_handling skip      # Skip orphans
+fbd config set import.orphan_handling strict    # Fail on orphans
 ```
 
 Per-command override:
 
 ```bash
-bd import -i issues.jsonl --orphan-handling resurrect
+fbd import -i issues.jsonl --orphan-handling resurrect
 ```
 
 ## Deletion Tracking
@@ -1437,11 +1437,11 @@ Deleted issues are tracked in `.beads/deletions.jsonl`:
 
 ```bash
 # Delete issue (records to manifest)
-bd delete bd-42
+fbd delete bd-42
 
 # View deletions
-bd deleted
-bd deleted --since=30d
+fbd deleted
+fbd deleted --since=30d
 
 # Deletions propagate via git
 git pull  # Imports deletions from remote
@@ -1453,30 +1453,30 @@ git pull  # Imports deletions from remote
 
 ```bash
 # Force full sync
-bd sync
+fbd sync
 
 # Check sync status
-bd info
+fbd info
 ```
 
 ### Import errors
 
 ```bash
 # Check import status
-bd import -i .beads/issues.jsonl --dry-run
+fbd import -i .beads/issues.jsonl --dry-run
 
 # Allow orphans if needed
-bd import -i .beads/issues.jsonl --orphan-handling allow
+fbd import -i .beads/issues.jsonl --orphan-handling allow
 ```
 
 ### Duplicate detection
 
 ```bash
 # Find duplicates after import
-bd duplicates
+fbd duplicates
 
 # Auto-merge duplicates
-bd duplicates --auto-merge
+fbd duplicates --auto-merge
 ```
 
 </document>
@@ -1506,12 +1506,12 @@ flowchart TD
         D[("beads.db<br/><i>Fast Queries / Derived State</i>")]
     end
 
-    G <-->|"bd sync"| J
+    G <-->|"fbd sync"| J
     J -->|"rebuild"| D
     D -->|"append"| J
 
-    U((👤 User)) -->|"bd create<br/>bd update"| D
-    D -->|"bd list<br/>bd show"| U
+    U((👤 User)) -->|"fbd create<br/>fbd update"| D
+    D -->|"fbd list<br/>fbd show"| U
 
     style GIT fill:#2d5a27,stroke:#4a9c3e,color:#fff
     style JSONL fill:#1a4a6e,stroke:#3a8ac4,color:#fff
@@ -1523,7 +1523,7 @@ flowchart TD
 
 **JSONL** is the *operational* source of truth—when recovering from database corruption, Beads rebuilds SQLite from JSONL files, not directly from Git commits.
 
-This layered model enables recovery: if SQLite is corrupted but JSONL is intact, run `bd sync --import-only` to rebuild. If JSONL is corrupted, recover it from Git history first.
+This layered model enables recovery: if SQLite is corrupted but JSONL is intact, run `fbd sync --import-only` to rebuild. If JSONL is corrupted, recover it from Git history first.
 :::
 
 ### Layer 1: Git Repository
@@ -1548,7 +1548,7 @@ JSONL (JSON Lines) files store issue data in an append-only format. This is the 
 - Git-mergeable (append-only reduces conflicts)
 - Portable across systems
 - Can be recovered from Git history
-- **Recovery source**: `bd sync --import-only` rebuilds SQLite from JSONL
+- **Recovery source**: `fbd sync --import-only` rebuilds SQLite from JSONL
 
 ### Layer 3: SQLite Database
 
@@ -1560,13 +1560,13 @@ SQLite provides fast local queries without network latency. This is *derived sta
 - Instant queries (no network)
 - Complex filtering and sorting
 - Derived from JSONL (always rebuildable)
-- Safe to delete and rebuild: `rm .beads/beads.db* && bd sync --import-only`
+- Safe to delete and rebuild: `rm .beads/beads.db* && fbd sync --import-only`
 
 ## Data Flow
 
 ### Write Path
 ```text
-User runs bd create
+User runs fbd create
     → SQLite updated
     → JSONL appended
     → Git commit (on sync)
@@ -1574,14 +1574,14 @@ User runs bd create
 
 ### Read Path
 ```text
-User runs bd list
+User runs fbd list
     → SQLite queried
     → Results returned immediately
 ```
 
 ### Sync Path
 ```text
-User runs bd sync
+User runs fbd sync
     → Git pull
     → JSONL merged
     → SQLite rebuilt if needed
@@ -1594,13 +1594,13 @@ Beads provides specialized sync modes for different recovery scenarios:
 
 #### Standard Sync
 ```bash
-bd sync
+fbd sync
 ```
 Normal bidirectional sync: pulls remote changes, merges JSONL, rebuilds SQLite if needed, pushes local changes.
 
 #### Import-Only Mode
 ```bash
-bd sync --import-only
+fbd sync --import-only
 ```
 Rebuilds the SQLite database from JSONL without pushing changes. Use this when:
 - SQLite is corrupted or missing
@@ -1611,7 +1611,7 @@ This is the safest recovery option when JSONL is intact.
 
 #### Force Rebuild Mode
 ```bash
-bd sync --force-rebuild
+fbd sync --force-rebuild
 ```
 Forces complete SQLite rebuild from JSONL, discarding any SQLite-only state. Use with caution:
 - More aggressive than `--import-only`
@@ -1624,13 +1624,13 @@ When working across multiple machines or clones:
 
 1. **Always sync before switching machines**
    ```bash
-   bd sync  # Push changes before leaving
+   fbd sync  # Push changes before leaving
    ```
 
 2. **Pull before creating new issues**
    ```bash
-   bd sync  # Pull changes first on new machine
-   bd create "New issue"
+   fbd sync  # Pull changes first on new machine
+   fbd create "New issue"
    ```
 
 3. **Avoid parallel edits** - If two machines create issues simultaneously without syncing, conflicts may occur
@@ -1639,7 +1639,7 @@ See [Sync Failures Recovery](/recovery/sync-failures) for data loss prevention i
 
 ## The Daemon
 
-The Beads daemon (`bd daemon`) handles background synchronization:
+The Beads daemon (`fbd daemon`) handles background synchronization:
 
 - Watches for file changes
 - Triggers sync on changes
@@ -1655,8 +1655,8 @@ The daemon is optional but recommended for multi-agent workflows.
 For CI/CD pipelines, containers, and single-use scenarios, run commands without spawning a daemon:
 
 ```bash
-bd --no-daemon create "CI-generated issue"
-bd --no-daemon sync
+fbd --no-daemon create "CI-generated issue"
+fbd --no-daemon sync
 ```
 
 **When to use `--no-daemon`:**
@@ -1675,7 +1675,7 @@ When multiple git clones of the same repository run daemons simultaneously, race
 - Worktree-based development workflows
 
 **Prevention:**
-1. Use `bd daemons killall` before switching between clones
+1. Use `fbd daemons killall` before switching between clones
 2. Ensure only one clone's daemon is active at a time
 3. Consider `--no-daemon` mode for automated workflows
 :::
@@ -1686,7 +1686,7 @@ See [Sync Failures Recovery](/recovery/sync-failures) for daemon race condition 
 
 The three-layer architecture makes recovery straightforward because each layer can rebuild from the one above it:
 
-1. **Lost SQLite?** → Rebuild from JSONL: `bd sync --import-only`
+1. **Lost SQLite?** → Rebuild from JSONL: `fbd sync --import-only`
 2. **Lost JSONL?** → Recover from Git history: `git checkout HEAD~1 -- .beads/issues.jsonl`
 3. **Conflicts?** → Git merge, then rebuild
 
@@ -1697,28 +1697,28 @@ The following sequence demonstrates how the architecture enables quick recovery.
 This sequence resolves the majority of reported issues:
 
 ```bash
-bd daemons killall           # Stop daemons (prevents race conditions)
+fbd daemons killall           # Stop daemons (prevents race conditions)
 git worktree prune           # Clean orphaned worktrees
 rm .beads/beads.db*          # Remove potentially corrupted database
-bd sync --import-only        # Rebuild from JSONL source of truth
+fbd sync --import-only        # Rebuild from JSONL source of truth
 ```
 
-:::danger Never Use `bd doctor --fix`
-Analysis of 54 GitHub issues revealed that `bd doctor --fix` frequently causes **more damage** than the original problem:
+:::danger Never Use `fbd doctor --fix`
+Analysis of 54 GitHub issues revealed that `fbd doctor --fix` frequently causes **more damage** than the original problem:
 
 - Deletes "circular" dependencies that are actually valid parent-child relationships
 - False positive detection removes legitimate issue links
 - Recovery after `--fix` is harder than recovery from the original issue
 
 **Safe alternatives:**
-- `bd doctor` — Diagnostic only, no changes made
-- `bd blocked` — Check which issues are blocked and why
-- `bd show <issue-id>` — Inspect a specific issue's state
+- `fbd doctor` — Diagnostic only, no changes made
+- `fbd blocked` — Check which issues are blocked and why
+- `fbd show <issue-id>` — Inspect a specific issue's state
 
-If `bd doctor` reports problems, investigate each one manually before taking any action.
+If `fbd doctor` reports problems, investigate each one manually before taking any action.
 :::
 
-See [Recovery](/recovery) for specific procedures and [Database Corruption Recovery](/recovery/database-corruption) for `bd doctor --fix` recovery (Pattern D4).
+See [Recovery](/recovery) for specific procedures and [Database Corruption Recovery](/recovery/database-corruption) for `fbd doctor --fix` recovery (Pattern D4).
 
 ## Design Decisions
 
@@ -1773,12 +1773,12 @@ For these use cases, consider GitHub Issues, Linear, or Jira.
 
 # CLI Reference
 
-Complete reference for all `bd` commands.
+Complete reference for all `fbd` commands.
 
 ## Command Structure
 
 ```bash
-bd [global-flags] <command> [command-flags] [arguments]
+fbd [global-flags] <command> [command-flags] [arguments]
 ```
 
 ### Global Flags
@@ -1801,75 +1801,75 @@ Most frequently used:
 
 | Command | Description |
 |---------|-------------|
-| `bd create` | Create new issue |
-| `bd list` | List issues with filters |
-| `bd show` | Show issue details |
-| `bd update` | Update issue fields |
-| `bd close` | Close an issue |
-| `bd ready` | Show unblocked work |
-| `bd sync` | Force sync to git |
+| `fbd create` | Create new issue |
+| `fbd list` | List issues with filters |
+| `fbd show` | Show issue details |
+| `fbd update` | Update issue fields |
+| `fbd close` | Close an issue |
+| `fbd ready` | Show unblocked work |
+| `fbd sync` | Force sync to git |
 
 ### Issue Management
 
 | Command | Description |
 |---------|-------------|
-| `bd create` | Create issue |
-| `bd show` | Show details |
-| `bd update` | Update fields |
-| `bd close` | Close issue |
-| `bd delete` | Delete issue |
-| `bd reopen` | Reopen closed issue |
+| `fbd create` | Create issue |
+| `fbd show` | Show details |
+| `fbd update` | Update fields |
+| `fbd close` | Close issue |
+| `fbd delete` | Delete issue |
+| `fbd reopen` | Reopen closed issue |
 
 ### Dependencies
 
 | Command | Description |
 |---------|-------------|
-| `bd dep add` | Add dependency |
-| `bd dep remove` | Remove dependency |
-| `bd dep tree` | Show dependency tree |
-| `bd dep cycles` | Detect circular dependencies |
-| `bd blocked` | Show blocked issues |
-| `bd ready` | Show unblocked issues |
+| `fbd dep add` | Add dependency |
+| `fbd dep remove` | Remove dependency |
+| `fbd dep tree` | Show dependency tree |
+| `fbd dep cycles` | Detect circular dependencies |
+| `fbd blocked` | Show blocked issues |
+| `fbd ready` | Show unblocked issues |
 
 ### Labels & Comments
 
 | Command | Description |
 |---------|-------------|
-| `bd label add` | Add label to issue |
-| `bd label remove` | Remove label |
-| `bd label list` | List all labels |
-| `bd comment add` | Add comment |
-| `bd comment list` | List comments |
+| `fbd label add` | Add label to issue |
+| `fbd label remove` | Remove label |
+| `fbd label list` | List all labels |
+| `fbd comment add` | Add comment |
+| `fbd comment list` | List comments |
 
 ### Sync & Export
 
 | Command | Description |
 |---------|-------------|
-| `bd sync` | Full sync cycle |
-| `bd export` | Export to JSONL |
-| `bd import` | Import from JSONL |
-| `bd migrate` | Migrate database schema |
+| `fbd sync` | Full sync cycle |
+| `fbd export` | Export to JSONL |
+| `fbd import` | Import from JSONL |
+| `fbd migrate` | Migrate database schema |
 
 ### System
 
 | Command | Description |
 |---------|-------------|
-| `bd init` | Initialize beads in project |
-| `bd info` | Show system info |
-| `bd version` | Show version |
-| `bd config` | Manage configuration |
-| `bd daemons` | Manage daemons |
-| `bd hooks` | Manage git hooks |
+| `fbd init` | Initialize beads in project |
+| `fbd info` | Show system info |
+| `fbd version` | Show version |
+| `fbd config` | Manage configuration |
+| `fbd daemons` | Manage daemons |
+| `fbd hooks` | Manage git hooks |
 
 ### Workflows
 
 | Command | Description |
 |---------|-------------|
-| `bd pour` | Instantiate formula as molecule |
-| `bd wisp` | Create ephemeral wisp |
-| `bd mol` | Manage molecules |
-| `bd pin` | Pin work to agent |
-| `bd hook` | Show pinned work |
+| `fbd pour` | Instantiate formula as molecule |
+| `fbd wisp` | Create ephemeral wisp |
+| `fbd mol` | Manage molecules |
+| `fbd pin` | Pin work to agent |
+| `fbd hook` | Show pinned work |
 
 ## Quick Reference
 
@@ -1877,70 +1877,70 @@ Most frequently used:
 
 ```bash
 # Basic
-bd create "Title" -t task -p 2
+fbd create "Title" -t task -p 2
 
 # With description
-bd create "Title" --description="Details here" -t bug -p 1
+fbd create "Title" --description="Details here" -t bug -p 1
 
 # With labels
-bd create "Title" -l "backend,urgent"
+fbd create "Title" -l "backend,urgent"
 
 # As child of epic
-bd create "Subtask" --parent bd-42
+fbd create "Subtask" --parent bd-42
 
 # With discovered-from link
-bd create "Found bug" --deps discovered-from:bd-42
+fbd create "Found bug" --deps discovered-from:bd-42
 
 # JSON output
-bd create "Title" --json
+fbd create "Title" --json
 ```
 
 ### Querying Issues
 
 ```bash
 # All open issues
-bd list --status open
+fbd list --status open
 
 # High priority bugs
-bd list --status open --priority 0,1 --type bug
+fbd list --status open --priority 0,1 --type bug
 
 # With specific labels
-bd list --label-any urgent,critical
+fbd list --label-any urgent,critical
 
 # JSON output
-bd list --json
+fbd list --json
 ```
 
 ### Working with Dependencies
 
 ```bash
 # Add: bd-2 depends on bd-1
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # View tree
-bd dep tree bd-2
+fbd dep tree bd-2
 
 # Find cycles
-bd dep cycles
+fbd dep cycles
 
 # What's ready to work?
-bd ready
+fbd ready
 
 # What's blocked?
-bd blocked
+fbd blocked
 ```
 
 ### Syncing
 
 ```bash
 # Full sync (export + commit + push)
-bd sync
+fbd sync
 
 # Force export
-bd export
+fbd export
 
 # Import from file
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ## See Also
@@ -1960,12 +1960,12 @@ bd import -i .beads/issues.jsonl
 
 Commands for managing issue dependencies.
 
-## bd dep add
+## fbd dep add
 
 Add a dependency between issues.
 
 ```bash
-bd dep add <dependent> <dependency> [flags]
+fbd dep add <dependent> <dependency> [flags]
 ```
 
 **Semantics:** `<dependent>` depends on `<dependency>` (dependency blocks dependent).
@@ -1979,35 +1979,35 @@ bd dep add <dependent> <dependency> [flags]
 **Examples:**
 ```bash
 # bd-2 depends on bd-1 (bd-1 blocks bd-2)
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # Soft relationship
-bd dep add bd-2 bd-1 --type related
+fbd dep add bd-2 bd-1 --type related
 
 # JSON output
-bd dep add bd-2 bd-1 --json
+fbd dep add bd-2 bd-1 --json
 ```
 
-## bd dep remove
+## fbd dep remove
 
 Remove a dependency.
 
 ```bash
-bd dep remove <dependent> <dependency> [flags]
+fbd dep remove <dependent> <dependency> [flags]
 ```
 
 **Examples:**
 ```bash
-bd dep remove bd-2 bd-1
-bd dep remove bd-2 bd-1 --json
+fbd dep remove bd-2 bd-1
+fbd dep remove bd-2 bd-1 --json
 ```
 
-## bd dep tree
+## fbd dep tree
 
 Display dependency tree.
 
 ```bash
-bd dep tree <id> [flags]
+fbd dep tree <id> [flags]
 ```
 
 **Flags:**
@@ -2018,9 +2018,9 @@ bd dep tree <id> [flags]
 
 **Examples:**
 ```bash
-bd dep tree bd-42
-bd dep tree bd-42 --depth 3
-bd dep tree bd-42 --json
+fbd dep tree bd-42
+fbd dep tree bd-42 --depth 3
+fbd dep tree bd-42 --json
 ```
 
 **Output:**
@@ -2032,12 +2032,12 @@ Dependency tree for bd-42:
     > bd-40: Set up database [P1] (closed)
 ```
 
-## bd dep cycles
+## fbd dep cycles
 
 Detect circular dependencies.
 
 ```bash
-bd dep cycles [flags]
+fbd dep cycles [flags]
 ```
 
 **Flags:**
@@ -2047,16 +2047,16 @@ bd dep cycles [flags]
 
 **Examples:**
 ```bash
-bd dep cycles
-bd dep cycles --json
+fbd dep cycles
+fbd dep cycles --json
 ```
 
-## bd ready
+## fbd ready
 
 Show issues with no blockers.
 
 ```bash
-bd ready [flags]
+fbd ready [flags]
 ```
 
 **Flags:**
@@ -2069,10 +2069,10 @@ bd ready [flags]
 
 **Examples:**
 ```bash
-bd ready
-bd ready --priority 1
-bd ready --type bug
-bd ready --json
+fbd ready
+fbd ready --priority 1
+fbd ready --type bug
+fbd ready --json
 ```
 
 **Output:**
@@ -2084,12 +2084,12 @@ Ready work (3 issues with no blockers):
 3. [P3] bd-46: Update docs
 ```
 
-## bd blocked
+## fbd blocked
 
 Show blocked issues and their blockers.
 
 ```bash
-bd blocked [flags]
+fbd blocked [flags]
 ```
 
 **Flags:**
@@ -2099,8 +2099,8 @@ bd blocked [flags]
 
 **Examples:**
 ```bash
-bd blocked
-bd blocked --json
+fbd blocked
+fbd blocked --json
 ```
 
 **Output:**
@@ -2114,46 +2114,46 @@ bd-41: Create API
   Blocked by: bd-40 (in_progress)
 ```
 
-## bd relate
+## fbd relate
 
 Create a soft relationship between issues.
 
 ```bash
-bd relate <id1> <id2> [flags]
+fbd relate <id1> <id2> [flags]
 ```
 
 **Examples:**
 ```bash
-bd relate bd-42 bd-43
-bd relate bd-42 bd-43 --json
+fbd relate bd-42 bd-43
+fbd relate bd-42 bd-43 --json
 ```
 
-## bd duplicate
+## fbd duplicate
 
 Mark an issue as duplicate.
 
 ```bash
-bd duplicate <id> --of <canonical> [flags]
+fbd duplicate <id> --of <canonical> [flags]
 ```
 
 **Examples:**
 ```bash
-bd duplicate bd-43 --of bd-42
-bd duplicate bd-43 --of bd-42 --json
+fbd duplicate bd-43 --of bd-42
+fbd duplicate bd-43 --of bd-42 --json
 ```
 
-## bd supersede
+## fbd supersede
 
 Mark an issue as superseding another.
 
 ```bash
-bd supersede <old> --with <new> [flags]
+fbd supersede <old> --with <new> [flags]
 ```
 
 **Examples:**
 ```bash
-bd supersede bd-42 --with bd-50
-bd supersede bd-42 --with bd-50 --json
+fbd supersede bd-42 --with bd-50
+fbd supersede bd-42 --with bd-50 --json
 ```
 
 ## Understanding Dependencies
@@ -2174,21 +2174,21 @@ bd supersede bd-42 --with bd-50 --json
 ```bash
 # bd-2 depends on bd-1
 # Meaning: bd-1 must complete before bd-2 can start
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # After bd-1 closes:
-bd close bd-1
-bd ready  # bd-2 now appears
+fbd close bd-1
+fbd ready  # bd-2 now appears
 ```
 
 ### Avoiding Cycles
 
 ```bash
 # Check before adding complex dependencies
-bd dep cycles
+fbd dep cycles
 
 # If cycle detected, remove one dependency
-bd dep remove bd-A bd-B
+fbd dep remove bd-A bd-B
 ```
 
 </document>
@@ -2200,12 +2200,12 @@ bd dep remove bd-A bd-B
 
 The most important commands for daily use.
 
-## bd create
+## fbd create
 
 Create a new issue.
 
 ```bash
-bd create <title> [flags]
+fbd create <title> [flags]
 ```
 
 **Flags:**
@@ -2221,18 +2221,18 @@ bd create <title> [flags]
 
 **Examples:**
 ```bash
-bd create "Fix login bug" -t bug -p 1
-bd create "Add dark mode" -t feature -p 2 --description="User requested"
-bd create "Subtask" --parent bd-42 -p 2
-bd create "Found during work" --deps discovered-from:bd-42 --json
+fbd create "Fix login bug" -t bug -p 1
+fbd create "Add dark mode" -t feature -p 2 --description="User requested"
+fbd create "Subtask" --parent bd-42 -p 2
+fbd create "Found during work" --deps discovered-from:bd-42 --json
 ```
 
-## bd list
+## fbd list
 
 List issues with filters.
 
 ```bash
-bd list [flags]
+fbd list [flags]
 ```
 
 **Flags:**
@@ -2247,32 +2247,32 @@ bd list [flags]
 
 **Examples:**
 ```bash
-bd list --status open
-bd list --priority 0,1 --type bug
-bd list --label-any urgent,critical --json
+fbd list --status open
+fbd list --priority 0,1 --type bug
+fbd list --label-any urgent,critical --json
 ```
 
-## bd show
+## fbd show
 
 Show issue details.
 
 ```bash
-bd show <id> [flags]
+fbd show <id> [flags]
 ```
 
 **Examples:**
 ```bash
-bd show bd-42
-bd show bd-42 --json
-bd show bd-42 bd-43 bd-44  # Multiple issues
+fbd show bd-42
+fbd show bd-42 --json
+fbd show bd-42 bd-43 bd-44  # Multiple issues
 ```
 
-## bd update
+## fbd update
 
 Update issue fields.
 
 ```bash
-bd update <id> [flags]
+fbd update <id> [flags]
 ```
 
 **Flags:**
@@ -2288,17 +2288,17 @@ bd update <id> [flags]
 
 **Examples:**
 ```bash
-bd update bd-42 --status in_progress
-bd update bd-42 --priority 0 --add-label urgent
-bd update bd-42 --title "Updated title" --json
+fbd update bd-42 --status in_progress
+fbd update bd-42 --priority 0 --add-label urgent
+fbd update bd-42 --title "Updated title" --json
 ```
 
-## bd close
+## fbd close
 
 Close an issue.
 
 ```bash
-bd close <id> [flags]
+fbd close <id> [flags]
 ```
 
 **Flags:**
@@ -2309,17 +2309,17 @@ bd close <id> [flags]
 
 **Examples:**
 ```bash
-bd close bd-42
-bd close bd-42 --reason "Fixed in PR #123"
-bd close bd-42 --json
+fbd close bd-42
+fbd close bd-42 --reason "Fixed in PR #123"
+fbd close bd-42 --json
 ```
 
-## bd ready
+## fbd ready
 
 Show issues ready to work on (no blockers).
 
 ```bash
-bd ready [flags]
+fbd ready [flags]
 ```
 
 **Flags:**
@@ -2331,31 +2331,31 @@ bd ready [flags]
 
 **Examples:**
 ```bash
-bd ready
-bd ready --priority 1
-bd ready --json
+fbd ready
+fbd ready --priority 1
+fbd ready --json
 ```
 
-## bd blocked
+## fbd blocked
 
 Show blocked issues and their blockers.
 
 ```bash
-bd blocked [flags]
+fbd blocked [flags]
 ```
 
 **Examples:**
 ```bash
-bd blocked
-bd blocked --json
+fbd blocked
+fbd blocked --json
 ```
 
-## bd sync
+## fbd sync
 
 Force immediate sync to git.
 
 ```bash
-bd sync [flags]
+fbd sync [flags]
 ```
 
 Performs:
@@ -2366,16 +2366,16 @@ Performs:
 
 **Examples:**
 ```bash
-bd sync
-bd sync --json
+fbd sync
+fbd sync --json
 ```
 
-## bd info
+## fbd info
 
 Show system information.
 
 ```bash
-bd info [flags]
+fbd info [flags]
 ```
 
 **Flags:**
@@ -2387,23 +2387,23 @@ bd info [flags]
 
 **Examples:**
 ```bash
-bd info
-bd info --whats-new
-bd info --json
+fbd info
+fbd info --whats-new
+fbd info --json
 ```
 
-## bd stats
+## fbd stats
 
 Show project statistics.
 
 ```bash
-bd stats [flags]
+fbd stats [flags]
 ```
 
 **Examples:**
 ```bash
-bd stats
-bd stats --json
+fbd stats
+fbd stats --json
 ```
 
 </document>
@@ -2415,12 +2415,12 @@ bd stats --json
 
 Commands for managing issues.
 
-## bd create
+## fbd create
 
 Create a new issue.
 
 ```bash
-bd create <title> [flags]
+fbd create <title> [flags]
 ```
 
 **All flags:**
@@ -2441,38 +2441,38 @@ bd create <title> [flags]
 **Examples:**
 ```bash
 # Bug with high priority
-bd create "Login fails with special chars" -t bug -p 1
+fbd create "Login fails with special chars" -t bug -p 1
 
 # Feature with description
-bd create "Add export to PDF" -t feature -p 2 \
+fbd create "Add export to PDF" -t feature -p 2 \
   --description="Users want to export reports as PDF files"
 
 # Feature with design, acceptance, and notes
-bd create "Implement user authentication" -t feature -p 1 \
+fbd create "Implement user authentication" -t feature -p 1 \
   --description="Add JWT-based authentication" \
   --design="Use bcrypt for password hashing, JWT for sessions" \
   --acceptance="All tests pass, security audit complete" \
   --notes="Consider rate limiting for login attempts"
 
 # Task with labels
-bd create "Update CI config" -t task -l "ci,infrastructure"
+fbd create "Update CI config" -t task -l "ci,infrastructure"
 
 # Epic with children
-bd create "Auth System" -t epic -p 1
-bd create "Design login UI" --parent bd-42
-bd create "Implement backend" --parent bd-42
+fbd create "Auth System" -t epic -p 1
+fbd create "Design login UI" --parent bd-42
+fbd create "Implement backend" --parent bd-42
 
 # Discovered issue
-bd create "Found SQL injection" -t bug -p 0 \
+fbd create "Found SQL injection" -t bug -p 0 \
   --deps discovered-from:bd-42 --json
 ```
 
-## bd show
+## fbd show
 
 Display issue details.
 
 ```bash
-bd show <id>... [flags]
+fbd show <id>... [flags]
 ```
 
 **Flags:**
@@ -2483,17 +2483,17 @@ bd show <id>... [flags]
 
 **Examples:**
 ```bash
-bd show bd-42
-bd show bd-42 --full
-bd show bd-42 bd-43 bd-44 --json
+fbd show bd-42
+fbd show bd-42 --full
+fbd show bd-42 bd-43 bd-44 --json
 ```
 
-## bd update
+## fbd update
 
 Update issue fields.
 
 ```bash
-bd update <id> [flags]
+fbd update <id> [flags]
 ```
 
 **All flags:**
@@ -2512,24 +2512,24 @@ bd update <id> [flags]
 **Examples:**
 ```bash
 # Start work
-bd update bd-42 --status in_progress
+fbd update bd-42 --status in_progress
 
 # Escalate priority
-bd update bd-42 --priority 0 --add-label urgent
+fbd update bd-42 --priority 0 --add-label urgent
 
 # Change title and description
-bd update bd-42 --title "New title" --description="Updated description"
+fbd update bd-42 --title "New title" --description="Updated description"
 
 # Multiple changes
-bd update bd-42 --status in_progress --priority 1 --add-label "in-review" --json
+fbd update bd-42 --status in_progress --priority 1 --add-label "in-review" --json
 ```
 
-## bd close
+## fbd close
 
 Close an issue.
 
 ```bash
-bd close <id> [flags]
+fbd close <id> [flags]
 ```
 
 **Flags:**
@@ -2540,31 +2540,31 @@ bd close <id> [flags]
 
 **Examples:**
 ```bash
-bd close bd-42
-bd close bd-42 --reason "Fixed in commit abc123"
-bd close bd-42 --reason "Duplicate of bd-43" --json
+fbd close bd-42
+fbd close bd-42 --reason "Fixed in commit abc123"
+fbd close bd-42 --reason "Duplicate of bd-43" --json
 ```
 
-## bd reopen
+## fbd reopen
 
 Reopen a closed issue.
 
 ```bash
-bd reopen <id> [flags]
+fbd reopen <id> [flags]
 ```
 
 **Examples:**
 ```bash
-bd reopen bd-42
-bd reopen bd-42 --json
+fbd reopen bd-42
+fbd reopen bd-42 --json
 ```
 
-## bd delete
+## fbd delete
 
 Delete an issue.
 
 ```bash
-bd delete <id> [flags]
+fbd delete <id> [flags]
 ```
 
 **Flags:**
@@ -2575,18 +2575,18 @@ bd delete <id> [flags]
 
 **Examples:**
 ```bash
-bd delete bd-42
-bd delete bd-42 -f --json
+fbd delete bd-42
+fbd delete bd-42 -f --json
 ```
 
 **Note:** Deletions are tracked in `.beads/deletions.jsonl` for sync.
 
-## bd search
+## fbd search
 
 Search issues by text.
 
 ```bash
-bd search <query> [flags]
+fbd search <query> [flags]
 ```
 
 **Flags:**
@@ -2598,17 +2598,17 @@ bd search <query> [flags]
 
 **Examples:**
 ```bash
-bd search "authentication"
-bd search "login bug" --status open
-bd search "API" --type feature --json
+fbd search "authentication"
+fbd search "login bug" --status open
+fbd search "API" --type feature --json
 ```
 
-## bd duplicates
+## fbd duplicates
 
 Find and manage duplicate issues.
 
 ```bash
-bd duplicates [flags]
+fbd duplicates [flags]
 ```
 
 **Flags:**
@@ -2620,17 +2620,17 @@ bd duplicates [flags]
 
 **Examples:**
 ```bash
-bd duplicates
-bd duplicates --auto-merge
-bd duplicates --dry-run --json
+fbd duplicates
+fbd duplicates --auto-merge
+fbd duplicates --dry-run --json
 ```
 
-## bd merge
+## fbd merge
 
 Merge duplicate issues.
 
 ```bash
-bd merge <source>... --into <target> [flags]
+fbd merge <source>... --into <target> [flags]
 ```
 
 **Flags:**
@@ -2642,8 +2642,8 @@ bd merge <source>... --into <target> [flags]
 
 **Examples:**
 ```bash
-bd merge bd-42 bd-43 --into bd-41
-bd merge bd-42 bd-43 --into bd-41 --dry-run --json
+fbd merge bd-42 bd-43 --into bd-41
+fbd merge bd-42 bd-43 --into bd-41 --dry-run --json
 ```
 
 </document>
@@ -2661,29 +2661,29 @@ Commands for managing labels and comments.
 
 ```bash
 # During creation
-bd create "Task" -l "backend,urgent"
+fbd create "Task" -l "backend,urgent"
 
 # To existing issue
-bd update bd-42 --add-label urgent
-bd update bd-42 --add-label "backend,security"
+fbd update bd-42 --add-label urgent
+fbd update bd-42 --add-label "backend,security"
 ```
 
 ### Removing Labels
 
 ```bash
-bd update bd-42 --remove-label urgent
+fbd update bd-42 --remove-label urgent
 ```
 
 ### Listing Labels
 
 ```bash
 # All labels in use
-bd label list
-bd label list --json
+fbd label list
+fbd label list --json
 
 # Issues with specific labels
-bd list --label-any urgent,critical
-bd list --label-all backend,security
+fbd list --label-any urgent,critical
+fbd list --label-all backend,security
 ```
 
 ### Label Conventions
@@ -2703,21 +2703,21 @@ Suggested label categories:
 ### Adding Comments
 
 ```bash
-bd comment add bd-42 "Working on this now"
-bd comment add bd-42 --message "Found the bug in auth.go:45"
+fbd comment add bd-42 "Working on this now"
+fbd comment add bd-42 --message "Found the bug in auth.go:45"
 ```
 
 ### Listing Comments
 
 ```bash
-bd comment list bd-42
-bd comment list bd-42 --json
+fbd comment list bd-42
+fbd comment list bd-42 --json
 ```
 
 ### Viewing with Issue
 
 ```bash
-bd show bd-42 --full  # Includes comments
+fbd show bd-42 --full  # Includes comments
 ```
 
 ## Filtering by Labels
@@ -2726,21 +2726,21 @@ bd show bd-42 --full  # Includes comments
 
 ```bash
 # Issues with urgent OR critical
-bd list --label-any urgent,critical
+fbd list --label-any urgent,critical
 ```
 
 ### All Match (AND)
 
 ```bash
 # Issues with BOTH backend AND security
-bd list --label-all backend,security
+fbd list --label-all backend,security
 ```
 
 ### Combined Filters
 
 ```bash
 # Open bugs with urgent label
-bd list --status open --type bug --label-any urgent --json
+fbd list --status open --type bug --label-any urgent --json
 ```
 
 ## Bulk Operations
@@ -2750,7 +2750,7 @@ bd list --status open --type bug --label-any urgent --json
 ```bash
 # Using shell
 for id in bd-42 bd-43 bd-44; do
-  bd update $id --add-label "sprint-1"
+  fbd update $id --add-label "sprint-1"
 done
 ```
 
@@ -2758,9 +2758,9 @@ done
 
 ```bash
 # Label all open bugs as needs-triage
-bd list --status open --type bug --json | \
+fbd list --status open --type bug --json | \
   jq -r '.[].id' | \
-  xargs -I {} bd update {} --add-label needs-triage
+  xargs -I {} fbd update {} --add-label needs-triage
 ```
 
 ## Best Practices
@@ -2780,12 +2780,12 @@ bd list --status open --type bug --json | \
 
 Commands for synchronizing with git.
 
-## bd sync
+## fbd sync
 
 Full sync cycle: export, commit, push.
 
 ```bash
-bd sync [flags]
+fbd sync [flags]
 ```
 
 **What it does:**
@@ -2802,8 +2802,8 @@ bd sync [flags]
 
 **Examples:**
 ```bash
-bd sync
-bd sync --json
+fbd sync
+fbd sync --json
 ```
 
 **When to use:**
@@ -2811,12 +2811,12 @@ bd sync --json
 - Before switching branches
 - After significant changes
 
-## bd export
+## fbd export
 
 Export database to JSONL.
 
 ```bash
-bd export [flags]
+fbd export [flags]
 ```
 
 **Flags:**
@@ -2828,17 +2828,17 @@ bd export [flags]
 
 **Examples:**
 ```bash
-bd export
-bd export -o backup.jsonl
-bd export --dry-run
+fbd export
+fbd export -o backup.jsonl
+fbd export --dry-run
 ```
 
-## bd import
+## fbd import
 
 Import from JSONL file.
 
 ```bash
-bd import -i <file> [flags]
+fbd import -i <file> [flags]
 ```
 
 **Flags:**
@@ -2860,18 +2860,18 @@ bd import -i <file> [flags]
 
 **Examples:**
 ```bash
-bd import -i .beads/issues.jsonl
-bd import -i backup.jsonl --dry-run
-bd import -i issues.jsonl --orphan-handling resurrect
-bd import -i issues.jsonl --dedupe-after --json
+fbd import -i .beads/issues.jsonl
+fbd import -i backup.jsonl --dry-run
+fbd import -i issues.jsonl --orphan-handling resurrect
+fbd import -i issues.jsonl --dedupe-after --json
 ```
 
-## bd migrate
+## fbd migrate
 
 Migrate database schema.
 
 ```bash
-bd migrate [flags]
+fbd migrate [flags]
 ```
 
 **Flags:**
@@ -2885,18 +2885,18 @@ bd migrate [flags]
 
 **Examples:**
 ```bash
-bd migrate --inspect --json
-bd migrate --dry-run
-bd migrate
-bd migrate --cleanup --yes
+fbd migrate --inspect --json
+fbd migrate --dry-run
+fbd migrate
+fbd migrate --cleanup --yes
 ```
 
-## bd hooks
+## fbd hooks
 
 Manage git hooks.
 
 ```bash
-bd hooks <subcommand> [flags]
+fbd hooks <subcommand> [flags]
 ```
 
 **Subcommands:**
@@ -2908,9 +2908,9 @@ bd hooks <subcommand> [flags]
 
 **Examples:**
 ```bash
-bd hooks install
-bd hooks status
-bd hooks uninstall
+fbd hooks install
+fbd hooks status
+fbd hooks uninstall
 ```
 
 ## Auto-Sync Behavior
@@ -2928,8 +2928,8 @@ Use `--no-daemon` flag:
 - Must manually export/sync
 
 ```bash
-bd --no-daemon create "Task"
-bd export  # Manual export needed
+fbd --no-daemon create "Task"
+fbd export  # Manual export needed
 ```
 
 ## Conflict Resolution
@@ -2939,7 +2939,7 @@ bd export  # Manual export needed
 Install the beads merge driver:
 
 ```bash
-bd init  # Prompts for merge driver setup
+fbd init  # Prompts for merge driver setup
 ```
 
 The driver automatically:
@@ -2952,8 +2952,8 @@ The driver automatically:
 ```bash
 # After merge conflict
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 ```
 
 ## Deletion Tracking
@@ -2962,11 +2962,11 @@ Deletions sync via `.beads/deletions.jsonl`:
 
 ```bash
 # Delete issue
-bd delete bd-42
+fbd delete bd-42
 
 # View deletions
-bd deleted
-bd deleted --since=30d
+fbd deleted
+fbd deleted --since=30d
 
 # Deletions propagate via git
 git pull  # Imports deletions from remote
@@ -2974,10 +2974,10 @@ git pull  # Imports deletions from remote
 
 ## Best Practices
 
-1. **Always sync at session end** - `bd sync`
-2. **Install git hooks** - `bd hooks install`
+1. **Always sync at session end** - `fbd sync`
+2. **Install git hooks** - `fbd hooks install`
 3. **Use merge driver** - Avoids manual conflict resolution
-4. **Check sync status** - `bd info` shows daemon/sync state
+4. **Check sync status** - `fbd info` shows daemon/sync state
 
 </document>
 
@@ -3023,7 +3023,7 @@ needs = ["design"]
 ### Molecules
 
 Work graphs with parent-child relationships:
-- Created by instantiating formulas with `bd pour`
+- Created by instantiating formulas with `fbd pour`
 - Steps have dependencies (`needs`)
 - Progress tracked via issue status
 
@@ -3037,7 +3037,7 @@ Async coordination primitives:
 ### Wisps
 
 Ephemeral operations that don't sync to git:
-- Created with `bd wisp`
+- Created with `fbd wisp`
 - Stored in `.beads-wisp/` (gitignored)
 - Auto-expire after completion
 
@@ -3045,24 +3045,24 @@ Ephemeral operations that don't sync to git:
 
 | Command | Description |
 |---------|-------------|
-| `bd pour` | Instantiate formula as molecule |
-| `bd wisp` | Create ephemeral wisp |
-| `bd mol list` | List molecules |
-| `bd pin` | Pin work to agent |
-| `bd hook` | Show pinned work |
+| `fbd pour` | Instantiate formula as molecule |
+| `fbd wisp` | Create ephemeral wisp |
+| `fbd mol list` | List molecules |
+| `fbd pin` | Pin work to agent |
+| `fbd hook` | Show pinned work |
 
 ## Simple Example
 
 ```bash
 # Create a release workflow
-bd pour release --var version=1.0.0
+fbd pour release --var version=1.0.0
 
 # View the molecule
-bd mol show release-1.0.0
+fbd mol show release-1.0.0
 
 # Work through steps
-bd update release-1.0.0.1 --status in_progress
-bd close release-1.0.0.1
+fbd update release-1.0.0.1 --status in_progress
+fbd close release-1.0.0.1
 # Next step becomes ready...
 ```
 
@@ -3268,20 +3268,20 @@ Formulas are searched in order:
 
 ```bash
 # List available formulas
-bd mol list
+fbd mol list
 
 # Pour formula into molecule
-bd pour <formula-name> --var key=value
+fbd pour <formula-name> --var key=value
 
 # Preview what would be created
-bd pour <formula-name> --dry-run
+fbd pour <formula-name> --dry-run
 ```
 
 ## Creating Custom Formulas
 
 1. Create file: `.beads/formulas/my-workflow.formula.toml`
 2. Define structure (see examples above)
-3. Use with: `bd pour my-workflow`
+3. Use with: `fbd pour my-workflow`
 
 ## Example: Release Formula
 
@@ -3497,8 +3497,8 @@ type = "human"
 ### Check Gate Status
 
 ```bash
-bd show bd-xyz.3  # Shows gate state
-bd show bd-xyz.3 --json | jq '.gate'
+fbd show bd-xyz.3  # Shows gate state
+fbd show bd-xyz.3 --json | jq '.gate'
 ```
 
 ### Manual Gate Override
@@ -3506,13 +3506,13 @@ bd show bd-xyz.3 --json | jq '.gate'
 For human gates:
 
 ```bash
-bd gate approve bd-xyz.3 --approver "team-lead"
+fbd gate approve bd-xyz.3 --approver "team-lead"
 ```
 
 ### Skip Gate (Emergency)
 
 ```bash
-bd gate skip bd-xyz.3 --reason "Emergency deploy"
+fbd gate skip bd-xyz.3 --reason "Emergency deploy"
 ```
 
 ## waits-for Dependency
@@ -3563,12 +3563,12 @@ A molecule is a persistent instance of a formula:
 
 ```bash
 # Pour a formula into a molecule
-bd pour <formula-name> [--var key=value]
+fbd pour <formula-name> [--var key=value]
 ```
 
 **Example:**
 ```bash
-bd pour release --var version=1.0.0
+fbd pour release --var version=1.0.0
 ```
 
 This creates:
@@ -3578,15 +3578,15 @@ This creates:
 ### Listing Molecules
 
 ```bash
-bd mol list
-bd mol list --json
+fbd mol list
+fbd mol list --json
 ```
 
 ### Viewing a Molecule
 
 ```bash
-bd mol show <molecule-id>
-bd dep tree <molecule-id>  # Shows full hierarchy
+fbd mol show <molecule-id>
+fbd dep tree <molecule-id>  # Shows full hierarchy
 ```
 
 ## Working with Molecules
@@ -3602,40 +3602,40 @@ title = "Implement feature"
 needs = ["design"]  # Must complete design first
 ```
 
-The `bd ready` command respects these:
+The `fbd ready` command respects these:
 
 ```bash
-bd ready  # Only shows steps with completed dependencies
+fbd ready  # Only shows steps with completed dependencies
 ```
 
 ### Progressing Through Steps
 
 ```bash
 # Start a step
-bd update bd-xyz.1 --status in_progress
+fbd update bd-xyz.1 --status in_progress
 
 # Complete a step
-bd close bd-xyz.1 --reason "Done"
+fbd close bd-xyz.1 --reason "Done"
 
 # Check what's ready next
-bd ready
+fbd ready
 ```
 
 ### Viewing Progress
 
 ```bash
 # See blocked steps
-bd blocked
+fbd blocked
 
 # See molecule stats
-bd stats
+fbd stats
 ```
 
 ## Molecule Lifecycle
 
 ```
 Formula (template)
-    ↓ bd pour
+    ↓ fbd pour
 Molecule (instance)
     ↓ work steps
 Completed Molecule
@@ -3676,27 +3676,27 @@ Assign molecules to agents:
 
 ```bash
 # Pin to current agent
-bd pin bd-xyz --start
+fbd pin bd-xyz --start
 
 # Check what's pinned
-bd hook
+fbd hook
 ```
 
 ## Example Workflow
 
 ```bash
 # 1. Create molecule from formula
-bd pour feature-workflow --var name="dark-mode"
+fbd pour feature-workflow --var name="dark-mode"
 
 # 2. View structure
-bd dep tree bd-xyz
+fbd dep tree bd-xyz
 
 # 3. Start first step
-bd update bd-xyz.1 --status in_progress
+fbd update bd-xyz.1 --status in_progress
 
 # 4. Complete and progress
-bd close bd-xyz.1
-bd ready  # Shows next steps
+fbd close bd-xyz.1
+fbd ready  # Shows next steps
 
 # 5. Continue until complete
 ```
@@ -3737,27 +3737,27 @@ Wisps are "vapor phase" molecules:
 
 ```bash
 # Create wisp from formula
-bd wisp create <formula> [--var key=value]
+fbd wisp create <formula> [--var key=value]
 
 # Example
-bd wisp create quick-check --var target=auth-module
+fbd wisp create quick-check --var target=auth-module
 ```
 
 ## Wisp Commands
 
 ```bash
 # List wisps
-bd wisp list
-bd wisp list --json
+fbd wisp list
+fbd wisp list --json
 
 # Show wisp details
-bd wisp show <wisp-id>
+fbd wisp show <wisp-id>
 
 # Delete wisp
-bd wisp delete <wisp-id>
+fbd wisp delete <wisp-id>
 
 # Delete all completed wisps
-bd wisp cleanup
+fbd wisp cleanup
 ```
 
 ## Wisp vs Molecule
@@ -3771,14 +3771,14 @@ bd wisp cleanup
 
 ## Phase Control
 
-Use `bd mol bond` to control phase:
+Use `fbd mol bond` to control phase:
 
 ```bash
 # Force liquid (persistent molecule)
-bd mol bond <formula> <target> --pour
+fbd mol bond <formula> <target> --pour
 
 # Force vapor (ephemeral wisp)
-bd mol bond <formula> <target> --wisp
+fbd mol bond <formula> <target> --wisp
 ```
 
 ## Example: Quick Check Workflow
@@ -3808,9 +3808,9 @@ needs = ["test"]
 Use as wisp:
 
 ```bash
-bd wisp create quick-check
+fbd wisp create quick-check
 # Work through steps...
-bd wisp cleanup  # Remove when done
+fbd wisp cleanup  # Remove when done
 ```
 
 ## Auto-Expiration
@@ -3825,14 +3825,14 @@ expires_after = "24h"  # Auto-delete after 24 hours
 Or cleanup manually:
 
 ```bash
-bd wisp cleanup --all  # Remove all wisps
-bd wisp cleanup --completed  # Remove only completed
+fbd wisp cleanup --all  # Remove all wisps
+fbd wisp cleanup --completed  # Remove only completed
 ```
 
 ## Best Practices
 
 1. **Use wisps for local-only work** - Don't sync to git
-2. **Clean up regularly** - `bd wisp cleanup`
+2. **Clean up regularly** - `fbd wisp cleanup`
 3. **Use molecules for tracked work** - Wisps are ephemeral
 4. **Consider CI/CD wisps** - Perfect for pipeline steps
 
@@ -3869,8 +3869,8 @@ Routes define which repository handles which issues:
 Pin work to specific agents:
 
 ```bash
-bd pin bd-42 --for agent-1 --start
-bd hook --agent agent-1  # Show pinned work
+fbd pin bd-42 --for agent-1 --start
+fbd hook --agent agent-1  # Show pinned work
 ```
 
 ### Cross-repo Dependencies
@@ -3878,7 +3878,7 @@ bd hook --agent agent-1  # Show pinned work
 Track dependencies across repositories:
 
 ```bash
-bd dep add bd-42 external:other-repo/bd-100
+fbd dep add bd-42 external:other-repo/bd-100
 ```
 
 ## Architecture
@@ -3925,26 +3925,26 @@ Assign work to a specific agent:
 
 ```bash
 # Pin issue to agent
-bd pin bd-42 --for agent-1
+fbd pin bd-42 --for agent-1
 
 # Pin and start work
-bd pin bd-42 --for agent-1 --start
+fbd pin bd-42 --for agent-1 --start
 
 # Unpin work
-bd unpin bd-42
+fbd unpin bd-42
 ```
 
 ### Checking Pinned Work
 
 ```bash
 # What's on my hook?
-bd hook
+fbd hook
 
 # What's on agent-1's hook?
-bd hook --agent agent-1
+fbd hook --agent agent-1
 
 # JSON output
-bd hook --json
+fbd hook --json
 ```
 
 ## Handoff Patterns
@@ -3955,12 +3955,12 @@ Agent A completes work, hands off to Agent B:
 
 ```bash
 # Agent A
-bd close bd-42 --reason "Ready for review"
-bd pin bd-42 --for agent-b
+fbd close bd-42 --reason "Ready for review"
+fbd pin bd-42 --for agent-b
 
 # Agent B picks up
-bd hook  # Sees bd-42
-bd update bd-42 --status in_progress
+fbd hook  # Sees bd-42
+fbd update bd-42 --status in_progress
 ```
 
 ### Parallel Work
@@ -3969,13 +3969,13 @@ Multiple agents work on different issues:
 
 ```bash
 # Coordinator
-bd pin bd-42 --for agent-a --start
-bd pin bd-43 --for agent-b --start
-bd pin bd-44 --for agent-c --start
+fbd pin bd-42 --for agent-a --start
+fbd pin bd-43 --for agent-b --start
+fbd pin bd-44 --for agent-c --start
 
 # Each agent works independently
 # Coordinator monitors progress
-bd list --status in_progress --json
+fbd list --status in_progress --json
 ```
 
 ### Fan-Out / Fan-In
@@ -3984,16 +3984,16 @@ Split work, then merge:
 
 ```bash
 # Fan-out
-bd create "Part A" --parent bd-epic
-bd create "Part B" --parent bd-epic
-bd create "Part C" --parent bd-epic
+fbd create "Part A" --parent bd-epic
+fbd create "Part B" --parent bd-epic
+fbd create "Part C" --parent bd-epic
 
-bd pin bd-epic.1 --for agent-a
-bd pin bd-epic.2 --for agent-b
-bd pin bd-epic.3 --for agent-c
+fbd pin bd-epic.1 --for agent-a
+fbd pin bd-epic.2 --for agent-b
+fbd pin bd-epic.3 --for agent-c
 
 # Fan-in: wait for all parts
-bd dep add bd-merge bd-epic.1 bd-epic.2 bd-epic.3
+fbd dep add bd-merge bd-epic.1 bd-epic.2 bd-epic.3
 ```
 
 ## Agent Discovery
@@ -4002,10 +4002,10 @@ Find available agents:
 
 ```bash
 # List known agents (if using agent registry)
-bd agents list
+fbd agents list
 
 # Check agent status
-bd agents status agent-1
+fbd agents status agent-1
 ```
 
 ## Conflict Prevention
@@ -4016,23 +4016,23 @@ Prevent concurrent edits:
 
 ```bash
 # Reserve files before editing
-bd reserve auth.go --for agent-1
+fbd reserve auth.go --for agent-1
 
 # Check reservations
-bd reservations list
+fbd reservations list
 
 # Release when done
-bd reserve --release auth.go
+fbd reserve --release auth.go
 ```
 
 ### Issue Locking
 
 ```bash
 # Lock issue for exclusive work
-bd lock bd-42 --for agent-1
+fbd lock bd-42 --for agent-1
 
 # Unlock when done
-bd unlock bd-42
+fbd unlock bd-42
 ```
 
 ## Communication Patterns
@@ -4041,20 +4041,20 @@ bd unlock bd-42
 
 ```bash
 # Agent A leaves note
-bd comment add bd-42 "Completed API, needs frontend integration"
+fbd comment add bd-42 "Completed API, needs frontend integration"
 
 # Agent B reads
-bd show bd-42 --full
+fbd show bd-42 --full
 ```
 
 ### Via Labels
 
 ```bash
 # Mark for review
-bd update bd-42 --add-label "needs-review"
+fbd update bd-42 --add-label "needs-review"
 
 # Agent B filters
-bd list --label-any needs-review
+fbd list --label-any needs-review
 ```
 
 ## Best Practices
@@ -4118,18 +4118,18 @@ Patterns match against:
 
 ```bash
 # Show routing table
-bd routes list
-bd routes list --json
+fbd routes list
+fbd routes list --json
 
 # Test routing
-bd routes test "Fix frontend button"
-bd routes test --label frontend
+fbd routes test "Fix frontend button"
+fbd routes test --label frontend
 
 # Add route
-bd routes add "frontend/**" --target frontend-repo --priority 10
+fbd routes add "frontend/**" --target frontend-repo --priority 10
 
 # Remove route
-bd routes remove "frontend/**"
+fbd routes remove "frontend/**"
 ```
 
 ## Auto-Routing
@@ -4137,14 +4137,14 @@ bd routes remove "frontend/**"
 When creating issues, beads checks routes:
 
 ```bash
-bd create "Fix frontend button alignment" -t bug
+fbd create "Fix frontend button alignment" -t bug
 # Auto-routed to frontend-repo based on title match
 ```
 
 Override with explicit target:
 
 ```bash
-bd create "Fix button" --repo backend-repo
+fbd create "Fix button" --repo backend-repo
 ```
 
 ## Cross-Repo Dependencies
@@ -4153,10 +4153,10 @@ Track dependencies across repos:
 
 ```bash
 # In frontend-repo
-bd dep add bd-42 external:backend-repo/bd-100
+fbd dep add bd-42 external:backend-repo/bd-100
 
 # View cross-repo deps
-bd dep tree bd-42 --cross-repo
+fbd dep tree bd-42 --cross-repo
 ```
 
 ## Hydration
@@ -4165,13 +4165,13 @@ Pull related issues from other repos:
 
 ```bash
 # Hydrate issues from related repos
-bd hydrate
+fbd hydrate
 
 # Preview hydration
-bd hydrate --dry-run
+fbd hydrate --dry-run
 
 # Hydrate specific repo
-bd hydrate --from backend-repo
+fbd hydrate --from backend-repo
 ```
 
 ## Best Practices
@@ -4179,7 +4179,7 @@ bd hydrate --from backend-repo
 1. **Use specific patterns** - Avoid overly broad matches
 2. **Set priorities** - Ensure specific patterns match first
 3. **Default fallback** - Always have a `*` pattern with lowest priority
-4. **Test routes** - Use `bd routes test` before committing
+4. **Test routes** - Use `fbd routes test` before committing
 
 </document>
 
@@ -4195,7 +4195,7 @@ How to use beads with Aider.
 ### Quick Setup
 
 ```bash
-bd setup aider
+fbd setup aider
 ```
 
 This creates/updates `.aider.conf.yml` with beads context.
@@ -4203,7 +4203,7 @@ This creates/updates `.aider.conf.yml` with beads context.
 ### Verify Setup
 
 ```bash
-bd setup aider --check
+fbd setup aider --check
 ```
 
 ## Configuration
@@ -4215,7 +4215,7 @@ The setup adds to `.aider.conf.yml`:
 read:
   - .beads/issues.jsonl
 
-# Optional: Auto-run bd prime
+# Optional: Auto-run fbd prime
 auto-commits: false
 ```
 
@@ -4228,30 +4228,30 @@ auto-commits: false
 aider
 
 # Or manually inject context
-bd prime | aider --message-file -
+fbd prime | aider --message-file -
 ```
 
 ### During Work
 
-Use bd commands alongside aider:
+Use fbd commands alongside aider:
 
 ```bash
 # In another terminal or after exiting aider
-bd create "Found bug during work" --deps discovered-from:bd-42 --json
-bd update bd-42 --status in_progress
-bd ready
+fbd create "Found bug during work" --deps discovered-from:bd-42 --json
+fbd update bd-42 --status in_progress
+fbd ready
 ```
 
 ### End Session
 
 ```bash
-bd sync
+fbd sync
 ```
 
 ## Best Practices
 
 1. **Keep issues visible** - Aider reads `.beads/issues.jsonl`
-2. **Sync regularly** - Run `bd sync` after significant changes
+2. **Sync regularly** - Run `fbd sync` after significant changes
 3. **Use discovered-from** - Track issues found during work
 4. **Document context** - Include descriptions in issues
 
@@ -4259,7 +4259,7 @@ bd sync
 
 ```bash
 # 1. Check ready work
-bd ready
+fbd ready
 
 # 2. Start aider with issue context
 aider --message "Working on bd-42: Fix auth bug"
@@ -4267,11 +4267,11 @@ aider --message "Working on bd-42: Fix auth bug"
 # 3. Work in aider...
 
 # 4. Create discovered issues
-bd create "Found related bug" --deps discovered-from:bd-42 --json
+fbd create "Found related bug" --deps discovered-from:bd-42 --json
 
 # 5. Complete and sync
-bd close bd-42 --reason "Fixed"
-bd sync
+fbd close bd-42 --reason "Fixed"
+fbd sync
 ```
 
 ## Troubleshooting
@@ -4283,7 +4283,7 @@ bd sync
 cat .aider.conf.yml
 
 # Regenerate
-bd setup aider
+fbd setup aider
 ```
 
 ### Issues not visible
@@ -4293,7 +4293,7 @@ bd setup aider
 ls -la .beads/issues.jsonl
 
 # Export if missing
-bd export
+fbd export
 ```
 
 ## See Also
@@ -4315,12 +4315,12 @@ How to use beads with Claude Code.
 ### Quick Setup
 
 ```bash
-bd setup claude
+fbd setup claude
 ```
 
 This installs:
-- **SessionStart hook** - Runs `bd prime` on session start
-- **PreCompact hook** - Runs `bd sync` before context compaction
+- **SessionStart hook** - Runs `fbd prime` on session start
+- **PreCompact hook** - Runs `fbd sync` before context compaction
 
 ### Manual Setup
 
@@ -4329,8 +4329,8 @@ Add to your Claude Code hooks configuration:
 ```json
 {
   "hooks": {
-    "SessionStart": ["bd prime"],
-    "PreCompact": ["bd sync"]
+    "SessionStart": ["fbd prime"],
+    "PreCompact": ["fbd sync"]
   }
 }
 ```
@@ -4338,14 +4338,14 @@ Add to your Claude Code hooks configuration:
 ### Verify Setup
 
 ```bash
-bd setup claude --check
+fbd setup claude --check
 ```
 
 ## How It Works
 
-1. **Session starts** → `bd prime` injects ~1-2k tokens of context
-2. **You work** → Use `bd` CLI commands directly
-3. **Session compacts** → `bd sync` saves work to git
+1. **Session starts** → `fbd prime` injects ~1-2k tokens of context
+2. **You work** → Use `fbd` CLI commands directly
+3. **Session compacts** → `fbd sync` saves work to git
 4. **Session ends** → Changes synced via git
 
 ## Essential Commands for Agents
@@ -4354,12 +4354,12 @@ bd setup claude --check
 
 ```bash
 # Always include description for context
-bd create "Fix authentication bug" \
+fbd create "Fix authentication bug" \
   --description="Login fails with special characters in password" \
   -t bug -p 1 --json
 
 # Link discovered issues
-bd create "Found SQL injection" \
+fbd create "Found SQL injection" \
   --description="User input not sanitized in query builder" \
   --deps discovered-from:bd-42 --json
 ```
@@ -4368,33 +4368,33 @@ bd create "Found SQL injection" \
 
 ```bash
 # Find ready work
-bd ready --json
+fbd ready --json
 
 # Start work
-bd update bd-42 --status in_progress --json
+fbd update bd-42 --status in_progress --json
 
 # Complete work
-bd close bd-42 --reason "Fixed in commit abc123" --json
+fbd close bd-42 --reason "Fixed in commit abc123" --json
 ```
 
 ### Querying
 
 ```bash
 # List open issues
-bd list --status open --json
+fbd list --status open --json
 
 # Show issue details
-bd show bd-42 --json
+fbd show bd-42 --json
 
 # Check blocked issues
-bd blocked --json
+fbd blocked --json
 ```
 
 ### Syncing
 
 ```bash
 # ALWAYS run at session end
-bd sync
+fbd sync
 ```
 
 ## Best Practices
@@ -4402,28 +4402,28 @@ bd sync
 ### Always Use `--json`
 
 ```bash
-bd list --json          # Parse programmatically
-bd create "Task" --json # Get issue ID from output
-bd show bd-42 --json    # Structured data
+fbd list --json          # Parse programmatically
+fbd create "Task" --json # Get issue ID from output
+fbd show bd-42 --json    # Structured data
 ```
 
 ### Always Include Descriptions
 
 ```bash
 # Good
-bd create "Fix auth bug" \
+fbd create "Fix auth bug" \
   --description="Login fails when password contains quotes" \
   -t bug -p 1 --json
 
 # Bad - no context for future work
-bd create "Fix auth bug" -t bug -p 1 --json
+fbd create "Fix auth bug" -t bug -p 1 --json
 ```
 
 ### Link Related Work
 
 ```bash
 # When you discover issues during work
-bd create "Found related bug" \
+fbd create "Found related bug" \
   --deps discovered-from:bd-current --json
 ```
 
@@ -4431,7 +4431,7 @@ bd create "Found related bug" \
 
 ```bash
 # ALWAYS run before ending
-bd sync
+fbd sync
 ```
 
 ## Plugin (Optional)
@@ -4458,28 +4458,28 @@ Adds slash commands:
 
 ```bash
 # Check hook setup
-bd setup claude --check
+fbd setup claude --check
 
 # Manually prime
-bd prime
+fbd prime
 ```
 
 ### Changes not syncing
 
 ```bash
 # Force sync
-bd sync
+fbd sync
 
 # Check daemon
-bd info
-bd daemons health
+fbd info
+fbd daemons health
 ```
 
 ### Database not found
 
 ```bash
 # Initialize beads
-bd init --quiet
+fbd init --quiet
 ```
 
 ## See Also
@@ -4586,7 +4586,7 @@ Once configured, use naturally:
 Create an issue for fixing the login bug with priority 1
 ```
 
-The MCP server translates to appropriate `bd` commands.
+The MCP server translates to appropriate `fbd` commands.
 
 ## Trade-offs
 
@@ -4628,7 +4628,7 @@ pip install beads-mcp
 ls -la .beads/
 
 # Initialize if needed
-bd init --quiet
+fbd init --quiet
 ```
 
 ## See Also
@@ -4652,7 +4652,7 @@ This section provides step-by-step recovery procedures for common Beads issues. 
 | Database Corruption | SQLite errors, missing data | [Database Corruption](/recovery/database-corruption) |
 | Merge Conflicts | JSONL conflicts during sync | [Merge Conflicts](/recovery/merge-conflicts) |
 | Circular Dependencies | Cycle detection errors | [Circular Dependencies](/recovery/circular-dependencies) |
-| Sync Failures | `bd sync` errors | [Sync Failures](/recovery/sync-failures) |
+| Sync Failures | `fbd sync` errors | [Sync Failures](/recovery/sync-failures) |
 
 ## Quick Diagnostic
 
@@ -4660,17 +4660,17 @@ Before diving into specific runbooks, try these quick checks:
 
 ```bash
 # Check Beads status
-bd status
+fbd status
 
 # Verify daemon is running
-bd daemon status
+fbd daemon status
 
 # Check for blocked issues
-bd blocked
+fbd blocked
 ```
 
 :::tip
-Most issues can be diagnosed with `bd status`. Start there before following specific runbooks.
+Most issues can be diagnosed with `fbd status`. Start there before following specific runbooks.
 :::
 
 ## Getting Help
@@ -4678,7 +4678,7 @@ Most issues can be diagnosed with `bd status`. Start there before following spec
 If these runbooks don't resolve your issue:
 
 1. Check the [FAQ](/reference/faq)
-2. Search [existing issues](https://github.com/steveyegge/beads/issues)
+2. Search [existing issues](https://github.com/steveyegge/fastbeads/issues)
 3. Open a new issue with diagnostic output
 
 </document>
@@ -4693,33 +4693,33 @@ This runbook helps you detect and break circular dependency cycles in your issue
 ## Symptoms
 
 - "circular dependency detected" errors
-- `bd blocked` shows unexpected results
+- `fbd blocked` shows unexpected results
 - Issues that should be ready appear blocked
 
 ## Diagnosis
 
 ```bash
 # Check for blocked issues
-bd blocked
+fbd blocked
 
 # View dependencies for a specific issue
-bd show <issue-id>
+fbd show <issue-id>
 
 # List all dependencies
-bd dep tree
+fbd dep tree
 ```
 
 ## Solution
 
 **Step 1:** Identify the cycle
 ```bash
-bd blocked --verbose
+fbd blocked --verbose
 ```
 
 **Step 2:** Map the dependency chain
 ```bash
-bd show <issue-a>
-bd show <issue-b>
+fbd show <issue-a>
+fbd show <issue-b>
 # Follow the chain until you return to <issue-a>
 ```
 
@@ -4728,19 +4728,19 @@ Consider: Which dependency is least critical to the workflow?
 
 **Step 4:** Remove the problematic dependency
 ```bash
-bd dep remove <dependent-issue> <blocking-issue>
+fbd dep remove <dependent-issue> <blocking-issue>
 ```
 
 **Step 5:** Verify the cycle is broken
 ```bash
-bd blocked
-bd ready
+fbd blocked
+fbd ready
 ```
 
 ## Prevention
 
 - Think "X needs Y" not "X before Y" when adding dependencies
-- Use `bd blocked` after adding dependencies to check for cycles
+- Use `fbd blocked` after adding dependencies to check for cycles
 - Keep dependency chains shallow when possible
 
 </document>
@@ -4754,7 +4754,7 @@ This runbook helps you recover from SQLite database corruption in Beads.
 
 ## Symptoms
 
-- SQLite error messages during `bd` commands
+- SQLite error messages during `fbd` commands
 - "database is locked" errors that persist
 - Missing issues that should exist
 - Inconsistent state between JSONL and database
@@ -4763,7 +4763,7 @@ This runbook helps you recover from SQLite database corruption in Beads.
 
 ```bash
 # Check database integrity
-bd status
+fbd status
 
 # Look for corruption indicators
 ls -la .beads/beads.db*
@@ -4779,7 +4779,7 @@ Back up your `.beads/` directory before proceeding.
 
 **Step 1:** Stop the daemon
 ```bash
-bd daemon stop
+fbd daemon stop
 ```
 
 **Step 2:** Back up current state
@@ -4789,25 +4789,25 @@ cp -r .beads .beads.backup
 
 **Step 3:** Rebuild from JSONL (source of truth)
 ```bash
-bd doctor --fix
+fbd doctor --fix
 ```
 
 **Step 4:** Verify recovery
 ```bash
-bd status
-bd list
+fbd status
+fbd list
 ```
 
 **Step 5:** Restart daemon
 ```bash
-bd daemon start
+fbd daemon start
 ```
 
 ## Prevention
 
-- Avoid interrupting `bd sync` operations
+- Avoid interrupting `fbd sync` operations
 - Let the daemon handle synchronization
-- Use `bd daemon stop` before system shutdown
+- Use `fbd daemon stop` before system shutdown
 
 </document>
 
@@ -4821,7 +4821,7 @@ This runbook helps you resolve JSONL merge conflicts that occur during Git opera
 ## Symptoms
 
 - Git merge conflicts in `.beads/*.jsonl` files
-- `bd sync` fails with conflict errors
+- `fbd sync` fails with conflict errors
 - Different issue states between clones
 
 ## Diagnosis
@@ -4854,13 +4854,13 @@ git add .beads/issues.jsonl
 
 **Step 3:** Force rebuild to reconcile
 ```bash
-bd doctor --fix
+fbd doctor --fix
 ```
 
 **Step 4:** Verify state
 ```bash
-bd list
-bd status
+fbd list
+fbd status
 ```
 
 **Step 5:** Complete the merge
@@ -4871,7 +4871,7 @@ git commit -m "Resolved beads merge conflicts"
 ## Prevention
 
 - Sync before and after Git operations
-- Use `bd sync` regularly
+- Use `fbd sync` regularly
 - Avoid concurrent modifications from multiple clones
 
 </document>
@@ -4881,11 +4881,11 @@ git commit -m "Resolved beads merge conflicts"
 
 # Sync Failures Recovery
 
-This runbook helps you recover from `bd sync` failures.
+This runbook helps you recover from `fbd sync` failures.
 
 ## Symptoms
 
-- `bd sync` hangs or times out
+- `fbd sync` hangs or times out
 - Network-related error messages
 - "failed to push" or "failed to pull" errors
 - Daemon not responding
@@ -4894,10 +4894,10 @@ This runbook helps you recover from `bd sync` failures.
 
 ```bash
 # Check daemon status
-bd daemon status
+fbd daemon status
 
 # Check sync state
-bd status
+fbd status
 
 # View daemon logs
 cat .beads/daemon.log | tail -50
@@ -4907,7 +4907,7 @@ cat .beads/daemon.log | tail -50
 
 **Step 1:** Stop the daemon
 ```bash
-bd daemon stop
+fbd daemon stop
 ```
 
 **Step 2:** Check for lock files
@@ -4919,18 +4919,18 @@ rm -f .beads/*.lock
 
 **Step 3:** Force a fresh sync
 ```bash
-bd doctor --fix
+fbd doctor --fix
 ```
 
 **Step 4:** Restart daemon
 ```bash
-bd daemon start
+fbd daemon start
 ```
 
 **Step 5:** Verify sync works
 ```bash
-bd sync
-bd status
+fbd sync
+fbd status
 ```
 
 ## Common Causes
@@ -4939,14 +4939,14 @@ bd status
 |-------|----------|
 | Network timeout | Retry with better connection |
 | Stale lock file | Remove lock after stopping daemon |
-| Corrupted state | Use `bd doctor --fix` |
+| Corrupted state | Use `fbd doctor --fix` |
 | Git conflicts | See [Merge Conflicts](/recovery/merge-conflicts) |
 
 ## Prevention
 
 - Ensure stable network before sync
 - Let sync complete before closing terminal
-- Use `bd daemon stop` before system shutdown
+- Use `fbd daemon stop` before system shutdown
 
 </document>
 
@@ -4962,8 +4962,8 @@ Advanced beads functionality.
 Rename issues while preserving references:
 
 ```bash
-bd rename bd-42 bd-new-id
-bd rename bd-42 bd-new-id --dry-run  # Preview
+fbd rename bd-42 bd-new-id
+fbd rename bd-42 bd-new-id --dry-run  # Preview
 ```
 
 Updates:
@@ -4976,8 +4976,8 @@ Updates:
 Merge duplicate issues:
 
 ```bash
-bd merge bd-42 bd-43 --into bd-41
-bd merge bd-42 bd-43 --into bd-41 --dry-run
+fbd merge bd-42 bd-43 --into bd-41
+fbd merge bd-42 bd-43 --into bd-41 --dry-run
 ```
 
 What gets merged:
@@ -4991,16 +4991,16 @@ Reduce database size by compacting old issues:
 
 ```bash
 # View compaction statistics
-bd admin compact --stats
+fbd admin compact --stats
 
 # Preview candidates (30+ days closed)
-bd admin compact --analyze --json
+fbd admin compact --analyze --json
 
 # Apply agent-generated summary
-bd admin compact --apply --id bd-42 --summary summary.txt
+fbd admin compact --apply --id bd-42 --summary summary.txt
 
 # Immediate deletion (CAUTION!)
-bd admin cleanup --force
+fbd admin cleanup --force
 ```
 
 **When to compact:**
@@ -5013,15 +5013,15 @@ bd admin cleanup --force
 View deleted or compacted issues from git:
 
 ```bash
-bd restore bd-42 --show
-bd restore bd-42 --to-file issue.json
+fbd restore bd-42 --show
+fbd restore bd-42 --to-file issue.json
 ```
 
 ## Database Inspection
 
 ```bash
 # Schema info
-bd info --schema --json
+fbd info --schema --json
 
 # Raw database query (advanced)
 sqlite3 .beads/beads.db "SELECT * FROM issues LIMIT 5"
@@ -5038,7 +5038,7 @@ storage.UnderlyingDB().Exec(`
 `)
 ```
 
-See [EXTENDING.md](https://github.com/steveyegge/beads/blob/main/docs/EXTENDING.md).
+See [EXTENDING.md](https://github.com/steveyegge/fastbeads/blob/main/docs/EXTENDING.md).
 
 ## Event System
 
@@ -5046,10 +5046,10 @@ Subscribe to beads events:
 
 ```bash
 # View recent events
-bd events list --since 1h
+fbd events list --since 1h
 
 # Watch events in real-time
-bd events watch
+fbd events watch
 ```
 
 Events:
@@ -5064,23 +5064,23 @@ Events:
 ### Create Multiple
 
 ```bash
-cat issues.jsonl | bd import -i -
+cat issues.jsonl | fbd import -i -
 ```
 
 ### Update Multiple
 
 ```bash
-bd list --status open --priority 4 --json | \
+fbd list --status open --priority 4 --json | \
   jq -r '.[].id' | \
-  xargs -I {} bd update {} --priority 3
+  xargs -I {} fbd update {} --priority 3
 ```
 
 ### Close Multiple
 
 ```bash
-bd list --label "sprint-1" --status open --json | \
+fbd list --label "sprint-1" --status open --json | \
   jq -r '.[].id' | \
-  xargs -I {} bd close {} --reason "Sprint complete"
+  xargs -I {} fbd close {} --reason "Sprint complete"
 ```
 
 ## API Access
@@ -5088,7 +5088,7 @@ bd list --label "sprint-1" --status open --json | \
 Use beads as a Go library:
 
 ```go
-import "github.com/steveyegge/beads/internal/storage"
+import "github.com/steveyegge/fastbeads/internal/storage"
 
 db, _ := storage.NewSQLite(".beads/beads.db")
 issues, _ := db.ListIssues(storage.ListOptions{
@@ -5102,10 +5102,10 @@ issues, _ := db.ListIssues(storage.ListOptions{
 
 ```bash
 # Enable WAL mode
-bd config set database.wal_mode true
+fbd config set database.wal_mode true
 
 # Increase cache
-bd config set database.cache_size 10000
+fbd config set database.cache_size 10000
 ```
 
 ### Many Concurrent Agents
@@ -5113,7 +5113,7 @@ bd config set database.cache_size 10000
 ```bash
 # Use event-driven daemon
 export BEADS_DAEMON_MODE=events
-bd daemons killall
+fbd daemons killall
 ```
 
 ### CI/CD Optimization
@@ -5121,7 +5121,7 @@ bd daemons killall
 ```bash
 # Disable daemon in CI
 export BEADS_NO_DAEMON=true
-bd --no-daemon list
+fbd --no-daemon list
 ```
 
 </document>
@@ -5144,16 +5144,16 @@ Complete configuration reference for beads.
 
 ```bash
 # Get config value
-bd config get import.orphan_handling
+fbd config get import.orphan_handling
 
 # Set config value
-bd config set import.orphan_handling allow
+fbd config set import.orphan_handling allow
 
 # List all config
-bd config list
+fbd config list
 
 # Reset to default
-bd config reset import.orphan_handling
+fbd config reset import.orphan_handling
 ```
 
 ## Configuration Options
@@ -5169,7 +5169,7 @@ path = ".beads/beads.db"     # Database file location
 
 ```toml
 [id]
-prefix = "bd"                 # Issue ID prefix
+prefix = "fbd"                 # Issue ID prefix
 hash_length = 4               # Hash length in IDs
 ```
 
@@ -5213,7 +5213,7 @@ mode = "poll"                 # poll|events (experimental)
 [git]
 auto_commit = true            # Auto-commit on sync
 auto_push = true              # Auto-push on sync
-commit_message = "bd sync"    # Default commit message
+commit_message = "fbd sync"    # Default commit message
 ```
 
 ### Hooks
@@ -5247,10 +5247,10 @@ prune_on_sync = true          # Auto-prune old records
 
 ```bash
 # Override database
-bd --db /tmp/test.db list
+fbd --db /tmp/test.db list
 
 # Disable daemon for single command
-bd --no-daemon create "Task"
+fbd --no-daemon create "Task"
 ```
 
 ## Example Configuration
@@ -5282,7 +5282,7 @@ retention_days = 90
 ## Viewing Active Configuration
 
 ```bash
-bd info --json | jq '.config'
+fbd info --json | jq '.config'
 ```
 
 </document>
@@ -5343,14 +5343,14 @@ Use `--no-daemon` when not needed (CI, worktrees).
 ```bash
 # Auto-sync via daemon (default)
 # Or manual sync:
-bd sync
+fbd sync
 ```
 
 ### How do I handle merge conflicts?
 
 Install the beads merge driver:
 ```bash
-bd init  # Prompts for merge driver
+fbd init  # Prompts for merge driver
 ```
 
 Or manually resolve and reimport.
@@ -5369,7 +5369,7 @@ Yes! That's what beads was designed for:
 export BEADS_NO_DAEMON=true
 
 # Or per-command
-bd --no-daemon list
+fbd --no-daemon list
 ```
 
 ## Workflows
@@ -5404,16 +5404,16 @@ Async coordination primitives:
 ### How do I integrate with my editor?
 
 ```bash
-bd setup claude   # Claude Code
-bd setup cursor   # Cursor
-bd setup aider    # Aider
+fbd setup claude   # Claude Code
+fbd setup cursor   # Cursor
+fbd setup aider    # Aider
 ```
 
 ### Can beads import from GitHub Issues?
 
 Yes:
 ```bash
-bd import --from github --repo owner/repo
+fbd import --from github --repo owner/repo
 ```
 
 ## Troubleshooting
@@ -5422,31 +5422,31 @@ bd import --from github --repo owner/repo
 
 ```bash
 # Remove stale socket
-rm -f .beads/bd.sock
+rm -f .beads/fbd.sock
 
 # Restart
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### Why aren't my changes syncing?
 
 ```bash
 # Check daemon status
-bd info
+fbd info
 
 # Force sync
-bd sync
+fbd sync
 
 # Check hooks
-bd hooks status
+fbd hooks status
 ```
 
 ### How do I report a bug?
 
-1. Check existing issues: https://github.com/steveyegge/beads/issues
-2. Include: `bd version`, `bd info --json`, reproduction steps
-3. File at: https://github.com/steveyegge/beads/issues/new
+1. Check existing issues: https://github.com/steveyegge/fastbeads/issues
+2. Include: `fbd version`, `fbd info --json`, reproduction steps
+3. File at: https://github.com/steveyegge/fastbeads/issues/new
 
 </document>
 
@@ -5473,7 +5473,7 @@ Beads uses git for:
 ├── issues.jsonl       # Issue data (git-tracked)
 ├── deletions.jsonl    # Deletion manifest (git-tracked)
 ├── config.toml        # Project config (git-tracked)
-└── bd.sock            # Daemon socket (gitignored)
+└── fbd.sock            # Daemon socket (gitignored)
 ```
 
 ## Git Hooks
@@ -5481,7 +5481,7 @@ Beads uses git for:
 ### Installation
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 Installs:
@@ -5492,13 +5492,13 @@ Installs:
 ### Status
 
 ```bash
-bd hooks status
+fbd hooks status
 ```
 
 ### Uninstall
 
 ```bash
-bd hooks uninstall
+fbd hooks uninstall
 ```
 
 ## Merge Driver
@@ -5513,7 +5513,7 @@ The beads merge driver handles JSONL conflicts automatically:
 ### Installation
 
 ```bash
-bd init  # Prompts for merge driver setup
+fbd init  # Prompts for merge driver setup
 ```
 
 Or manually add to `.gitattributes`:
@@ -5528,7 +5528,7 @@ And `.git/config`:
 ```ini
 [merge "beads"]
     name = Beads JSONL merge driver
-    driver = bd merge-driver %O %A %B
+    driver = fbd merge-driver %O %A %B
 ```
 
 ## Protected Branches
@@ -5536,7 +5536,7 @@ And `.git/config`:
 For protected main branches:
 
 ```bash
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 This:
@@ -5550,11 +5550,11 @@ Beads requires `--no-daemon` in git worktrees:
 
 ```bash
 # In worktree
-bd --no-daemon create "Task"
-bd --no-daemon list
+fbd --no-daemon create "Task"
+fbd --no-daemon list
 ```
 
-Why: Daemon uses `.beads/bd.sock` which conflicts across worktrees.
+Why: Daemon uses `.beads/fbd.sock` which conflicts across worktrees.
 
 ## Branch Workflows
 
@@ -5562,9 +5562,9 @@ Why: Daemon uses `.beads/bd.sock` which conflicts across worktrees.
 
 ```bash
 git checkout -b feature-x
-bd create "Feature X" -t feature
+fbd create "Feature X" -t feature
 # Work...
-bd sync
+fbd sync
 git push
 ```
 
@@ -5572,15 +5572,15 @@ git push
 
 ```bash
 # In fork
-bd init --contributor
+fbd init --contributor
 # Work in separate planning repo...
-bd sync
+fbd sync
 ```
 
 ### Team Workflow
 
 ```bash
-bd init --team
+fbd init --team
 # All team members share issues.jsonl
 git pull  # Auto-imports via hook
 ```
@@ -5596,8 +5596,8 @@ Automatic - driver handles most conflicts.
 ```bash
 # After conflict
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 git add .beads/
 git commit
 ```
@@ -5607,14 +5607,14 @@ git commit
 After merge:
 
 ```bash
-bd duplicates --auto-merge
+fbd duplicates --auto-merge
 ```
 
 ## Best Practices
 
-1. **Install hooks** - `bd hooks install`
+1. **Install hooks** - `fbd hooks install`
 2. **Use merge driver** - Avoid manual conflict resolution
-3. **Sync regularly** - `bd sync` at session end
+3. **Sync regularly** - `fbd sync` at session end
 4. **Pull before work** - Get latest issues
 5. **Use `--no-daemon` in worktrees**
 
@@ -5629,32 +5629,32 @@ Common issues and solutions.
 
 ## Installation Issues
 
-### `bd: command not found`
+### `fbd: command not found`
 
 ```bash
 # Check if installed
-which bd
-go list -f {{.Target}} github.com/steveyegge/beads/cmd/bd
+which fbd
+go list -f {{.Target}} github.com/steveyegge/fastbeads/cmd/fbd
 
 # Add Go bin to PATH
 export PATH="$PATH:$(go env GOPATH)/bin"
 
 # Or reinstall
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
-### `zsh: killed bd` on macOS
+### `zsh: killed fbd` on macOS
 
 CGO/SQLite compatibility issue:
 
 ```bash
-CGO_ENABLED=1 go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_ENABLED=1 go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### Permission denied
 
 ```bash
-chmod +x $(which bd)
+chmod +x $(which fbd)
 ```
 
 ## Database Issues
@@ -5663,20 +5663,20 @@ chmod +x $(which bd)
 
 ```bash
 # Initialize beads
-bd init --quiet
+fbd init --quiet
 
 # Or specify database
-bd --db .beads/beads.db list
+fbd --db .beads/beads.db list
 ```
 
 ### Database locked
 
 ```bash
 # Stop daemon
-bd daemons killall
+fbd daemons killall
 
 # Try again
-bd list
+fbd list
 ```
 
 ### Corrupted database
@@ -5684,7 +5684,7 @@ bd list
 ```bash
 # Restore from JSONL
 rm .beads/beads.db
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ## Daemon Issues
@@ -5693,23 +5693,23 @@ bd import -i .beads/issues.jsonl
 
 ```bash
 # Check status
-bd info
+fbd info
 
 # Remove stale socket
-rm -f .beads/bd.sock
+rm -f .beads/fbd.sock
 
 # Restart
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### Version mismatch
 
-After upgrading bd:
+After upgrading fbd:
 
 ```bash
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### High CPU usage
@@ -5717,7 +5717,7 @@ bd info
 ```bash
 # Switch to event-driven mode
 export BEADS_DAEMON_MODE=events
-bd daemons killall
+fbd daemons killall
 ```
 
 ## Sync Issues
@@ -5726,35 +5726,35 @@ bd daemons killall
 
 ```bash
 # Force sync
-bd sync
+fbd sync
 
 # Check daemon
-bd info | grep daemon
+fbd info | grep daemon
 
 # Check hooks
-bd hooks status
+fbd hooks status
 ```
 
 ### Import errors
 
 ```bash
 # Allow orphans
-bd import -i .beads/issues.jsonl --orphan-handling allow
+fbd import -i .beads/issues.jsonl --orphan-handling allow
 
 # Check for duplicates after
-bd duplicates
+fbd duplicates
 ```
 
 ### Merge conflicts
 
 ```bash
 # Use merge driver
-bd init  # Setup merge driver
+fbd init  # Setup merge driver
 
 # Or manual resolution
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 ```
 
 ## Git Hook Issues
@@ -5766,7 +5766,7 @@ bd sync
 ls -la .git/hooks/
 
 # Reinstall
-bd hooks install
+fbd hooks install
 ```
 
 ### Hook errors
@@ -5785,20 +5785,20 @@ cat .git/hooks/pre-commit
 
 ```bash
 # Detect cycles
-bd dep cycles
+fbd dep cycles
 
 # Remove one dependency
-bd dep remove bd-A bd-B
+fbd dep remove bd-A bd-B
 ```
 
 ### Missing dependencies
 
 ```bash
 # Check orphan handling
-bd config get import.orphan_handling
+fbd config get import.orphan_handling
 
 # Allow orphans
-bd config set import.orphan_handling allow
+fbd config set import.orphan_handling allow
 ```
 
 ## Performance Issues
@@ -5810,14 +5810,14 @@ bd config set import.orphan_handling allow
 ls -lh .beads/beads.db
 
 # Compact if large
-bd admin compact --analyze
+fbd admin compact --analyze
 ```
 
 ### High memory usage
 
 ```bash
 # Reduce cache
-bd config set database.cache_size 1000
+fbd config set database.cache_size 1000
 ```
 
 ## Getting Help
@@ -5825,31 +5825,31 @@ bd config set database.cache_size 1000
 ### Debug output
 
 ```bash
-bd --verbose list
+fbd --verbose list
 ```
 
 ### Logs
 
 ```bash
-bd daemons logs . -n 100
+fbd daemons logs . -n 100
 ```
 
 ### System info
 
 ```bash
-bd info --json
+fbd info --json
 ```
 
 ### File an issue
 
 ```bash
 # Include this info
-bd version
-bd info --json
+fbd version
+fbd info --json
 uname -a
 ```
 
-Report at: https://github.com/steveyegge/beads/issues
+Report at: https://github.com/steveyegge/fastbeads/issues
 
 </document>
 
@@ -5857,4 +5857,4 @@ Report at: https://github.com/steveyegge/beads/issues
 
 # End of Documentation
 
-For updates and contributions, visit: https://github.com/steveyegge/beads
+For updates and contributions, visit: https://github.com/steveyegge/fastbeads

@@ -6,7 +6,7 @@ This file exists for compatibility with tools that look for AGENTS.md.
 
 ## Key Sections
 
-- **Issue Tracking** - How to use bd for work management
+- **Issue Tracking** - How to use fbd for work management
 - **Development Guidelines** - Code standards and testing
 - **Visual Design System** - Status icons, colors, and semantic styling for CLI output
 
@@ -22,15 +22,15 @@ See [AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md) for full development guidelin
 
 ## Agent Warning: Interactive Commands
 
-**DO NOT use `bd edit`** - it opens an interactive editor ($EDITOR) which AI agents cannot use.
+**DO NOT use `fbd edit`** - it opens an interactive editor ($EDITOR) which AI agents cannot use.
 
-Use `bd update` with flags instead:
+Use `fbd update` with flags instead:
 ```bash
-bd update <id> --description "new description"
-bd update <id> --title "new title"
-bd update <id> --design "design notes"
-bd update <id> --notes "additional notes"
-bd update <id> --acceptance "acceptance criteria"
+fbd update <id> --description "new description"
+fbd update <id> --title "new title"
+fbd update <id> --design "design notes"
+fbd update <id> --notes "additional notes"
+fbd update <id> --acceptance "acceptance criteria"
 ```
 
 ## Non-Interactive Shell Commands

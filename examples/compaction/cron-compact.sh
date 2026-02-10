@@ -36,9 +36,9 @@ fi
 cd "$REPO_PATH"
 log "Repository: $(pwd)"
 
-# Check bd is installed
-if ! command -v bd &> /dev/null; then
-  log "ERROR: bd command not found"
+# Check fbd is installed
+if ! command -v fbd &> /dev/null; then
+  log "ERROR: fbd command not found"
   exit 1
 fi
 
@@ -48,17 +48,17 @@ git pull origin main 2>&1 | tee -a "$LOG_FILE"
 
 # Tier 1 compaction
 log "Running Tier 1 compaction..."
-TIER1_COUNT=$(bd admin compact --all --json 2>&1 | jq '. | length' || echo "0")
+TIER1_COUNT=$(fbd admin compact --all --json 2>&1 | jq '. | length' || echo "0")
 log "Compacted $TIER1_COUNT Tier 1 issues"
 
 # Tier 2 compaction
 log "Running Tier 2 compaction..."
-TIER2_COUNT=$(bd admin compact --all --tier 2 --json 2>&1 | jq '. | length' || echo "0")
+TIER2_COUNT=$(fbd admin compact --all --tier 2 --json 2>&1 | jq '. | length' || echo "0")
 log "Compacted $TIER2_COUNT Tier 2 issues"
 
 # Show statistics
 log "Compaction statistics:"
-bd admin compact --stats 2>&1 | tee -a "$LOG_FILE"
+fbd admin compact --stats 2>&1 | tee -a "$LOG_FILE"
 
 # Commit and push if changes exist
 if git diff --quiet .beads/issues.jsonl issues.db 2>/dev/null; then

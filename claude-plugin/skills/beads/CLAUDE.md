@@ -6,47 +6,47 @@ ADRs in `adr/` document key decisions. These are NOT loaded during skill invocat
 
 | ADR | Decision |
 |-----|----------|
-| [ADR-0001](adr/0001-bd-prime-as-source-of-truth.md) | Use `bd prime` as CLI reference source of truth |
+| [ADR-0001](adr/0001-bd-prime-as-source-of-truth.md) | Use `fbd prime` as CLI reference source of truth |
 
-## Key Principle: DRY via bd prime
+## Key Principle: DRY via fbd prime
 
 **NEVER duplicate CLI documentation in SKILL.md or resources.**
 
-- `bd prime` outputs AI-optimized workflow context
-- `bd <command> --help` provides specific usage
-- Both auto-update with bd releases
+- `fbd prime` outputs AI-optimized workflow context
+- `fbd <command> --help` provides specific usage
+- Both auto-update with fbd releases
 
 **SKILL.md should only contain:**
-- Decision frameworks (bd vs TodoWrite)
+- Decision frameworks (fbd vs TodoWrite)
 - Prerequisites (install verification)
 - Resource index (progressive disclosure)
-- Pointers to `bd prime` and `--help`
+- Pointers to `fbd prime` and `--help`
 
 ## Keeping the Skill Updated
 
-### When bd releases new version:
+### When fbd releases new version:
 
-1. **Check for new features**: `bd --help` for new commands
+1. **Check for new features**: `fbd --help` for new commands
 2. **Update SKILL.md frontmatter**: `version: "X.Y.Z"`
 3. **Add resources for conceptual features** (agents, gates, chemistry patterns)
-4. **Don't add CLI reference** — that's `bd prime`'s job
+4. **Don't add CLI reference** — that's `fbd prime`'s job
 
 ### What belongs in resources:
 
 | Content Type | Belongs in Resources? | Why |
 |--------------|----------------------|-----|
-| Conceptual frameworks | ✅ Yes | bd prime doesn't explain "when to use" |
+| Conceptual frameworks | ✅ Yes | fbd prime doesn't explain "when to use" |
 | Decision trees | ✅ Yes | Cognitive guidance, not CLI reference |
 | Advanced patterns | ✅ Yes | Depth beyond `--help` |
-| CLI command syntax | ❌ No | Use `bd <cmd> --help` |
-| Workflow checklists | ❌ No | `bd prime` covers this |
+| CLI command syntax | ❌ No | Use `fbd <cmd> --help` |
+| Workflow checklists | ❌ No | `fbd prime` covers this |
 
 ### Resource update checklist:
 
 ```
-[ ] Check if bd prime now covers this content
+[ ] Check if fbd prime now covers this content
 [ ] If yes, remove from resources (avoid duplication)
-[ ] If no, update resource for new bd version
+[ ] If no, update resource for new fbd version
 [ ] Update version compatibility in README.md
 ```
 
@@ -71,8 +71,8 @@ wc -w claude-plugin/skills/beads/SKILL.md  # Target: 400-600 words
 # Verify links resolve
 # (Manual check: ensure all resource links in SKILL.md exist)
 
-# Verify bd prime still works
-bd prime | head -20
+# Verify fbd prime still works
+fbd prime | head -20
 ```
 
 ## Attribution

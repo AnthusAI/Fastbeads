@@ -180,7 +180,7 @@ const config: Config = {
             },
             {
               label: 'npm Package',
-              href: 'https://www.npmjs.com/package/@beads/bd',
+              href: 'https://www.npmjs.com/package/@beads/fbd',
             },
             {
               label: 'PyPI (MCP)',

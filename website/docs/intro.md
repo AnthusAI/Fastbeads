@@ -7,7 +7,7 @@ slug: /
 
 # Beads Documentation
 
-**Beads** (`bd`) is a git-backed issue tracker designed for AI-supervised coding workflows.
+**Beads** (`fbd`) is a git-backed issue tracker designed for AI-supervised coding workflows.
 
 ## Why Beads?
 
@@ -15,7 +15,7 @@ Traditional issue trackers (Jira, GitHub Issues) weren't designed for AI agents.
 
 - **AI-native workflows** - Hash-based IDs prevent collisions when multiple agents work concurrently
 - **Git-backed storage** - Issues sync via JSONL files, enabling collaboration across branches
-- **Dependency-aware execution** - `bd ready` shows only unblocked work
+- **Dependency-aware execution** - `fbd ready` shows only unblocked work
 - **Formula system** - Declarative templates for repeatable workflows
 - **Multi-agent coordination** - Routing, gates, and molecules for complex workflows
 
@@ -30,13 +30,13 @@ curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/insta
 
 # Initialize in your project
 cd your-project
-bd init --quiet
+fbd init --quiet
 
 # Create your first issue
-bd create "Set up database" -p 1 -t task
+fbd create "Set up database" -p 1 -t task
 
 # See ready work
-bd ready
+fbd ready
 ```
 
 ## Core Concepts
@@ -56,15 +56,15 @@ Beads is optimized for AI coding agents:
 
 ```bash
 # Always use --json for programmatic access
-bd list --json
-bd show bd-42 --json
+fbd list --json
+fbd show bd-42 --json
 
 # Track discovered work during implementation
-bd create "Found bug in auth" --description="Details..." \
+fbd create "Found bug in auth" --description="Details..." \
   --deps discovered-from:bd-100 --json
 
 # Sync at end of session
-bd sync
+fbd sync
 ```
 
 See the [Claude Code integration](/integrations/claude-code) for detailed agent instructions.
@@ -83,7 +83,7 @@ The magic is automatic synchronization between a local SQLite database and git-t
 
 ## Next Steps
 
-- [Installation](/getting-started/installation) - Get bd installed
+- [Installation](/getting-started/installation) - Get fbd installed
 - [Quick Start](/getting-started/quickstart) - Create your first issues
 - [CLI Reference](/cli-reference) - All available commands
 - [Workflows](/workflows) - Formulas, molecules, and gates

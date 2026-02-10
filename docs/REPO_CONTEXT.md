@@ -5,7 +5,7 @@ different directories than where `.beads/` lives.
 
 ## Problem
 
-Git commands must run in the correct repository, but users may invoke `bd` from:
+Git commands must run in the correct repository, but users may invoke `fbd` from:
 
 - A different repository (using `BEADS_DIR` environment variable)
 - A git worktree (separate working directory, shared `.beads/`)
@@ -19,7 +19,7 @@ leading to bugs when assumptions don't match reality.
 The `RepoContext` API provides a single source of truth for repository resolution:
 
 ```go
-import "github.com/steveyegge/beads/internal/beads"
+import "github.com/steveyegge/fastbeads/internal/beads"
 
 rc, err := beads.GetRepoContext()
 if err != nil {
@@ -68,7 +68,7 @@ CWD is inside the repository containing `.beads/`:
 └── README.md
 
 $ cd /project/src
-$ bd sync
+$ fbd sync
 # GitCmd() runs in /project (correct)
 ```
 
@@ -79,7 +79,7 @@ User is in one repository but managing beads in another:
 ```
 $ cd /repo-a          # Has uncommitted changes
 $ export BEADS_DIR=/repo-b/.beads
-$ bd sync
+$ fbd sync
 # GitCmd() runs in /repo-b (correct, not /repo-a)
 ```
 
@@ -100,7 +100,7 @@ User is in a worktree but `.beads/` lives in main repository:
 └── src/
 
 $ cd /project/.worktrees/feature-branch
-$ bd sync
+$ fbd sync
 # GitCmd() runs in /project (main repo, where .beads lives)
 ```
 
@@ -111,7 +111,7 @@ Both worktree and BEADS_DIR can be active simultaneously:
 ```
 $ cd /repo-a/.worktrees/branch-x
 $ export BEADS_DIR=/repo-b/.beads
-$ bd sync
+$ fbd sync
 # GitCmd() runs in /repo-b (BEADS_DIR takes precedence)
 ```
 

@@ -1,6 +1,6 @@
 # Exclusive Lock Protocol
 
-The exclusive lock protocol allows external tools to claim exclusive management of a beads database, preventing the bd daemon from interfering with their operations.
+The exclusive lock protocol allows external tools to claim exclusive management of a beads database, preventing the fbd daemon from interfering with their operations.
 
 ## Use Cases
 
@@ -33,7 +33,7 @@ The lock file is located at `.beads/.exclusive-lock` and contains JSON:
 
 ### Daemon Behavior
 
-The bd daemon checks for exclusive locks at the start of each sync cycle:
+The fbd daemon checks for exclusive locks at the start of each sync cycle:
 
 1. **No lock file**: Daemon proceeds normally with sync operations
 2. **Valid lock (process alive)**: Daemon skips all operations for this database
@@ -61,7 +61,7 @@ import (
     "encoding/json"
     "os"
     "path/filepath"
-    "github.com/steveyegge/beads/internal/types"
+    "github.com/steveyegge/fastbeads/internal/types"
 )
 
 func acquireLock(beadsDir, holder, version string) error {
@@ -108,8 +108,8 @@ cat > "$LOCK_FILE" <<EOF
 EOF
 
 # Do work...
-bd create "My issue" -p 1
-bd update bd-42 --status in_progress
+fbd create "My issue" -p 1
+fbd update bd-42 --status in_progress
 
 # Release lock
 rm "$LOCK_FILE"
@@ -180,7 +180,7 @@ Check daemon logs (default: `.beads/daemon.log`) to troubleshoot lock issues.
 
 ## Testing Your Integration
 
-1. **Start the daemon**: `bd daemon start --interval 1m`
+1. **Start the daemon**: `fbd daemon start --interval 1m`
 2. **Create a lock**: Use your tool to create `.beads/.exclusive-lock`
 3. **Verify daemon skips**: Check daemon logs for "Skipping database" message
 4. **Release lock**: Remove `.beads/.exclusive-lock`
@@ -226,4 +226,4 @@ For integration help, see:
 - **README.md** - Daemon configuration
 - **examples/** - Sample integrations
 
-File issues at: https://github.com/steveyegge/beads/issues
+File issues at: https://github.com/steveyegge/fastbeads/issues

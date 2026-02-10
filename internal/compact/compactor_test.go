@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage/sqlite"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func setupTestStorage(t *testing.T) *sqlite.SQLiteStorage {

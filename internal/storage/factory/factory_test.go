@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/configfile"
-	"github.com/steveyegge/beads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/configfile"
+	"github.com/steveyegge/fastbeads/internal/storage"
 )
 
 func TestNew_SQLiteBackend(t *testing.T) {

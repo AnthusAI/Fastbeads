@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+# bd-shim v1
+# bd-hooks-version: 0.49.6
+#
+# fbd (beads) post-merge hook - thin shim
+#
+# This shim delegates to 'fbd hook post-merge' which contains
+# the actual hook logic. This pattern ensures hook behavior is always
+# in sync with the installed fbd version - no manual updates needed.
+#
+# The 'fbd hook' command (singular) supports:
+# - Branch-then-merge pattern for Dolt (cell-level conflict resolution)
+# - Per-worktree state tracking
+# - Hook chaining configuration
+
+# Check if fbd is available
+if ! command -v fbd >/dev/null 2>&1; then
+    echo "Warning: fbd command not found in PATH, skipping post-merge hook" >&2
+    echo "  Install fbd: brew install beads" >&2
+    echo "  Or add fbd to your PATH" >&2
+    exit 0
+fi
+
+exec fbd hook post-merge "$@"

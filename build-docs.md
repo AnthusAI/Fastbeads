@@ -12,14 +12,14 @@ This infrastructure is critical for debugging, auditing, and user support - it a
 
 - **Build Entry Points**: The Makefile and .goreleaser.yml are the authoritative build configurations that users and CI/CD systems interact with. They control how version information flows into binaries.
 
-- **Version Pipeline**: These files work with `@/cmd/bd/version.go` to establish the complete version reporting chain:
+- **Version Pipeline**: These files work with `@/cmd/fbd/version.go` to establish the complete version reporting chain:
   - Build time: Extract git info via shell commands (Makefile) or goreleaser templates
   - Compilation: Pass info to Go compiler via `-X` ldflags
   - Runtime: Resolve functions in version.go retrieve and display the info
 
 - **Installation Methods**: The build configuration enables multiple installation paths while maintaining version consistency:
   - `make install` - Used by developers building from source
-  - `go install ./cmd/bd` - Direct Go installation with embedded ldflag injection
+  - `go install ./cmd/fbd` - Direct Go installation with embedded ldflag injection
   - GitHub releases - Goreleaser-built binaries for all platforms
   - Homebrew - Pre-built binaries installed via `brew install beads`
   - npm - Node.js package that downloads pre-built binaries via postinstall hook
@@ -35,10 +35,10 @@ The `install` target is the primary development build mechanism:
 
 ```makefile
 install:
-	@echo "Installing bd to $$(go env GOPATH)/bin..."
+	@echo "Installing fbd to $$(go env GOPATH)/bin..."
 	@bash -c 'commit=$$(git rev-parse HEAD 2>/dev/null || echo ""); \
 		branch=$$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo ""); \
-		go install -ldflags="-X main.Commit=$$commit -X main.Branch=$$branch" ./cmd/bd'
+		go install -ldflags="-X main.Commit=$$commit -X main.Branch=$$branch" ./cmd/fbd'
 ```
 
 How it works:
@@ -47,7 +47,7 @@ How it works:
 3. `git rev-parse --abbrev-ref HEAD` gets the current branch name
 4. Passes both as ldflags to `go install` using the `-X` flag (variable assignment)
 5. The ldflags set `main.Commit` and `main.Branch` package variables
-6. These variables are then retrieved by functions in `@/cmd/bd/version.go` at runtime
+6. These variables are then retrieved by functions in `@/cmd/fbd/version.go` at runtime
 
 Key implementation detail: The original target depended on `build`, but this was removed because `go install` is sufficient and handles compilation itself.
 
@@ -65,11 +65,11 @@ ldflags:
 ```
 
 Platform configurations:
-1. **bd-linux-amd64** (lines 12-26): Linux 64-bit Intel
-2. **bd-linux-arm64** (lines 28-44): Linux 64-bit ARM (Apple Silicon support)
-3. **bd-darwin-amd64** (lines 46-60): macOS 64-bit Intel
-4. **bd-darwin-arm64** (lines 62-76): macOS 64-bit ARM (M1/M2/M3)
-5. **bd-windows-amd64** (lines 78-95): Windows 64-bit Intel with additional `-buildmode=exe` flag
+1. **fbd-linux-amd64** (lines 12-26): Linux 64-bit Intel
+2. **fbd-linux-arm64** (lines 28-44): Linux 64-bit ARM (Apple Silicon support)
+3. **fbd-darwin-amd64** (lines 46-60): macOS 64-bit Intel
+4. **fbd-darwin-arm64** (lines 62-76): macOS 64-bit ARM (M1/M2/M3)
+5. **fbd-windows-amd64** (lines 78-95): Windows 64-bit Intel with additional `-buildmode=exe` flag
 
 The ldflags explained:
 - `-s -w`: Strip debug symbols to reduce binary size
@@ -89,9 +89,9 @@ Goreleaser template variables:
 Provides a user-friendly way to build from source with full version info:
 - Extracts git commit and branch
 - Calls `go install` with the same ldflags pattern as Makefile
-- Immediately verifies installation by running `bd version`
+- Immediately verifies installation by running `fbd version`
 
-**Version Resolution Chain** (`@/cmd/bd/version.go`, lines 116-163):
+**Version Resolution Chain** (`@/cmd/fbd/version.go`, lines 116-163):
 
 The version.go file implements functions that retrieve the injected information:
 
@@ -107,31 +107,31 @@ The version.go file implements functions that retrieve the injected information:
    - Returns empty string if none available
 
 3. **Output Formatting** (lines 52-58):
-   - Displays commit and branch in human-readable format: `bd version 0.29.0 (dev: main@7e70940)`
+   - Displays commit and branch in human-readable format: `fbd version 0.29.0 (dev: main@7e70940)`
 
 ### Things to Know
 
 **Critical Design Decision - Why Explicit Ldflags**:
 
 The Go toolchain (as of 1.18+) can automatically embed VCS information when compiling with `go build`, but this does NOT happen with `go install`. This creates an asymmetry:
-- `go build ./cmd/bd` → automatically embeds vcs.revision and vcs.branch
-- `go install ./cmd/bd` → does NOT embed VCS info automatically
+- `go build ./cmd/fbd` → automatically embeds vcs.revision and vcs.branch
+- `go install ./cmd/fbd` → does NOT embed VCS info automatically
 
 The solution is to explicitly pass git information as ldflags in all build configurations. This ensures:
 - Users who run `make install` get full version info
-- Users who run `go install ./cmd/bd` need to explicitly set ldflags (via Makefile or script)
+- Users who run `go install ./cmd/fbd` need to explicitly set ldflags (via Makefile or script)
 - Released binaries from goreleaser have full version info (handled by goreleaser templates)
 - The version command is consistent regardless of installation method
 
 **Issue #503 Root Cause**:
 
-The original system relied on Go's automatic VCS embedding which only works with `go build`. When released binaries (built via goreleaser) or installed binaries (via `go install`) came without explicit ldflags, the `bd version` command couldn't report commit and branch information.
+The original system relied on Go's automatic VCS embedding which only works with `go build`. When released binaries (built via goreleaser) or installed binaries (via `go install`) came without explicit ldflags, the `fbd version` command couldn't report commit and branch information.
 
 The fix adds explicit ldflag injection at all build points, creating a reliable pipeline independent of Go's automatic VCS embedding feature.
 
 **Ldflag Variable Names**:
 
-The variables in `@/cmd/bd/version.go` (lines 15-23) must match the ldflag paths in build configurations:
+The variables in `@/cmd/fbd/version.go` (lines 15-23) must match the ldflag paths in build configurations:
 - `main.Version` → Version variable
 - `main.Build` → Build variable
 - `main.Commit` → Commit variable
@@ -162,7 +162,7 @@ The build configuration integrates with `@/RELEASING.md`:
 
 **Testing Version Information**:
 
-The test file `@/cmd/bd/version_test.go` includes:
+The test file `@/cmd/fbd/version_test.go` includes:
 - `TestResolveCommitHash`: Verifies ldflag values are prioritized
 - `TestResolveBranch`: Verifies ldflag values are prioritized  
 - `TestVersionOutputWithCommitAndBranch`: Verifies output formatting with real values

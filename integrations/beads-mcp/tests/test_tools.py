@@ -296,7 +296,7 @@ async def test_client_lazy_initialization(tmp_path):
     # Clear connection pool before test
     tools._connection_pool.clear()
 
-    # Mock create_bd_client to avoid actual bd calls
+    # Mock create_bd_client to avoid actual fbd calls
     mock_client_instance = AsyncMock()
     mock_client_instance.ready = AsyncMock(return_value=[])
     mock_client_instance.close = AsyncMock()
@@ -479,12 +479,12 @@ async def test_beads_blocked():
 @pytest.mark.asyncio
 async def test_beads_init():
     """Test beads_init tool."""
-    init_output = "bd initialized successfully!"
+    init_output = "fbd initialized successfully!"
     mock_client = AsyncMock()
     mock_client.init = AsyncMock(return_value=init_output)
 
     with patch("beads_mcp.tools._get_client", return_value=mock_client):
         result = await beads_init(prefix="test")
 
-    assert "bd initialized successfully!" in result
+    assert "fbd initialized successfully!" in result
     mock_client.init.assert_called_once()

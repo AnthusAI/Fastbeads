@@ -12,7 +12,7 @@ Key scripts include version bumping, installation helpers that inject git inform
 
 - **Build Integration**: The `install.sh` script is referenced in documentation and release processes as the primary user-facing installation mechanism. It integrates directly with the Go build system to ensure full version information is embedded.
 
-- **Version Pipeline**: Works alongside the version infrastructure in `@/cmd/bd/version.go` by extracting and passing git information at build time via ldflags.
+- **Version Pipeline**: Works alongside the version infrastructure in `@/cmd/fbd/version.go` by extracting and passing git information at build time via ldflags.
 
 - **Release Automation**: The `release.sh` and `bump-version.sh` scripts orchestrate the release process documented in `@/RELEASING.md`, ensuring version consistency across all components (CLI, plugin, MCP server, npm package).
 
@@ -43,10 +43,10 @@ The script simplifies local installation from source while ensuring full version
 
 4. **Installation with Ldflags** (line 20):
    - Calls `go install` with explicit `-ldflags` to set `main.Commit` and `main.Branch`
-   - These ldflags inject values that are then picked up by `resolveCommitHash()` and `resolveBranch()` in `@/cmd/bd/version.go`
+   - These ldflags inject values that are then picked up by `resolveCommitHash()` and `resolveBranch()` in `@/cmd/fbd/version.go`
 
 5. **Post-Install Verification** (lines 22-24):
-   - Immediately runs `bd version` to show the user that installation succeeded
+   - Immediately runs `fbd version` to show the user that installation succeeded
    - User sees commit and branch info in the output, confirming full version info is present
 
 **Makefile Integration** (`@/Makefile`, lines 37-41):
@@ -84,11 +84,11 @@ All 5 platform builds (linux-amd64, linux-arm64, darwin-amd64, darwin-arm64, win
 **Git Information Fallbacks**:
 - The script silently handles missing git info (returns empty strings)
 - This allows installation in non-git environments or git-less distributions
-- The version command in `@/cmd/bd/version.go` has its own fallback chain
+- The version command in `@/cmd/fbd/version.go` has its own fallback chain
 
 **Testing the Version Pipeline**:
-- After running `./scripts/install.sh`, users should immediately see full version info via `bd version`
-- The text output shows format like: `bd version 0.29.0 (dev: main@7e70940)`
+- After running `./scripts/install.sh`, users should immediately see full version info via `fbd version`
+- The text output shows format like: `fbd version 0.29.0 (dev: main@7e70940)`
 - JSON output includes both `commit` and `branch` fields
 
 **Release Coordination**:

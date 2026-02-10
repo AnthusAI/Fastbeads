@@ -28,7 +28,7 @@ func MigrateExternalRefUnique(db *sql.DB) error {
 	}
 
 	if len(existingDuplicates) > 0 {
-		return fmt.Errorf("cannot add UNIQUE constraint: found %d duplicate external_ref values (resolve with 'bd duplicates' or manually)", len(existingDuplicates))
+		return fmt.Errorf("cannot add UNIQUE constraint: found %d duplicate external_ref values (resolve with 'fbd duplicates' or manually)", len(existingDuplicates))
 	}
 
 	_, err = db.Exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_issues_external_ref_unique ON issues(external_ref) WHERE external_ref IS NOT NULL`)

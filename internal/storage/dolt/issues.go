@@ -11,9 +11,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/idgen"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/idgen"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // CreateIssue creates a new issue
@@ -78,7 +78,7 @@ func (s *DoltStore) CreateIssue(ctx context.Context, issue *types.Issue, actor s
 	var configPrefix string
 	err = tx.QueryRowContext(ctx, "SELECT value FROM config WHERE `key` = ?", "issue_prefix").Scan(&configPrefix)
 	if err == sql.ErrNoRows || configPrefix == "" {
-		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'bd init --prefix <prefix>' first)")
+		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'fbd init --prefix <prefix>' first)")
 	} else if err != nil {
 		return fmt.Errorf("failed to get config: %w", err)
 	}
@@ -154,7 +154,7 @@ func (s *DoltStore) CreateIssuesWithFullOptions(ctx context.Context, issues []*t
 	var configPrefix string
 	err = tx.QueryRowContext(ctx, "SELECT value FROM config WHERE `key` = ?", "issue_prefix").Scan(&configPrefix)
 	if err == sql.ErrNoRows || configPrefix == "" {
-		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'bd init --prefix <prefix>' first)")
+		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'fbd init --prefix <prefix>' first)")
 	} else if err != nil {
 		return fmt.Errorf("failed to get config: %w", err)
 	}

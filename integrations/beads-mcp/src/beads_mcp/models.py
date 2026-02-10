@@ -9,8 +9,8 @@ from pydantic import BaseModel, Field, field_validator
 #
 # IssueStatus and IssueType are strings (not Literals) to support custom
 # statuses and types configured via:
-#   bd config set status.custom "awaiting_review,awaiting_testing"
-#   bd config set types.custom "agent,molecule,event"
+#   fbd config set status.custom "awaiting_review,awaiting_testing"
+#   fbd config set types.custom "agent,molecule,event"
 #
 # The CLI handles validation of these values against the configured options.
 # Built-in statuses: open, in_progress, blocked, deferred, closed
@@ -141,7 +141,7 @@ class LinkedIssue(IssueBase):
 
 
 class Issue(IssueBase):
-    """Issue model matching bd JSON output."""
+    """Issue model matching fbd JSON output."""
 
     dependencies: list[LinkedIssue] = Field(default_factory=list)
     dependents: list[LinkedIssue] = Field(default_factory=list)
@@ -248,7 +248,7 @@ class ShowIssueParams(BaseModel):
 
 
 class StatsSummary(BaseModel):
-    """Summary statistics from bd stats."""
+    """Summary statistics from fbd stats."""
 
     total_issues: int
     open_issues: int
@@ -264,7 +264,7 @@ class StatsSummary(BaseModel):
 
 
 class RecentActivity(BaseModel):
-    """Recent activity from bd stats."""
+    """Recent activity from fbd stats."""
 
     hours_tracked: int = 24
     commit_count: int = 0
@@ -276,7 +276,7 @@ class RecentActivity(BaseModel):
 
 
 class Stats(BaseModel):
-    """Beads task statistics matching bd stats --json output."""
+    """Beads task statistics matching fbd stats --json output."""
 
     summary: StatsSummary
     recent_activity: RecentActivity | None = None
@@ -296,7 +296,7 @@ class InitParams(BaseModel):
 
 
 class InitResult(BaseModel):
-    """Result from bd init command."""
+    """Result from fbd init command."""
 
     database: str
     prefix: str

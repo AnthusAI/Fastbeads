@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage/memory"
+	"github.com/steveyegge/fastbeads/internal/storage/memory"
 )
 
 // TestDepAdd_JSONOutput verifies that handleDepAdd returns JSON data in Response.Data.

@@ -6,8 +6,8 @@ Get up and running with Beads in 2 minutes.
 
 ```bash
 cd ~/src/beads
-go build -o bd ./cmd/bd
-./bd --help
+go build -o fbd ./cmd/fbd
+./fbd --help
 ```
 
 ## Initialize
@@ -16,19 +16,19 @@ First time in a repository:
 
 ```bash
 # Basic setup (prompts for contributor mode)
-bd init
+fbd init
 
 # Dolt backend (version-controlled SQL database)
-bd init --backend dolt
+fbd init --backend dolt
 
 # OSS contributor (fork workflow with separate planning repo)
-bd init --contributor
+fbd init --contributor
 
 # Team member (branch workflow for collaboration)
-bd init --team
+fbd init --team
 
 # Protected main branch (GitHub/GitLab)
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 The wizard will:
@@ -43,11 +43,11 @@ Notes:
 - SQLite backend stores data in `.beads/beads.db`.
 - Dolt backend stores data in `.beads/dolt/` and records `"database": "dolt"` in `.beads/metadata.json`.
 - Dolt backend runs **single-process-only**; daemon mode is disabled.
-- Dolt backend **auto-commits** after each successful write command in embedded mode (`dolt.auto-commit: on`). In server mode, auto-commit defaults to OFF. Override with `bd --dolt-auto-commit off|on ...` or config.
+- Dolt backend **auto-commits** after each successful write command in embedded mode (`dolt.auto-commit: on`). In server mode, auto-commit defaults to OFF. Override with `fbd --dolt-auto-commit off|on ...` or config.
 
 ### Role Configuration
 
-During `bd init`, you'll be asked: "Contributing to someone else's repo? [y/N]"
+During `fbd init`, you'll be asked: "Contributing to someone else's repo? [y/N]"
 
 - Answer **Y** if you're contributing to a fork (runs contributor wizard)
 - Answer **N** if you're the maintainer or have push access
@@ -72,23 +72,23 @@ git config beads.role maintainer
 git config --get beads.role
 ```
 
-**Note:** If `beads.role` is not configured, beads falls back to URL-based detection (deprecated). Run `bd doctor` to check configuration status.
+**Note:** If `beads.role` is not configured, beads falls back to URL-based detection (deprecated). Run `fbd doctor` to check configuration status.
 
 ## Your First Issues
 
 ```bash
 # Create a few issues
-./bd create "Set up database" -p 1 -t task
-./bd create "Create API" -p 2 -t feature
-./bd create "Add authentication" -p 2 -t feature
+./fbd create "Set up database" -p 1 -t task
+./fbd create "Create API" -p 2 -t feature
+./fbd create "Add authentication" -p 2 -t feature
 
 # List them
-./bd list
+./fbd list
 ```
 
 **Note:** Issue IDs are hash-based (e.g., `bd-a1b2`, `bd-f14c`) to prevent collisions when multiple agents/branches work concurrently.
 
-**Dependency visibility:** When issues have blocking dependencies, `bd list` shows them inline:
+**Dependency visibility:** When issues have blocking dependencies, `fbd list` shows them inline:
 ```
 ○ bd-a1b2 [P1] [task] - Set up database
 ○ bd-f14c [P2] [feature] - Create API (blocked by: bd-a1b2)
@@ -103,16 +103,16 @@ For large features, use hierarchical IDs to organize work:
 
 ```bash
 # Create epic (generates parent hash ID)
-./bd create "Auth System" -t epic -p 1
+./fbd create "Auth System" -t epic -p 1
 # Returns: bd-a3f8e9
 
 # Create child tasks (automatically get .1, .2, .3 suffixes)
-./bd create "Design login UI" -p 1       # bd-a3f8e9.1
-./bd create "Backend validation" -p 1    # bd-a3f8e9.2
-./bd create "Integration tests" -p 1     # bd-a3f8e9.3
+./fbd create "Design login UI" -p 1       # bd-a3f8e9.1
+./fbd create "Backend validation" -p 1    # bd-a3f8e9.2
+./fbd create "Integration tests" -p 1     # bd-a3f8e9.3
 
 # View hierarchy
-./bd dep tree bd-a3f8e9
+./fbd dep tree bd-a3f8e9
 ```
 
 Output:
@@ -129,13 +129,13 @@ Output:
 
 ```bash
 # API depends on database
-./bd dep add bd-2 bd-1
+./fbd dep add bd-2 bd-1
 
 # Auth depends on API
-./bd dep add bd-3 bd-2
+./fbd dep add bd-3 bd-2
 
 # View the tree
-./bd dep tree bd-3
+./fbd dep tree bd-3
 ```
 
 Output:
@@ -150,7 +150,7 @@ Output:
 ## Find Ready Work
 
 ```bash
-./bd ready
+./fbd ready
 ```
 
 Output:
@@ -166,13 +166,13 @@ Only bd-1 is ready because bd-2 and bd-3 are blocked!
 
 ```bash
 # Start working on bd-1
-./bd update bd-1 --status in_progress
+./fbd update bd-1 --status in_progress
 
 # Complete it
-./bd close bd-1 --reason "Database setup complete"
+./fbd close bd-1 --reason "Database setup complete"
 
 # Check ready work again
-./bd ready
+./fbd ready
 ```
 
 Now bd-2 is ready! 🎉
@@ -181,10 +181,10 @@ Now bd-2 is ready! 🎉
 
 ```bash
 # See blocked issues
-./bd blocked
+./fbd blocked
 
 # View statistics
-./bd stats
+./fbd stats
 ```
 
 ## Database Location
@@ -194,28 +194,28 @@ By default: `~/.beads/default.db`
 You can use project-specific databases:
 
 ```bash
-./bd --db ./my-project.db create "Task"
+./fbd --db ./my-project.db create "Task"
 ```
 
 ## Migrating Databases
 
-After upgrading bd, use `bd migrate` to check for and migrate old database files:
+After upgrading fbd, use `fbd migrate` to check for and migrate old database files:
 
 ```bash
 # Inspect migration plan (AI agents)
-./bd migrate --inspect --json
+./fbd migrate --inspect --json
 
 # Check schema and config
-./bd info --schema --json
+./fbd info --schema --json
 
 # Preview migration changes
-./bd migrate --dry-run
+./fbd migrate --dry-run
 
 # Migrate old databases to beads.db
-./bd migrate
+./fbd migrate
 
 # Migrate and clean up old files
-./bd migrate --cleanup --yes
+./fbd migrate --cleanup --yes
 ```
 
 **AI agents:** Use `--inspect` to analyze migration safety before running. The system verifies required config keys and data integrity invariants.
@@ -226,16 +226,16 @@ As your project accumulates closed issues, the database grows. Manage size with 
 
 ```bash
 # View compaction statistics
-bd admin compact --stats
+fbd admin compact --stats
 
 # Preview compaction candidates (30+ days closed)
-bd admin compact --analyze --json --no-daemon
+fbd admin compact --analyze --json --no-daemon
 
 # Apply agent-generated summary
-bd admin compact --apply --id bd-42 --summary summary.txt --no-daemon
+fbd admin compact --apply --id bd-42 --summary summary.txt --no-daemon
 
 # Immediately delete closed issues (CAUTION: permanent!)
-bd admin cleanup --force
+fbd admin cleanup --force
 ```
 
 **When to compact:**
@@ -243,25 +243,25 @@ bd admin cleanup --force
 - After major project milestones when old issues are no longer relevant
 - Before archiving a project phase
 
-**Note:** Compaction is permanent graceful decay. Original content is discarded but viewable via `bd restore <id>` from git history.
+**Note:** Compaction is permanent graceful decay. Original content is discarded but viewable via `fbd restore <id>` from git history.
 
 ## Background Daemon
 
-bd runs a background daemon for auto-sync and performance. You rarely need to manage it directly:
+fbd runs a background daemon for auto-sync and performance. You rarely need to manage it directly:
 
 ```bash
 # Check daemon status
-bd info | grep daemon
+fbd info | grep daemon
 
 # List all running daemons
-bd daemons list
+fbd daemons list
 
 # Force direct mode (skip daemon)
-bd --no-daemon ready
+fbd --no-daemon ready
 ```
 
 **When to disable daemon:**
-- Git worktrees (required: `bd --no-daemon`)
+- Git worktrees (required: `fbd --no-daemon`)
 - CI/CD pipelines
 - Resource-constrained environments
 
@@ -269,9 +269,9 @@ See [DAEMON.md](DAEMON.md) for complete daemon management guide.
 
 ## Next Steps
 
-- Add labels: `./bd create "Task" -l "backend,urgent"`
-- Filter ready work: `./bd ready --priority 1`
-- Search issues: `./bd list --status open`
-- Detect cycles: `./bd dep cycles`
+- Add labels: `./fbd create "Task" -l "backend,urgent"`
+- Filter ready work: `./fbd ready --priority 1`
+- Search issues: `./fbd list --status open`
+- Detect cycles: `./fbd dep cycles`
 
 See [README.md](../README.md) for full documentation.

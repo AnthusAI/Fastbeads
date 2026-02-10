@@ -45,8 +45,8 @@ Four types of relationships:
 Background process per workspace:
 - Auto-starts on first command
 - Handles auto-sync with 5s debounce
-- Socket at `.beads/bd.sock`
-- Manage with `bd daemons` commands
+- Socket at `.beads/fbd.sock`
+- Manage with `fbd daemons` commands
 
 ### JSONL Sync
 

@@ -1,25 +1,25 @@
-# Jira Integration for bd
+# Jira Integration for fbd
 
-Two-way synchronization between Jira and bd (beads).
+Two-way synchronization between Jira and fbd (beads).
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `jira2jsonl.py` | **Import** - Fetch Jira issues into bd |
-| `jsonl2jira.py` | **Export** - Push bd issues to Jira |
+| `jira2jsonl.py` | **Import** - Fetch Jira issues into fbd |
+| `jsonl2jira.py` | **Export** - Push fbd issues to Jira |
 
 ## Overview
 
-These tools enable bidirectional sync between Jira and bd:
+These tools enable bidirectional sync between Jira and fbd:
 
-**Import (Jira → bd):**
+**Import (Jira → fbd):**
 1. **Jira REST API** - Fetch issues directly from any Jira instance
 2. **JSON Export** - Parse exported Jira issues JSON
-3. **bd config integration** - Read credentials and mappings from `bd config`
+3. **fbd config integration** - Read credentials and mappings from `fbd config`
 
-**Export (bd → Jira):**
-1. **Create issues** - Push new bd issues to Jira
+**Export (fbd → Jira):**
+1. **Create issues** - Push new fbd issues to Jira
 2. **Update issues** - Sync changes to existing Jira issues
 3. **Status transitions** - Handle Jira workflow transitions automatically
 
@@ -37,10 +37,10 @@ These tools enable bidirectional sync between Jira and bd:
 
 ### Export (jsonl2jira.py)
 
-- Create new Jira issues from bd issues
+- Create new Jira issues from fbd issues
 - Update existing Jira issues (matched by `external_ref`)
 - Handle Jira workflow transitions for status changes
-- Reverse field mappings (bd → Jira)
+- Reverse field mappings (fbd → Jira)
 - Dry-run mode for previewing changes
 - Auto-update `external_ref` after creation
 
@@ -50,24 +50,24 @@ No dependencies required! Uses Python 3 standard library.
 
 ## Quick Start
 
-### Option 1: Using bd config (Recommended)
+### Option 1: Using fbd config (Recommended)
 
 Set up your Jira credentials once:
 
 ```bash
 # Required settings
-bd config set jira.url "https://company.atlassian.net"
-bd config set jira.project "PROJ"
-bd config set jira.api_token "YOUR_API_TOKEN"
+fbd config set jira.url "https://company.atlassian.net"
+fbd config set jira.project "PROJ"
+fbd config set jira.api_token "YOUR_API_TOKEN"
 
 # For Jira Cloud, also set username (your email)
-bd config set jira.username "you@company.com"
+fbd config set jira.username "you@company.com"
 ```
 
 Then import:
 
 ```bash
-python jira2jsonl.py --from-config | bd import
+python jira2jsonl.py --from-config | fbd import
 ```
 
 ### Option 2: Using environment variables
@@ -79,7 +79,7 @@ export JIRA_USERNAME=you@company.com  # For Jira Cloud
 python jira2jsonl.py \
   --url https://company.atlassian.net \
   --project PROJ \
-  | bd import
+  | fbd import
 ```
 
 ### Option 3: Command-line arguments
@@ -90,7 +90,7 @@ python jira2jsonl.py \
   --project PROJ \
   --username you@company.com \
   --api-token YOUR_TOKEN \
-  | bd import
+  | fbd import
 ```
 
 ## Authentication
@@ -102,8 +102,8 @@ Jira Cloud requires:
 2. **API Token**: Create at https://id.atlassian.com/manage-profile/security/api-tokens
 
 ```bash
-bd config set jira.username "you@company.com"
-bd config set jira.api_token "your_api_token"
+fbd config set jira.username "you@company.com"
+fbd config set jira.api_token "your_api_token"
 ```
 
 ### Jira Server/Data Center
@@ -114,11 +114,11 @@ Jira Server/DC can use:
 
 ```bash
 # Using PAT (recommended)
-bd config set jira.api_token "your_pat_token"
+fbd config set jira.api_token "your_pat_token"
 
 # Using username/password
-bd config set jira.username "your_username"
-bd config set jira.api_token "your_password"
+fbd config set jira.username "your_username"
+fbd config set jira.api_token "your_password"
 ```
 
 ## Usage
@@ -127,12 +127,12 @@ bd config set jira.api_token "your_password"
 
 ```bash
 # Fetch all issues from a project
-python jira2jsonl.py --from-config | bd import
+python jira2jsonl.py --from-config | fbd import
 
 # Save to file first (recommended for large projects)
 python jira2jsonl.py --from-config > issues.jsonl
-bd import -i issues.jsonl --dry-run  # Preview
-bd import -i issues.jsonl             # Import
+fbd import -i issues.jsonl --dry-run  # Preview
+fbd import -i issues.jsonl             # Import
 ```
 
 ### Filtering Issues
@@ -155,7 +155,7 @@ python jira2jsonl.py --url https://company.atlassian.net \
 # Sequential IDs (bd-1, bd-2, ...) - default
 python jira2jsonl.py --from-config
 
-# Hash-based IDs (bd-a3f2dd, ...) - matches bd create
+# Hash-based IDs (bd-a3f2dd, ...) - matches fbd create
 python jira2jsonl.py --from-config --id-mode hash
 
 # Custom hash length (3-8 chars)
@@ -170,14 +170,14 @@ python jira2jsonl.py --from-config --prefix myproject
 If you have an exported JSON file:
 
 ```bash
-python jira2jsonl.py --file issues.json | bd import
+python jira2jsonl.py --file issues.json | fbd import
 ```
 
 ## Field Mapping
 
 ### Default Mappings
 
-| Jira Field | bd Field | Notes |
+| Jira Field | fbd Field | Notes |
 |------------|----------|-------|
 | `key` | (internal) | Used for dependency resolution |
 | `summary` | `title` | Direct copy |
@@ -196,28 +196,28 @@ python jira2jsonl.py --file issues.json | bd import
 
 ### Status Mapping
 
-Default status mappings (Jira status -> bd status):
+Default status mappings (Jira status -> fbd status):
 
-| Jira Status | bd Status |
+| Jira Status | fbd Status |
 |-------------|-----------|
 | To Do, Open, Backlog, New | `open` |
 | In Progress, In Development, In Review | `in_progress` |
 | Blocked, On Hold | `blocked` |
 | Done, Closed, Resolved, Complete | `closed` |
 
-Custom mappings via bd config:
+Custom mappings via fbd config:
 
 ```bash
-bd config set jira.status_map.backlog "open"
-bd config set jira.status_map.in_review "in_progress"
-bd config set jira.status_map.on_hold "blocked"
+fbd config set jira.status_map.backlog "open"
+fbd config set jira.status_map.in_review "in_progress"
+fbd config set jira.status_map.on_hold "blocked"
 ```
 
 ### Priority Mapping
 
-Default priority mappings (Jira priority -> bd priority 0-4):
+Default priority mappings (Jira priority -> fbd priority 0-4):
 
-| Jira Priority | bd Priority |
+| Jira Priority | fbd Priority |
 |---------------|-------------|
 | Highest, Critical, Blocker | 0 (Critical) |
 | High, Major | 1 (High) |
@@ -228,15 +228,15 @@ Default priority mappings (Jira priority -> bd priority 0-4):
 Custom mappings:
 
 ```bash
-bd config set jira.priority_map.urgent "0"
-bd config set jira.priority_map.nice_to_have "4"
+fbd config set jira.priority_map.urgent "0"
+fbd config set jira.priority_map.nice_to_have "4"
 ```
 
 ### Issue Type Mapping
 
-Default type mappings (Jira type -> bd type):
+Default type mappings (Jira type -> fbd type):
 
-| Jira Type | bd Type |
+| Jira Type | fbd Type |
 |-----------|---------|
 | Bug, Defect | `bug` |
 | Story, Feature, Enhancement | `feature` |
@@ -247,16 +247,16 @@ Default type mappings (Jira type -> bd type):
 Custom mappings:
 
 ```bash
-bd config set jira.type_map.story "feature"
-bd config set jira.type_map.spike "task"
-bd config set jira.type_map.tech_debt "chore"
+fbd config set jira.type_map.story "feature"
+fbd config set jira.type_map.spike "task"
+fbd config set jira.type_map.tech_debt "chore"
 ```
 
 ## Issue Links & Dependencies
 
-Jira issue links are converted to bd dependencies:
+Jira issue links are converted to fbd dependencies:
 
-| Jira Link Type | bd Dependency Type |
+| Jira Link Type | fbd Dependency Type |
 |----------------|-------------------|
 | Blocks/Is blocked by | `blocks` |
 | Parent (Epic/Story) | `parent-child` |
@@ -269,19 +269,19 @@ Jira issue links are converted to bd dependencies:
 Each imported issue has an `external_ref` field containing the Jira issue URL. On subsequent imports:
 
 1. Issues are matched by `external_ref` first
-2. If matched, the existing bd issue is updated (if Jira is newer)
-3. If not matched, a new bd issue is created
+2. If matched, the existing fbd issue is updated (if Jira is newer)
+3. If not matched, a new fbd issue is created
 
 This enables incremental sync:
 
 ```bash
 # Initial import
-python jira2jsonl.py --from-config | bd import
+python jira2jsonl.py --from-config | fbd import
 
 # Later: import only recent changes
 python jira2jsonl.py --from-config \
   --jql "project = PROJ AND updated >= -7d" \
-  | bd import
+  | fbd import
 ```
 
 ## Examples
@@ -291,9 +291,9 @@ python jira2jsonl.py --from-config \
 ```bash
 python jira2jsonl.py --url https://company.atlassian.net \
   --jql "project = PROJ AND sprint in openSprints()" \
-  | bd import
+  | fbd import
 
-bd ready  # See what's ready to work on
+fbd ready  # See what's ready to work on
 ```
 
 ### Example 2: Full Project Migration
@@ -303,13 +303,13 @@ bd ready  # See what's ready to work on
 python jira2jsonl.py --from-config > all-issues.jsonl
 
 # Preview import
-bd import -i all-issues.jsonl --dry-run
+fbd import -i all-issues.jsonl --dry-run
 
 # Import
-bd import -i all-issues.jsonl
+fbd import -i all-issues.jsonl
 
 # View stats
-bd stats
+fbd stats
 ```
 
 ### Example 3: Sync High Priority Bugs
@@ -317,25 +317,25 @@ bd stats
 ```bash
 python jira2jsonl.py --from-config \
   --jql "project = PROJ AND type = Bug AND priority in (Highest, High)" \
-  | bd import
+  | fbd import
 ```
 
 ### Example 4: Import with Hash IDs
 
 ```bash
 # Use hash IDs for collision-free distributed work
-python jira2jsonl.py --from-config --id-mode hash | bd import
+python jira2jsonl.py --from-config --id-mode hash | fbd import
 ```
 
 ## Limitations
 
-- **Single assignee**: Jira supports multiple assignees (watchers), bd supports one
+- **Single assignee**: Jira supports multiple assignees (watchers), fbd supports one
 - **Custom fields**: Only standard fields are mapped; custom fields are ignored
 - **Attachments**: Not imported
 - **Comments**: Not imported (only description)
 - **Worklogs**: Not imported
 - **Sprints**: Sprint metadata not preserved (use labels or JQL filtering)
-- **Components/Versions**: Not mapped to bd (consider using labels)
+- **Components/Versions**: Not mapped to fbd (consider using labels)
 
 ## Troubleshooting
 
@@ -405,32 +405,32 @@ Supported ADF node types: paragraph, heading, bulletList, orderedList, listItem,
 
 # Export: jsonl2jira.py
 
-Push bd issues to Jira.
+Push fbd issues to Jira.
 
 ## Export Quick Start
 
 ```bash
 # Export all issues (create new, update existing)
-bd export | python jsonl2jira.py --from-config
+fbd export | python jsonl2jira.py --from-config
 
 # Create only (don't update existing Jira issues)
-bd export | python jsonl2jira.py --from-config --create-only
+fbd export | python jsonl2jira.py --from-config --create-only
 
 # Dry run (preview what would happen)
-bd export | python jsonl2jira.py --from-config --dry-run
+fbd export | python jsonl2jira.py --from-config --dry-run
 
-# Auto-update bd with new external_refs
-bd export | python jsonl2jira.py --from-config --update-refs
+# Auto-update fbd with new external_refs
+fbd export | python jsonl2jira.py --from-config --update-refs
 ```
 
 ## Export Modes
 
 ### Create Only
 
-Only create new Jira issues for bd issues that don't have an `external_ref`:
+Only create new Jira issues for fbd issues that don't have an `external_ref`:
 
 ```bash
-bd export | python jsonl2jira.py --from-config --create-only
+fbd export | python jsonl2jira.py --from-config --create-only
 ```
 
 ### Create and Update
@@ -438,7 +438,7 @@ bd export | python jsonl2jira.py --from-config --create-only
 Create new issues AND update existing ones (matched by `external_ref`):
 
 ```bash
-bd export | python jsonl2jira.py --from-config
+fbd export | python jsonl2jira.py --from-config
 ```
 
 ### Dry Run
@@ -446,7 +446,7 @@ bd export | python jsonl2jira.py --from-config
 Preview what would happen without making any changes:
 
 ```bash
-bd export | python jsonl2jira.py --from-config --dry-run
+fbd export | python jsonl2jira.py --from-config --dry-run
 ```
 
 ## Workflow Transitions
@@ -461,45 +461,45 @@ If no valid transition is found, the status change is skipped with a warning.
 
 ## Reverse Field Mappings
 
-For export, you need mappings from bd → Jira (reverse of import):
+For export, you need mappings from fbd → Jira (reverse of import):
 
 ```bash
-# Status: bd status -> Jira status name
-bd config set jira.reverse_status_map.open "To Do"
-bd config set jira.reverse_status_map.in_progress "In Progress"
-bd config set jira.reverse_status_map.blocked "Blocked"
-bd config set jira.reverse_status_map.closed "Done"
+# Status: fbd status -> Jira status name
+fbd config set jira.reverse_status_map.open "To Do"
+fbd config set jira.reverse_status_map.in_progress "In Progress"
+fbd config set jira.reverse_status_map.blocked "Blocked"
+fbd config set jira.reverse_status_map.closed "Done"
 
-# Type: bd type -> Jira issue type name
-bd config set jira.reverse_type_map.bug "Bug"
-bd config set jira.reverse_type_map.feature "Story"
-bd config set jira.reverse_type_map.task "Task"
-bd config set jira.reverse_type_map.epic "Epic"
-bd config set jira.reverse_type_map.chore "Task"
+# Type: fbd type -> Jira issue type name
+fbd config set jira.reverse_type_map.bug "Bug"
+fbd config set jira.reverse_type_map.feature "Story"
+fbd config set jira.reverse_type_map.task "Task"
+fbd config set jira.reverse_type_map.epic "Epic"
+fbd config set jira.reverse_type_map.chore "Task"
 
-# Priority: bd priority (0-4) -> Jira priority name
-bd config set jira.reverse_priority_map.0 "Highest"
-bd config set jira.reverse_priority_map.1 "High"
-bd config set jira.reverse_priority_map.2 "Medium"
-bd config set jira.reverse_priority_map.3 "Low"
-bd config set jira.reverse_priority_map.4 "Lowest"
+# Priority: fbd priority (0-4) -> Jira priority name
+fbd config set jira.reverse_priority_map.0 "Highest"
+fbd config set jira.reverse_priority_map.1 "High"
+fbd config set jira.reverse_priority_map.2 "Medium"
+fbd config set jira.reverse_priority_map.3 "Low"
+fbd config set jira.reverse_priority_map.4 "Lowest"
 ```
 
 If not configured, sensible defaults are used.
 
 ## Updating external_ref
 
-After creating a Jira issue, you'll want to link it back to the bd issue:
+After creating a Jira issue, you'll want to link it back to the fbd issue:
 
 ```bash
 # Option 1: Auto-update with --update-refs flag
-bd export | python jsonl2jira.py --from-config --update-refs
+fbd export | python jsonl2jira.py --from-config --update-refs
 
 # Option 2: Manual update from script output
-bd export | python jsonl2jira.py --from-config | while read line; do
+fbd export | python jsonl2jira.py --from-config | while read line; do
   bd_id=$(echo "$line" | jq -r '.bd_id')
   ext_ref=$(echo "$line" | jq -r '.external_ref')
-  bd update "$bd_id" --external-ref="$ext_ref"
+  fbd update "$bd_id" --external-ref="$ext_ref"
 done
 ```
 
@@ -509,27 +509,27 @@ done
 
 ```bash
 # First, export all open issues
-bd list --status open --json | python jsonl2jira.py --from-config --update-refs
+fbd list --status open --json | python jsonl2jira.py --from-config --update-refs
 
 # Now those issues have external_ref set
-bd list --status open
+fbd list --status open
 ```
 
 ### Example 2: Sync Changes Back to Jira
 
 ```bash
 # Export issues modified today
-bd list --json | python jsonl2jira.py --from-config
+fbd list --json | python jsonl2jira.py --from-config
 ```
 
 ### Example 3: Preview Before Export
 
 ```bash
 # See what would happen
-bd export | python jsonl2jira.py --from-config --dry-run
+fbd export | python jsonl2jira.py --from-config --dry-run
 
 # If it looks good, run for real
-bd export | python jsonl2jira.py --from-config --update-refs
+fbd export | python jsonl2jira.py --from-config --update-refs
 ```
 
 ## Export Limitations
@@ -542,26 +542,26 @@ bd export | python jsonl2jira.py --from-config --update-refs
 
 ## Bidirectional Sync Workflow
 
-For ongoing synchronization between Jira and bd:
+For ongoing synchronization between Jira and fbd:
 
 ```bash
 # 1. Pull changes from Jira
-python jira2jsonl.py --from-config --jql "project=PROJ AND updated >= -1d" | bd import
+python jira2jsonl.py --from-config --jql "project=PROJ AND updated >= -1d" | fbd import
 
-# 2. Do local work in bd
-bd update bd-xxx --status in_progress
+# 2. Do local work in fbd
+fbd update bd-xxx --status in_progress
 # ... work ...
-bd close bd-xxx
+fbd close bd-xxx
 
 # 3. Push changes to Jira
-bd export | python jsonl2jira.py --from-config
+fbd export | python jsonl2jira.py --from-config
 
 # 4. Repeat daily/weekly
 ```
 
 ## See Also
 
-- [bd README](../../README.md) - Main documentation
+- [fbd README](../../README.md) - Main documentation
 - [GitHub Import Example](../github-import/) - Similar import for GitHub Issues
 - [CONFIG.md](../../docs/CONFIG.md) - Configuration documentation
 - [Jira REST API docs](https://developer.atlassian.com/cloud/jira/platform/rest/v2/)

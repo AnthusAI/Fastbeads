@@ -10,7 +10,7 @@ import (
 
 	embedded "github.com/dolthub/driver"
 
-	"github.com/steveyegge/beads/internal/storage/doltutil"
+	"github.com/steveyegge/fastbeads/internal/storage/doltutil"
 )
 
 // openTestDolt creates a temporary embedded Dolt database for testing.

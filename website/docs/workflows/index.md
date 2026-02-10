@@ -43,7 +43,7 @@ needs = ["design"]
 ### Molecules
 
 Work graphs with parent-child relationships:
-- Created by instantiating formulas with `bd pour`
+- Created by instantiating formulas with `fbd pour`
 - Steps have dependencies (`needs`)
 - Progress tracked via issue status
 
@@ -57,7 +57,7 @@ Async coordination primitives:
 ### Wisps
 
 Ephemeral operations that don't sync to git:
-- Created with `bd wisp`
+- Created with `fbd wisp`
 - Stored in `.beads-wisp/` (gitignored)
 - Auto-expire after completion
 
@@ -65,24 +65,24 @@ Ephemeral operations that don't sync to git:
 
 | Command | Description |
 |---------|-------------|
-| `bd pour` | Instantiate formula as molecule |
-| `bd wisp` | Create ephemeral wisp |
-| `bd mol list` | List molecules |
-| `bd pin` | Pin work to agent |
-| `bd hook` | Show pinned work |
+| `fbd pour` | Instantiate formula as molecule |
+| `fbd wisp` | Create ephemeral wisp |
+| `fbd mol list` | List molecules |
+| `fbd pin` | Pin work to agent |
+| `fbd hook` | Show pinned work |
 
 ## Simple Example
 
 ```bash
 # Create a release workflow
-bd pour release --var version=1.0.0
+fbd pour release --var version=1.0.0
 
 # View the molecule
-bd mol show release-1.0.0
+fbd mol show release-1.0.0
 
 # Work through steps
-bd update release-1.0.0.1 --status in_progress
-bd close release-1.0.0.1
+fbd update release-1.0.0.1 --status in_progress
+fbd close release-1.0.0.1
 # Next step becomes ready...
 ```
 

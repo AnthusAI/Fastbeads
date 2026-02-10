@@ -11,7 +11,7 @@ When contributing to OSS projects, you want to:
 
 ## Solution
 
-Use `bd init --contributor` to set up a separate planning repository that never gets committed to the upstream project.
+Use `fbd init --contributor` to set up a separate planning repository that never gets committed to the upstream project.
 
 ## Setup
 
@@ -30,7 +30,7 @@ git remote add upstream https://github.com/ORIGINAL_OWNER/project.git
 
 ```bash
 # Run the contributor setup wizard
-bd init --contributor
+fbd init --contributor
 ```
 
 The wizard will:
@@ -43,7 +43,7 @@ The wizard will:
 
 ```bash
 # Create a planning issue
-bd create "Plan how to fix bug X" -p 2
+fbd create "Plan how to fix bug X" -p 2
 
 # This issue goes to ~/.beads-planning automatically!
 ```
@@ -55,7 +55,7 @@ bd create "Plan how to fix bug X" -p 2
 When you create issues as a contributor:
 
 ```bash
-bd create "Fix authentication bug" -p 1
+fbd create "Fix authentication bug" -p 1
 ```
 
 Beads automatically routes this to your planning repo (`~/.beads-planning/.beads/issues.jsonl`), not the current repo.
@@ -64,13 +64,13 @@ Beads automatically routes this to your planning repo (`~/.beads-planning/.beads
 
 ```bash
 # See all issues (from both repos)
-bd list
+fbd list
 
 # See only current repo issues
-bd list --source-repo .
+fbd list --source-repo .
 
 # See only planning issues
-bd list --source-repo ~/.beads-planning
+fbd list --source-repo ~/.beads-planning
 ```
 
 ### Discovered Work
@@ -79,7 +79,7 @@ When you discover work while implementing:
 
 ```bash
 # The new issue inherits source_repo from parent
-bd create "Found edge case in auth" -p 1 --deps discovered-from:bd-42
+fbd create "Found edge case in auth" -p 1 --deps discovered-from:bd-42
 ```
 
 ### Committing Code (Not Planning)
@@ -104,15 +104,15 @@ cd upstream-project
 git remote add upstream https://github.com/upstream/upstream-project.git
 
 # 2. Run contributor setup
-bd init --contributor
+fbd init --contributor
 # Wizard detects fork ✓
 # Creates ~/.beads-planning ✓
 # Configures auto-routing ✓
 
 # 3. Plan your work (routes to planning repo)
-bd create "Research how auth module works" -p 2
-bd create "Design fix for bug #123" -p 1
-bd ready  # Shows planning issues
+fbd create "Research how auth module works" -p 2
+fbd create "Design fix for bug #123" -p 1
+fbd ready  # Shows planning issues
 
 # 4. Implement (commit code only)
 git checkout -b fix-auth-bug
@@ -120,14 +120,14 @@ git checkout -b fix-auth-bug
 git add . && git commit -m "Fix: auth bug"
 
 # 5. Track discovered work (stays in planning repo)
-bd create "Found related issue in logout" -p 2 --deps discovered-from:bd-abc
+fbd create "Found related issue in logout" -p 2 --deps discovered-from:bd-abc
 
 # 6. Push code (planning never included)
 git push origin fix-auth-bug
 # Create PR on GitHub - zero planning pollution!
 
 # 7. Clean up after PR merges
-bd close bd-abc --reason "PR merged"
+fbd close bd-abc --reason "PR merged"
 ```
 
 ## Configuration
@@ -147,12 +147,12 @@ If you prefer manual setup:
 
 ```bash
 # Initialize beads normally
-bd init
+fbd init
 
 # Configure routing
-bd config set routing.mode auto
-bd config set routing.contributor ~/.beads-planning
-bd config set routing.maintainer .
+fbd config set routing.mode auto
+fbd config set routing.contributor ~/.beads-planning
+fbd config set routing.maintainer .
 ```
 
 ### Legacy Configuration (Deprecated)
@@ -161,12 +161,12 @@ Older versions used `contributor.*` keys. These still work for backward compatib
 
 ```bash
 # Old keys (deprecated but functional)
-bd config set contributor.planning_repo ~/.beads-planning
-bd config set contributor.auto_route true
+fbd config set contributor.planning_repo ~/.beads-planning
+fbd config set contributor.auto_route true
 
 # New keys (preferred)
-bd config set routing.mode auto
-bd config set routing.contributor ~/.beads-planning
+fbd config set routing.mode auto
+fbd config set routing.contributor ~/.beads-planning
 ```
 
 ## Multi-Repository View
@@ -175,11 +175,11 @@ Beads aggregates issues from multiple repos:
 
 ```bash
 # List issues from all configured repos
-bd list
+fbd list
 
 # Filter by source repository
-bd list --source-repo .                    # Current repo only
-bd list --source-repo ~/.beads-planning    # Planning repo only
+fbd list --source-repo .                    # Current repo only
+fbd list --source-repo ~/.beads-planning    # Planning repo only
 ```
 
 ## Benefits
@@ -187,7 +187,7 @@ bd list --source-repo ~/.beads-planning    # Planning repo only
 ✅ **Clean PRs** - No personal todos in upstream contributions
 ✅ **Private planning** - Experimental work stays local
 ✅ **Git ledger** - Everything is version controlled
-✅ **Unified view** - See all issues with `bd list`
+✅ **Unified view** - See all issues with `fbd list`
 ✅ **Auto-routing** - No manual sorting needed
 
 ## Common Questions
@@ -197,7 +197,7 @@ bd list --source-repo ~/.beads-planning    # Planning repo only
 A: Override auto-routing with `--repo` flag:
 
 ```bash
-bd create "Document new API" -p 2 --repo .
+fbd create "Document new API" -p 2 --repo .
 ```
 
 ### Q: Can I change the planning repo location?
@@ -205,7 +205,7 @@ bd create "Document new API" -p 2 --repo .
 A: Yes, configure it:
 
 ```bash
-bd config set routing.contributor /path/to/my-planning
+fbd config set routing.contributor /path/to/my-planning
 ```
 
 ### Q: What if I have push access to upstream?
@@ -217,8 +217,8 @@ A: The wizard will ask if you want a planning repo anyway. You can say "no" to s
 A: Change routing mode to explicit:
 
 ```bash
-bd config set routing.mode explicit
-bd config set routing.default .  # Default to current repo
+fbd config set routing.mode explicit
+fbd config set routing.default .  # Default to current repo
 ```
 
 ## See Also

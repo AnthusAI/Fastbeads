@@ -4,7 +4,7 @@ AI-supervised issue tracker for coding workflows. Manage tasks, discover work, a
 
 ## What is Beads?
 
-Beads (`bd`) is an issue tracker designed specifically for AI-supervised coding workflows. It helps AI agents and developers:
+Beads (`fbd`) is an issue tracker designed specifically for AI-supervised coding workflows. It helps AI agents and developers:
 - Track work with a simple CLI
 - Discover and link related tasks during development
 - Maintain context across coding sessions
@@ -41,7 +41,7 @@ There are two ways to install the beads plugin:
 
 ```bash
 # Clone the repository (shell command)
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
 ```
 
@@ -81,7 +81,7 @@ After installation, restart Claude Code to activate the MCP server.
 
 ### Version Management
 
-- **`/beads:version`** - Check bd CLI, plugin, and MCP server versions
+- **`/beads:version`** - Check fbd CLI, plugin, and MCP server versions
 
 ### Core Workflow Commands
 
@@ -105,7 +105,7 @@ After installation, restart Claude Code to activate the MCP server.
 
 The plugin includes a full-featured MCP server with these tools:
 
-- **`init`** - Initialize bd in current directory
+- **`init`** - Initialize fbd in current directory
 - **`create`** - Create new issue (bug, feature, task, epic, chore)
 - **`list`** - List issues with filters (status, priority, type, assignee)
 - **`ready`** - Find tasks with no blockers ready to work on
@@ -198,7 +198,7 @@ No configuration needed. Claude Code will prompt for approval on each MCP tool i
 - **Server-level auto-approval**: Convenient for trusted projects, but allows any beads operation without confirmation
 - **Project-level auto-approval**: Good balance for multi-project workflows with project-specific trust levels
 
-**Limitation:** Claude Code doesn't currently support per-tool approval granularity. You cannot auto-approve only read operations (like `bd ready`, `bd show`) while requiring confirmation for mutations (like `bd create`, `bd update`). It's all-or-nothing at the server level.
+**Limitation:** Claude Code doesn't currently support per-tool approval granularity. You cannot auto-approve only read operations (like `fbd ready`, `fbd show`) while requiring confirmation for mutations (like `fbd create`, `fbd update`). It's all-or-nothing at the server level.
 
 **Recommended Configuration:**
 
@@ -216,7 +216,7 @@ For more information, see the [Claude Code settings documentation](https://docs.
 
 The MCP server supports these environment variables:
 
-- **`BEADS_PATH`** - Path to bd executable (default: `bd` in PATH)
+- **`BEADS_PATH`** - Path to fbd executable (default: `fbd` in PATH)
 - **`BEADS_DB`** - Path to beads database file (default: auto-discover from cwd)
 - **`BEADS_ACTOR`** - Actor name for audit trail (default: `$USER`)
 - **`BEADS_NO_AUTO_FLUSH`** - Disable automatic JSONL sync (default: `false`)
@@ -279,7 +279,7 @@ Beads automatically syncs issues to `.beads/issues.jsonl`:
 This enables seamless collaboration:
 ```bash
 # Make changes
-bd create "Add feature" -p 1
+fbd create "Add feature" -p 1
 
 # Changes auto-export after 5 seconds
 # Commit when ready
@@ -288,7 +288,7 @@ git commit -m "Add feature tracking"
 
 # After pull, JSONL auto-imports
 git pull
-bd ready  # Shows issues ready to work on (with fresh data from git)
+fbd ready  # Shows issues ready to work on (with fresh data from git)
 ```
 
 ## Updating
@@ -304,21 +304,21 @@ Check for plugin updates:
 
 Claude Code will pull the latest version from GitHub. After updating, **restart Claude Code** to apply MCP server changes.
 
-### 2. bd CLI Updates
+### 2. fbd CLI Updates
 
-The plugin requires the `bd` CLI to be installed. Update it separately:
+The plugin requires the `fbd` CLI to be installed. Update it separately:
 
 ```bash
 # Quick update
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
 # Or with go
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### 3. Version Compatibility
 
-The MCP server **automatically checks** bd CLI version on startup and will fail with a clear error if your version is too old.
+The MCP server **automatically checks** fbd CLI version on startup and will fail with a clear error if your version is too old.
 
 Check version compatibility manually:
 ```bash
@@ -326,22 +326,22 @@ Check version compatibility manually:
 ```
 
 This will show:
-- bd CLI version
+- fbd CLI version
 - Plugin version
 - MCP server status
 - Compatibility warnings if versions mismatch
 
 **Recommended update workflow:**
 1. Check versions: `/beads:version`
-2. Update bd CLI if needed (see above)
+2. Update fbd CLI if needed (see above)
 3. Update plugin: `/plugin update beads`
 4. Restart Claude Code
 5. Verify: `/beads:version`
 
 ### Version Numbering
 
-Beads follows semantic versioning. The plugin version tracks the bd CLI version:
-- Plugin 0.9.2 requires bd CLI >= 0.9.0 (checked automatically at startup)
+Beads follows semantic versioning. The plugin version tracks the fbd CLI version:
+- Plugin 0.9.2 requires fbd CLI >= 0.9.0 (checked automatically at startup)
 - Major version bumps may introduce breaking changes
 - Check CHANGELOG.md for release notes
 
@@ -351,7 +351,7 @@ Beads follows semantic versioning. The plugin version tracks the bd CLI version:
 
 1. Check installation: `/plugin list`
 2. Restart Claude Code
-3. Verify `bd` is in PATH: `which bd`
+3. Verify `fbd` is in PATH: `which fbd`
 4. Check uv is installed: `which uv`
 
 ### MCP server not connecting
@@ -366,18 +366,18 @@ Beads follows semantic versioning. The plugin version tracks the bd CLI version:
 1. Make sure you're in a project with beads initialized: `/beads:init`
 2. Check if database exists: `ls -la .beads/`
 3. Try direct MCP tool access instead of slash commands
-4. Check the beads CLI works: `bd --help`
+4. Check the beads CLI works: `fbd --help`
 
 ### MCP tool errors
 
-1. Verify `bd` executable location: `BEADS_PATH` env var
-2. Check `bd` works in terminal: `bd stats`
+1. Verify `fbd` executable location: `BEADS_PATH` env var
+2. Check `fbd` works in terminal: `fbd stats`
 3. Review MCP server logs in Claude Code
 4. Try reinitializing: `/beads:init`
 
 ## Learn More
 
-- **GitHub**: https://github.com/steveyegge/beads
+- **GitHub**: https://github.com/steveyegge/fastbeads
 - **Documentation**: See README.md in the repository
 - **Examples**: Check `examples/` directory for integration patterns
 - **MCP Server**: See `integrations/beads-mcp/` for server details

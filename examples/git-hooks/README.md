@@ -1,6 +1,6 @@
-# bd Git Hooks
+# fbd Git Hooks
 
-This directory contains git hooks that integrate bd (beads) with your git workflow, preventing stale JSONL from being pushed to remote.
+This directory contains git hooks that integrate fbd (beads) with your git workflow, preventing stale JSONL from being pushed to remote.
 
 ## The Problem
 
@@ -20,9 +20,9 @@ Two race conditions can occur:
 
 ## The Solution
 
-These git hooks ensure bd changes are always synchronized with your commits and pushes:
+These git hooks ensure fbd changes are always synchronized with your commits and pushes:
 
-- **pre-commit** - Flushes pending bd changes to JSONL before commit and stages it
+- **pre-commit** - Flushes pending fbd changes to JSONL before commit and stages it
 - **pre-push** - Blocks push if JSONL has uncommitted changes (bd-my64)
 - **post-merge** - Imports updated JSONL after git pull/merge
 
@@ -30,21 +30,21 @@ These git hooks ensure bd changes are always synchronized with your commits and 
 
 ### Quick Install (Recommended)
 
-Use `bd hooks install` to install hooks automatically:
+Use `fbd hooks install` to install hooks automatically:
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
-Alternatively, use `bd init --quiet` which installs hooks during initialization.
+Alternatively, use `fbd init --quiet` which installs hooks during initialization.
 
-**Hook Chaining (New in v0.23):** If you already have git hooks installed (e.g., pre-commit framework), bd will:
+**Hook Chaining (New in v0.23):** If you already have git hooks installed (e.g., pre-commit framework), fbd will:
 - Detect existing hooks
 - Offer to chain with them (recommended)
-- Preserve your existing hooks while adding bd functionality
+- Preserve your existing hooks while adding fbd functionality
 - Back up hooks if you choose to overwrite
 
-This prevents bd from silently overwriting workflows like pre-commit framework, which previously caused test failures to slip through.
+This prevents fbd from silently overwriting workflows like pre-commit framework, which previously caused test failures to slip through.
 
 The installer will:
 - Copy hooks to `.git/hooks/`
@@ -56,7 +56,7 @@ The installer will:
 For teams that need to share hooks across members (especially when using pre-built containers or CI/CD):
 
 ```bash
-bd hooks install --shared
+fbd hooks install --shared
 ```
 
 This installs hooks to `.beads-hooks/` (a versioned directory) instead of `.git/hooks/`, and configures git to use them via `git config core.hooksPath .beads-hooks`.
@@ -66,19 +66,19 @@ This installs hooks to `.beads-hooks/` (a versioned directory) instead of `.git/
 - ✅ Team members get hooks automatically when they clone/pull
 - ✅ Security teams can scan and audit hook contents before deployment
 - ✅ Works with pre-built containers (hooks are already in the repo)
-- ✅ Hooks stay in sync when you run `bd hooks install --shared` after upgrades
+- ✅ Hooks stay in sync when you run `fbd hooks install --shared` after upgrades
 
 **Use cases:**
 - Teams building containers in CI that need hooks pre-installed
 - Organizations requiring security scanning of all code (including hooks)
 - Projects where consistent tooling across team members is critical
-- Devcontainer workflows where bd is installed during container build
+- Devcontainer workflows where fbd is installed during container build
 
-After running `bd hooks install --shared`, commit `.beads-hooks/` to your repository:
+After running `fbd hooks install --shared`, commit `.beads-hooks/` to your repository:
 
 ```bash
 git add .beads-hooks/
-git commit -m "Add bd git hooks for team"
+git commit -m "Add fbd git hooks for team"
 ```
 
 ### Manual Install
@@ -97,7 +97,7 @@ chmod +x .git/hooks/pre-commit .git/hooks/pre-push .git/hooks/post-merge
 Before each commit, the hook runs:
 
 ```bash
-bd sync --flush-only
+fbd sync --flush-only
 ```
 
 This:
@@ -112,7 +112,7 @@ The hook is silent on success, fast (no git operations), and safe (fails commit 
 Before each push, the hook:
 
 ```bash
-bd sync --flush-only  # Flush pending changes (if bd available)
+fbd sync --flush-only  # Flush pending changes (if fbd available)
 git status --porcelain .beads/*.jsonl  # Check for uncommitted changes
 ```
 
@@ -129,7 +129,7 @@ This solves bd-my64: changes made between commit and push (or pending debounced 
 After a git pull or merge, the hook runs:
 
 ```bash
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 This ensures your local database reflects the merged state. The hook:
@@ -141,7 +141,7 @@ This ensures your local database reflects the merged state. The hook:
 
 ## Compatibility
 
-- **Auto-sync**: Works alongside bd's automatic 5-second debounce
+- **Auto-sync**: Works alongside fbd's automatic 5-second debounce
 - **Direct mode**: Hooks work in both daemon and `--no-daemon` mode
 - **Worktrees**: Safe to use with git worktrees
 
@@ -151,7 +151,7 @@ This ensures your local database reflects the merged state. The hook:
 ✅ Database always in sync with git  
 ✅ Automatic collision resolution on merge  
 ✅ Fast and silent operation  
-✅ Optional - manual `bd sync` still works  
+✅ Optional - manual `fbd sync` still works  
 
 ## Uninstall
 

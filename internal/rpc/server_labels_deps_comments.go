@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // lookupIssueMeta fetches title and assignee for mutation events.
@@ -58,7 +58,7 @@ func (s *Server) handleDepAdd(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -108,7 +108,7 @@ func (s *Server) handleSimpleStoreOp(req *Request, argsPtr interface{}, argDesc 
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -146,7 +146,7 @@ func (s *Server) handleDepTree(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -213,7 +213,7 @@ func (s *Server) handleCommentList(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 
@@ -247,7 +247,7 @@ func (s *Server) handleCommentAdd(req *Request) Response {
 	if store == nil {
 		return Response{
 			Success: false,
-			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'bd daemon' in your project)",
+			Error:   "storage not available (global daemon deprecated - use local daemon instead with 'fbd daemon' in your project)",
 		}
 	}
 

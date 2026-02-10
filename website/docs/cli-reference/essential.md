@@ -8,12 +8,12 @@ sidebar_position: 2
 
 The most important commands for daily use.
 
-## bd create
+## fbd create
 
 Create a new issue.
 
 ```bash
-bd create <title> [flags]
+fbd create <title> [flags]
 ```
 
 **Flags:**
@@ -29,18 +29,18 @@ bd create <title> [flags]
 
 **Examples:**
 ```bash
-bd create "Fix login bug" -t bug -p 1
-bd create "Add dark mode" -t feature -p 2 --description="User requested"
-bd create "Subtask" --parent bd-42 -p 2
-bd create "Found during work" --deps discovered-from:bd-42 --json
+fbd create "Fix login bug" -t bug -p 1
+fbd create "Add dark mode" -t feature -p 2 --description="User requested"
+fbd create "Subtask" --parent bd-42 -p 2
+fbd create "Found during work" --deps discovered-from:bd-42 --json
 ```
 
-## bd list
+## fbd list
 
 List issues with filters.
 
 ```bash
-bd list [flags]
+fbd list [flags]
 ```
 
 **Flags:**
@@ -55,32 +55,32 @@ bd list [flags]
 
 **Examples:**
 ```bash
-bd list --status open
-bd list --priority 0,1 --type bug
-bd list --label-any urgent,critical --json
+fbd list --status open
+fbd list --priority 0,1 --type bug
+fbd list --label-any urgent,critical --json
 ```
 
-## bd show
+## fbd show
 
 Show issue details.
 
 ```bash
-bd show <id> [flags]
+fbd show <id> [flags]
 ```
 
 **Examples:**
 ```bash
-bd show bd-42
-bd show bd-42 --json
-bd show bd-42 bd-43 bd-44  # Multiple issues
+fbd show bd-42
+fbd show bd-42 --json
+fbd show bd-42 bd-43 bd-44  # Multiple issues
 ```
 
-## bd update
+## fbd update
 
 Update issue fields.
 
 ```bash
-bd update <id> [flags]
+fbd update <id> [flags]
 ```
 
 **Flags:**
@@ -96,17 +96,17 @@ bd update <id> [flags]
 
 **Examples:**
 ```bash
-bd update bd-42 --status in_progress
-bd update bd-42 --priority 0 --add-label urgent
-bd update bd-42 --title "Updated title" --json
+fbd update bd-42 --status in_progress
+fbd update bd-42 --priority 0 --add-label urgent
+fbd update bd-42 --title "Updated title" --json
 ```
 
-## bd close
+## fbd close
 
 Close an issue.
 
 ```bash
-bd close <id> [flags]
+fbd close <id> [flags]
 ```
 
 **Flags:**
@@ -117,17 +117,17 @@ bd close <id> [flags]
 
 **Examples:**
 ```bash
-bd close bd-42
-bd close bd-42 --reason "Fixed in PR #123"
-bd close bd-42 --json
+fbd close bd-42
+fbd close bd-42 --reason "Fixed in PR #123"
+fbd close bd-42 --json
 ```
 
-## bd ready
+## fbd ready
 
 Show issues ready to work on (no blockers).
 
 ```bash
-bd ready [flags]
+fbd ready [flags]
 ```
 
 **Flags:**
@@ -139,31 +139,31 @@ bd ready [flags]
 
 **Examples:**
 ```bash
-bd ready
-bd ready --priority 1
-bd ready --json
+fbd ready
+fbd ready --priority 1
+fbd ready --json
 ```
 
-## bd blocked
+## fbd blocked
 
 Show blocked issues and their blockers.
 
 ```bash
-bd blocked [flags]
+fbd blocked [flags]
 ```
 
 **Examples:**
 ```bash
-bd blocked
-bd blocked --json
+fbd blocked
+fbd blocked --json
 ```
 
-## bd sync
+## fbd sync
 
 Force immediate sync to git.
 
 ```bash
-bd sync [flags]
+fbd sync [flags]
 ```
 
 Performs:
@@ -174,16 +174,16 @@ Performs:
 
 **Examples:**
 ```bash
-bd sync
-bd sync --json
+fbd sync
+fbd sync --json
 ```
 
-## bd info
+## fbd info
 
 Show system information.
 
 ```bash
-bd info [flags]
+fbd info [flags]
 ```
 
 **Flags:**
@@ -195,21 +195,21 @@ bd info [flags]
 
 **Examples:**
 ```bash
-bd info
-bd info --whats-new
-bd info --json
+fbd info
+fbd info --whats-new
+fbd info --json
 ```
 
-## bd stats
+## fbd stats
 
 Show project statistics.
 
 ```bash
-bd stats [flags]
+fbd stats [flags]
 ```
 
 **Examples:**
 ```bash
-bd stats
-bd stats --json
+fbd stats
+fbd stats --json
 ```

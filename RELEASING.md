@@ -23,7 +23,7 @@ A beads release involves multiple distribution channels:
 1. **GitHub Release** - Binary downloads for all platforms
 2. **Homebrew** - macOS/Linux package manager
 3. **PyPI** - Python MCP server (`beads-mcp`)
-4. **npm** - Node.js package for Claude Code for Web (`@beads/bd`)
+4. **npm** - Node.js package for Claude Code for Web (`@beads/fbd`)
 
 ## Prerequisites
 
@@ -123,20 +123,20 @@ Use the version bump script to update all version references and create the rele
 | `--commit` | Create a git commit with version changes |
 | `--tag` | Create annotated git tag (requires --commit) |
 | `--push` | Push commit and tag to origin (requires --tag) |
-| `--install` | Build and install bd to `~/go/bin` AND `~/.local/bin` |
+| `--install` | Build and install fbd to `~/go/bin` AND `~/.local/bin` |
 | `--mcp-local` | Install beads-mcp from local source via uv/pip |
 | `--upgrade-mcp` | Upgrade beads-mcp from PyPI (after PyPI publish) |
-| `--restart-daemons` | Restart all bd daemons to pick up new version |
+| `--restart-daemons` | Restart all fbd daemons to pick up new version |
 | `--all` | Shorthand for `--install --mcp-local --restart-daemons` |
 
 This updates:
-- `cmd/bd/version.go` - CLI version constant
+- `cmd/fbd/version.go` - CLI version constant
 - `integrations/beads-mcp/pyproject.toml` - MCP server version
 - `integrations/beads-mcp/src/beads_mcp/__init__.py` - MCP Python version
 - `claude-plugin/.claude-plugin/plugin.json` - Plugin version
 - `.claude-plugin/marketplace.json` - Marketplace version
 - `npm-package/package.json` - npm package version
-- `cmd/bd/templates/hooks/*` - Git hook versions
+- `cmd/fbd/templates/hooks/*` - Git hook versions
 - `README.md` - Documentation version
 - `PLUGIN.md` - Version requirements
 - `CHANGELOG.md` - Creates release entry from [Unreleased]
@@ -151,7 +151,7 @@ This triggers GitHub Actions to build release artifacts automatically.
 **Recommended workflow:**
 
 ```bash
-# 1. Update CHANGELOG.md and cmd/bd/info.go with release notes (manual step)
+# 1. Update CHANGELOG.md and cmd/fbd/info.go with release notes (manual step)
 
 # 2. Bump version and install everything locally
 ./scripts/bump-version.sh 0.22.0 --commit --all
@@ -218,7 +218,7 @@ gh release create v0.22.0 \
 
 ### Verify GitHub Release
 
-1. Visit https://github.com/steveyegge/beads/releases
+1. Visit https://github.com/steveyegge/fastbeads/releases
 2. Verify v0.22.0 is marked as "Latest"
 3. Check all platform binaries are present:
    - `beads_0.22.0_darwin_amd64.tar.gz`
@@ -244,7 +244,7 @@ brew update
 brew upgrade beads  # or: brew install beads
 
 # Verify
-bd version  # Should show 0.22.0
+fbd version  # Should show 0.22.0
 ```
 
 ## 4. PyPI Release (MCP Server)
@@ -360,19 +360,19 @@ npm pack
 npm install -g ./beads-bd-0.22.0.tgz
 
 # Verify binary downloads correctly
-bd version  # Should show 0.22.0
+fbd version  # Should show 0.22.0
 
 # Test in a project
-mkdir /tmp/test-npm-bd
-cd /tmp/test-npm-bd
+mkdir /tmp/test-npm-fbd
+cd /tmp/test-npm-fbd
 git init
-bd init
-bd create "Test issue" -p 1
-bd list
+fbd init
+fbd create "Test issue" -p 1
+fbd list
 
 # Cleanup
-npm uninstall -g @beads/bd
-rm -rf /tmp/test-npm-bd
+npm uninstall -g @beads/fbd
+rm -rf /tmp/test-npm-fbd
 cd -
 rm beads-bd-0.22.0.tgz
 ```
@@ -394,15 +394,15 @@ npm publish
 
 ```bash
 # Check package page
-open https://www.npmjs.com/package/@beads/bd
+open https://www.npmjs.com/package/@beads/fbd
 
 # Install and test
-npm install -g @beads/bd
-bd version  # Should show 0.22.0
+npm install -g @beads/fbd
+fbd version  # Should show 0.22.0
 
 # Test postinstall downloaded correct binary
-which bd
-bd --help
+which fbd
+fbd --help
 ```
 
 ## 7. Verify Release
@@ -413,9 +413,9 @@ After all distribution channels are updated, verify each one:
 
 ```bash
 # Download and test binary
-wget https://github.com/steveyegge/beads/releases/download/v0.22.0/beads_0.22.0_darwin_arm64.tar.gz
+wget https://github.com/steveyegge/fastbeads/releases/download/v0.22.0/beads_0.22.0_darwin_arm64.tar.gz
 tar -xzf beads_0.22.0_darwin_arm64.tar.gz
-./bd version
+./fbd version
 ```
 
 ### Homebrew
@@ -423,7 +423,7 @@ tar -xzf beads_0.22.0_darwin_arm64.tar.gz
 ```bash
 brew update
 brew upgrade beads
-bd version
+fbd version
 ```
 
 ### PyPI
@@ -436,8 +436,8 @@ python -m beads_mcp --version
 ### npm
 
 ```bash
-npm install -g @beads/bd
-bd version
+npm install -g @beads/fbd
+fbd version
 ```
 
 ### Installation Script
@@ -445,7 +445,7 @@ bd version
 ```bash
 # Test quick install script
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
-bd version
+fbd version
 ```
 
 ## Hotfix Releases
@@ -493,7 +493,7 @@ Follow hotfix procedure above to release 0.22.1.
 ### 3. Deprecate npm Package (If Needed)
 
 ```bash
-npm deprecate @beads/bd@0.22.0 "Critical bug, please upgrade to 0.22.1"
+npm deprecate @beads/fbd@0.22.0 "Critical bug, please upgrade to 0.22.1"
 ```
 
 ### 4. Yank PyPI Release (If Needed)
@@ -582,14 +582,14 @@ After a successful release:
 
    **Note:** The `--upgrade-mcp` flag can be combined with other flags:
    ```bash
-   # Update versions, commit, install bd binary, and upgrade beads-mcp all at once
+   # Update versions, commit, install fbd binary, and upgrade beads-mcp all at once
    ./scripts/bump-version.sh 0.24.3 --commit --install --upgrade-mcp
    ```
 
 2. **Restart local daemons** to pick up the new version:
    ```bash
-   bd daemons killall --json
-   # Daemons will auto-restart with new version on next bd command
+   fbd daemons killall --json
+   # Daemons will auto-restart with new version on next fbd command
    ```
 
 3. **Announce** on relevant channels (Twitter, blog, etc.)
@@ -659,5 +659,5 @@ Examples:
 
 ## Questions?
 
-- Open an issue: https://github.com/steveyegge/beads/issues
-- Check existing releases: https://github.com/steveyegge/beads/releases
+- Open an issue: https://github.com/steveyegge/fastbeads/issues
+- Check existing releases: https://github.com/steveyegge/fastbeads/releases

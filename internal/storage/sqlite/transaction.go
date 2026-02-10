@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // Verify sqliteTxStorage implements storage.Transaction at compile time
@@ -162,7 +162,7 @@ func (t *sqliteTxStorage) CreateIssue(ctx context.Context, issue *types.Issue, a
 		issue.UpdatedAt = now
 	}
 
-	// Defensive fix for closed_at invariant (GH#523): older versions of bd could
+	// Defensive fix for closed_at invariant (GH#523): older versions of fbd could
 	// close issues without setting closed_at. Fix by using max(created_at, updated_at) + 1s.
 	if issue.Status == types.StatusClosed && issue.ClosedAt == nil {
 		maxTime := issue.CreatedAt
@@ -198,14 +198,14 @@ func (t *sqliteTxStorage) CreateIssue(ctx context.Context, issue *types.Issue, a
 	err = t.conn.QueryRowContext(ctx, `SELECT value FROM config WHERE key = ?`, "issue_prefix").Scan(&configPrefix)
 	if errors.Is(err, sql.ErrNoRows) || configPrefix == "" {
 		// CRITICAL: Reject operation if issue_prefix config is missing
-		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'bd init --prefix <prefix>' first)")
+		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'fbd init --prefix <prefix>' first)")
 	} else if err != nil {
 		return fmt.Errorf("failed to get config: %w", err)
 	}
 
 	// Determine prefix for ID generation and validation:
 	// 1. PrefixOverride completely replaces config prefix (for cross-rig creation)
-	// 2. IDPrefix appends to config prefix (e.g., "bd" + "wisp" → "bd-wisp")
+	// 2. IDPrefix appends to config prefix (e.g., "fbd" + "wisp" → "bd-wisp")
 	// 3. Otherwise use config prefix as-is
 	prefix := configPrefix
 	skipPrefixValidation := false
@@ -295,7 +295,7 @@ func (t *sqliteTxStorage) CreateIssues(ctx context.Context, issues []*types.Issu
 			issue.UpdatedAt = now
 		}
 
-		// Defensive fix for closed_at invariant (GH#523): older versions of bd could
+		// Defensive fix for closed_at invariant (GH#523): older versions of fbd could
 		// close issues without setting closed_at. Fix by using max(created_at, updated_at) + 1s.
 		if issue.Status == types.StatusClosed && issue.ClosedAt == nil {
 			maxTime := issue.CreatedAt

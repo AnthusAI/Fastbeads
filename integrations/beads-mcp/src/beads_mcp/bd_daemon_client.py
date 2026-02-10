@@ -1,4 +1,4 @@
-"""Client for interacting with bd daemon via RPC over Unix socket."""
+"""Client for interacting with fbd daemon via RPC over Unix socket."""
 
 import asyncio
 import json
@@ -44,7 +44,7 @@ class DaemonConnectionError(DaemonError):
 
 
 class BdDaemonClient(BdClientBase):
-    """Client for calling bd daemon via RPC over Unix socket."""
+    """Client for calling fbd daemon via RPC over Unix socket."""
 
     socket_path: str | None
     working_dir: str
@@ -111,7 +111,7 @@ class BdDaemonClient(BdClientBase):
         
         # No socket found anywhere
         raise DaemonNotRunningError(
-            "Daemon socket not found. Is the daemon running? Try: bd daemon start"
+            "Daemon socket not found. Is the daemon running? Try: fbd daemon start"
         )
 
     async def _send_request(self, operation: str, args: Dict[str, Any]) -> Any:
@@ -239,9 +239,9 @@ class BdDaemonClient(BdClientBase):
             Quickstart guide text
         """
         return (
-            "Beads (bd) Quickstart\n\n"
+            "Beads (fbd) Quickstart\n\n"
             "To get started with beads, please refer to the documentation or use the CLI:\n"
-            "  bd quickstart\n\n"
+            "  fbd quickstart\n\n"
             "For MCP usage, try 'beads list' or 'beads create'."
         )
 

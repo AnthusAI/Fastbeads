@@ -11,11 +11,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/steveyegge/beads/internal/audit"
-	"github.com/steveyegge/beads/internal/lockfile"
-	"github.com/steveyegge/beads/internal/routing"
-	"github.com/steveyegge/beads/internal/types"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/audit"
+	"github.com/steveyegge/fastbeads/internal/lockfile"
+	"github.com/steveyegge/fastbeads/internal/routing"
+	"github.com/steveyegge/fastbeads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // BootstrapResult contains statistics about the bootstrap operation

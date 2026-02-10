@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func TestMemoryStorage_LoadFromIssues_IndexesAndCounters(t *testing.T) {
@@ -235,8 +235,8 @@ func TestMemoryStorage_DependencyCounts_Records_Tree_Cycles(t *testing.T) {
 	if err != nil {
 		t.Fatalf("DetectCycles: %v", err)
 	}
-	if cycles != nil {
-		t.Fatalf("expected nil cycles, got %+v", cycles)
+	if len(cycles) != 0 {
+		t.Fatalf("expected no cycles, got %+v", cycles)
 	}
 }
 

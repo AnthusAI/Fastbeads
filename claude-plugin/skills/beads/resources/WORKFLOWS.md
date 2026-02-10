@@ -1,13 +1,13 @@
 # Workflows and Checklists
 
-Detailed step-by-step workflows for common bd usage patterns with checklists.
+Detailed step-by-step workflows for common fbd usage patterns with checklists.
 
 ## Contents
 
-- [Session Start Workflow](#session-start) - Check bd ready, establish context
+- [Session Start Workflow](#session-start) - Check fbd ready, establish context
 - [Compaction Survival](#compaction-survival) - Recovering after compaction events
 - [Discovery and Issue Creation](#discovery) - Proactive issue creation during work
-- [Status Maintenance](#status-maintenance) - Keeping bd status current
+- [Status Maintenance](#status-maintenance) - Keeping fbd status current
 - [Epic Planning](#epic-planning) - Structuring complex work with dependencies
 - [Side Quest Handling](#side-quests) - Discovery during main task, assessing blocker vs deferrable, resuming
 - [Multi-Session Resume](#resume) - Returning after days/weeks away
@@ -23,40 +23,40 @@ Detailed step-by-step workflows for common bd usage patterns with checklists.
 
 ## Session Start Workflow {#session-start}
 
-**bd is available when**:
+**fbd is available when**:
 - Project has `.beads/` directory (project-local), OR
 - `~/.beads/` exists (global fallback for any directory)
 
 **Automatic checklist at session start:**
 
 ```
-Session Start (when bd is available):
-- [ ] Run bd ready --json
+Session Start (when fbd is available):
+- [ ] Run fbd ready --json
 - [ ] Report: "X items ready to work on: [summary]"
 - [ ] If using global ~/.beads, note this in report
-- [ ] If none ready, check bd blocked --json
+- [ ] If none ready, check fbd blocked --json
 - [ ] Suggest next action based on findings
 ```
 
-**Pattern**: Always run `bd ready` when starting work where bd is available. Report status immediately to establish shared context.
+**Pattern**: Always run `fbd ready` when starting work where fbd is available. Report status immediately to establish shared context.
 
-**Database selection**: bd auto-discovers which database to use (project-local `.beads/` takes precedence over global `~/.beads/`).
+**Database selection**: fbd auto-discovers which database to use (project-local `.beads/` takes precedence over global `~/.beads/`).
 
 ---
 
 ## Compaction Survival {#compaction-survival}
 
-**Critical**: After compaction events, conversation history is deleted but bd state persists. Beads are your only memory.
+**Critical**: After compaction events, conversation history is deleted but fbd state persists. Beads are your only memory.
 
 **Post-compaction recovery checklist:**
 
 ```
 After Compaction:
-- [ ] Run bd list --status in_progress to see active work
-- [ ] Run bd show <issue-id> for each in_progress issue
+- [ ] Run fbd list --status in_progress to see active work
+- [ ] Run fbd show <issue-id> for each in_progress issue
 - [ ] Read notes field to understand: COMPLETED, IN PROGRESS, BLOCKERS, KEY DECISIONS
-- [ ] Check dependencies: bd dep tree <issue-id> for context
-- [ ] If notes insufficient, check bd list --status open for related issues
+- [ ] Check dependencies: fbd dep tree <issue-id> for context
+- [ ] If notes insufficient, check fbd list --status open for related issues
 - [ ] Reconstruct TodoWrite list from notes if needed
 ```
 
@@ -66,7 +66,7 @@ After Compaction:
 
 **Good note (enables recovery):**
 ```
-bd update issue-42 --notes "COMPLETED: User authentication - added JWT token
+fbd update issue-42 --notes "COMPLETED: User authentication - added JWT token
 generation with 1hr expiry, implemented refresh token endpoint using rotating
 tokens pattern. IN PROGRESS: Password reset flow. Email service integration
 working. NEXT: Need to add rate limiting to reset endpoint (currently unlimited
@@ -76,7 +76,7 @@ recommendations, tech lead concerned about response time but benchmarks show <10
 
 **Bad note (insufficient for recovery):**
 ```
-bd update issue-42 --notes "Working on auth feature. Made some progress.
+fbd update issue-42 --notes "Working on auth feature. Made some progress.
 More to do later."
 ```
 
@@ -86,7 +86,7 @@ The good note contains:
 - Next concrete step (not just "continue")
 - Key context (team concerns, technical decisions with rationale)
 
-**After compaction**: `bd show issue-42` reconstructs the full context needed to continue work.
+**After compaction**: `fbd show issue-42` reconstructs the full context needed to continue work.
 
 ---
 
@@ -98,8 +98,8 @@ The good note contains:
 Discovery Workflow:
 - [ ] Notice bug, improvement, or follow-up work
 - [ ] Assess: Can defer or is blocker?
-- [ ] Create issue with bd create "Issue title"
-- [ ] Add discovered-from dependency: bd dep add current-id new-id --type discovered-from
+- [ ] Create issue with fbd create "Issue title"
+- [ ] Add discovered-from dependency: fbd dep add current-id new-id --type discovered-from
 - [ ] If blocker: pause and switch; if not: continue current work
 - [ ] Issue persists for future sessions
 ```
@@ -129,10 +129,10 @@ Issue Lifecycle:
 - [ ] During: Update acceptance criteria if requirements clarify
 - [ ] During: Add dependencies if blockers discovered
 - [ ] Complete: Close with summary of what was done
-- [ ] After: Check bd ready to see what unblocked
+- [ ] After: Check fbd ready to see what unblocked
 ```
 
-**Pattern**: Keep bd status current so project state is always accurate.
+**Pattern**: Keep fbd status current so project state is always accurate.
 
 **Status transitions**:
 - `open` → `in_progress` when starting work
@@ -165,9 +165,9 @@ Dynamic view: Current wavefront of in-progress work
 ```
 ⚠️ COGNITIVE TRAP:
 "Phase 1 before Phase 2" → brain thinks "Phase 1 blocks Phase 2"
-                         → WRONG: bd dep add phase1 phase2
+                         → WRONG: fbd dep add phase1 phase2
 
-Correct: "Phase 2 needs Phase 1" → bd dep add phase2 phase1
+Correct: "Phase 2 needs Phase 1" → fbd dep add phase2 phase1
 ```
 
 **The fix**: Name issues by what they ARE, think about what they NEED.
@@ -179,9 +179,9 @@ Epic Planning with Ready Fronts:
 - [ ] Create epic issue for high-level goal
 - [ ] Walk backward from goal: "What does the end state need?"
 - [ ] Create child issues named by WHAT, not WHEN
-- [ ] Add deps using requirement language: "X needs Y" → bd dep add X Y
-- [ ] Verify with bd blocked (tasks blocked BY prerequisites, not dependents)
-- [ ] Use bd ready to work through in dependency order
+- [ ] Add deps using requirement language: "X needs Y" → fbd dep add X Y
+- [ ] Verify with fbd blocked (tasks blocked BY prerequisites, not dependents)
+- [ ] Use fbd ready to work through in dependency order
 ```
 
 ### The Graph Walk Pattern
@@ -218,28 +218,28 @@ Ready Front 3:  gt-streaming, gt-header (parallel, need messages)
 Ready Front 4:  gt-integration (needs streaming, header)
 ```
 
-At any moment, `bd ready` shows the current front. As issues close, blocked work becomes ready.
+At any moment, `fbd ready` shows the current front. As issues close, blocked work becomes ready.
 
 ### Example: OAuth Integration
 
 ```bash
 # Create epic (the goal)
-bd create "OAuth integration" -t epic
+fbd create "OAuth integration" -t epic
 
 # Walk backward: What does OAuth need?
-bd create "Login/logout endpoints" -t task        # needs token storage
-bd create "Token storage and refresh" -t task     # needs auth flow
-bd create "Authorization code flow" -t task       # needs credentials
-bd create "OAuth client credentials" -t task      # foundation
+fbd create "Login/logout endpoints" -t task        # needs token storage
+fbd create "Token storage and refresh" -t task     # needs auth flow
+fbd create "Authorization code flow" -t task       # needs credentials
+fbd create "OAuth client credentials" -t task      # foundation
 
 # Add deps using requirement language: "X needs Y"
-bd dep add endpoints storage      # endpoints need storage
-bd dep add storage flow           # storage needs flow
-bd dep add flow credentials       # flow needs credentials
+fbd dep add endpoints storage      # endpoints need storage
+fbd dep add storage flow           # storage needs flow
+fbd dep add flow credentials       # flow needs credentials
 # credentials has no deps - it's Ready Front 1
 
-# Verify: bd blocked should show sensible blocking
-bd blocked
+# Verify: fbd blocked should show sensible blocking
+fbd blocked
 # endpoints blocked by storage ✓
 # storage blocked by flow ✓
 # flow blocked by credentials ✓
@@ -248,7 +248,7 @@ bd blocked
 
 ### Validation
 
-After adding deps, verify with `bd blocked`:
+After adding deps, verify with `fbd blocked`:
 - Tasks should be blocked BY their prerequisites
 - NOT blocked by their dependents
 
@@ -297,8 +297,8 @@ Actions:
 
 ```
 Resume Workflow:
-- [ ] Run bd ready to see available work
-- [ ] Run bd stats for project overview
+- [ ] Run fbd ready to see available work
+- [ ] Run fbd stats for project overview
 - [ ] List recent closed issues for context
 - [ ] Show details on issue to work on
 - [ ] Review design notes and acceptance criteria
@@ -306,7 +306,7 @@ Resume Workflow:
 - [ ] Begin work with full context
 ```
 
-**Why this works**: bd preserves design decisions, acceptance criteria, and dependency context. No scrolling conversation history or reconstructing from markdown.
+**Why this works**: fbd preserves design decisions, acceptance criteria, and dependency context. No scrolling conversation history or reconstructing from markdown.
 
 ---
 
@@ -320,8 +320,8 @@ This workflow enables smooth work resumption by updating beads notes when stoppi
 
 ```
 Session Start with in_progress issues:
-- [ ] Run bd list --status in_progress
-- [ ] For each in_progress issue: bd show <issue-id>
+- [ ] Run fbd list --status in_progress
+- [ ] For each in_progress issue: fbd show <issue-id>
 - [ ] Read notes field to understand: COMPLETED, IN PROGRESS, NEXT
 - [ ] Report to user with context from notes field
 - [ ] Example: "workspace-mcp-server-2 is in_progress. Last session:
@@ -342,7 +342,7 @@ Session End Handoff:
 - [ ] Prompt user: "We just completed X and started Y on <issue-id>.
        Should I update the beads notes for next session?"
 - [ ] If yes, suggest command:
-       bd update <issue-id> --notes "COMPLETED: X. IN PROGRESS: Y. NEXT: Z"
+       fbd update <issue-id> --notes "COMPLETED: X. IN PROGRESS: Y. NEXT: Z"
 - [ ] User reviews and confirms
 - [ ] Claude executes the update
 - [ ] Notes saved for next session's resumption
@@ -383,7 +383,7 @@ Session End Checklist:
   - [ ] Craft note with COMPLETED/IN_PROGRESS/NEXT
   - [ ] Include blocker if stuck
   - [ ] Include key decisions if relevant
-  - [ ] Suggest bd update command
+  - [ ] Suggest fbd update command
 - [ ] Execute approved update
 - [ ] Confirm: "Saved handoff notes for next session"
 ```
@@ -404,7 +404,7 @@ User Tips:
 
 **At End of Session 1:**
 ```bash
-bd update workspace-mcp-server-2 --notes "COMPLETED: Set up skeleton with Docs
+fbd update workspace-mcp-server-2 --notes "COMPLETED: Set up skeleton with Docs
 API connection verified. Markdown parsing logic 80% done (handles *, _ modifiers).
 IN PROGRESS: Testing edge cases for nested formatting. NEXT: Implement
 batchUpdate call structure for text insertion. REFERENCE: Reference pattern at
@@ -413,7 +413,7 @@ docs/markdown-to-docs-reference.md. No blockers, moving well."
 
 **At Start of Session 2:**
 ```bash
-bd show workspace-mcp-server-2
+fbd show workspace-mcp-server-2
 # Output includes notes field showing exactly where we left off
 # Claude reports: "Markdown→Docs feature is 80% parsed. We were testing
 # edge cases and need to implement batchUpdate next. Want to continue?"
@@ -429,8 +429,8 @@ Session resumes instantly with full context, no history scrolling needed.
 
 ```
 Unblocking Workflow:
-- [ ] Run bd blocked --json to see what's stuck
-- [ ] Show details on blocked issues: bd show issue-id
+- [ ] Run fbd blocked --json to see what's stuck
+- [ ] Show details on blocked issues: fbd show issue-id
 - [ ] Identify blocker issues
 - [ ] Choose: work on blocker, or reassess dependency
 - [ ] If reassess: remove incorrect dependency
@@ -438,19 +438,19 @@ Unblocking Workflow:
 - [ ] Blocked issues automatically become ready when blockers close
 ```
 
-**Pattern**: bd automatically maintains ready state based on dependencies. Closing a blocker makes blocked work ready.
+**Pattern**: fbd automatically maintains ready state based on dependencies. Closing a blocker makes blocked work ready.
 
 **Example**:
 
 ```
-Situation: bd ready shows nothing
+Situation: fbd ready shows nothing
 
 Actions:
-1. bd blocked shows: "api-endpoint blocked by db-schema"
+1. fbd blocked shows: "api-endpoint blocked by db-schema"
 2. Show db-schema: "Create user table schema"
 3. Work on db-schema issue
 4. Close db-schema when done
-5. bd ready now shows: "api-endpoint" (automatically unblocked)
+5. fbd ready now shows: "api-endpoint" (automatically unblocked)
 ```
 
 ---
@@ -461,16 +461,16 @@ Actions:
 
 ```
 Hybrid Workflow:
-- [ ] Check bd for high-level context
-- [ ] Choose bd issue to work on
-- [ ] Mark bd issue in_progress
+- [ ] Check fbd for high-level context
+- [ ] Choose fbd issue to work on
+- [ ] Mark fbd issue in_progress
 - [ ] Create TodoWrite from acceptance criteria for execution
 - [ ] Work through TodoWrite items
-- [ ] Update bd design notes as you learn
-- [ ] When TodoWrite complete, close bd issue
+- [ ] Update fbd design notes as you learn
+- [ ] When TodoWrite complete, close fbd issue
 ```
 
-**Why hybrid**: bd provides persistent structure, TodoWrite provides visible progress.
+**Why hybrid**: fbd provides persistent structure, TodoWrite provides visible progress.
 
 ---
 
@@ -505,7 +505,7 @@ Research or investigation work:
 1. Create issues for each refactoring step
 2. Add blocks dependencies for correct order
 3. Work through in dependency order
-4. bd ready automatically shows next step
+4. fbd ready automatically shows next step
 5. Each completion unblocks next work
 ```
 
@@ -528,7 +528,7 @@ Research or investigation work:
 
 ```
 - [ ] Check for .beads/ directory
-- [ ] If exists: bd ready
+- [ ] If exists: fbd ready
 - [ ] Report status to user
 - [ ] Get user input on what to work on
 - [ ] Show issue details
@@ -553,7 +553,7 @@ Research or investigation work:
 - [ ] Implementation done
 - [ ] Tests passing
 - [ ] Close issue with summary
-- [ ] Check bd ready for unblocked work
+- [ ] Check fbd ready for unblocked work
 - [ ] Report completion and next available work
 ```
 
@@ -572,7 +572,7 @@ Research or investigation work:
 
 ## Decision Points
 
-**Should I create a bd issue or use TodoWrite?**
+**Should I create a fbd issue or use TodoWrite?**
 → See [BOUNDARIES.md](BOUNDARIES.md) for decision matrix
 
 **Should I ask user before creating issue?**
@@ -592,32 +592,32 @@ Research or investigation work:
 ## Troubleshooting Workflows
 
 **"I can't find any ready work"**
-1. Run bd blocked
+1. Run fbd blocked
 2. Identify what's blocking progress
 3. Either work on blockers or create new work
 
 **"I created an issue but it's not showing in ready"**
-1. Run bd show on the issue
+1. Run fbd show on the issue
 2. Check dependencies field
 3. If blocked, resolve blocker first
 4. If incorrectly blocked, remove dependency
 
 **"Work is more complex than expected"**
-1. Transition from TodoWrite to bd mid-session
-2. Create bd issue with current context
+1. Transition from TodoWrite to fbd mid-session
+2. Create fbd issue with current context
 3. Note: "Discovered complexity during implementation"
 4. Add dependencies as discovered
-5. Continue with bd tracking
+5. Continue with fbd tracking
 
 **"I closed an issue but work isn't done"**
-1. Reopen with bd update status=open
+1. Reopen with fbd update status=open
 2. Or create new issue linking to closed one
 3. Note what's still needed
 4. Closed issues can't be reopened in some systems, so create new if needed
 
 **"Too many issues, can't find what matters"**
-1. Use bd list with filters (priority, issue_type)
-2. Use bd ready to focus on unblocked work
+1. Use fbd list with filters (priority, issue_type)
+2. Use fbd ready to focus on unblocked work
 3. Consider closing old issues that no longer matter
 4. Use labels for organization
 

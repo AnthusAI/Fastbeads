@@ -1,10 +1,10 @@
-// Package beads provides a minimal public API for extending bd with custom orchestration.
+// Package beads provides a minimal public API for extending fbd with custom orchestration.
 //
-// Most extensions should use direct SQL queries against bd's database.
+// Most extensions should use direct SQL queries against fbd's database.
 // This package exports only the essential types and functions needed for
-// Go-based extensions that want to use bd's storage layer programmatically.
+// Go-based extensions that want to use fbd's storage layer programmatically.
 //
-// For detailed guidance on extending bd, see EXTENDING.md.
+// For detailed guidance on extending fbd, see EXTENDING.md.
 package beads
 
 import (
@@ -14,12 +14,13 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/configfile"
-	"github.com/steveyegge/beads/internal/git"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/sqlite"
-	"github.com/steveyegge/beads/internal/types"
-	"github.com/steveyegge/beads/internal/utils"
+	"github.com/steveyegge/fastbeads/internal/configfile"
+	"github.com/steveyegge/fastbeads/internal/env"
+	"github.com/steveyegge/fastbeads/internal/git"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/utils"
 )
 
 // CanonicalDatabaseName is the required database filename for all beads repositories
@@ -172,8 +173,8 @@ func findLocalBdsDirInRepo() string {
 // findLocalBeadsDir finds the local .beads directory without following redirects.
 // This is used to detect if a redirect is configured.
 func findLocalBeadsDir() string {
-	// Check BEADS_DIR environment variable first
-	if beadsDir := os.Getenv("BEADS_DIR"); beadsDir != "" {
+	// Check FBD_DIR/BEADS_DIR environment variable first
+	if beadsDir := env.GetEnvAlias("DIR"); beadsDir != "" {
 		return utils.CanonicalizePath(beadsDir)
 	}
 
@@ -283,7 +284,7 @@ func findDatabaseInBeadsDir(beadsDir string, warnOnIssues bool) string {
 			for _, db := range validDBs {
 				fmt.Fprintf(os.Stderr, "  - %s\n", filepath.Base(db))
 			}
-			fmt.Fprintf(os.Stderr, "Run 'bd init' to migrate to %s or manually remove old databases.\n\n", CanonicalDatabaseName)
+			fmt.Fprintf(os.Stderr, "Run 'fbd init' to migrate to %s or manually remove old databases.\n\n", CanonicalDatabaseName)
 		}
 
 		// Warn about legacy database names
@@ -292,7 +293,7 @@ func findDatabaseInBeadsDir(beadsDir string, warnOnIssues bool) string {
 			for _, legacy := range LegacyDatabaseNames {
 				if dbName == legacy {
 					fmt.Fprintf(os.Stderr, "WARNING: Using legacy database name: %s\n", dbName)
-					fmt.Fprintf(os.Stderr, "Run 'bd migrate' to upgrade to canonical name: %s\n\n", CanonicalDatabaseName)
+					fmt.Fprintf(os.Stderr, "Run 'fbd migrate' to upgrade to canonical name: %s\n\n", CanonicalDatabaseName)
 					break
 				}
 			}
@@ -367,7 +368,7 @@ type Storage = storage.Storage
 // Use Storage.RunInTransaction() to obtain a Transaction instance.
 type Transaction = storage.Transaction
 
-// NewSQLiteStorage opens a bd SQLite database for programmatic access.
+// NewSQLiteStorage opens a fbd SQLite database for programmatic access.
 // This function explicitly uses SQLite regardless of configuration.
 //
 // Note: This bypasses backend configuration. If your .beads directory is
@@ -388,9 +389,9 @@ func GetConfiguredBackend(beadsDir string) string {
 	return cfg.GetBackend()
 }
 
-// FindDatabasePath discovers the bd database path using bd's standard search order:
-//  1. $BEADS_DIR environment variable (points to .beads directory)
-//  2. $BEADS_DB environment variable (points directly to database file, deprecated)
+// FindDatabasePath discovers the fbd database path using fbd's standard search order:
+//  1. $FBD_DIR/$BEADS_DIR environment variable (points to .beads directory)
+//  2. $FBD_DB/$BEADS_DB environment variable (points directly to database file, deprecated)
 //  3. .beads/*.db in current directory or ancestors
 //
 // Redirect files are supported: if a .beads/redirect file exists, its contents
@@ -398,8 +399,8 @@ func GetConfiguredBackend(beadsDir string) string {
 //
 // Returns empty string if no database is found.
 func FindDatabasePath() string {
-	// 1. Check BEADS_DIR environment variable (preferred)
-	if beadsDir := os.Getenv("BEADS_DIR"); beadsDir != "" {
+	// 1. Check FBD_DIR/BEADS_DIR environment variable (preferred)
+	if beadsDir := env.GetEnvAlias("DIR"); beadsDir != "" {
 		// Canonicalize the path to prevent nested .beads directories
 		absBeadsDir := utils.CanonicalizePath(beadsDir)
 
@@ -415,8 +416,8 @@ func FindDatabasePath() string {
 		// Return empty string and let the caller handle it
 	}
 
-	// 2. Check BEADS_DB environment variable (deprecated but still supported)
-	if envDB := os.Getenv("BEADS_DB"); envDB != "" {
+	// 2. Check FBD_DB/BEADS_DB environment variable (deprecated but still supported)
+	if envDB := env.GetEnvAlias("DB"); envDB != "" {
 		return utils.CanonicalizePath(envDB)
 	}
 
@@ -473,8 +474,8 @@ func hasBeadsProjectFiles(beadsDir string) bool {
 // For worktrees, prioritizes the main repository's .beads directory.
 // This is useful for commands that need to detect beads projects without requiring a database.
 func FindBeadsDir() string {
-	// 1. Check BEADS_DIR environment variable (preferred)
-	if beadsDir := os.Getenv("BEADS_DIR"); beadsDir != "" {
+	// 1. Check FBD_DIR/BEADS_DIR environment variable (preferred)
+	if beadsDir := env.GetEnvAlias("DIR"); beadsDir != "" {
 		absBeadsDir := utils.CanonicalizePath(beadsDir)
 
 		// Follow redirect if present
@@ -556,7 +557,7 @@ func FindBeadsDir() string {
 // the first one found, preferring issues.jsonl over beads.jsonl.
 //
 // This function does not create directories or files - it only discovers paths.
-// Use this when you need to know where bd stores its JSONL export.
+// Use this when you need to know where fbd stores its JSONL export.
 func FindJSONLPath(dbPath string) string {
 	if dbPath == "" {
 		return ""

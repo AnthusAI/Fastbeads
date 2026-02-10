@@ -1,6 +1,6 @@
-# Contributing to bd
+# Contributing to fbd
 
-Thank you for your interest in contributing to bd! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to fbd! This document provides guidelines and instructions for contributing.
 
 ## Development Setup
 
@@ -14,11 +14,11 @@ Thank you for your interest in contributing to bd! This document provides guidel
 
 ```bash
 # Clone the repository
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads
 
 # Build the project
-go build -o bd ./cmd/bd
+go build -o fbd ./cmd/fbd
 
 # Run tests
 go test ./...
@@ -27,14 +27,14 @@ go test ./...
 go test -race ./...
 
 # Build and install locally
-go install ./cmd/bd
+go install ./cmd/fbd
 ```
 
 ## Project Structure
 
 ```
 beads/
-├── cmd/bd/              # CLI entry point and commands
+├── cmd/fbd/              # CLI entry point and commands
 ├── internal/
 │   ├── types/           # Core data types (Issue, Dependency, etc.)
 │   └── storage/         # Storage interface and implementations
@@ -180,10 +180,10 @@ go test -race -coverprofile=coverage.out ./...
 
 ### Dual-Mode Testing Pattern
 
-**IMPORTANT**: bd supports two execution modes: *direct mode* (SQLite access) and *daemon mode* (RPC via background process). Commands must work identically in both modes. To prevent bugs like GH#719, GH#751, and bd-fu83, use the dual-mode test framework for testing commands.
+**IMPORTANT**: fbd supports two execution modes: *direct mode* (SQLite access) and *daemon mode* (RPC via background process). Commands must work identically in both modes. To prevent bugs like GH#719, GH#751, and bd-fu83, use the dual-mode test framework for testing commands.
 
 ```go
-// cmd/bd/dual_mode_test.go provides the framework
+// cmd/fbd/dual_mode_test.go provides the framework
 
 func TestMyCommand(t *testing.T) {
     // This test runs TWICE: once in direct mode, once with a live daemon
@@ -225,7 +225,7 @@ Available `DualModeTestEnv` helper methods:
 Run dual-mode tests:
 ```bash
 # Run dual-mode tests (requires integration tag)
-go test -v -tags integration -run "TestDualMode" ./cmd/bd/
+go test -v -tags integration -run "TestDualMode" ./cmd/fbd/
 ```
 
 Example:
@@ -275,7 +275,7 @@ Include in your bug report:
 - Steps to reproduce
 - Expected behavior
 - Actual behavior
-- Version of bd (`bd version` if implemented)
+- Version of fbd (`fbd version` if implemented)
 - Operating system and Go version
 
 ### Feature Requests
@@ -301,12 +301,12 @@ All contributions go through code review:
 
 ```bash
 # Build and test your changes quickly
-go build -o bd ./cmd/bd && ./bd init --prefix test
+go build -o fbd ./cmd/fbd && ./fbd init --prefix test
 
 # Test specific functionality
-./bd create "Test issue" -p 1 -t bug
-./bd dep add test-2 test-1
-./bd ready
+./fbd create "Test issue" -p 1 -t bug
+./fbd dep add test-2 test-1
+./fbd ready
 ```
 
 ### Database Inspection
@@ -332,7 +332,7 @@ docker run --rm -v $(pwd):/workspace -w /workspace nixos/nix \
 
 # Verify the build works
 docker run --rm -v $(pwd):/workspace -w /workspace nixos/nix \
-  sh -c 'echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf && nix build .#default && ./result/bin/bd version'
+  sh -c 'echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf && nix build .#default && ./result/bin/fbd version'
 ```
 
 If the build fails with a `vendorHash` mismatch, update `default.nix` with the `got:` hash from the error message and rebuild.
@@ -343,10 +343,10 @@ Use Go's built-in debugging tools:
 
 ```bash
 # Run with verbose logging
-go run ./cmd/bd -v create "Test"
+go run ./cmd/fbd -v create "Test"
 
 # Use delve for debugging
-dlv debug ./cmd/bd -- create "Test issue"
+dlv debug ./cmd/fbd -- create "Test issue"
 ```
 
 ## Release Process
@@ -361,7 +361,7 @@ dlv debug ./cmd/bd -- create "Test issue"
 
 ## Questions?
 
-- Check existing [issues](https://github.com/steveyegge/beads/issues)
+- Check existing [issues](https://github.com/steveyegge/fastbeads/issues)
 - Open a new issue for questions
 - Review [README.md](README.md) and other documentation
 
@@ -375,4 +375,4 @@ Be respectful and professional in all interactions. We're here to build somethin
 
 ---
 
-Thank you for contributing to bd! 🎉
+Thank you for contributing to fbd! 🎉

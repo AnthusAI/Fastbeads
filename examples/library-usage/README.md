@@ -4,7 +4,7 @@ This example demonstrates using Beads as a Go library in external projects (like
 
 ## Why Use Beads as a Library?
 
-Instead of spawning `bd` CLI processes:
+Instead of spawning `fbd` CLI processes:
 - ✅ **Direct API access** - Call functions directly instead of parsing JSON output
 - ✅ **Type safety** - Compile-time checking of types and interfaces
 - ✅ **Performance** - No process spawn overhead
@@ -17,7 +17,7 @@ Instead of spawning `bd` CLI processes:
 In your Go project:
 
 ```bash
-go get github.com/steveyegge/beads@latest
+go get github.com/steveyegge/fastbeads@latest
 ```
 
 ## Basic Usage
@@ -29,7 +29,7 @@ import (
     "context"
     "log"
     
-    "github.com/steveyegge/beads"
+    "github.com/steveyegge/fastbeads"
 )
 
 func main() {
@@ -63,7 +63,7 @@ func main() {
 cd examples/library-usage
 
 # Make sure there's a Beads database
-bd init --prefix demo
+fbd init --prefix demo
 
 # Run the example
 go run main.go

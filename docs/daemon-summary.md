@@ -24,9 +24,9 @@ A comprehensive analysis of the beads daemon implementation, with learnings appl
 
 ## Overview
 
-The `bd daemon` is a background process that provides automatic synchronization between the local SQLite database and the git-tracked JSONL file. It follows an **LSP-style model** with one daemon per workspace, communicating via Unix domain sockets (or named pipes on Windows).
+The `fbd daemon` is a background process that provides automatic synchronization between the local SQLite database and the git-tracked JSONL file. It follows an **LSP-style model** with one daemon per workspace, communicating via Unix domain sockets (or named pipes on Windows).
 
-**Key insight:** The daemon exists primarily to automate a single operation - `bd export` before git commits. Everything else is secondary.
+**Key insight:** The daemon exists primarily to automate a single operation - `fbd export` before git commits. Everything else is secondary.
 
 ---
 
@@ -36,7 +36,7 @@ The `bd daemon` is a background process that provides automatic synchronization 
 
 | Goal | How Daemon Achieves It | Value |
 |------|------------------------|-------|
-| **Data safety** | Auto-exports changes to JSONL (500ms debounce) | Users don't lose work if they forget `bd sync` |
+| **Data safety** | Auto-exports changes to JSONL (500ms debounce) | Users don't lose work if they forget `fbd sync` |
 | **Multi-agent coordination** | Single point of database access via RPC | Prevents SQLite locking conflicts |
 | **Team collaboration** | Auto-commit/push in background | Changes reach remote without manual intervention |
 
@@ -45,7 +45,7 @@ The `bd daemon` is a background process that provides automatic synchronization 
 | Goal | How Daemon Achieves It | Value |
 |------|------------------------|-------|
 | **Performance** | Holds DB connection open, batches operations | Faster subsequent queries |
-| **Real-time monitoring** | Enables `bd watch` and status updates | Live feedback on issue state |
+| **Real-time monitoring** | Enables `fbd watch` and status updates | Live feedback on issue state |
 | **Version management** | Auto-detects version mismatches | Prevents incompatible daemon/CLI combinations |
 
 ### What the Daemon is NOT For
@@ -63,7 +63,7 @@ The `bd daemon` is a background process that provides automatic synchronization 
 ```mermaid
 flowchart TB
     subgraph daemon["BD DAEMON PROCESS"]
-        rpc["RPC Server<br/>(bd.sock)"]
+        rpc["RPC Server<br/>(fbd.sock)"]
         mutation["Mutation Channel<br/>(512 buffer)"]
         debounce["Debouncer<br/>(500ms)"]
         sqlite["SQLite Store"]
@@ -85,16 +85,16 @@ flowchart TB
 
 | Component | File Path | Purpose |
 |-----------|-----------|---------|
-| CLI entry | `cmd/bd/daemon.go` | Command definition, flag handling |
-| Lifecycle | `cmd/bd/daemon_lifecycle.go` | Startup, shutdown, graceful termination |
-| Event loop | `cmd/bd/daemon_event_loop.go` | Main loop, ticker coordination |
-| File watcher | `cmd/bd/daemon_watcher.go` | fsnotify integration |
-| Debouncer | `cmd/bd/daemon_debouncer.go` | Event batching |
-| Sync engine | `cmd/bd/daemon_sync.go` | Export, import, git operations |
-| Auto-start | `cmd/bd/daemon_autostart.go` | Version checks, restart logic |
+| CLI entry | `cmd/fbd/daemon.go` | Command definition, flag handling |
+| Lifecycle | `cmd/fbd/daemon_lifecycle.go` | Startup, shutdown, graceful termination |
+| Event loop | `cmd/fbd/daemon_event_loop.go` | Main loop, ticker coordination |
+| File watcher | `cmd/fbd/daemon_watcher.go` | fsnotify integration |
+| Debouncer | `cmd/fbd/daemon_debouncer.go` | Event batching |
+| Sync engine | `cmd/fbd/daemon_sync.go` | Export, import, git operations |
+| Auto-start | `cmd/fbd/daemon_autostart.go` | Version checks, restart logic |
 | RPC server | `internal/rpc/server_core.go` | Connection handling, protocol |
-| Unix impl | `cmd/bd/daemon_unix.go` | Signal handling, flock |
-| Windows impl | `cmd/bd/daemon_windows.go` | Named pipes, process management |
+| Unix impl | `cmd/fbd/daemon_unix.go` | Signal handling, flock |
+| Windows impl | `cmd/fbd/daemon_windows.go` | Named pipes, process management |
 
 ### Communication Protocol
 
@@ -207,9 +207,9 @@ Windows has more limited daemon support due to:
 ### Platform-Specific Implementation Files
 
 ```
-cmd/bd/daemon_unix.go      # Linux, macOS, BSD - signals, flock
-cmd/bd/daemon_windows.go   # Windows - named pipes, process groups
-cmd/bd/daemon_wasm.go      # WASM - no-op stubs
+cmd/fbd/daemon_unix.go      # Linux, macOS, BSD - signals, flock
+cmd/fbd/daemon_windows.go   # Windows - named pipes, process groups
+cmd/fbd/daemon_wasm.go      # WASM - no-op stubs
 ```
 
 ---
@@ -232,7 +232,7 @@ cmd/bd/daemon_wasm.go      # WASM - no-op stubs
 
 #### 1. Dual-Mode Command Support
 
-**Problem:** Commands like `bd graph`, `bd create -f` worked in direct mode but crashed in daemon mode.
+**Problem:** Commands like `fbd graph`, `fbd create -f` worked in direct mode but crashed in daemon mode.
 
 **Root cause:** Code accessed `store` global variable, which is `nil` when daemon is running.
 
@@ -330,7 +330,7 @@ func (d *Debouncer) Trigger() {
 
 ### Analysis
 
-The beads daemon's primary value is **auto-sync to JSONL** (avoiding manual `bd export` before commits). Without a database, this use case disappears.
+The beads daemon's primary value is **auto-sync to JSONL** (avoiding manual `fbd export` before commits). Without a database, this use case disappears.
 
 | Use Case | Value Without DB | Reasoning |
 |----------|------------------|-----------|
@@ -363,7 +363,7 @@ Without a database:
 - No connection pooling benefits
 - No async operations that improve UX
 
-**Recommendation:** Document that daemon mode requires SQLite and serves ONLY to automate `bd export`. Don't expand daemon scope beyond this clear purpose.
+**Recommendation:** Document that daemon mode requires SQLite and serves ONLY to automate `fbd export`. Don't expand daemon scope beyond this clear purpose.
 
 ---
 
@@ -632,7 +632,7 @@ Each improvement has been reviewed for actual value vs complexity.
 |-------------|-------|------------|-----------|
 | **CI matrix tests (Windows/macOS/Linux)** | High | Low | GitHub Actions makes this trivial; catches platform bugs early |
 | **Automated daemon vs direct mode tests** | High | Medium | Prevents regressions; ensures feature parity |
-| **`bd doctor daemon` subcommand** | Medium | Low | High ROI for debugging; user self-service |
+| **`fbd doctor daemon` subcommand** | Medium | Low | High ROI for debugging; user self-service |
 
 ### Deferred (Wait for User Demand)
 
@@ -653,7 +653,7 @@ Each improvement has been reviewed for actual value vs complexity.
 
 1. **CI matrix tests** - Prevents regressions, low effort
 2. **Daemon vs direct mode tests** - Ensures correctness
-3. **`bd doctor daemon`** - Improves debuggability
+3. **`fbd doctor daemon`** - Improves debuggability
 
 **Everything else:** Skip or defer until proven user demand.
 
@@ -690,7 +690,7 @@ remote-sync-interval: "30s" # How often to pull remote updates
 
 ```bash
 # Single command
-bd --no-daemon list
+fbd --no-daemon list
 
 # Entire session
 export BEADS_NO_DAEMON=true

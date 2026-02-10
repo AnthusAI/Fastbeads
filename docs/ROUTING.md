@@ -4,7 +4,7 @@ This document describes the auto-routing feature that intelligently directs new 
 
 ## Overview
 
-Auto-routing solves the OSS contributor problem: contributors want to plan work locally without polluting upstream PRs with planning issues. The routing layer automatically detects whether you're a maintainer or contributor and routes `bd create` to the appropriate repository.
+Auto-routing solves the OSS contributor problem: contributors want to plan work locally without polluting upstream PRs with planning issues. The routing layer automatically detects whether you're a maintainer or contributor and routes `fbd create` to the appropriate repository.
 
 ## User Role Detection
 
@@ -30,13 +30,13 @@ The routing system detects user role via:
 ```bash
 # Maintainer (SSH access)
 git remote add origin git@github.com:owner/repo.git
-bd create "Fix bug" -p 1
+fbd create "Fix bug" -p 1
 # → Creates in current repo (.)
 
 # Contributor (HTTPS fork)
 git remote add origin https://github.com/fork/repo.git
 git remote add upstream https://github.com/owner/repo.git
-bd create "Fix bug" -p 1
+fbd create "Fix bug" -p 1
 # → Creates in planning repo (~/.beads-planning by default)
 ```
 
@@ -47,18 +47,18 @@ Routing is configured via the database config:
 ```bash
 # Auto-routing is disabled by default (routing.mode="")
 # Enable with:
-bd init --contributor
+fbd init --contributor
 # OR manually:
-bd config set routing.mode auto
+fbd config set routing.mode auto
 
 # Set default planning repo
-bd config set routing.default "~/.beads-planning"
+fbd config set routing.default "~/.beads-planning"
 
 # Set repo for maintainers (in auto mode)
-bd config set routing.maintainer "."
+fbd config set routing.maintainer "."
 
 # Set repo for contributors (in auto mode)
-bd config set routing.contributor "~/.beads-planning"
+fbd config set routing.contributor "~/.beads-planning"
 ```
 
 ## CLI Usage
@@ -66,8 +66,8 @@ bd config set routing.contributor "~/.beads-planning"
 ### Auto-Routing
 
 ```bash
-# Let bd decide based on role
-bd create "Fix authentication bug" -p 1
+# Let fbd decide based on role
+fbd create "Fix authentication bug" -p 1
 
 # Maintainer: creates in current repo (.)
 # Contributor: creates in ~/.beads-planning
@@ -77,8 +77,8 @@ bd create "Fix authentication bug" -p 1
 
 ```bash
 # Force creation in specific repo (overrides auto-routing)
-bd create "Fix bug" -p 1 --repo /path/to/repo
-bd create "Add feature" -p 1 --repo ~/my-planning
+fbd create "Fix bug" -p 1 --repo /path/to/repo
+fbd create "Add feature" -p 1 --repo ~/my-planning
 ```
 
 ## Discovered Issue Inheritance
@@ -87,11 +87,11 @@ Issues created with `discovered-from` dependencies automatically inherit the par
 
 ```bash
 # Parent in current repo
-bd create "Implement auth" -p 1
+fbd create "Implement auth" -p 1
 # → Created as bd-abc (source_repo = ".")
 
 # Discovered issue inherits parent's repo
-bd create "Found bug in auth" -p 1 --deps discovered-from:bd-abc
+fbd create "Found bug in auth" -p 1 --deps discovered-from:bd-abc
 # → Created with source_repo = "." (same as parent)
 ```
 
@@ -99,11 +99,11 @@ This ensures discovered work stays in the same repository as the parent task.
 
 ## Multi-Repo Hydration
 
-**⚠️ Critical:** When using routing to separate repos, you must enable multi-repo hydration or routed issues won't appear in `bd list`.
+**⚠️ Critical:** When using routing to separate repos, you must enable multi-repo hydration or routed issues won't appear in `fbd list`.
 
 ### The Problem
 
-Auto-routing writes issues to a separate repository (e.g., `~/.beads-planning`), but by default, `bd list` only shows issues from the current repository's database. Without hydration, routed issues are "invisible" even though they exist.
+Auto-routing writes issues to a separate repository (e.g., `~/.beads-planning`), but by default, `fbd list` only shows issues from the current repository's database. Without hydration, routed issues are "invisible" even though they exist.
 
 ### The Solution
 
@@ -121,11 +121,11 @@ repos:
 
 ### Automatic Setup
 
-`bd init --contributor` now automatically configures both routing AND hydration:
+`fbd init --contributor` now automatically configures both routing AND hydration:
 
 ```bash
 cd ~/my-forked-repo
-bd init --contributor
+fbd init --contributor
 
 # This sets up:
 # 1. routing.mode=auto
@@ -139,10 +139,10 @@ If you configured routing before this feature, add hydration manually:
 
 ```bash
 # Add planning repo to hydration list
-bd repo add ~/.beads-planning
+fbd repo add ~/.beads-planning
 
 # Verify configuration
-bd repo list
+fbd repo list
 ```
 
 ### How It Works
@@ -152,7 +152,7 @@ Multi-repo hydration imports issues from all configured repos into the current d
 1. **JSONL as source of truth**: Each repo maintains its own `issues.jsonl`
 2. **Periodic import**: Daemon imports from `repos.additional` every sync cycle
 3. **Source tracking**: Each issue tagged with `source_repo` field
-4. **Unified view**: `bd list` shows issues from all repos
+4. **Unified view**: `fbd list` shows issues from all repos
 
 ### Requirements
 
@@ -160,21 +160,21 @@ Multi-repo hydration imports issues from all configured repos into the current d
 
 ```bash
 # In main repo
-bd daemon start
+fbd daemon start
 
 # In planning repo
 cd ~/.beads-planning
-bd daemon start --local
+fbd daemon start --local
 ```
 
 Without daemons, JSONL files become stale and hydration only sees old data.
 
 ### Troubleshooting
 
-Run `bd doctor` to check for configuration issues:
+Run `fbd doctor` to check for configuration issues:
 
 ```bash
-bd doctor
+fbd doctor
 
 # Checks:
 # - routing.mode=auto with routing targets but repos.additional not configured
@@ -184,17 +184,17 @@ bd doctor
 
 **Common Issues:**
 
-1. **Routed issues not appearing in bd list**
+1. **Routed issues not appearing in fbd list**
    - **Cause:** `repos.additional` not configured
-   - **Fix:** `bd repo add <routing-target>`
+   - **Fix:** `fbd repo add <routing-target>`
 
 2. **Issues appear but data is stale**
    - **Cause:** Daemon not running in target repo
-   - **Fix:** `cd <target-repo> && bd daemon start --local`
+   - **Fix:** `cd <target-repo> && fbd daemon start --local`
 
 3. **After upgrading, routed issues missing**
    - **Cause:** Upgraded before hydration was automatic
-   - **Fix:** `bd repo add <routing-target>` to enable hydration manually
+   - **Fix:** `fbd repo add <routing-target>` to enable hydration manually
 
 ## Backward Compatibility
 
@@ -207,7 +207,7 @@ bd doctor
 **Key Files:**
 - `internal/routing/routing.go` - Role detection and routing logic
 - `internal/routing/routing_test.go` - Unit tests
-- `cmd/bd/create.go` - Integration with create command
+- `cmd/fbd/create.go` - Integration with create command
 - `routing_integration_test.go` - End-to-end tests
 
 **API:**
@@ -236,7 +236,7 @@ go test -v -run TestRouting
 
 ## Future Enhancements
 
-See [bd-k58](https://github.com/steveyegge/beads/issues/k58) for proposal workflow:
-- `bd propose <id>` - Move issue from planning to upstream
-- `bd withdraw <id>` - Un-propose
-- `bd accept <id>` - Maintainer accepts proposal
+See [bd-k58](https://github.com/steveyegge/fastbeads/issues/k58) for proposal workflow:
+- `fbd propose <id>` - Move issue from planning to upstream
+- `fbd withdraw <id>` - Un-propose
+- `fbd accept <id>` - Maintainer accepts proposal

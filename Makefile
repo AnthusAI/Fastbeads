@@ -5,7 +5,7 @@
 # Default target
 all: build
 
-BINARY := bd
+BINARY := fbd
 BUILD_DIR := .
 INSTALL_DIR := $(HOME)/.local/bin
 
@@ -31,13 +31,13 @@ export CGO_LDFLAGS  += -L$(ICU_PREFIX)/lib
 endif
 endif
 
-# Build the bd binary
+# Build the fbd binary
 build:
-	@echo "Building bd..."
+	@echo "Building fbd..."
 ifeq ($(OS),Windows_NT)
-	go build -tags gms_pure_go -ldflags="-X main.Build=$$(git rev-parse --short HEAD)" -o $(BUILD_DIR)/$(BINARY) ./cmd/bd
+	go build -tags gms_pure_go -ldflags="-X main.Build=$$(git rev-parse --short HEAD)" -o $(BUILD_DIR)/$(BINARY) ./cmd/fbd
 else
-	go build -ldflags="-X main.Build=$$(git rev-parse --short HEAD)" -o $(BUILD_DIR)/$(BINARY) ./cmd/bd
+	go build -ldflags="-X main.Build=$$(git rev-parse --short HEAD)" -o $(BUILD_DIR)/$(BINARY) ./cmd/fbd
 ifeq ($(shell uname),Darwin)
 	@codesign -s - -f $(BUILD_DIR)/$(BINARY) 2>/dev/null || true
 	@echo "Signed $(BINARY) for macOS"
@@ -82,16 +82,12 @@ ifndef SKIP_UPDATE_CHECK
 	fi
 endif
 
-# Install bd to ~/.local/bin (builds, signs on macOS, and copies)
-# Also creates 'beads' symlink as an alias for bd
+# Install fbd to ~/.local/bin (builds, signs on macOS, and copies)
 install: check-up-to-date build
 	@mkdir -p $(INSTALL_DIR)
 	@rm -f $(INSTALL_DIR)/$(BINARY)
 	@cp $(BUILD_DIR)/$(BINARY) $(INSTALL_DIR)/$(BINARY)
 	@echo "Installed $(BINARY) to $(INSTALL_DIR)/$(BINARY)"
-	@rm -f $(INSTALL_DIR)/beads
-	@ln -s $(BINARY) $(INSTALL_DIR)/beads
-	@echo "Created 'beads' alias -> $(BINARY)"
 
 # Format all Go files
 fmt:
@@ -115,18 +111,18 @@ fmt-check:
 # Clean build artifacts and benchmark profiles
 clean:
 	@echo "Cleaning..."
-	rm -f bd
+	rm -f fbd
 	rm -f internal/storage/sqlite/bench-cpu-*.prof
 	rm -f beads-perf-*.prof
 
 # Show help
 help:
 	@echo "Beads Makefile targets:"
-	@echo "  make build        - Build the bd binary"
+	@echo "  make build        - Build the fbd binary"
 	@echo "  make test         - Run all tests"
 	@echo "  make bench        - Run performance benchmarks (generates CPU profiles)"
 	@echo "  make bench-quick  - Run quick benchmarks (shorter benchtime)"
-	@echo "  make install      - Install bd to ~/.local/bin (with codesign on macOS, includes 'beads' alias)"
+	@echo "  make install      - Install fbd to ~/.local/bin (with codesign on macOS)"
 	@echo "  make fmt          - Format all Go files with gofmt"
 	@echo "  make fmt-check    - Check Go formatting (for CI)"
 	@echo "  make clean        - Remove build artifacts and profile files"

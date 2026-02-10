@@ -10,7 +10,7 @@ The 3-way merge functionality in `internal/merge/` is based on **beads-merge** b
 
 ### What We Vendored
 
-The core merge algorithm from beads-merge has been adapted and integrated into bd:
+The core merge algorithm from beads-merge has been adapted and integrated into fbd:
 - Field-level 3-way merge logic
 - Issue identity matching (id + created_at + created_by)
 - Dependency and label merging with deduplication
@@ -20,10 +20,10 @@ The core merge algorithm from beads-merge has been adapted and integrated into b
 
 ### Changes Made
 
-- Adapted to use bd's `internal/types.Issue` instead of custom types
-- Integrated with bd's JSONL export/import system
+- Adapted to use fbd's `internal/types.Issue` instead of custom types
+- Integrated with fbd's JSONL export/import system
 - Added support for bd-specific fields (Design, AcceptanceCriteria, etc.)
-- Exposed as `bd merge` CLI command and library API
+- Exposed as `fbd merge` CLI command and library API
 
 ### License
 
@@ -55,4 +55,4 @@ SOFTWARE.
 
 ### Thank You
 
-Special thanks to @neongreen for building beads-merge and graciously allowing us to integrate it into bd. This solves critical multi-workspace sync issues and makes beads much more robust for collaborative workflows.
+Special thanks to @neongreen for building beads-merge and graciously allowing us to integrate it into fbd. This solves critical multi-workspace sync issues and makes beads much more robust for collaborative workflows.

@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage/memory"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage/memory"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // TestHandleCreate_SetsCreatedBy verifies that CreatedBy is passed through RPC and stored (GH#748)

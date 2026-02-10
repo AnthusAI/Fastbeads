@@ -1,6 +1,6 @@
 # Internals
 
-This document describes internal implementation details of bd, with particular focus on concurrency guarantees and data consistency.
+This document describes internal implementation details of fbd, with particular focus on concurrency guarantees and data consistency.
 
 For the overall architecture (data model, sync mechanism, component overview), see [ARCHITECTURE.md](ARCHITECTURE.md).
 
@@ -138,7 +138,7 @@ Comprehensive race detector tests ensure concurrency safety:
 - `TestFlushManagerShutdownDuringOperation` - Shutdown while operations ongoing
 - `TestMarkDirtyAndScheduleFlushConcurrency` - Integration test with legacy API
 
-Run with: `go test -race -run TestFlushManager ./cmd/bd`
+Run with: `go test -race -run TestFlushManager ./cmd/fbd`
 
 ### In-Process Test Compatibility
 
@@ -168,7 +168,7 @@ Hash-based comparison (not mtime) prevents git pull false positives (issue bd-84
 `flushToJSONLWithState()` validates JSONL file hash before flush:
 - Compares stored hash with actual file hash
 - If mismatch detected, clears export_hashes and forces full re-export (issue bd-160)
-- Prevents staleness when JSONL is modified outside bd
+- Prevents staleness when JSONL is modified outside fbd
 
 ### Export Modes
 
@@ -198,7 +198,7 @@ Hash-based comparison (not mtime) prevents git pull false positives (issue bd-84
 
 ### Problem Statement
 
-The `bd ready` command originally computed blocked issues using a recursive CTE on every query. On a 10K issue database, each query took ~752ms, making the command feel sluggish and impractical for large projects.
+The `fbd ready` command originally computed blocked issues using a recursive CTE on every query. On a 10K issue database, each query took ~752ms, making the command feel sluggish and impractical for large projects.
 
 ### Solution: Materialized Cache Table
 

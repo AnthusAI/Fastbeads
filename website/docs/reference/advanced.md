@@ -13,8 +13,8 @@ Advanced beads functionality.
 Rename issues while preserving references:
 
 ```bash
-bd rename bd-42 bd-new-id
-bd rename bd-42 bd-new-id --dry-run  # Preview
+fbd rename bd-42 bd-new-id
+fbd rename bd-42 bd-new-id --dry-run  # Preview
 ```
 
 Updates:
@@ -27,8 +27,8 @@ Updates:
 Merge duplicate issues:
 
 ```bash
-bd merge bd-42 bd-43 --into bd-41
-bd merge bd-42 bd-43 --into bd-41 --dry-run
+fbd merge bd-42 bd-43 --into bd-41
+fbd merge bd-42 bd-43 --into bd-41 --dry-run
 ```
 
 What gets merged:
@@ -42,16 +42,16 @@ Reduce database size by compacting old issues:
 
 ```bash
 # View compaction statistics
-bd admin compact --stats
+fbd admin compact --stats
 
 # Preview candidates (30+ days closed)
-bd admin compact --analyze --json
+fbd admin compact --analyze --json
 
 # Apply agent-generated summary
-bd admin compact --apply --id bd-42 --summary summary.txt
+fbd admin compact --apply --id bd-42 --summary summary.txt
 
 # Immediate deletion (CAUTION!)
-bd admin cleanup --force
+fbd admin cleanup --force
 ```
 
 **When to compact:**
@@ -64,15 +64,15 @@ bd admin cleanup --force
 View deleted or compacted issues from git:
 
 ```bash
-bd restore bd-42 --show
-bd restore bd-42 --to-file issue.json
+fbd restore bd-42 --show
+fbd restore bd-42 --to-file issue.json
 ```
 
 ## Database Inspection
 
 ```bash
 # Schema info
-bd info --schema --json
+fbd info --schema --json
 
 # Raw database query (advanced)
 sqlite3 .beads/beads.db "SELECT * FROM issues LIMIT 5"
@@ -89,7 +89,7 @@ storage.UnderlyingDB().Exec(`
 `)
 ```
 
-See [EXTENDING.md](https://github.com/steveyegge/beads/blob/main/docs/EXTENDING.md).
+See [EXTENDING.md](https://github.com/steveyegge/fastbeads/blob/main/docs/EXTENDING.md).
 
 ## Event System
 
@@ -97,10 +97,10 @@ Subscribe to beads events:
 
 ```bash
 # View recent events
-bd events list --since 1h
+fbd events list --since 1h
 
 # Watch events in real-time
-bd events watch
+fbd events watch
 ```
 
 Events:
@@ -115,23 +115,23 @@ Events:
 ### Create Multiple
 
 ```bash
-cat issues.jsonl | bd import -i -
+cat issues.jsonl | fbd import -i -
 ```
 
 ### Update Multiple
 
 ```bash
-bd list --status open --priority 4 --json | \
+fbd list --status open --priority 4 --json | \
   jq -r '.[].id' | \
-  xargs -I {} bd update {} --priority 3
+  xargs -I {} fbd update {} --priority 3
 ```
 
 ### Close Multiple
 
 ```bash
-bd list --label "sprint-1" --status open --json | \
+fbd list --label "sprint-1" --status open --json | \
   jq -r '.[].id' | \
-  xargs -I {} bd close {} --reason "Sprint complete"
+  xargs -I {} fbd close {} --reason "Sprint complete"
 ```
 
 ## API Access
@@ -139,7 +139,7 @@ bd list --label "sprint-1" --status open --json | \
 Use beads as a Go library:
 
 ```go
-import "github.com/steveyegge/beads/internal/storage"
+import "github.com/steveyegge/fastbeads/internal/storage"
 
 db, _ := storage.NewSQLite(".beads/beads.db")
 issues, _ := db.ListIssues(storage.ListOptions{
@@ -153,10 +153,10 @@ issues, _ := db.ListIssues(storage.ListOptions{
 
 ```bash
 # Enable WAL mode
-bd config set database.wal_mode true
+fbd config set database.wal_mode true
 
 # Increase cache
-bd config set database.cache_size 10000
+fbd config set database.cache_size 10000
 ```
 
 ### Many Concurrent Agents
@@ -164,7 +164,7 @@ bd config set database.cache_size 10000
 ```bash
 # Use event-driven daemon
 export BEADS_DAEMON_MODE=events
-bd daemons killall
+fbd daemons killall
 ```
 
 ### CI/CD Optimization
@@ -172,5 +172,5 @@ bd daemons killall
 ```bash
 # Disable daemon in CI
 export BEADS_NO_DAEMON=true
-bd --no-daemon list
+fbd --no-daemon list
 ```

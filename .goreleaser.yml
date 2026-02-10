@@ -12,9 +12,9 @@ before:
     - ./scripts/gen-winres.sh
 
 builds:
-  - id: bd-linux-amd64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-linux-amd64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -28,9 +28,9 @@ builds:
       - -X main.Commit={{.Commit}}
       - -X main.Branch={{.Branch}}
 
-  - id: bd-linux-arm64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-linux-arm64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -44,9 +44,9 @@ builds:
       - -X main.Commit={{.Commit}}
       - -X main.Branch={{.Branch}}
 
-  - id: bd-android-arm64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-android-arm64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -60,9 +60,9 @@ builds:
       - -X main.Commit={{.Commit}}
       - -X main.Branch={{.Branch}}
 
-  - id: bd-darwin-amd64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-darwin-amd64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -76,9 +76,9 @@ builds:
       - -X main.Commit={{.Commit}}
       - -X main.Branch={{.Branch}}
 
-  - id: bd-darwin-arm64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-darwin-arm64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -92,9 +92,9 @@ builds:
       - -X main.Commit={{.Commit}}
       - -X main.Branch={{.Branch}}
 
-  - id: bd-windows-amd64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-windows-amd64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -114,9 +114,9 @@ builds:
         # Requires WINDOWS_SIGNING_CERT_PFX_BASE64 and WINDOWS_SIGNING_CERT_PASSWORD secrets
         - ./scripts/sign-windows.sh "{{ .Path }}"
 
-  - id: bd-windows-arm64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-windows-arm64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -136,9 +136,9 @@ builds:
         # Requires WINDOWS_SIGNING_CERT_PFX_BASE64 and WINDOWS_SIGNING_CERT_PASSWORD secrets
         - ./scripts/sign-windows.sh "{{ .Path }}"
 
-  - id: bd-freebsd-amd64
-    main: ./cmd/bd
-    binary: bd
+- id: fbd-freebsd-amd64
+    main: ./cmd/fbd
+  binary: fbd
     env:
       - CGO_ENABLED=0
     goos:
@@ -153,7 +153,7 @@ builds:
       - -X main.Branch={{.Branch}}
 
 archives:
-  - id: bd-archive
+- id: fbd-archive
     format: tar.gz
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:

@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-// envSnapshot saves and clears BD_/BEADS_ environment variables.
+// envSnapshot saves and clears FBD_/BD_/BEADS_ environment variables.
 // Returns a restore function that should be deferred.
 func envSnapshot(t *testing.T) func() {
 	t.Helper()
 	saved := make(map[string]string)
 	for _, env := range os.Environ() {
-		if strings.HasPrefix(env, "BD_") || strings.HasPrefix(env, "BEADS_") {
+		if strings.HasPrefix(env, "FBD_") || strings.HasPrefix(env, "BD_") || strings.HasPrefix(env, "BEADS_") {
 			parts := strings.SplitN(env, "=", 2)
 			key := parts[0]
 			saved[key] = os.Getenv(key)
@@ -24,7 +24,7 @@ func envSnapshot(t *testing.T) func() {
 	return func() {
 		// Clear any test-set variables first
 		for _, env := range os.Environ() {
-			if strings.HasPrefix(env, "BD_") || strings.HasPrefix(env, "BEADS_") {
+			if strings.HasPrefix(env, "FBD_") || strings.HasPrefix(env, "BD_") || strings.HasPrefix(env, "BEADS_") {
 				parts := strings.SplitN(env, "=", 2)
 				os.Unsetenv(parts[0])
 			}
@@ -93,6 +93,10 @@ func TestEnvironmentBinding(t *testing.T) {
 		expected interface{}
 		getter   func(string) interface{}
 	}{
+		{"FBD_JSON", "json", "true", true, func(k string) interface{} { return GetBool(k) }},
+		{"FBD_NO_DAEMON", "no-daemon", "true", true, func(k string) interface{} { return GetBool(k) }},
+		{"FBD_ACTOR", "actor", "testuser", "testuser", func(k string) interface{} { return GetString(k) }},
+		{"FBD_DB", "db", "/tmp/test.db", "/tmp/test.db", func(k string) interface{} { return GetString(k) }},
 		{"BD_JSON", "json", "true", true, func(k string) interface{} { return GetBool(k) }},
 		{"BD_NO_DAEMON", "no-daemon", "true", true, func(k string) interface{} { return GetBool(k) }},
 		{"BD_ACTOR", "actor", "testuser", "testuser", func(k string) interface{} { return GetString(k) }},

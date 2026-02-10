@@ -92,7 +92,7 @@ ui.RenderFail("✗")     // Error indicator
 ui.RenderAccent("→")   // Accent/link
 ui.RenderMuted("...")  // Secondary info
 ui.RenderBold("name")  // Emphasis
-ui.RenderCommand("bd") // Command reference
+ui.RenderCommand("fbd") // Command reference
 ```
 
 ## Help Text Styling

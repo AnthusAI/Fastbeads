@@ -2,7 +2,7 @@
 
 > Adapted from ACF beads skill
 
-**v0.40+**: First-class worktree management via `bd worktree` command.
+**v0.40+**: First-class worktree management via `fbd worktree` command.
 
 ## When to Use Worktrees
 
@@ -13,16 +13,16 @@
 | Quick branch switch | No | `git switch` is simpler |
 | PR review isolation | Yes | Review without disturbing main work |
 
-## Why `bd worktree` over `git worktree`
+## Why `fbd worktree` over `git worktree`
 
-**Always use `bd worktree`** instead of raw `git worktree` commands.
+**Always use `fbd worktree`** instead of raw `git worktree` commands.
 
 ```bash
-bd worktree create .worktrees/{name} --branch feature/{name}
-bd worktree remove .worktrees/{name}
+fbd worktree create .worktrees/{name} --branch feature/{name}
+fbd worktree remove .worktrees/{name}
 ```
 
-**Why?** `bd worktree` auto-configures:
+**Why?** `fbd worktree` auto-configures:
 - Beads database redirect files
 - Proper gitignore entries
 - Daemon bypass for worktree operations
@@ -47,16 +47,16 @@ main-repo/
 
 ```bash
 # Create worktree with beads support
-bd worktree create .worktrees/my-feature --branch feature/my-feature
+fbd worktree create .worktrees/my-feature --branch feature/my-feature
 
 # List worktrees
-bd worktree list
+fbd worktree list
 
 # Show worktree info
-bd worktree info .worktrees/my-feature
+fbd worktree info .worktrees/my-feature
 
 # Remove worktree cleanly
-bd worktree remove .worktrees/my-feature
+fbd worktree remove .worktrees/my-feature
 ```
 
 ## Debugging
@@ -64,8 +64,8 @@ bd worktree remove .worktrees/my-feature
 When beads commands behave unexpectedly in a worktree:
 
 ```bash
-bd where              # Shows actual .beads location (follows redirects)
-bd doctor --deep      # Validates graph integrity across all refs
+fbd where              # Shows actual .beads location (follows redirects)
+fbd doctor --deep      # Validates graph integrity across all refs
 ```
 
 ## Protected Branch Workflows
@@ -73,8 +73,8 @@ bd doctor --deep      # Validates graph integrity across all refs
 For repos with protected `main` branch:
 
 ```bash
-bd init --branch beads-metadata    # Use separate branch for beads data
-bd init --contributor              # Auto-configure sync.remote=upstream for forks
+fbd init --branch beads-metadata    # Use separate branch for beads data
+fbd init --contributor              # Auto-configure sync.remote=upstream for forks
 ```
 
 This creates `.git/beads-worktrees/` for internal management.
@@ -85,10 +85,10 @@ Multi-clone, multi-branch workflows:
 
 - Hash-based IDs (`bd-abc`) eliminate collision across clones
 - Each clone syncs independently via git
-- See [WORKTREES.md](https://github.com/steveyegge/beads/blob/main/docs/WORKTREES.md) for comprehensive guide
+- See [WORKTREES.md](https://github.com/steveyegge/fastbeads/blob/main/docs/WORKTREES.md) for comprehensive guide
 
 ## External References
 
-- **Official Docs**: [github.com/steveyegge/beads/docs](https://github.com/steveyegge/beads/tree/main/docs)
-- **Sync Branch**: [PROTECTED_BRANCHES.md](https://github.com/steveyegge/beads/blob/main/docs/PROTECTED_BRANCHES.md)
-- **Worktrees**: [WORKTREES.md](https://github.com/steveyegge/beads/blob/main/docs/WORKTREES.md)
+- **Official Docs**: [github.com/steveyegge/fastbeads/docs](https://github.com/steveyegge/fastbeads/tree/main/docs)
+- **Sync Branch**: [PROTECTED_BRANCHES.md](https://github.com/steveyegge/fastbeads/blob/main/docs/PROTECTED_BRANCHES.md)
+- **Worktrees**: [WORKTREES.md](https://github.com/steveyegge/fastbeads/blob/main/docs/WORKTREES.md)

@@ -10,7 +10,7 @@ This runbook helps you recover from SQLite database corruption in Beads.
 
 ## Symptoms
 
-- SQLite error messages during `bd` commands
+- SQLite error messages during `fbd` commands
 - "database is locked" errors that persist
 - Missing issues that should exist
 - Inconsistent state between JSONL and database
@@ -19,7 +19,7 @@ This runbook helps you recover from SQLite database corruption in Beads.
 
 ```bash
 # Check database integrity
-bd status
+fbd status
 
 # Look for corruption indicators
 ls -la .beads/beads.db*
@@ -35,7 +35,7 @@ Back up your `.beads/` directory before proceeding.
 
 **Step 1:** Stop the daemon
 ```bash
-bd daemon stop
+fbd daemon stop
 ```
 
 **Step 2:** Back up current state
@@ -45,22 +45,22 @@ cp -r .beads .beads.backup
 
 **Step 3:** Rebuild from JSONL (source of truth)
 ```bash
-bd doctor --fix
+fbd doctor --fix
 ```
 
 **Step 4:** Verify recovery
 ```bash
-bd status
-bd list
+fbd status
+fbd list
 ```
 
 **Step 5:** Restart daemon
 ```bash
-bd daemon start
+fbd daemon start
 ```
 
 ## Prevention
 
-- Avoid interrupting `bd sync` operations
+- Avoid interrupting `fbd sync` operations
 - Let the daemon handle synchronization
-- Use `bd daemon stop` before system shutdown
+- Use `fbd daemon stop` before system shutdown

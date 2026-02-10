@@ -3,7 +3,7 @@ package sqlite
 import (
 	"fmt"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // validatePriority validates a priority value
@@ -22,13 +22,13 @@ func validateStatus(value interface{}) error {
 }
 
 // validateStatusWithCustom validates a status value, allowing custom statuses.
-// Note: tombstone status is blocked here (bd-y68) - use bd delete instead of bd update --status=tombstone
+// Note: tombstone status is blocked here (bd-y68) - use fbd delete instead of fbd update --status=tombstone
 func validateStatusWithCustom(value interface{}, customStatuses []string) error {
 	if status, ok := value.(string); ok {
 		// Block direct status update to tombstone (bd-y68)
-		// Tombstones should only be created via bd delete, not bd update --status=tombstone
+		// Tombstones should only be created via fbd delete, not fbd update --status=tombstone
 		if types.Status(status) == types.StatusTombstone {
-			return fmt.Errorf("cannot set status to tombstone directly; use 'bd delete' instead")
+			return fmt.Errorf("cannot set status to tombstone directly; use 'fbd delete' instead")
 		}
 		if !types.Status(status).IsValidWithCustom(customStatuses) {
 			return fmt.Errorf("invalid status: %s", status)

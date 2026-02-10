@@ -16,7 +16,7 @@ If arguments are missing, ask the user for:
 
 Use the beads MCP `update` tool to apply the changes. Show the updated issue to confirm the change.
 
-**Note:** Comments are managed separately with `bd comments add`. The `update` command is for singular, versioned properties (title, status, priority, etc.), while comments form a discussion thread that's appended to, not updated.
+**Note:** Comments are managed separately with `fbd comments add`. The `update` command is for singular, versioned properties (title, status, priority, etc.), while comments form a discussion thread that's appended to, not updated.
 
 Common workflows:
 - Start work: Update status to `in_progress`

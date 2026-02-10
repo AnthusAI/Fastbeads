@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage"
 )
 
 // FederatedStorage implementation for DoltStore

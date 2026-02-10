@@ -9,6 +9,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/muesli/termenv"
+	"github.com/steveyegge/fastbeads/internal/env"
 )
 
 func init() {
@@ -23,12 +24,12 @@ func init() {
 
 // IsAgentMode returns true if the CLI is running in agent-optimized mode.
 // This is triggered by:
-//   - BD_AGENT_MODE=1 environment variable (explicit)
+//   - FBD_AGENT_MODE/BD_AGENT_MODE=1 environment variable (explicit)
 //   - CLAUDE_CODE environment variable (auto-detect Claude Code)
 //
 // Agent mode provides ultra-compact output optimized for LLM context windows.
 func IsAgentMode() bool {
-	if os.Getenv("BD_AGENT_MODE") == "1" {
+	if env.GetEnvAlias("AGENT_MODE") == "1" {
 		return true
 	}
 	// Auto-detect Claude Code environment

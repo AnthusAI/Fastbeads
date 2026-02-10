@@ -1,0 +1,11 @@
+# Test fbd close error cases
+
+fbd init --prefix test
+
+# Close nonexistent issue should fail
+! fbd close nonexistent-id
+stderr 'no issue found'
+
+# Close with no args and no last-touched should fail
+! fbd close
+stderr 'no issue ID provided'

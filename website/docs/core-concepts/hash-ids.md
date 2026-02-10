@@ -40,7 +40,7 @@ IDs are generated from:
 
 ```bash
 # Create issue - ID assigned automatically
-bd create "Fix authentication bug"
+fbd create "Fix authentication bug"
 # Returns: bd-7x2f
 
 # The ID is deterministic for same content+timestamp
@@ -52,13 +52,13 @@ For epics and subtasks:
 
 ```bash
 # Parent epic
-bd create "Auth System" -t epic
+fbd create "Auth System" -t epic
 # Returns: bd-a3f8e9
 
 # Children auto-increment
-bd create "Design UI" --parent bd-a3f8e9    # bd-a3f8e9.1
-bd create "Backend" --parent bd-a3f8e9      # bd-a3f8e9.2
-bd create "Tests" --parent bd-a3f8e9        # bd-a3f8e9.3
+fbd create "Design UI" --parent bd-a3f8e9    # bd-a3f8e9.1
+fbd create "Backend" --parent bd-a3f8e9      # bd-a3f8e9.2
+fbd create "Tests" --parent bd-a3f8e9        # bd-a3f8e9.3
 ```
 
 Benefits:
@@ -71,14 +71,14 @@ Benefits:
 Configure ID prefix and length:
 
 ```bash
-# Set prefix (default: bd)
-bd config set id.prefix myproject
+# Set prefix (default: fbd)
+fbd config set id.prefix myproject
 
 # Set hash length (default: 4)
-bd config set id.hash_length 6
+fbd config set id.hash_length 6
 
 # New issues use new format
-bd create "Test"
+fbd create "Test"
 # Returns: myproject-a1b2c3
 ```
 
@@ -92,21 +92,21 @@ While rare, collisions are handled automatically:
 
 ```bash
 # Check for collisions
-bd info --schema --json | jq '.collision_count'
+fbd info --schema --json | jq '.collision_count'
 ```
 
 ## Working with IDs
 
 ```bash
 # Partial ID matching
-bd show a1b2     # Finds bd-a1b2...
-bd show auth     # Fuzzy match by title
+fbd show a1b2     # Finds bd-a1b2...
+fbd show auth     # Fuzzy match by title
 
 # Full ID required for ambiguous cases
-bd show bd-a1b2c3d4
+fbd show bd-a1b2c3d4
 
 # List with full IDs
-bd list --full-ids
+fbd list --full-ids
 ```
 
 ## Migration from Sequential IDs
@@ -115,10 +115,10 @@ If migrating from a system with sequential IDs:
 
 ```bash
 # Import preserves original IDs in metadata
-bd import -i old-issues.json
+fbd import -i old-issues.json
 
 # View original ID
-bd show bd-new --json | jq '.original_id'
+fbd show bd-new --json | jq '.original_id'
 ```
 
 ## Best Practices

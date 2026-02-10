@@ -126,8 +126,8 @@ func TestAutoFlushGroup(t *testing.T) {
 **Trade-offs**: More refactoring, loses integration test value
 
 ## Files Modified (Reverted)
-- `cmd/bd/main_test.go` - Reverted to original
-- `cmd/bd/duplicates_test.go` - Fixed unused import (kept fix)
+- `cmd/fbd/main_test.go` - Reverted to original
+- `cmd/fbd/duplicates_test.go` - Fixed unused import (kept fix)
 
 ## Lessons Learned
 

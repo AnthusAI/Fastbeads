@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Convert markdown files to bd JSONL format.
+Convert markdown files to fbd JSONL format.
 
 This is a simple example converter that demonstrates the pattern.
 Users can customize this for their specific markdown conventions.
@@ -12,7 +12,7 @@ Supported markdown patterns:
 4. Inline issue references (e.g., "blocks: bd-10")
 
 Usage:
-    python md2jsonl.py feature.md | bd import
+    python md2jsonl.py feature.md | fbd import
     python md2jsonl.py feature.md > issues.jsonl
 """
 
@@ -25,9 +25,9 @@ from typing import List, Dict, Any, Optional
 
 
 class MarkdownToIssues:
-    """Convert markdown to bd JSONL format."""
+    """Convert markdown to fbd JSONL format."""
 
-    def __init__(self, prefix: str = "bd"):
+    def __init__(self, prefix: str = "fbd"):
         self.prefix = prefix
         self.issue_counter = 1
         self.issues: List[Dict[str, Any]] = []
@@ -228,7 +228,7 @@ def main():
         print("Usage: python md2jsonl.py <markdown-file>", file=sys.stderr)
         print("", file=sys.stderr)
         print("Examples:", file=sys.stderr)
-        print("  python md2jsonl.py feature.md | bd import", file=sys.stderr)
+        print("  python md2jsonl.py feature.md | fbd import", file=sys.stderr)
         print("  python md2jsonl.py feature.md > issues.jsonl", file=sys.stderr)
         sys.exit(1)
 
@@ -242,7 +242,7 @@ def main():
     content = markdown_file.read_text()
 
     # Convert to issues
-    converter = MarkdownToIssues(prefix="bd")
+    converter = MarkdownToIssues(prefix="fbd")
     converter.parse_markdown(content)
 
     # Output JSONL

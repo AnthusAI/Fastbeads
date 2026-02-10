@@ -11,7 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 	"golang.org/x/mod/semver"
 )
 
@@ -48,11 +48,11 @@ func (s *Server) checkVersionCompatibility(clientVersion string) error {
 		cmp := semver.Compare(serverVer, clientVer)
 		if cmp < 0 {
 			// Daemon is older - needs upgrade
-			return fmt.Errorf("incompatible major versions: client %s, daemon %s. Daemon is older; upgrade and restart daemon: 'bd daemon stop . && bd daemon start'",
+			return fmt.Errorf("incompatible major versions: client %s, daemon %s. Daemon is older; upgrade and restart daemon: 'fbd daemon stop . && fbd daemon start'",
 				clientVersion, ServerVersion)
 		}
 		// Daemon is newer - client needs upgrade
-		return fmt.Errorf("incompatible major versions: client %s, daemon %s. Client is older; upgrade the bd CLI to match the daemon's major version",
+		return fmt.Errorf("incompatible major versions: client %s, daemon %s. Client is older; upgrade the fbd CLI to match the daemon's major version",
 			clientVersion, ServerVersion)
 	}
 
@@ -67,12 +67,12 @@ func (s *Server) checkVersionCompatibility(clientVersion string) error {
 
 		if serverMinor != clientMinor {
 			// Minor version mismatch - schema may be incompatible
-			return fmt.Errorf("version mismatch: client v%s requires daemon upgrade (daemon is v%s). The client may expect schema changes not present in this daemon version. Run: bd daemons killall",
+			return fmt.Errorf("version mismatch: client v%s requires daemon upgrade (daemon is v%s). The client may expect schema changes not present in this daemon version. Run: fbd daemons killall",
 				clientVersion, ServerVersion)
 		}
 
 		// Patch version difference - usually safe but warn
-		return fmt.Errorf("version mismatch: daemon v%s is older than client v%s. Upgrade and restart daemon: bd daemons killall",
+		return fmt.Errorf("version mismatch: daemon v%s is older than client v%s. Upgrade and restart daemon: fbd daemons killall",
 			ServerVersion, clientVersion)
 	}
 

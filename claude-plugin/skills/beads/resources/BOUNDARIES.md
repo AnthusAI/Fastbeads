@@ -1,22 +1,22 @@
-# Boundaries: When to Use bd vs TodoWrite
+# Boundaries: When to Use fbd vs TodoWrite
 
-This reference provides detailed decision criteria for choosing between bd issue tracking and TodoWrite for task management.
+This reference provides detailed decision criteria for choosing between fbd issue tracking and TodoWrite for task management.
 
 ## Contents
 
 - [The Core Question](#the-core-question)
 - [Decision Matrix](#decision-matrix)
-  - [Use bd for](#use-bd-for): Multi-Session Work, Complex Dependencies, Knowledge Work, Side Quests, Project Memory
+  - [Use fbd for](#use-bd-for): Multi-Session Work, Complex Dependencies, Knowledge Work, Side Quests, Project Memory
   - [Use TodoWrite for](#use-todowrite-for): Single-Session Tasks, Linear Execution, Immediate Context, Simple Tracking
 - [Detailed Comparison](#detailed-comparison)
 - [Integration Patterns](#integration-patterns)
-  - Pattern 1: bd as Strategic, TodoWrite as Tactical
-  - Pattern 2: TodoWrite as Working Copy of bd
+  - Pattern 1: fbd as Strategic, TodoWrite as Tactical
+  - Pattern 2: TodoWrite as Working Copy of fbd
   - Pattern 3: Transition Mid-Session
 - [Real-World Examples](#real-world-examples)
   - Strategic Document Development, Simple Feature Implementation, Bug Investigation, Refactoring with Dependencies
 - [Common Mistakes](#common-mistakes)
-  - Using TodoWrite for multi-session work, using bd for simple tasks, not transitioning when complexity emerges, creating too many bd issues, never using bd
+  - Using TodoWrite for multi-session work, using fbd for simple tasks, not transitioning when complexity emerges, creating too many fbd issues, never using fbd
 - [The Transition Point](#the-transition-point)
 - [Summary Heuristics](#summary-heuristics)
 
@@ -24,14 +24,14 @@ This reference provides detailed decision criteria for choosing between bd issue
 
 **"Could I resume this work after 2 weeks away?"**
 
-- If bd would help you resume → **use bd**
+- If fbd would help you resume → **use fbd**
 - If markdown skim would suffice → **TodoWrite is fine**
 
-This heuristic captures the essential difference: bd provides structured context that persists across long gaps, while TodoWrite excels at immediate session tracking.
+This heuristic captures the essential difference: fbd provides structured context that persists across long gaps, while TodoWrite excels at immediate session tracking.
 
 ## Decision Matrix
 
-### Use bd for:
+### Use fbd for:
 
 #### Multi-Session Work
 Work spanning multiple compaction cycles or days where context needs to persist.
@@ -42,7 +42,7 @@ Work spanning multiple compaction cycles or days where context needs to persist.
 - Bug investigation requiring experimentation over time
 - Architecture design evolving through multiple iterations
 
-**Why bd wins**: Issues capture context that survives compaction. Return weeks later and see full history, design decisions, and current status.
+**Why fbd wins**: Issues capture context that survives compaction. Return weeks later and see full history, design decisions, and current status.
 
 #### Complex Dependencies
 Work with blockers, prerequisites, or hierarchical structure.
@@ -53,7 +53,7 @@ Work with blockers, prerequisites, or hierarchical structure.
 - Refactoring with dependencies between different code areas
 - Migration requiring sequential steps in specific order
 
-**Why bd wins**: Dependency graph shows what's blocking what. `bd ready` automatically surfaces unblocked work. No manual tracking required.
+**Why fbd wins**: Dependency graph shows what's blocking what. `fbd ready` automatically surfaces unblocked work. No manual tracking required.
 
 #### Knowledge Work
 Tasks with fuzzy boundaries, exploration, or strategic thinking.
@@ -64,7 +64,7 @@ Tasks with fuzzy boundaries, exploration, or strategic thinking.
 - Performance optimization requiring measurement and experimentation
 - Documentation requiring understanding system architecture
 
-**Why bd wins**: `design` and `acceptance_criteria` fields capture evolving understanding. Issues can be refined as exploration reveals more information.
+**Why fbd wins**: `design` and `acceptance_criteria` fields capture evolving understanding. Issues can be refined as exploration reveals more information.
 
 #### Side Quests
 Exploratory work that might pause the main task.
@@ -75,7 +75,7 @@ Exploratory work that might pause the main task.
 - During code review, identify potential improvement
 - While writing tests, find edge case requiring research
 
-**Why bd wins**: Create issue with `discovered-from` dependency, pause main work safely. Context preserved for both tracks. Resume either one later.
+**Why fbd wins**: Create issue with `discovered-from` dependency, pause main work safely. Context preserved for both tracks. Resume either one later.
 
 #### Project Memory
 Need to resume work after significant time with full context.
@@ -86,7 +86,7 @@ Need to resume work after significant time with full context.
 - Complex features split across sprints
 - Research projects with long investigation periods
 
-**Why bd wins**: Git-backed database persists indefinitely. All context, decisions, and history available on resume. No relying on conversation scrollback or markdown files.
+**Why fbd wins**: Git-backed database persists indefinitely. All context, decisions, and history available on resume. No relying on conversation scrollback or markdown files.
 
 ---
 
@@ -134,17 +134,17 @@ Just need a checklist to show progress to user.
 - Demonstrating systematic approach
 - Providing reassurance work is proceeding
 
-**Why TodoWrite wins**: User wants to see thinking and progress. TodoWrite is visible in conversation. bd is invisible background structure.
+**Why TodoWrite wins**: User wants to see thinking and progress. TodoWrite is visible in conversation. fbd is invisible background structure.
 
 ---
 
 ## Detailed Comparison
 
-| Aspect | bd | TodoWrite |
+| Aspect | fbd | TodoWrite |
 |--------|-----|-----------|
 | **Persistence** | Git-backed, survives compaction | Session-only, lost after conversation |
 | **Dependencies** | Graph-based, automatic ready detection | Manual, no automatic tracking |
-| **Discoverability** | `bd ready` surfaces work | Scroll conversation for todos |
+| **Discoverability** | `fbd ready` surfaces work | Scroll conversation for todos |
 | **Complexity** | Handles nested epics, blockers | Flat list only |
 | **Visibility** | Background structure, not in conversation | Visible to user in chat |
 | **Setup** | Requires `.beads/` directory in project | Always available |
@@ -155,17 +155,17 @@ Just need a checklist to show progress to user.
 
 ## Integration Patterns
 
-bd and TodoWrite can coexist effectively in a session. Use both strategically.
+fbd and TodoWrite can coexist effectively in a session. Use both strategically.
 
-### Pattern 1: bd as Strategic, TodoWrite as Tactical
+### Pattern 1: fbd as Strategic, TodoWrite as Tactical
 
 **Setup:**
-- bd tracks high-level issues and dependencies
+- fbd tracks high-level issues and dependencies
 - TodoWrite tracks current session's execution steps
 
 **Example:**
 ```
-bd issue: "Implement user authentication" (epic)
+fbd issue: "Implement user authentication" (epic)
   ├─ Child issue: "Create login endpoint"
   ├─ Child issue: "Add JWT token validation"  ← Currently working on this
   └─ Child issue: "Implement logout"
@@ -182,32 +182,32 @@ TodoWrite (for JWT validation):
 - User wants to see current progress but larger context exists
 - Multi-session work currently in single-session execution phase
 
-### Pattern 2: TodoWrite as Working Copy of bd
+### Pattern 2: TodoWrite as Working Copy of fbd
 
 **Setup:**
-- Start with bd issue containing full context
-- Create TodoWrite checklist from bd issue's acceptance criteria
-- Update bd as TodoWrite items complete
+- Start with fbd issue containing full context
+- Create TodoWrite checklist from fbd issue's acceptance criteria
+- Update fbd as TodoWrite items complete
 
 **Example:**
 ```
 Session start:
-- Check bd: "issue-auth-42: Add JWT token validation" is ready
+- Check fbd: "issue-auth-42: Add JWT token validation" is ready
 - Extract acceptance criteria into TodoWrite
-- Mark bd issue as in_progress
+- Mark fbd issue as in_progress
 - Work through TodoWrite items
-- Update bd design notes as you learn
-- When TodoWrite completes, close bd issue
+- Update fbd design notes as you learn
+- When TodoWrite completes, close fbd issue
 ```
 
 **When to use:**
-- bd issue is ready but execution is straightforward
+- fbd issue is ready but execution is straightforward
 - User wants visible progress tracking
 - Need structured approach to larger issue
 
 ### Pattern 3: Transition Mid-Session
 
-**From TodoWrite to bd:**
+**From TodoWrite to fbd:**
 
 Recognize mid-execution that work is more complex than anticipated.
 
@@ -219,17 +219,17 @@ Recognize mid-execution that work is more complex than anticipated.
 
 **How to transition:**
 ```
-1. Create bd issue with current TodoWrite content
+1. Create fbd issue with current TodoWrite content
 2. Note: "Discovered this is multi-session work during implementation"
 3. Add dependencies as discovered
 4. Keep TodoWrite for current session
-5. Update bd issue before session ends
-6. Next session: resume from bd, create new TodoWrite if needed
+5. Update fbd issue before session ends
+6. Next session: resume from fbd, create new TodoWrite if needed
 ```
 
-**From bd to TodoWrite:**
+**From fbd to TodoWrite:**
 
-Rare, but happens when bd issue turns out simpler than expected.
+Rare, but happens when fbd issue turns out simpler than expected.
 
 **Trigger signals:**
 - All context already clear
@@ -239,10 +239,10 @@ Rare, but happens when bd issue turns out simpler than expected.
 
 **How to transition:**
 ```
-1. Keep bd issue for historical record
+1. Keep fbd issue for historical record
 2. Create TodoWrite from issue description
 3. Execute via TodoWrite
-4. Close bd issue when done
+4. Close fbd issue when done
 5. Note: "Completed in single session, simpler than expected"
 ```
 
@@ -252,14 +252,14 @@ Rare, but happens when bd issue turns out simpler than expected.
 
 **Scenario**: Planning migration from MySQL to PostgreSQL for production application.
 
-**Why bd**:
+**Why fbd**:
 - Multi-session work across days/weeks
 - Fuzzy boundaries - scope emerges through investigation
 - Side quests - discover schema incompatibilities requiring refactoring
 - Dependencies - can't migrate data until schema validated
 - Project memory - need to resume after interruptions
 
-**bd structure**:
+**fbd structure**:
 ```
 db-epic: "Migrate production database to PostgreSQL"
   ├─ db-1: "Audit current MySQL schema and queries"
@@ -288,7 +288,7 @@ db-epic: "Migrate production database to PostgreSQL"
 - [ ] Run tests
 ```
 
-**bd role**: None. Overkill for straightforward task.
+**fbd role**: None. Overkill for straightforward task.
 
 ### Example 3: Bug Investigation
 
@@ -304,27 +304,27 @@ db-epic: "Migrate production database to PostgreSQL"
 
 **What actually happens**: Reproducing bug reveals it's intermittent. Root cause investigation shows multiple potential issues. Needs time to investigate.
 
-**Transition to bd**:
+**Transition to fbd**:
 ```
-Create bd issue: "Fix intermittent auth failure in production"
+Create fbd issue: "Fix intermittent auth failure in production"
   - Description: Initially seemed simple but reproduction shows complex race condition
   - Design: Three potential causes identified, need to test each
   - Created issues for each hypothesis with discovered-from dependency
 
-Pause for day, resume next session from bd context
+Pause for day, resume next session from fbd context
 ```
 
 ### Example 4: Refactoring with Dependencies
 
 **Scenario**: Extract common validation logic from three controllers.
 
-**Why bd**:
+**Why fbd**:
 - Dependencies - must extract before modifying callers
 - Multi-file changes need coordination
 - Potential side quest - might discover better pattern during extraction
 - Need to track which controllers updated
 
-**bd structure**:
+**fbd structure**:
 ```
 refactor-1: "Create shared validation module"
   → blocks refactor-2, refactor-3, refactor-4
@@ -336,7 +336,7 @@ refactor-4: "Update payment controller to use shared validation"
 
 **TodoWrite role**: Could use TodoWrite for individual controller updates as implementing.
 
-**Why this works**: bd ensures you don't forget to update a controller. `bd ready` shows next available work. Dependencies prevent starting controller update before extraction complete.
+**Why this works**: fbd ensures you don't forget to update a controller. `fbd ready` shows next available work. Dependencies prevent starting controller update before extraction complete.
 
 ## Common Mistakes
 
@@ -348,9 +348,9 @@ refactor-4: "Update payment controller to use shared validation"
 - Lose design decisions made during implementation
 - Start over or duplicate work
 
-**Solution**: Create bd issue instead. Persist context across sessions.
+**Solution**: Create fbd issue instead. Persist context across sessions.
 
-### Mistake 2: Using bd for Simple Linear Tasks
+### Mistake 2: Using fbd for Simple Linear Tasks
 
 **What happens**:
 - Overhead of creating issue not justified
@@ -367,18 +367,18 @@ refactor-4: "Update payment controller to use shared validation"
 - Keep using TodoWrite despite poor fit
 - Lose context when conversation ends
 
-**Solution**: Transition to bd when complexity signal appears. Not too late mid-session.
+**Solution**: Transition to fbd when complexity signal appears. Not too late mid-session.
 
-### Mistake 4: Creating Too Many bd Issues
+### Mistake 4: Creating Too Many fbd Issues
 
 **What happens**:
 - Every tiny task gets an issue
 - Database cluttered with trivial items
-- Hard to find meaningful work in `bd ready`
+- Hard to find meaningful work in `fbd ready`
 
-**Solution**: Reserve bd for work that actually benefits from persistence. Use "2 week test" - would bd help resume after 2 weeks? If no, skip it.
+**Solution**: Reserve fbd for work that actually benefits from persistence. Use "2 week test" - would fbd help resume after 2 weeks? If no, skip it.
 
-### Mistake 5: Never Using bd Because TodoWrite is Familiar
+### Mistake 5: Never Using fbd Because TodoWrite is Familiar
 
 **What happens**:
 - Multi-session projects become markdown swamps
@@ -386,7 +386,7 @@ refactor-4: "Update payment controller to use shared validation"
 - Can't resume work effectively
 - Rotten half-implemented plans
 
-**Solution**: Force yourself to use bd for next multi-session project. Experience the difference in organization and resumability.
+**Solution**: Force yourself to use fbd for next multi-session project. Experience the difference in organization and resumability.
 
 ### Mistake 6: Always Asking Before Creating Issues (or Never Asking)
 
@@ -424,7 +424,7 @@ Most work starts with an implicit mental model:
 
 ✅ **Stays straightforward** → Continue with TodoWrite, complete in session
 
-⚠️ **Complexity emerges** → Transition to bd, preserve context
+⚠️ **Complexity emerges** → Transition to fbd, preserve context
 
 The skill is recognizing the transition point:
 
@@ -436,7 +436,7 @@ The skill is recognizing the transition point:
 - "The user might not be available to continue today"
 - "I found three related issues while working on this"
 
-**When you notice these signals**: Create bd issue, preserve context, work from structured foundation.
+**When you notice these signals**: Create fbd issue, preserve context, work from structured foundation.
 
 ## Summary Heuristics
 
@@ -444,26 +444,26 @@ Quick decision guides:
 
 **Time horizon:**
 - Same session → TodoWrite
-- Multiple sessions → bd
+- Multiple sessions → fbd
 
 **Dependency structure:**
 - Linear steps → TodoWrite
-- Blockers/prerequisites → bd
+- Blockers/prerequisites → fbd
 
 **Scope clarity:**
 - Well-defined → TodoWrite
-- Exploratory → bd
+- Exploratory → fbd
 
 **Context complexity:**
 - Conversation has everything → TodoWrite
-- External context needed → bd
+- External context needed → fbd
 
 **User interaction:**
 - User watching progress → TodoWrite visible in chat
-- Background work → bd invisible structure
+- Background work → fbd invisible structure
 
 **Resume difficulty:**
 - Easy from markdown → TodoWrite
-- Need structured history → bd
+- Need structured history → fbd
 
-When in doubt: **Use the 2-week test**. If you'd struggle to resume this work after 2 weeks without bd, use bd.
+When in doubt: **Use the 2-week test**. If you'd struggle to resume this work after 2 weeks without fbd, use fbd.

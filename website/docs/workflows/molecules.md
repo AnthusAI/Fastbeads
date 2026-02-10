@@ -21,12 +21,12 @@ A molecule is a persistent instance of a formula:
 
 ```bash
 # Pour a formula into a molecule
-bd pour <formula-name> [--var key=value]
+fbd pour <formula-name> [--var key=value]
 ```
 
 **Example:**
 ```bash
-bd pour release --var version=1.0.0
+fbd pour release --var version=1.0.0
 ```
 
 This creates:
@@ -36,15 +36,15 @@ This creates:
 ### Listing Molecules
 
 ```bash
-bd mol list
-bd mol list --json
+fbd mol list
+fbd mol list --json
 ```
 
 ### Viewing a Molecule
 
 ```bash
-bd mol show <molecule-id>
-bd dep tree <molecule-id>  # Shows full hierarchy
+fbd mol show <molecule-id>
+fbd dep tree <molecule-id>  # Shows full hierarchy
 ```
 
 ## Working with Molecules
@@ -60,40 +60,40 @@ title = "Implement feature"
 needs = ["design"]  # Must complete design first
 ```
 
-The `bd ready` command respects these:
+The `fbd ready` command respects these:
 
 ```bash
-bd ready  # Only shows steps with completed dependencies
+fbd ready  # Only shows steps with completed dependencies
 ```
 
 ### Progressing Through Steps
 
 ```bash
 # Start a step
-bd update bd-xyz.1 --status in_progress
+fbd update bd-xyz.1 --status in_progress
 
 # Complete a step
-bd close bd-xyz.1 --reason "Done"
+fbd close bd-xyz.1 --reason "Done"
 
 # Check what's ready next
-bd ready
+fbd ready
 ```
 
 ### Viewing Progress
 
 ```bash
 # See blocked steps
-bd blocked
+fbd blocked
 
 # See molecule stats
-bd stats
+fbd stats
 ```
 
 ## Molecule Lifecycle
 
 ```
 Formula (template)
-    ↓ bd pour
+    ↓ fbd pour
 Molecule (instance)
     ↓ work steps
 Completed Molecule
@@ -134,27 +134,27 @@ Assign molecules to agents:
 
 ```bash
 # Pin to current agent
-bd pin bd-xyz --start
+fbd pin bd-xyz --start
 
 # Check what's pinned
-bd hook
+fbd hook
 ```
 
 ## Example Workflow
 
 ```bash
 # 1. Create molecule from formula
-bd pour feature-workflow --var name="dark-mode"
+fbd pour feature-workflow --var name="dark-mode"
 
 # 2. View structure
-bd dep tree bd-xyz
+fbd dep tree bd-xyz
 
 # 3. Start first step
-bd update bd-xyz.1 --status in_progress
+fbd update bd-xyz.1 --status in_progress
 
 # 4. Complete and progress
-bd close bd-xyz.1
-bd ready  # Shows next steps
+fbd close bd-xyz.1
+fbd ready  # Shows next steps
 
 # 5. Continue until complete
 ```

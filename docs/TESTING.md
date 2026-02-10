@@ -2,14 +2,14 @@
 
 ## Overview
 
-The beads project has a comprehensive test suite with **~41,000 lines of code** across **205 files** in `cmd/bd` alone.
+The beads project has a comprehensive test suite with **~41,000 lines of code** across **205 files** in `cmd/fbd` alone.
 
 ## Test Performance
 
 - **Total test time:** ~3 minutes (excluding broken tests)
 - **Package count:** 20+ packages with tests
 - **Compilation overhead:** ~180 seconds (most of the total time)
-- **Individual test time:** Only ~3.8 seconds combined for all 313 tests in cmd/bd
+- **Individual test time:** Only ~3.8 seconds combined for all 313 tests in cmd/fbd
 
 ## Running Tests
 
@@ -23,10 +23,10 @@ make test
 ./scripts/test.sh
 
 # Run specific package
-./scripts/test.sh ./cmd/bd/...
+./scripts/test.sh ./cmd/fbd/...
 
 # Run specific test pattern
-./scripts/test.sh -run TestCreate ./cmd/bd/...
+./scripts/test.sh -run TestCreate ./cmd/fbd/...
 
 # Verbose output
 ./scripts/test.sh -v
@@ -63,7 +63,7 @@ TEST_RUN=TestCreate ./scripts/test.sh
 Tests in `.test-skip` are automatically skipped. Current broken tests:
 
 1. **TestFallbackToDirectModeEnablesFlush** (GH #355)
-   - Location: `cmd/bd/direct_mode_test.go:14`
+   - Location: `cmd/fbd/direct_mode_test.go:14`
    - Issue: Database deadlock, hangs for 5 minutes
    - Impact: Makes test suite extremely slow
 
@@ -84,7 +84,7 @@ When running tests during development:
    ./scripts/test.sh
 
    # Run just what you changed:
-   ./scripts/test.sh -run TestSpecificFeature ./cmd/bd/...
+   ./scripts/test.sh -run TestSpecificFeature ./cmd/fbd/...
    ```
 
 3. **Compilation is the bottleneck:**
@@ -114,7 +114,7 @@ If you discover a broken test:
 
 ### Slowest Tests (>0.05s)
 
-The top slow tests in cmd/bd:
+The top slow tests in cmd/fbd:
 - `TestDoctorWithBeadsDir` (1.68s) - Only significantly slow test
 - `TestFlushManagerDebouncing` (0.21s)
 - `TestDebouncer_*` tests (0.06-0.12s each) - Intentional sleeps for concurrency testing
@@ -125,7 +125,7 @@ Most tests are <0.01s and very fast.
 ### Package Structure
 
 ```
-cmd/bd/           - Main CLI tests (82 test files, most of the suite)
+cmd/fbd/           - Main CLI tests (82 test files, most of the suite)
 internal/beads/   - Core beads library tests
 internal/storage/ - Storage backend tests (SQLite, memory)
 internal/rpc/     - RPC protocol tests
@@ -151,7 +151,7 @@ The test script is designed to work seamlessly with CI/CD:
 
 ### Run a single test
 ```bash
-./scripts/test.sh -run '^TestExactName$' ./cmd/bd/...
+./scripts/test.sh -run '^TestExactName$' ./cmd/fbd/...
 ```
 
 ### Check which tests are being skipped

@@ -3,8 +3,8 @@ package storage_test
 import (
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/memory"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage/memory"
 )
 
 // TestIsVersioned verifies the IsVersioned type detection helper.

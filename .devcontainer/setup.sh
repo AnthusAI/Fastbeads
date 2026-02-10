@@ -1,21 +1,21 @@
 #!/bin/bash
 set -e
 
-echo "🔧 Building bd from source..."
-go build -o bd ./cmd/bd
+echo "🔧 Building fbd from source..."
+go build -o fbd ./cmd/fbd
 
-echo "📦 Installing bd globally..."
-sudo mv bd /usr/local/bin/bd
-sudo chmod +x /usr/local/bin/bd
+echo "📦 Installing fbd globally..."
+sudo mv fbd /usr/local/bin/fbd
+sudo chmod +x /usr/local/bin/fbd
 
-echo "✅ Verifying bd installation..."
-bd version
+echo "✅ Verifying fbd installation..."
+fbd version
 
-echo "🎯 Initializing bd (non-interactive)..."
+echo "🎯 Initializing fbd (non-interactive)..."
 if [ ! -f .beads/beads.db ]; then
-  bd init --quiet
+  fbd init --quiet
 else
-  echo "bd already initialized"
+  echo "fbd already initialized"
 fi
 
 echo "🪝 Installing git hooks..."
@@ -30,4 +30,4 @@ echo "📚 Installing Go dependencies..."
 go mod download
 
 echo "✨ Development environment ready!"
-echo "Run 'bd ready' to see available tasks"
+echo "Run 'fbd ready' to see available tasks"

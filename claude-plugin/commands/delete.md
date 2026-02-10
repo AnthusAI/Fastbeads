@@ -14,8 +14,8 @@ Delete one or more issues and clean up all references.
 
 ## Batch Deletion
 
-- Delete multiple: `bd delete bd-1 bd-2 bd-3 --force`
-- Delete from file: `bd delete --from-file deletions.txt --force`
+- Delete multiple: `fbd delete bd-1 bd-2 bd-3 --force`
+- Delete from file: `fbd delete --from-file deletions.txt --force`
 
 ## Dependency Handling
 

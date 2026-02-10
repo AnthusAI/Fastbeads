@@ -33,10 +33,10 @@ dolt version
 
 ```bash
 # New project
-bd init --backend=dolt
+fbd init --backend=dolt
 
 # Or convert existing SQLite database
-bd migrate --to=dolt
+fbd migrate --to=dolt
 ```
 
 ### 3. Configure Sync Mode
@@ -82,7 +82,7 @@ dolt:
 
 ```bash
 # Check server status
-bd doctor
+fbd doctor
 
 # Server auto-starts when needed
 # PID stored in: .beads/dolt/sql-server.pid
@@ -152,8 +152,8 @@ dolt remote add origin file:///path/to/remote
 ### Push/Pull
 
 ```bash
-# Via bd sync
-bd sync
+# Via fbd sync
+fbd sync
 
 # Direct dolt commands (if needed)
 cd .beads/dolt
@@ -170,26 +170,26 @@ dolt pull origin main
 mv .beads .beads-sqlite-backup
 
 # Initialize with Dolt
-bd init --backend=dolt
+fbd init --backend=dolt
 
 # Import from JSONL (if you have one)
-bd import .beads-sqlite-backup/issues.jsonl
+fbd import .beads-sqlite-backup/issues.jsonl
 ```
 
 ### Option 2: In-Place Migration
 
 ```bash
 # Export current state
-bd export --full issues.jsonl
+fbd export --full issues.jsonl
 
 # Reconfigure backend
 # Edit .beads/config.yaml to set backend: dolt
 
 # Re-initialize
-bd init --backend=dolt
+fbd init --backend=dolt
 
 # Import
-bd import issues.jsonl
+fbd import issues.jsonl
 ```
 
 ## Troubleshooting
@@ -217,18 +217,18 @@ cd .beads/dolt && dolt sql-server --host 127.0.0.1 --port 3306
 mysql -h 127.0.0.1 -P 3306 -u root beads
 
 # Check server is running
-bd doctor
+fbd doctor
 
 # Force restart
 kill $(cat .beads/dolt/sql-server.pid) 2>/dev/null
-bd list  # Triggers auto-start
+fbd list  # Triggers auto-start
 ```
 
 ### Performance Issues
 
 1. **Ensure server mode is enabled** (default)
 2. Check server logs for errors
-3. Run `bd doctor` for diagnostics
+3. Run `fbd doctor` for diagnostics
 4. Consider `dolt gc` for database maintenance:
    ```bash
    cd .beads/dolt && dolt gc
@@ -244,8 +244,8 @@ cd .beads/dolt
 # Create feature branch
 dolt checkout -b feature/experiment
 
-# Make changes via bd commands
-bd create "experimental issue"
+# Make changes via fbd commands
+fbd create "experimental issue"
 
 # Merge back
 dolt checkout main

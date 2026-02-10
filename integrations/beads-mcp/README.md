@@ -1,7 +1,7 @@
 # beads-mcp
 
-MCP server for [beads](https://github.com/steveyegge/beads) issue tracker and agentic memory system.
-Enables AI agents to manage tasks using bd CLI through Model Context Protocol.
+MCP server for [beads](https://github.com/steveyegge/fastbeads) issue tracker and agentic memory system.
+Enables AI agents to manage tasks using fbd CLI through Model Context Protocol.
 
 > **Note:** For environments with shell access (Claude Code, Cursor, Windsurf), the **CLI + hooks approach is recommended** over MCP. It uses ~1-2k tokens vs 10-50k for MCP schemas, resulting in lower compute cost and latency. See the [main README](../../README.md) for CLI setup.
 >
@@ -36,7 +36,7 @@ Add to your Claude Desktop config:
 For development, clone the repository:
 
 ```bash
-git clone https://github.com/steveyegge/beads
+git clone https://github.com/steveyegge/fastbeads
 cd beads/integrations/beads-mcp
 uv sync
 ```
@@ -61,9 +61,9 @@ Then use in Claude Desktop config:
 
 **Environment Variables** (all optional):
 - `BEADS_USE_DAEMON` - Use daemon RPC instead of CLI (default: `1`, set to `0` to disable)
-- `BEADS_PATH` - Path to bd executable (default: `~/.local/bin/bd`)
+- `BEADS_PATH` - Path to fbd executable (default: `~/.local/bin/fbd`)
 - `BEADS_DB` - Path to beads database file (default: auto-discover from cwd)
-- `BEADS_WORKING_DIR` - Working directory for bd commands (default: `$PWD` or current directory). Used for multi-repo setups - see below
+- `BEADS_WORKING_DIR` - Working directory for fbd commands (default: `$PWD` or current directory). Used for multi-repo setups - see below
 - `BEADS_ACTOR` - Actor name for audit trail (default: `$USER`)
 - `BEADS_NO_AUTO_FLUSH` - Disable automatic JSONL sync (default: `false`)
 - `BEADS_NO_AUTO_IMPORT` - Disable automatic JSONL import (default: `false`)
@@ -86,7 +86,7 @@ Then use in Claude Desktop config:
 ```
 
 **How it works (LSP model):**
-1. MCP server checks for local daemon socket (`.beads/bd.sock`) in your current workspace
+1. MCP server checks for local daemon socket (`.beads/fbd.sock`) in your current workspace
 2. Routes requests to the **per-project daemon** based on working directory
 3. Auto-starts the local daemon if not running
 4. **Each project gets its own isolated daemon** serving only its database
@@ -213,7 +213,7 @@ await beads_ready_work(workspace_root="/Users/you/project-a")
 - `beads://quickstart` - Quickstart guide for using beads
 
 **Tools (all support `workspace_root` parameter):**
-- `init` - Initialize bd in current directory
+- `init` - Initialize fbd in current directory
 - `create` - Create new issue (bug, feature, task, epic, chore)
 - `list` - List issues with filters (status, priority, type, assignee)
 - `ready` - Find tasks with no blockers ready to work on
@@ -228,7 +228,7 @@ await beads_ready_work(workspace_root="/Users/you/project-a")
 
 ## Known Issues
 
-### ~~MCP Tools Not Loading in Claude Code~~ (Issue [#346](https://github.com/steveyegge/beads/issues/346)) - RESOLVED
+### ~~MCP Tools Not Loading in Claude Code~~ (Issue [#346](https://github.com/steveyegge/fastbeads/issues/346)) - RESOLVED
 
 **Status:** ✅ Fixed in v0.24.0+
 
@@ -280,7 +280,7 @@ With coverage:
 uv run pytest --cov=beads_mcp tests/
 ```
 
-Test suite includes both mocked unit tests and integration tests with real `bd` CLI.
+Test suite includes both mocked unit tests and integration tests with real `fbd` CLI.
 
 ### Multi-Repo Integration Test
 
@@ -288,7 +288,7 @@ Test daemon RPC with multiple repositories:
 ```bash
 # Start the daemon first
 cd /path/to/beads
-./bd daemon start
+./fbd daemon start
 
 # Run multi-repo test
 cd integrations/beads-mcp

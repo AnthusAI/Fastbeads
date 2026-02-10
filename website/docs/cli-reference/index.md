@@ -6,12 +6,12 @@ sidebar_position: 1
 
 # CLI Reference
 
-Complete reference for all `bd` commands.
+Complete reference for all `fbd` commands.
 
 ## Command Structure
 
 ```bash
-bd [global-flags] <command> [command-flags] [arguments]
+fbd [global-flags] <command> [command-flags] [arguments]
 ```
 
 ### Global Flags
@@ -34,75 +34,75 @@ Most frequently used:
 
 | Command | Description |
 |---------|-------------|
-| `bd create` | Create new issue |
-| `bd list` | List issues with filters |
-| `bd show` | Show issue details |
-| `bd update` | Update issue fields |
-| `bd close` | Close an issue |
-| `bd ready` | Show unblocked work |
-| `bd sync` | Force sync to git |
+| `fbd create` | Create new issue |
+| `fbd list` | List issues with filters |
+| `fbd show` | Show issue details |
+| `fbd update` | Update issue fields |
+| `fbd close` | Close an issue |
+| `fbd ready` | Show unblocked work |
+| `fbd sync` | Force sync to git |
 
 ### Issue Management
 
 | Command | Description |
 |---------|-------------|
-| `bd create` | Create issue |
-| `bd show` | Show details |
-| `bd update` | Update fields |
-| `bd close` | Close issue |
-| `bd delete` | Delete issue |
-| `bd reopen` | Reopen closed issue |
+| `fbd create` | Create issue |
+| `fbd show` | Show details |
+| `fbd update` | Update fields |
+| `fbd close` | Close issue |
+| `fbd delete` | Delete issue |
+| `fbd reopen` | Reopen closed issue |
 
 ### Dependencies
 
 | Command | Description |
 |---------|-------------|
-| `bd dep add` | Add dependency |
-| `bd dep remove` | Remove dependency |
-| `bd dep tree` | Show dependency tree |
-| `bd dep cycles` | Detect circular dependencies |
-| `bd blocked` | Show blocked issues |
-| `bd ready` | Show unblocked issues |
+| `fbd dep add` | Add dependency |
+| `fbd dep remove` | Remove dependency |
+| `fbd dep tree` | Show dependency tree |
+| `fbd dep cycles` | Detect circular dependencies |
+| `fbd blocked` | Show blocked issues |
+| `fbd ready` | Show unblocked issues |
 
 ### Labels & Comments
 
 | Command | Description |
 |---------|-------------|
-| `bd label add` | Add label to issue |
-| `bd label remove` | Remove label |
-| `bd label list` | List all labels |
-| `bd comment add` | Add comment |
-| `bd comment list` | List comments |
+| `fbd label add` | Add label to issue |
+| `fbd label remove` | Remove label |
+| `fbd label list` | List all labels |
+| `fbd comment add` | Add comment |
+| `fbd comment list` | List comments |
 
 ### Sync & Export
 
 | Command | Description |
 |---------|-------------|
-| `bd sync` | Full sync cycle |
-| `bd export` | Export to JSONL |
-| `bd import` | Import from JSONL |
-| `bd migrate` | Migrate database schema |
+| `fbd sync` | Full sync cycle |
+| `fbd export` | Export to JSONL |
+| `fbd import` | Import from JSONL |
+| `fbd migrate` | Migrate database schema |
 
 ### System
 
 | Command | Description |
 |---------|-------------|
-| `bd init` | Initialize beads in project |
-| `bd info` | Show system info |
-| `bd version` | Show version |
-| `bd config` | Manage configuration |
-| `bd daemons` | Manage daemons |
-| `bd hooks` | Manage git hooks |
+| `fbd init` | Initialize beads in project |
+| `fbd info` | Show system info |
+| `fbd version` | Show version |
+| `fbd config` | Manage configuration |
+| `fbd daemons` | Manage daemons |
+| `fbd hooks` | Manage git hooks |
 
 ### Workflows
 
 | Command | Description |
 |---------|-------------|
-| `bd pour` | Instantiate formula as molecule |
-| `bd wisp` | Create ephemeral wisp |
-| `bd mol` | Manage molecules |
-| `bd pin` | Pin work to agent |
-| `bd hook` | Show pinned work |
+| `fbd pour` | Instantiate formula as molecule |
+| `fbd wisp` | Create ephemeral wisp |
+| `fbd mol` | Manage molecules |
+| `fbd pin` | Pin work to agent |
+| `fbd hook` | Show pinned work |
 
 ## Quick Reference
 
@@ -110,70 +110,70 @@ Most frequently used:
 
 ```bash
 # Basic
-bd create "Title" -t task -p 2
+fbd create "Title" -t task -p 2
 
 # With description
-bd create "Title" --description="Details here" -t bug -p 1
+fbd create "Title" --description="Details here" -t bug -p 1
 
 # With labels
-bd create "Title" -l "backend,urgent"
+fbd create "Title" -l "backend,urgent"
 
 # As child of epic
-bd create "Subtask" --parent bd-42
+fbd create "Subtask" --parent bd-42
 
 # With discovered-from link
-bd create "Found bug" --deps discovered-from:bd-42
+fbd create "Found bug" --deps discovered-from:bd-42
 
 # JSON output
-bd create "Title" --json
+fbd create "Title" --json
 ```
 
 ### Querying Issues
 
 ```bash
 # All open issues
-bd list --status open
+fbd list --status open
 
 # High priority bugs
-bd list --status open --priority 0,1 --type bug
+fbd list --status open --priority 0,1 --type bug
 
 # With specific labels
-bd list --label-any urgent,critical
+fbd list --label-any urgent,critical
 
 # JSON output
-bd list --json
+fbd list --json
 ```
 
 ### Working with Dependencies
 
 ```bash
 # Add: bd-2 depends on bd-1
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # View tree
-bd dep tree bd-2
+fbd dep tree bd-2
 
 # Find cycles
-bd dep cycles
+fbd dep cycles
 
 # What's ready to work?
-bd ready
+fbd ready
 
 # What's blocked?
-bd blocked
+fbd blocked
 ```
 
 ### Syncing
 
 ```bash
 # Full sync (export + commit + push)
-bd sync
+fbd sync
 
 # Force export
-bd export
+fbd export
 
 # Import from file
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ## See Also

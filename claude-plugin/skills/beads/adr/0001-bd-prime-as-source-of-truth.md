@@ -1,4 +1,4 @@
-# ADR-0001: Use bd prime as CLI Reference Source of Truth
+# ADR-0001: Use fbd prime as CLI Reference Source of Truth
 
 ## Status
 
@@ -14,32 +14,32 @@ The beads skill maintained CLI reference documentation in multiple locations:
 
 This created:
 - **Duplication**: Same commands documented 2-3 times
-- **Drift risk**: Documentation can fall behind bd versions
+- **Drift risk**: Documentation can fall behind fbd versions
 - **Token overhead**: ~3,000+ tokens loaded even for simple operations
 
-Meanwhile, bd provides `bd prime` which generates AI-optimized workflow context automatically.
+Meanwhile, fbd provides `fbd prime` which generates AI-optimized workflow context automatically.
 
 ## Decision
 
-Use `bd prime` as the single source of truth for CLI commands:
+Use `fbd prime` as the single source of truth for CLI commands:
 
 1. **SKILL.md** contains only value-add content (decision frameworks, cognitive patterns)
-2. **CLI reference** points to `bd prime` (auto-loaded by hooks) and `bd --help`
+2. **CLI reference** points to `fbd prime` (auto-loaded by hooks) and `fbd --help`
 3. **Resources** provide depth for advanced features (molecules, agents, gates)
 
 ## Consequences
 
 ### Positive
 
-- **Zero maintenance**: CLI docs auto-update with bd versions
+- **Zero maintenance**: CLI docs auto-update with fbd versions
 - **DRY**: Single source of truth
 - **Accurate**: No version drift possible
 - **Lighter SKILL.md**: ~500 words vs ~3,300
 
 ### Negative
 
-- **Dependency on bd prime format**: If output changes significantly, may need adaptation
-- **External tool requirement**: Skill assumes bd is installed
+- **Dependency on fbd prime format**: If output changes significantly, may need adaptation
+- **External tool requirement**: Skill assumes fbd is installed
 
 ## Implementation
 

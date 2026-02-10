@@ -1,40 +1,40 @@
 # TODO Command
 
-The `bd todo` command provides a lightweight interface for managing TODO items as task-type issues.
+The `fbd todo` command provides a lightweight interface for managing TODO items as task-type issues.
 
 ## Philosophy
 
-TODOs in bd are not a separate tracking system - they are regular task-type issues with convenient shortcuts. This means:
+TODOs in fbd are not a separate tracking system - they are regular task-type issues with convenient shortcuts. This means:
 
 - **No parallel systems**: TODOs use the same storage and sync as all other issues
 - **Promotable**: Easy to convert a TODO to a bug/feature when needed
-- **Full featured**: TODOs support all bd features (dependencies, labels, routing)
+- **Full featured**: TODOs support all fbd features (dependencies, labels, routing)
 - **Simple interface**: Quick commands for common TODO workflows
 
 ## Quick Start
 
 ```bash
 # Add a TODO
-bd todo add "Fix the login bug" -p 1
+fbd todo add "Fix the login bug" -p 1
 
 # List TODOs
-bd todo
+fbd todo
 
 # Mark TODO as done
-bd todo done <id>
+fbd todo done <id>
 ```
 
 ## Commands
 
-### `bd todo` (or `bd todo list`)
+### `fbd todo` (or `fbd todo list`)
 
 List all open task-type issues.
 
 ```bash
-bd todo                  # List open TODOs
-bd todo list            # Same as above
-bd todo list --all      # Show completed TODOs too
-bd todo list --json     # JSON output
+fbd todo                  # List open TODOs
+fbd todo list            # Same as above
+fbd todo list --all      # Show completed TODOs too
+fbd todo list --json     # JSON output
 ```
 
 **Output:**
@@ -45,28 +45,28 @@ bd todo list --json     # JSON output
 Total: 2 TODOs
 ```
 
-### `bd todo add <title>`
+### `fbd todo add <title>`
 
 Create a new TODO item (task-type issue).
 
 ```bash
-bd todo add "Fix the login bug"                                # Default P2
-bd todo add "Update docs" -p 3 -d "Add examples"              # With priority and description
-bd todo add "Critical fix" --priority 0 --description "ASAP"  # P0 task
+fbd todo add "Fix the login bug"                                # Default P2
+fbd todo add "Update docs" -p 3 -d "Add examples"              # With priority and description
+fbd todo add "Critical fix" --priority 0 --description "ASAP"  # P0 task
 ```
 
 **Flags:**
 - `-p, --priority <0-4>`: Priority (default: 2)
 - `-d, --description <text>`: Description
 
-### `bd todo done <id> [<id>...]`
+### `fbd todo done <id> [<id>...]`
 
 Mark one or more TODOs as complete.
 
 ```bash
-bd todo done test-abc              # Close one TODO
-bd todo done test-abc test-def     # Close multiple
-bd todo done test-abc --reason "Fixed in PR #42"  # With reason
+fbd todo done test-abc              # Close one TODO
+fbd todo done test-abc test-def     # Close multiple
+fbd todo done test-abc --reason "Fixed in PR #42"  # With reason
 ```
 
 **Flags:**
@@ -78,23 +78,23 @@ TODOs are regular task issues, so you can convert them:
 
 ```bash
 # Promote TODO to bug
-bd update test-abc --type bug --priority 0
+fbd update test-abc --type bug --priority 0
 
 # Add dependencies
-bd dep add test-abc test-def
+fbd dep add test-abc test-def
 
 # Add labels
-bd update test-abc --labels "urgent,frontend"
+fbd update test-abc --labels "urgent,frontend"
 ```
 
 ## Viewing TODO Details
 
-Use regular bd commands:
+Use regular fbd commands:
 
 ```bash
-bd show test-abc        # View TODO details
-bd list --type task     # List all tasks (including TODOs)
-bd ready               # See ready TODOs in work queue
+fbd show test-abc        # View TODO details
+fbd list --type task     # List all tasks (including TODOs)
+fbd ready               # See ready TODOs in work queue
 ```
 
 ## Examples
@@ -103,51 +103,51 @@ bd ready               # See ready TODOs in work queue
 
 ```bash
 # Morning: add your tasks
-bd todo add "Review PRs"
-bd todo add "Fix CI pipeline" -p 1
-bd todo add "Update changelog" -p 3
+fbd todo add "Review PRs"
+fbd todo add "Fix CI pipeline" -p 1
+fbd todo add "Update changelog" -p 3
 
 # Check what's on your plate
-bd todo
+fbd todo
 
 # Complete work
-bd todo done <id>
-bd todo done <id>
+fbd todo done <id>
+fbd todo done <id>
 
 # End of day: see what's left
-bd todo
+fbd todo
 ```
 
 ### Converting TODO to full issue
 
 ```bash
 # Start with a quick TODO
-bd todo add "Login is broken"
+fbd todo add "Login is broken"
 
 # Later, realize it's more serious
-bd update <id> --type bug --priority 0 --description "Users can't login, multiple reports"
-bd update <id> --acceptance "Login works for all user types"
+fbd update <id> --type bug --priority 0 --description "Users can't login, multiple reports"
+fbd update <id> --acceptance "Login works for all user types"
 
 # Now it's a full-fledged bug with proper tracking
-bd show <id>
+fbd show <id>
 ```
 
 ## FAQ
 
 **Q: Are TODOs different from tasks?**
-A: No, TODOs are just task-type issues. The `bd todo` command provides shortcuts for common task operations.
+A: No, TODOs are just task-type issues. The `fbd todo` command provides shortcuts for common task operations.
 
 **Q: Can TODOs have dependencies?**
-A: Yes! Use `bd dep add <todo-id> <blocks-id>` like any other issue.
+A: Yes! Use `fbd dep add <todo-id> <blocks-id>` like any other issue.
 
 **Q: Do TODOs sync with git?**
 A: Yes, they're exported to `.beads/issues.jsonl` like all other issues.
 
-**Q: Can I use TODOs with bd ready?**
-A: Yes! `bd ready` shows all unblocked issues, including task-type TODOs.
+**Q: Can I use TODOs with fbd ready?**
+A: Yes! `fbd ready` shows all unblocked issues, including task-type TODOs.
 
 **Q: Should I use TODOs or regular tasks?**
-A: Use `bd todo` for quick, informal tasks. Use `bd create -t task` for tasks that need more context or are part of larger planning.
+A: Use `fbd todo` for quick, informal tasks. Use `fbd create -t task` for tasks that need more context or are part of larger planning.
 
 ## Design Rationale
 
@@ -156,10 +156,10 @@ The TODO command follows beads' philosophy of **minimal surface area**:
 1. **No new types**: TODOs are task-type issues
 2. **No special storage**: Same database and JSONL as everything else
 3. **Convenience layer**: Just shortcuts for common operations
-4. **Fully compatible**: Works with all bd features and commands
+4. **Fully compatible**: Works with all fbd features and commands
 
 This ensures:
 - No duplicate tracking systems
 - No migration needed between TODOs and tasks
-- Works with all existing bd tooling (federation, compaction, routing)
+- Works with all existing fbd tooling (federation, compaction, routing)
 - Simple to understand and maintain

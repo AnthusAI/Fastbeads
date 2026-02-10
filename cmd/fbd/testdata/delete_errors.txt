@@ -1,0 +1,11 @@
+# Test fbd delete error cases
+
+fbd init --prefix test
+
+# Delete with no args should fail
+! fbd delete
+stderr 'no issue IDs provided'
+
+# Delete nonexistent issue should fail
+! fbd delete nonexistent-id --force
+stderr 'not found'

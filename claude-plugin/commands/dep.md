@@ -43,7 +43,7 @@ The `--format mermaid` option outputs the dependency tree as a Mermaid.js flowch
 
 **Example:**
 ```bash
-bd dep tree bd-1 --format mermaid
+fbd dep tree bd-1 --format mermaid
 ```
 
 Output can be embedded in markdown:
@@ -71,23 +71,23 @@ The diagram colors are determined by your Mermaid theme (default, dark, forest, 
 
 ## Examples
 
-- `bd dep add bd-10 bd-20 --type blocks`: bd-10 blocks bd-20
-- `bd dep tree bd-20`: Show what blocks bd-20 (dependency tree going UP)
-- `bd dep tree bd-1 --reverse`: Show what was discovered from bd-1 (dependent tree going DOWN)
-- `bd dep tree bd-1 --reverse --max-depth 3`: Show discovery tree with depth limit
-- `bd dep tree bd-20 --format mermaid > tree.md`: Generate Mermaid diagram for documentation
-- `bd dep cycles`: Check for circular dependencies
+- `fbd dep add bd-10 bd-20 --type blocks`: bd-10 blocks bd-20
+- `fbd dep tree bd-20`: Show what blocks bd-20 (dependency tree going UP)
+- `fbd dep tree bd-1 --reverse`: Show what was discovered from bd-1 (dependent tree going DOWN)
+- `fbd dep tree bd-1 --reverse --max-depth 3`: Show discovery tree with depth limit
+- `fbd dep tree bd-20 --format mermaid > tree.md`: Generate Mermaid diagram for documentation
+- `fbd dep cycles`: Check for circular dependencies
 
 ## Reverse Mode: Discovery Trees
 
 The `--reverse` flag inverts the tree direction to show **dependents** instead of **dependencies**:
 
-**Normal mode** (`bd dep tree ISSUE`):
+**Normal mode** (`fbd dep tree ISSUE`):
 - Shows what blocks you (dependency tree)
 - Answers: "What must I complete before I can work on this?"
 - Tree flows **UP** toward prerequisites
 
-**Reverse mode** (`bd dep tree ISSUE --reverse`):
+**Reverse mode** (`fbd dep tree ISSUE --reverse`):
 - Shows what was discovered from you (dependent tree)
 - Answers: "What work was discovered while working on this?"
 - Tree flows **DOWN** from goal to discovered tasks

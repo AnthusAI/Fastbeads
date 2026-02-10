@@ -2,7 +2,7 @@
 
 ## Overview
 
-Some antivirus software may flag beads (`bd` or `bd.exe`) as malicious. This is a **false positive** - beads is a legitimate, open-source command-line tool for issue tracking.
+Some antivirus software may flag beads (`fbd` or `fbd.exe`) as malicious. This is a **false positive** - beads is a legitimate, open-source command-line tool for issue tracking.
 
 ## Why This Happens
 
@@ -19,7 +19,7 @@ This is a **known industry-wide problem** affecting many legitimate Go projects.
 ### Kaspersky Antivirus
 
 **Detection**: `PDM:Trojan.Win32.Generic`
-**Affected versions**: bd.exe v0.23.1 and potentially others
+**Affected versions**: fbd.exe v0.23.1 and potentially others
 **Component**: System Watcher (Proactive Defense Module)
 
 Kaspersky's PDM (Proactive Defense Module) uses behavioral analysis that commonly triggers false positives on Go executables.
@@ -34,14 +34,14 @@ Add beads to your antivirus exclusion list:
 1. Open Kaspersky and go to Settings
 2. Navigate to Threats and Exclusions → Manage Exclusions
 3. Click Add → Add path to exclusion
-4. Add the directory containing `bd.exe` (e.g., `C:\Users\YourName\AppData\Local\bd\`)
+4. Add the directory containing `fbd.exe` (e.g., `C:\Users\YourName\AppData\Local\fbd\`)
 5. Select which components the exclusion applies to (scan, monitoring, etc.)
 
 **Windows Defender:**
 1. Open Windows Security
 2. Go to Virus & threat protection → Manage settings
 3. Scroll to Exclusions → Add or remove exclusions
-4. Add the beads installation directory or the specific `bd.exe` file
+4. Add the beads installation directory or the specific `fbd.exe` file
 
 **Other antivirus software:**
 - Look for "Exclusions", "Whitelist", or "Trusted Applications" settings
@@ -51,18 +51,18 @@ Add beads to your antivirus exclusion list:
 
 Before adding an exclusion, verify the downloaded file is legitimate:
 
-1. Download beads from the [official GitHub releases](https://github.com/steveyegge/beads/releases)
+1. Download beads from the [official GitHub releases](https://github.com/steveyegge/fastbeads/releases)
 2. Verify the SHA256 checksum matches the `checksums.txt` file in the release
 3. Check the file is signed (future releases will include code signing)
 
 **Verify checksum (Windows PowerShell):**
 ```powershell
-Get-FileHash bd.exe -Algorithm SHA256
+Get-FileHash fbd.exe -Algorithm SHA256
 ```
 
 **Verify checksum (macOS/Linux):**
 ```bash
-shasum -a 256 bd
+shasum -a 256 fbd
 ```
 
 Compare the output with the checksum in `checksums.txt` from the release page.
@@ -73,9 +73,9 @@ Help improve detection accuracy by reporting the false positive:
 
 **Kaspersky:**
 1. Visit [Kaspersky Threat Intelligence Portal](https://opentip.kaspersky.com/)
-2. Upload the `bd.exe` file for analysis
+2. Upload the `fbd.exe` file for analysis
 3. Mark it as a false positive
-4. Reference: beads is open-source CLI tool (https://github.com/steveyegge/beads)
+4. Reference: beads is open-source CLI tool (https://github.com/steveyegge/fastbeads)
 
 **Windows Defender:**
 1. Go to [Microsoft Security Intelligence](https://www.microsoft.com/en-us/wdsi/filesubmission)
@@ -117,7 +117,7 @@ Windows releases are signed with an Authenticode certificate when available. Cod
 **Verify a signed binary (Windows PowerShell):**
 ```powershell
 # Check if the binary is signed
-Get-AuthenticodeSignature .\bd.exe
+Get-AuthenticodeSignature .\fbd.exe
 
 # Expected output for signed binary:
 # SignerCertificate: [Certificate details]
@@ -130,7 +130,7 @@ Get-AuthenticodeSignature .\bd.exe
 # Ubuntu/Debian: apt-get install osslsigncode
 # macOS: brew install osslsigncode
 
-osslsigncode verify -in bd.exe
+osslsigncode verify -in fbd.exe
 ```
 
 **Note:** Code signing requires an EV (Extended Validation) certificate, which involves a verification process. If a release is not signed, it means the certificate was not available at build time. Follow the checksum verification steps above to verify authenticity.
@@ -139,7 +139,7 @@ osslsigncode verify -in bd.exe
 
 Some users report success with:
 ```bash
-go build -ldflags "-s -w" -o bd ./cmd/bd
+go build -ldflags "-s -w" -o fbd ./cmd/fbd
 ```
 
 However, results vary by antivirus vendor and version.
@@ -149,7 +149,7 @@ However, results vary by antivirus vendor and version.
 ### Is beads safe to use?
 
 Yes. Beads is:
-- Open source (all code is auditable on [GitHub](https://github.com/steveyegge/beads))
+- Open source (all code is auditable on [GitHub](https://github.com/steveyegge/fastbeads))
 - Signed releases include checksums for verification
 - Used by developers worldwide
 - A simple CLI tool for issue tracking
@@ -186,11 +186,11 @@ False positives may still occur with new releases until the certificate builds r
 
 If you encounter a new antivirus false positive:
 
-1. Open an issue on [GitHub](https://github.com/steveyegge/beads/issues)
+1. Open an issue on [GitHub](https://github.com/steveyegge/fastbeads/issues)
 2. Include:
    - Antivirus software name and version
    - Detection/threat name
-   - Beads version (`bd version`)
+   - Beads version (`fbd version`)
    - Operating system
 
 This helps us track and address false positives across different antivirus vendors.

@@ -22,9 +22,9 @@ A curated list of community-built UIs, extensions, and integrations for Beads. R
 
 - **[beads-ui](https://github.com/mantoni/beads-ui)** - Local web interface with live updates and kanban board. Run with `npx beads-ui start`. Built by [@mantoni](https://github.com/mantoni). (Node.js)
 
-- **[Monitor WebUI](https://github.com/steveyegge/beads/tree/main/examples/monitor-webui)** - Real-time Issue Tracking Dashboard. Standalone web-based monitoring interface with clean, responsive design. Built by Beads core team. (Go)
+- **[Monitor WebUI](https://github.com/steveyegge/fastbeads/tree/main/examples/monitor-webui)** - Real-time Issue Tracking Dashboard. Standalone web-based monitoring interface with clean, responsive design. Built by Beads core team. (Go)
 
-- **[beads-viz-prototype](https://github.com/mattbeane/beads-viz-prototype)** - Web-based visualization generating interactive HTML from `bd export`. Built by [@mattbeane](https://github.com/mattbeane). (Python)
+- **[beads-viz-prototype](https://github.com/mattbeane/beads-viz-prototype)** - Web-based visualization generating interactive HTML from `fbd export`. Built by [@mattbeane](https://github.com/mattbeane). (Python)
 
 - **[beads-dashboard](https://github.com/rhydlewis/beads-dashboard)** - A local, lean metrics dashboard for your beads data. Provides insights insights into lead time, throughput and other continuous improvement metrics. Includes a filterable table view of "all issues". Built by [@rhydlewis](https://github.com/rhydlewis). (Node.js/React)
 
@@ -61,7 +61,7 @@ A curated list of community-built UIs, extensions, and integrations for Beads. R
 
 - **[jira-beads-sync](https://github.com/conallob/jira-beads-sync)** - CLI tool & Claude Code plugin to sync tasks from Jira into beads and publish beads task states back to Jira. Built by [@conallob](https://github.com/conallob). (Go)
 
-- **[stringer](https://github.com/davetashner/stringer)** - Codebase archaeology CLI that mines git repos for TODOs, churn hotspots, lottery-risk files, dependency health, and more. Outputs beads JSONL for `bd import`. Install with `brew install davetashner/tap/stringer`. Built by [@davetashner](https://github.com/davetashner). (Go)
+- **[stringer](https://github.com/davetashner/stringer)** - Codebase archaeology CLI that mines git repos for TODOs, churn hotspots, lottery-risk files, dependency health, and more. Outputs beads JSONL for `fbd import`. Install with `brew install davetashner/tap/stringer`. Built by [@davetashner](https://github.com/davetashner). (Go)
 
 ## SDKs & Libraries
 
@@ -77,7 +77,7 @@ A curated list of community-built UIs, extensions, and integrations for Beads. R
 
 ## Discussion
 
-See [GitHub Discussions #276](https://github.com/steveyegge/beads/discussions/276) for ongoing UI development conversations, design decisions, and community contributions.
+See [GitHub Discussions #276](https://github.com/steveyegge/fastbeads/discussions/276) for ongoing UI development conversations, design decisions, and community contributions.
 
 ## Contributing
 

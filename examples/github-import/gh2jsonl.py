@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Convert GitHub Issues to bd JSONL format.
+Convert GitHub Issues to fbd JSONL format.
 
 Supports two input modes:
 1. GitHub API - Fetch issues directly from a repository
@@ -13,16 +13,16 @@ ID Modes:
 Usage:
     # From GitHub API (sequential IDs)
     export GITHUB_TOKEN=ghp_your_token_here
-    python gh2jsonl.py --repo owner/repo | bd import
+    python gh2jsonl.py --repo owner/repo | fbd import
 
-    # Hash-based IDs (matches bd create behavior)
-    python gh2jsonl.py --repo owner/repo --id-mode hash | bd import
+    # Hash-based IDs (matches fbd create behavior)
+    python gh2jsonl.py --repo owner/repo --id-mode hash | fbd import
 
     # From exported JSON file
-    python gh2jsonl.py --file issues.json | bd import
+    python gh2jsonl.py --file issues.json | fbd import
 
     # Hash IDs with custom length (4-8 chars)
-    python gh2jsonl.py --repo owner/repo --id-mode hash --hash-length 4 | bd import
+    python gh2jsonl.py --repo owner/repo --id-mode hash --hash-length 4 | fbd import
 
     # Save to file first
     python gh2jsonl.py --repo owner/repo > issues.jsonl
@@ -82,12 +82,12 @@ def generate_hash_id(
     nonce: int = 0
 ) -> str:
     """
-    Generate hash-based ID matching bd's algorithm.
+    Generate hash-based ID matching fbd's algorithm.
 
     Matches the Go implementation in internal/storage/sqlite/ids.go:generateHashID
 
     Args:
-        prefix: Issue prefix (e.g., "bd", "myproject")
+        prefix: Issue prefix (e.g., "fbd", "myproject")
         title: Issue title
         description: Issue description/body
         creator: Issue creator username
@@ -125,11 +125,11 @@ def generate_hash_id(
 
 
 class GitHubToBeads:
-    """Convert GitHub Issues to bd JSONL format."""
+    """Convert GitHub Issues to fbd JSONL format."""
 
     def __init__(
         self,
-        prefix: str = "bd",
+        prefix: str = "fbd",
         start_id: int = 1,
         id_mode: str = "sequential",
         hash_length: int = 6
@@ -220,7 +220,7 @@ class GitHubToBeads:
             raise ValueError("JSON must be a single issue object or array of issues")
 
     def map_priority(self, labels: List[str]) -> int:
-        """Map GitHub labels to bd priority."""
+        """Map GitHub labels to fbd priority."""
         label_names = [label.get("name", "").lower() if isinstance(label, dict) else label.lower() for label in labels]
 
         # Priority labels (customize for your repo)
@@ -236,7 +236,7 @@ class GitHubToBeads:
             return 2  # Default medium
 
     def map_issue_type(self, labels: List[str]) -> str:
-        """Map GitHub labels to bd issue type."""
+        """Map GitHub labels to fbd issue type."""
         label_names = [label.get("name", "").lower() if isinstance(label, dict) else label.lower() for label in labels]
 
         # Type labels (customize for your repo)
@@ -252,7 +252,7 @@ class GitHubToBeads:
             return "task"
 
     def map_status(self, state: str, labels: List[str]) -> str:
-        """Map GitHub state to bd status."""
+        """Map GitHub state to fbd status."""
         label_names = [label.get("name", "").lower() if isinstance(label, dict) else label.lower() for label in labels]
 
         if state == "closed":
@@ -304,7 +304,7 @@ class GitHubToBeads:
         return list(set(refs))  # Deduplicate
 
     def convert_issue(self, gh_issue: Dict[str, Any]) -> Dict[str, Any]:
-        """Convert a single GitHub issue to bd format."""
+        """Convert a single GitHub issue to fbd format."""
         gh_id = gh_issue["number"]
 
         # Generate ID based on mode
@@ -361,7 +361,7 @@ class GitHubToBeads:
 
         labels = gh_issue.get("labels", [])
 
-        # Build bd issue
+        # Build fbd issue
         issue = {
             "id": bd_id,
             "title": gh_issue["title"],
@@ -413,7 +413,7 @@ class GitHubToBeads:
                         "type": "related"
                     })
 
-            # Find the bd issue and add dependencies
+            # Find the fbd issue and add dependencies
             if dependencies:
                 for issue in self.issues:
                     if issue["id"] == bd_id:
@@ -421,7 +421,7 @@ class GitHubToBeads:
                         break
 
     def convert(self, gh_issues: List[Dict[str, Any]]):
-        """Convert all GitHub issues to bd format."""
+        """Convert all GitHub issues to fbd format."""
         # Store for dependency processing
         self._gh_issues = gh_issues
 
@@ -454,22 +454,22 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Convert GitHub Issues to bd JSONL format",
+        description="Convert GitHub Issues to fbd JSONL format",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # From GitHub API (sequential IDs)
   export GITHUB_TOKEN=ghp_...
-  python gh2jsonl.py --repo owner/repo | bd import
+  python gh2jsonl.py --repo owner/repo | fbd import
 
-  # Hash-based IDs (matches bd create behavior)
-  python gh2jsonl.py --repo owner/repo --id-mode hash | bd import
+  # Hash-based IDs (matches fbd create behavior)
+  python gh2jsonl.py --repo owner/repo --id-mode hash | fbd import
 
   # From JSON file
   python gh2jsonl.py --file issues.json > issues.jsonl
 
   # Hash IDs with custom length
-  python gh2jsonl.py --repo owner/repo --id-mode hash --hash-length 4 | bd import
+  python gh2jsonl.py --repo owner/repo --id-mode hash --hash-length 4 | fbd import
 
   # Fetch only open issues
   python gh2jsonl.py --repo owner/repo --state open
@@ -500,8 +500,8 @@ Examples:
     )
     parser.add_argument(
         "--prefix",
-        default="bd",
-        help="Issue ID prefix (default: bd)"
+        default="fbd",
+        help="Issue ID prefix (default: fbd)"
     )
     parser.add_argument(
         "--start-id",

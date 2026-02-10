@@ -1,10 +1,10 @@
-# Using bd for Static Reference Data
+# Using fbd for Static Reference Data
 
-bd is primarily designed for work tracking, but can also serve as a queryable database for static reference data with some adaptations.
+fbd is primarily designed for work tracking, but can also serve as a queryable database for static reference data with some adaptations.
 
 ## Work Tracking (Primary Use Case)
 
-Standard bd workflow:
+Standard fbd workflow:
 - Issues flow through states (open → in_progress → closed)
 - Priorities and dependencies matter
 - Status tracking is essential
@@ -12,7 +12,7 @@ Standard bd workflow:
 
 ## Reference Databases / Glossaries (Alternative Use)
 
-When using bd for static data (terminology, glossaries, reference information):
+When using fbd for static data (terminology, glossaries, reference information):
 
 **Characteristics:**
 - Entities are mostly static (typically always open)
@@ -23,7 +23,7 @@ When using bd for static data (terminology, glossaries, reference information):
 **Recommended approach:**
 - Use separate database (not mixed with work tracking) to avoid confusion
 - Consider dual format: maintain markdown version alongside database for name-based lookup
-- Example: A terminology database could use both `terms.db` (queryable via bd) and `GLOSSARY.md` (browsable by name)
+- Example: A terminology database could use both `terms.db` (queryable via fbd) and `GLOSSARY.md` (browsable by name)
 
 **Key difference**: Work items have lifecycle; reference entities are stable knowledge.
 
@@ -42,13 +42,13 @@ When using bd for static data (terminology, glossaries, reference information):
 
 ## Limitations
 
-**bd show requires IDs, not names:**
-- `bd show term-42` works
-- `bd show "API endpoint"` doesn't work
-- Workaround: `bd list | grep -i "api endpoint"` to find ID first
-- This is why dual format (bd + markdown) is recommended for reference data
+**fbd show requires IDs, not names:**
+- `fbd show term-42` works
+- `fbd show "API endpoint"` doesn't work
+- Workaround: `fbd list | grep -i "api endpoint"` to find ID first
+- This is why dual format (fbd + markdown) is recommended for reference data
 
 **No search by content:**
-- bd searches by ID, title filters, status, labels
+- fbd searches by ID, title filters, status, labels
 - For full-text search across descriptions/notes, use grep on the JSONL file
 - Example: `grep -i "authentication" .beads/issues.jsonl`

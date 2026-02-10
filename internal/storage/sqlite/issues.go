@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // isUniqueConstraintError checks if error is a UNIQUE constraint violation

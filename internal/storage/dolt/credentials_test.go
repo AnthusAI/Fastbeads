@@ -3,7 +3,7 @@ package dolt
 import (
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage"
 )
 
 func TestDoltStoreImplementsCredentialMethods(t *testing.T) {

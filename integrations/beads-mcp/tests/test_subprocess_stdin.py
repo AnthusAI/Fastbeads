@@ -23,7 +23,7 @@ class TestBdClientSubprocessStdin:
     def bd_client(self):
         """Create a BdClient instance for testing."""
         from beads_mcp.bd_client import BdClient
-        return BdClient(bd_path="/usr/bin/bd", beads_db="/tmp/test.db")
+        return BdClient(bd_path="/usr/bin/fbd", beads_db="/tmp/test.db")
 
     @pytest.fixture
     def mock_process(self):
@@ -49,7 +49,7 @@ class TestBdClientSubprocessStdin:
     @pytest.mark.asyncio
     async def test_check_version_uses_devnull_stdin(self, bd_client, mock_process):
         """Test that _check_version passes stdin=DEVNULL."""
-        mock_process.communicate = AsyncMock(return_value=(b"bd version 0.9.5", b""))
+        mock_process.communicate = AsyncMock(return_value=(b"fbd version 0.9.5", b""))
 
         with patch("asyncio.create_subprocess_exec", return_value=mock_process) as mock_exec:
             await bd_client._check_version()

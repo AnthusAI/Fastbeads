@@ -3,10 +3,12 @@ package debug
 import (
 	"fmt"
 	"os"
+
+	"github.com/steveyegge/fastbeads/internal/env"
 )
 
 var (
-	enabled     = os.Getenv("BD_DEBUG") != ""
+	enabled     = env.GetEnvAlias("DEBUG") != ""
 	verboseMode = false
 	quietMode   = false
 )

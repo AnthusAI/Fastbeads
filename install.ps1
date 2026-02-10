@@ -1,4 +1,4 @@
-# Beads (bd) Windows installer
+# Beads (fbd) Windows installer
 # Usage:
 #   irm https://raw.githubusercontent.com/steveyegge/beads/main/install.ps1 | iex
 
@@ -13,19 +13,19 @@ function Write-Success($Message) { Write-Host "==> $Message" -ForegroundColor Gr
 function Write-WarningMsg($Message) { Write-Warning $Message }
 function Write-Err($Message)     { Write-Host "Error: $Message" -ForegroundColor Red }
 
-# Create 'beads' alias (copy of bd.exe)
+# Create 'beads' alias (copy of fbd.exe)
 # On Windows, symlinks require admin privileges, so we create a copy instead
 function Create-BeadsAlias {
     param([string]$BinDir)
 
-    $bdPath = Join-Path $BinDir "bd.exe"
+    $bdPath = Join-Path $BinDir "fbd.exe"
     $beadsPath = Join-Path $BinDir "beads.exe"
 
     if (Test-Path $bdPath) {
         Write-Info "Creating 'beads' alias..."
         try {
             Copy-Item -Path $bdPath -Destination $beadsPath -Force
-            Write-Success "Created 'beads.exe' alias -> bd.exe"
+            Write-Success "Created 'beads.exe' alias -> fbd.exe"
         } catch {
             Write-WarningMsg "Failed to create beads.exe alias: $_"
         }
@@ -78,9 +78,9 @@ function Install-WithGo {
         return $false
     }
 
-    Write-Info "Installing bd via go install..."
+    Write-Info "Installing fbd via go install..."
     try {
-        & go install github.com/steveyegge/beads/cmd/bd@latest
+        & go install github.com/steveyegge/fastbeads/cmd/fbd@latest
         if ($LASTEXITCODE -ne 0) {
             Write-WarningMsg "go install exited with code $LASTEXITCODE"
             return $false
@@ -101,12 +101,12 @@ function Install-WithGo {
         $binDir = Join-Path $gopath "bin"
     }
 
-    $bdPath = Join-Path $binDir "bd.exe"
+    $bdPath = Join-Path $binDir "fbd.exe"
     # Record where we expect the binary to have been installed in this run
     $Script:LastInstallPath = $bdPath
 
     if (-not (Test-Path $bdPath)) {
-        Write-WarningMsg "bd.exe not found in $binDir after install"
+        Write-WarningMsg "fbd.exe not found in $binDir after install"
     } else {
         # Create 'beads' alias
         Create-BeadsAlias -BinDir $binDir
@@ -137,7 +137,7 @@ function Get-WindowsArch {
 }
 
 function Install-FromRelease {
-    Write-Info "Installing bd from GitHub releases..."
+    Write-Info "Installing fbd from GitHub releases..."
 
     $arch = Get-WindowsArch
     if (-not $arch) {
@@ -178,19 +178,19 @@ function Install-FromRelease {
         Write-Info "Extracting archive..."
         Expand-Archive -Path $zipPath -DestinationPath $tempRoot -Force
 
-        $bdPath = Join-Path $tempRoot "bd.exe"
+        $bdPath = Join-Path $tempRoot "fbd.exe"
         if (-not (Test-Path $bdPath)) {
-            Write-WarningMsg "bd.exe not found in release archive. Falling back to source install."
+            Write-WarningMsg "fbd.exe not found in release archive. Falling back to source install."
             return $false
         }
 
-        $installDir = Join-Path $env:LOCALAPPDATA "Programs\bd"
+        $installDir = Join-Path $env:LOCALAPPDATA "Programs\fbd"
         New-Item -ItemType Directory -Path $installDir -Force | Out-Null
 
-        Copy-Item -Path $bdPath -Destination (Join-Path $installDir "bd.exe") -Force
-        Write-Success "bd installed to $installDir\bd.exe"
+        Copy-Item -Path $bdPath -Destination (Join-Path $installDir "fbd.exe") -Force
+        Write-Success "fbd installed to $installDir\fbd.exe"
 
-        $Script:LastInstallPath = Join-Path $installDir "bd.exe"
+        $Script:LastInstallPath = Join-Path $installDir "fbd.exe"
 
         $pathEntries = [Environment]::GetEnvironmentVariable("PATH", "Process").Split([IO.Path]::PathSeparator) | ForEach-Object { $_.Trim() }
         if (-not ($pathEntries -contains $installDir)) {
@@ -207,7 +207,7 @@ function Install-FromRelease {
 }
 
 function Install-FromSource {
-    Write-Info "Building bd from source..."
+    Write-Info "Building fbd from source..."
 
     $tempRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("beads-install-" + [guid]::NewGuid().ToString("N"))
     New-Item -ItemType Directory -Path $tempRoot | Out-Null
@@ -235,7 +235,7 @@ function Install-FromSource {
             }
         } else {
             Write-Info "Cloning repository..."
-            & git clone --depth 1 https://github.com/steveyegge/beads.git $repoPath
+            & git clone --depth 1 https://github.com/steveyegge/fastbeads.git $repoPath
             if ($LASTEXITCODE -ne 0) {
                 throw "git clone failed with exit code $LASTEXITCODE"
             }
@@ -243,8 +243,8 @@ function Install-FromSource {
 
         Push-Location $repoPath
         try {
-            Write-Info "Compiling bd.exe..."
-            & go build -o bd.exe ./cmd/bd
+            Write-Info "Compiling fbd.exe..."
+            & go build -o fbd.exe ./cmd/fbd
             if ($LASTEXITCODE -ne 0) {
                 throw "go build failed with exit code $LASTEXITCODE"
             }
@@ -252,17 +252,17 @@ function Install-FromSource {
             Pop-Location
         }
 
-        $installDir = Join-Path $env:LOCALAPPDATA "Programs\bd"
+        $installDir = Join-Path $env:LOCALAPPDATA "Programs\fbd"
         New-Item -ItemType Directory -Path $installDir -Force | Out-Null
 
-        Copy-Item -Path (Join-Path $repoPath "bd.exe") -Destination (Join-Path $installDir "bd.exe") -Force
-        Write-Success "bd installed to $installDir\bd.exe"
+        Copy-Item -Path (Join-Path $repoPath "fbd.exe") -Destination (Join-Path $installDir "fbd.exe") -Force
+        Write-Success "fbd installed to $installDir\fbd.exe"
 
         # Create 'beads' alias
         Create-BeadsAlias -BinDir $installDir
 
         # Record where we installed the binary when building from source
-        $Script:LastInstallPath = Join-Path $installDir "bd.exe"
+        $Script:LastInstallPath = Join-Path $installDir "fbd.exe"
 
         $pathEntries = [Environment]::GetEnvironmentVariable("PATH", "Process").Split([IO.Path]::PathSeparator) | ForEach-Object { $_.Trim() }
         if (-not ($pathEntries -contains $installDir)) {
@@ -280,7 +280,7 @@ function Get-BdPathsInPath {
     $found = @()
     foreach ($entry in $pathEntries) {
         try {
-            $candidate = Join-Path $entry "bd.exe"
+            $candidate = Join-Path $entry "fbd.exe"
         } catch {
             continue
         }
@@ -300,8 +300,8 @@ function Warn-IfMultipleBd {
     $paths = Get-BdPathsInPath
     if ($paths.Count -le 1) { return }
 
-    Write-WarningMsg "Multiple 'bd' executables found on your PATH. This can cause an older version to be executed instead of the one we installed."
-    Write-Host "Found the following 'bd' executables (entries earlier in PATH take precedence):" -ForegroundColor Yellow
+    Write-WarningMsg "Multiple 'fbd' executables found on your PATH. This can cause an older version to be executed instead of the one we installed."
+    Write-Host "Found the following 'fbd' executables (entries earlier in PATH take precedence):" -ForegroundColor Yellow
     $i = 0
     foreach ($p in $paths) {
         $i++
@@ -318,32 +318,32 @@ function Warn-IfMultipleBd {
         Write-Host "`nWe installed to: $($Script:LastInstallPath)" -ForegroundColor Cyan
         $first = $paths[0]
         if ($first -ne $Script:LastInstallPath) {
-            Write-WarningMsg "The 'bd' executable that appears first in your PATH is different from the one we installed. To make the newly installed 'bd' the one you get when running 'bd', either:"
+            Write-WarningMsg "The 'fbd' executable that appears first in your PATH is different from the one we installed. To make the newly installed 'fbd' the one you get when running 'fbd', either:"
             Write-Host "  - Remove the older $first from your PATH, or" -ForegroundColor Yellow
             Write-Host "  - Reorder your PATH so that $([System.IO.Path]::GetDirectoryName($Script:LastInstallPath)) appears before $([System.IO.Path]::GetDirectoryName($first))" -ForegroundColor Yellow
-            Write-Host "After updating PATH, restart your shell and run 'bd version' to confirm." -ForegroundColor Yellow
+            Write-Host "After updating PATH, restart your shell and run 'fbd version' to confirm." -ForegroundColor Yellow
         } else {
-            Write-Host "The installed 'bd' is first in your PATH." -ForegroundColor Green
+            Write-Host "The installed 'fbd' is first in your PATH." -ForegroundColor Green
         }
     } else {
-        Write-WarningMsg "We couldn't determine where we installed 'bd' during this run."
+        Write-WarningMsg "We couldn't determine where we installed 'fbd' during this run."
     }
 }
 
 function Verify-Install {
     Write-Info "Verifying installation..."
-    # If there are multiple bd binaries on PATH, warn the user before running the verification
+    # If there are multiple fbd binaries on PATH, warn the user before running the verification
     try { Warn-IfMultipleBd } catch { }
     try {
-        $versionOutput = & bd version 2>$null
+        $versionOutput = & fbd version 2>$null
         if ($LASTEXITCODE -ne 0) {
-            Write-WarningMsg "bd version exited with code $LASTEXITCODE"
+            Write-WarningMsg "fbd version exited with code $LASTEXITCODE"
             return $false
         }
-        Write-Success "bd is installed: $versionOutput"
+        Write-Success "fbd is installed: $versionOutput"
         return $true
     } catch {
-        Write-WarningMsg "bd is not on PATH yet. Add the install directory to PATH and re-open your shell."
+        Write-WarningMsg "fbd is not on PATH yet. Add the install directory to PATH and re-open your shell."
         return $false
     }
 }
@@ -402,7 +402,7 @@ if (-not $installed) {
         exit 1
     } else {
         # No Go present - do not attempt to auto-download or auto-install Go.
-        Write-Err "Go is not installed. bd requires Go 1.24+ to build from source."
+        Write-Err "Go is not installed. fbd requires Go 1.24+ to build from source."
         Print-GoInstallInstructions
         exit 1
     }
@@ -410,8 +410,8 @@ if (-not $installed) {
 
 if ($installed) {
     Verify-Install | Out-Null
-    Write-Success "Installation complete. You can use either 'bd' or 'beads' to run the command."
-    Write-Host "Run 'bd quickstart' inside a repo to begin." -ForegroundColor Cyan
+    Write-Success "Installation complete. You can use either 'fbd' or 'beads' to run the command."
+    Write-Host "Run 'fbd quickstart' inside a repo to begin." -ForegroundColor Cyan
 } else {
     Write-Err "Installation failed. Please install Go 1.24+ and try again."
     exit 1

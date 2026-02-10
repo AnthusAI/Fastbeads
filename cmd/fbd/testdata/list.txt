@@ -1,0 +1,7 @@
+# Test fbd list command
+fbd init --prefix test
+fbd create 'First issue'
+fbd create 'Second issue'
+fbd list
+stdout 'First issue'
+stdout 'Second issue'

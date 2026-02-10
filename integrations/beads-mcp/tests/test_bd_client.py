@@ -21,7 +21,7 @@ from beads_mcp.models import (
 @pytest.fixture
 def bd_client():
     """Create a BdClient instance for testing."""
-    return BdClient(bd_path="/usr/bin/bd", beads_db="/tmp/test.db")
+    return BdClient(bd_path="/usr/bin/fbd", beads_db="/tmp/test.db")
 
 
 @pytest.fixture
@@ -36,16 +36,16 @@ def mock_process():
 @pytest.mark.asyncio
 async def test_bd_client_initialization():
     """Test BdClient initialization."""
-    client = BdClient(bd_path="/usr/bin/bd", beads_db="/tmp/test.db")
-    assert client.bd_path == "/usr/bin/bd"
+    client = BdClient(bd_path="/usr/bin/fbd", beads_db="/tmp/test.db")
+    assert client.bd_path == "/usr/bin/fbd"
     assert client.beads_db == "/tmp/test.db"
 
 
 @pytest.mark.asyncio
 async def test_bd_client_without_db():
     """Test BdClient initialization without database."""
-    client = BdClient(bd_path="/usr/bin/bd")
-    assert client.bd_path == "/usr/bin/bd"
+    client = BdClient(bd_path="/usr/bin/fbd")
+    assert client.bd_path == "/usr/bin/fbd"
     assert client.beads_db is None
 
 
@@ -63,10 +63,10 @@ async def test_run_command_success(bd_client, mock_process):
 
 @pytest.mark.asyncio
 async def test_run_command_not_found(bd_client):
-    """Test command execution when bd executable not found."""
+    """Test command execution when fbd executable not found."""
     with (
         patch("asyncio.create_subprocess_exec", side_effect=FileNotFoundError()),
-        pytest.raises(BdNotFoundError, match="bd CLI not found"),
+        pytest.raises(BdNotFoundError, match="fbd CLI not found"),
     ):
         await bd_client._run_command("show", "bd-1")
 
@@ -79,7 +79,7 @@ async def test_run_command_failure(bd_client, mock_process):
 
     with (
         patch("asyncio.create_subprocess_exec", return_value=mock_process),
-        pytest.raises(BdCommandError, match="bd command failed"),
+        pytest.raises(BdCommandError, match="fbd command failed"),
     ):
         await bd_client._run_command("show", "bd-999")
 
@@ -91,7 +91,7 @@ async def test_run_command_invalid_json(bd_client, mock_process):
 
     with (
         patch("asyncio.create_subprocess_exec", return_value=mock_process),
-        pytest.raises(BdCommandError, match="Failed to parse bd JSON output"),
+        pytest.raises(BdCommandError, match="Failed to parse fbd JSON output"),
     ):
         await bd_client._run_command("show", "bd-1")
 
@@ -562,7 +562,7 @@ async def test_add_dependency_failure(bd_client, mock_process):
 
     with (
         patch("asyncio.create_subprocess_exec", return_value=mock_process),
-        pytest.raises(BdCommandError, match="bd dep add failed"),
+        pytest.raises(BdCommandError, match="fbd dep add failed"),
     ):
         params = AddDependencyParams(issue_id="bd-2", depends_on_id="bd-1", dep_type="blocks")
         await bd_client.add_dependency(params)
@@ -570,10 +570,10 @@ async def test_add_dependency_failure(bd_client, mock_process):
 
 @pytest.mark.asyncio
 async def test_add_dependency_not_found(bd_client):
-    """Test add_dependency when bd executable not found."""
+    """Test add_dependency when fbd executable not found."""
     with (
         patch("asyncio.create_subprocess_exec", side_effect=FileNotFoundError()),
-        pytest.raises(BdNotFoundError, match="bd CLI not found"),
+        pytest.raises(BdNotFoundError, match="fbd CLI not found"),
     ):
         params = AddDependencyParams(issue_id="bd-2", depends_on_id="bd-1", dep_type="blocks")
         await bd_client.add_dependency(params)
@@ -599,17 +599,17 @@ async def test_quickstart_failure(bd_client, mock_process):
 
     with (
         patch("asyncio.create_subprocess_exec", return_value=mock_process),
-        pytest.raises(BdCommandError, match="bd quickstart failed"),
+        pytest.raises(BdCommandError, match="fbd quickstart failed"),
     ):
         await bd_client.quickstart()
 
 
 @pytest.mark.asyncio
 async def test_quickstart_not_found(bd_client):
-    """Test quickstart when bd executable not found."""
+    """Test quickstart when fbd executable not found."""
     with (
         patch("asyncio.create_subprocess_exec", side_effect=FileNotFoundError()),
-        pytest.raises(BdNotFoundError, match="bd CLI not found"),
+        pytest.raises(BdNotFoundError, match="fbd CLI not found"),
     ):
         await bd_client.quickstart()
 
@@ -689,7 +689,7 @@ async def test_blocked_invalid_response(bd_client, mock_process):
 @pytest.mark.asyncio
 async def test_init(bd_client, mock_process):
     """Test init method."""
-    init_output = "bd initialized successfully!"
+    init_output = "fbd initialized successfully!"
     mock_process.communicate = AsyncMock(return_value=(init_output.encode(), b""))
 
     with patch("asyncio.create_subprocess_exec", return_value=mock_process):
@@ -698,7 +698,7 @@ async def test_init(bd_client, mock_process):
         params = InitParams(prefix="test")
         result = await bd_client.init(params)
 
-    assert "bd initialized successfully!" in result
+    assert "fbd initialized successfully!" in result
 
 
 @pytest.mark.asyncio
@@ -709,6 +709,6 @@ async def test_init_failure(bd_client, mock_process):
 
     with (
         patch("asyncio.create_subprocess_exec", return_value=mock_process),
-        pytest.raises(BdCommandError, match="bd init failed"),
+        pytest.raises(BdCommandError, match="fbd init failed"),
     ):
         await bd_client.init()

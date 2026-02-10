@@ -51,7 +51,7 @@ How bd-issue-tracking integrates with TodoWrite, writing-plans, and other skills
 
 **Corresponding bead notes (persistent context):**
 ```bash
-bd update issue-123 --notes "COMPLETED: Login endpoint with bcrypt password
+fbd update issue-123 --notes "COMPLETED: Login endpoint with bcrypt password
 hashing (12 rounds). KEY DECISION: Using JWT tokens (not sessions) for stateless
 auth - simplifies horizontal scaling. IN PROGRESS: Session middleware implementation.
 NEXT: Need user input on token expiry time (1hr vs 24hr trade-off)."
@@ -86,14 +86,14 @@ NEXT: Need user input on token expiry time (1hr vs 24hr trade-off)."
 
 **Session 1 - Planning**:
 ```bash
-# Create bd issue
-bd create "Implement OAuth authentication" -t feature -p 0 --design "
+# Create fbd issue
+fbd create "Implement OAuth authentication" -t feature -p 0 --design "
 JWT tokens with refresh rotation.
-See BOUNDARIES.md for bd vs TodoWrite decision.
+See BOUNDARIES.md for fbd vs TodoWrite decision.
 "
 
 # Mark in_progress
-bd update oauth-1 --status in_progress
+fbd update oauth-1 --status in_progress
 
 # Create TodoWrite for today's work
 TodoWrite:
@@ -104,8 +104,8 @@ TodoWrite:
 
 **End of Session 1**:
 ```bash
-# Update bd with outcomes
-bd update oauth-1 --notes "COMPLETED: Researched OAuth2 refresh flow. Decided on 7-day refresh tokens.
+# Update fbd with outcomes
+fbd update oauth-1 --notes "COMPLETED: Researched OAuth2 refresh flow. Decided on 7-day refresh tokens.
 KEY DECISION: RS256 over HS256 (enables key rotation per security review).
 IN PROGRESS: Need to set up test OAuth provider.
 NEXT: Configure test provider, then implement token endpoint."
@@ -115,8 +115,8 @@ NEXT: Configure test provider, then implement token endpoint."
 
 **Session 2 - Implementation** (after compaction):
 ```bash
-# Read bd to reconstruct context
-bd show oauth-1
+# Read fbd to reconstruct context
+fbd show oauth-1
 # See: COMPLETED research, NEXT is configure test provider
 
 # Create fresh TodoWrite from NEXT
@@ -127,8 +127,8 @@ TodoWrite:
 
 # Work proceeds...
 
-# Update bd at milestone
-bd update oauth-1 --notes "COMPLETED: Test provider configured, token endpoint implemented.
+# Update fbd at milestone
+fbd update oauth-1 --notes "COMPLETED: Test provider configured, token endpoint implemented.
 TESTS: 5 passing (token generation, validation, expiry).
 IN PROGRESS: Adding refresh token rotation.
 NEXT: Implement rotation, add rate limiting, security review."
@@ -140,7 +140,7 @@ NEXT: Implement rotation, add rate limiting, security review."
 
 ## writing-plans Integration
 
-**For complex multi-step features**, the design field in bd issues can link to detailed implementation plans that break work into bite-sized RED-GREEN-REFACTOR steps.
+**For complex multi-step features**, the design field in fbd issues can link to detailed implementation plans that break work into bite-sized RED-GREEN-REFACTOR steps.
 
 ### When to Create Detailed Plans
 
@@ -164,7 +164,7 @@ When design field needs detailed breakdown, reference the **writing-plans** skil
 **Pattern:**
 ```bash
 # Create issue with high-level design
-bd create "Implement OAuth token refresh" --design "
+fbd create "Implement OAuth token refresh" --design "
 Add JWT refresh token flow with rotation.
 See docs/plans/2025-10-23-oauth-refresh-design.md for detailed plan.
 "
@@ -214,29 +214,29 @@ git commit -m "feat: add token refresh endpoint"
 ```
 ```
 
-### Integration with bd Workflow
+### Integration with fbd Workflow
 
 **Three-layer structure**:
-1. **bd issue**: Strategic objective + high-level design
+1. **fbd issue**: Strategic objective + high-level design
 2. **Detailed plan** (writing-plans): Step-by-step execution guide
 3. **TodoWrite**: Current task within the plan
 
 **During planning phase:**
-1. Create bd issue with high-level design
+1. Create fbd issue with high-level design
 2. If complex: Use writing-plans skill to create detailed plan
 3. Link plan in design field: `See docs/plans/YYYY-MM-DD-<topic>.md`
 
 **During execution phase:**
 1. Open detailed plan (if exists)
 2. Use TodoWrite to track current task within plan
-3. Update bd notes at milestones, not per-task
-4. Close bd issue when all plan tasks complete
+3. Update fbd notes at milestones, not per-task
+4. Close fbd issue when all plan tasks complete
 
 **Don't duplicate:** Detailed plan = execution steps. BD notes = outcomes and decisions.
 
-**Example bd notes after using detailed plan:**
+**Example fbd notes after using detailed plan:**
 ```bash
-bd update oauth-5 --notes "COMPLETED: Token refresh endpoint (5 tasks from plan: endpoint + rotation + tests)
+fbd update oauth-5 --notes "COMPLETED: Token refresh endpoint (5 tasks from plan: endpoint + rotation + tests)
 KEY DECISION: 7-day refresh tokens (vs 30-day) - reduces risk of token theft
 TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
 ```
@@ -252,9 +252,9 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
 **Rule of thumb:** Use detailed plans when systematic breakdown prevents mistakes, not for ceremony.
 
 **Pattern summary**:
-- **Simple feature**: bd issue only
-- **Complex feature**: bd issue + TodoWrite
-- **Very complex feature**: bd issue + writing-plans + TodoWrite
+- **Simple feature**: fbd issue only
+- **Complex feature**: fbd issue + TodoWrite
+- **Very complex feature**: fbd issue + writing-plans + TodoWrite
 
 ---
 
@@ -267,17 +267,17 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
 **Tools used**: bd-issue-tracking + developing-strategic-documents skill
 
 **Workflow**:
-1. Create bd issue for tracking:
+1. Create fbd issue for tracking:
    ```bash
-   bd create "Q4 strategic planning document" -t task -p 0
-   bd update strat-1 --status in_progress
+   fbd create "Q4 strategic planning document" -t task -p 0
+   fbd update strat-1 --status in_progress
    ```
 
 2. Use developing-strategic-documents skill for research and writing
 
-3. Update bd notes at milestones:
+3. Update fbd notes at milestones:
    ```bash
-   bd update strat-1 --notes "COMPLETED: Research phase (reviewed 5 competitor docs, 3 internal reports)
+   fbd update strat-1 --notes "COMPLETED: Research phase (reviewed 5 competitor docs, 3 internal reports)
    KEY DECISION: Focus on market expansion over cost optimization per exec input
    IN PROGRESS: Drafting recommendations section
    NEXT: Get exec review of draft recommendations before finalizing"
@@ -290,7 +290,7 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
    - [ ] Create budget estimates
    ```
 
-**Why this works**: bd preserves context across sessions (document might take days), skill provides writing framework, TodoWrite tracks current work.
+**Why this works**: fbd preserves context across sessions (document might take days), skill provides writing framework, TodoWrite tracks current work.
 
 ### Pattern: Multi-File Refactoring
 
@@ -301,22 +301,22 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
 **Workflow**:
 1. Create epic and subtasks:
    ```bash
-   bd create "Refactor auth system to use JWT" -t epic -p 0
-   bd create "Update login endpoint" -t task
-   bd create "Update token validation" -t task
-   bd create "Update middleware" -t task
-   bd create "Update tests" -t task
+   fbd create "Refactor auth system to use JWT" -t epic -p 0
+   fbd create "Update login endpoint" -t task
+   fbd create "Update token validation" -t task
+   fbd create "Update middleware" -t task
+   fbd create "Update tests" -t task
 
    # Link hierarchy
-   bd dep add auth-epic login-1 --type parent-child
-   bd dep add auth-epic validation-2 --type parent-child
-   bd dep add auth-epic middleware-3 --type parent-child
-   bd dep add auth-epic tests-4 --type parent-child
+   fbd dep add auth-epic login-1 --type parent-child
+   fbd dep add auth-epic validation-2 --type parent-child
+   fbd dep add auth-epic middleware-3 --type parent-child
+   fbd dep add auth-epic tests-4 --type parent-child
 
    # Add ordering
-   bd dep add validation-2 login-1  # validation depends on login
-   bd dep add middleware-3 validation-2  # middleware depends on validation
-   bd dep add tests-4 middleware-3  # tests depend on middleware
+   fbd dep add validation-2 login-1  # validation depends on login
+   fbd dep add middleware-3 validation-2  # middleware depends on validation
+   fbd dep add tests-4 middleware-3  # tests depend on middleware
    ```
 
 2. Work through subtasks in order, using TodoWrite for each:
@@ -329,14 +329,14 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
    - [ ] Verify backward compatibility
    ```
 
-3. Update bd notes as each completes:
+3. Update fbd notes as each completes:
    ```bash
-   bd close login-1 --reason "Updated to JWT. Tests passing. Backward compatible with session auth."
+   fbd close login-1 --reason "Updated to JWT. Tests passing. Backward compatible with session auth."
    ```
 
 4. If issues discovered, use systematic-debugging skill + create blocker issues
 
-**Why this works**: bd tracks dependencies and progress across files, TodoWrite focuses on current file, skills provide specialized frameworks when needed.
+**Why this works**: fbd tracks dependencies and progress across files, TodoWrite focuses on current file, skills provide specialized frameworks when needed.
 
 ---
 
@@ -347,7 +347,7 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
 | Need | Tool | Why |
 |------|------|-----|
 | Track today's execution | TodoWrite | Lightweight, shows current progress |
-| Preserve context across sessions | bd | Survives compaction, persistent memory |
+| Preserve context across sessions | fbd | Survives compaction, persistent memory |
 | Detailed implementation steps | writing-plans | RED-GREEN-REFACTOR breakdown |
 | Research document structure | developing-strategic-documents | Domain-specific framework |
 | Debug complex issue | systematic-debugging | Structured debugging protocol |
@@ -357,38 +357,38 @@ TESTS: All 12 tests passing (auth, rotation, expiry, error handling)"
 ```
 Is this work done in this session?
 ├─ Yes → Use TodoWrite only
-└─ No → Use bd
-    ├─ Simple feature → bd issue + TodoWrite
-    └─ Complex feature → bd issue + writing-plans + TodoWrite
+└─ No → Use fbd
+    ├─ Simple feature → fbd issue + TodoWrite
+    └─ Complex feature → fbd issue + writing-plans + TodoWrite
 
 Will conversation history get compacted?
-├─ Likely → Use bd (context survives)
+├─ Likely → Use fbd (context survives)
 └─ Unlikely → TodoWrite is sufficient
 
 Does work have dependencies or blockers?
-├─ Yes → Use bd (tracks relationships)
+├─ Yes → Use fbd (tracks relationships)
 └─ No → TodoWrite is sufficient
 
 Is this specialized domain work?
 ├─ Research/writing → developing-strategic-documents
 ├─ Complex debugging → systematic-debugging
 ├─ Detailed implementation → writing-plans
-└─ General tracking → bd + TodoWrite
+└─ General tracking → fbd + TodoWrite
 ```
 
 ### Integration Anti-Patterns
 
 **Don't**:
-- Duplicate TodoWrite tasks into bd notes (different purposes)
-- Create bd issues for single-session linear work (use TodoWrite)
-- Put detailed implementation steps in bd notes (use writing-plans)
-- Update bd after every TodoWrite task (update at milestones)
+- Duplicate TodoWrite tasks into fbd notes (different purposes)
+- Create fbd issues for single-session linear work (use TodoWrite)
+- Put detailed implementation steps in fbd notes (use writing-plans)
+- Update fbd after every TodoWrite task (update at milestones)
 - Use writing-plans for exploratory work (defeats the purpose)
 
 **Do**:
-- Update bd when changing tools or reaching milestones
-- Use TodoWrite as "working copy" of bd's NEXT section
-- Link between tools (bd design field → writing-plans file path)
+- Update fbd when changing tools or reaching milestones
+- Use TodoWrite as "working copy" of fbd's NEXT section
+- Link between tools (fbd design field → writing-plans file path)
 - Choose the right level of formality for the work complexity
 
 ---
@@ -398,7 +398,7 @@ Is this specialized domain work?
 **Key principle**: Each tool operates at a different timescale and level of detail.
 
 - **TodoWrite**: Minutes to hours (current execution)
-- **bd**: Hours to weeks (persistent context)
+- **fbd**: Hours to weeks (persistent context)
 - **writing-plans**: Days to weeks (detailed breakdown)
 - **Other skills**: As needed (domain frameworks)
 

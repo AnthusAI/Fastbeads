@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/steveyegge/beads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/beads"
 )
 
 const (

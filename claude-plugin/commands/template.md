@@ -1,4 +1,4 @@
-# bd template
+# fbd template
 
 Manage issue templates for streamlined issue creation.
 
@@ -7,15 +7,15 @@ Manage issue templates for streamlined issue creation.
 Templates provide pre-filled structures for common issue types, making it faster to create well-formed issues with consistent formatting.
 
 ```bash
-bd template list
-bd template show <template-name>
-bd template create <template-name>
+fbd template list
+fbd template show <template-name>
+fbd template create <template-name>
 ```
 
 ## Description
 
 Templates can be:
-- **Built-in**: Provided by bd (epic, bug, feature)
+- **Built-in**: Provided by fbd (epic, bug, feature)
 - **Custom**: Stored in `.beads/templates/` directory
 
 Each template defines default values for:
@@ -33,14 +33,14 @@ Each template defines default values for:
 List all available templates (built-in and custom).
 
 ```bash
-bd template list
-bd template list --json
+fbd template list
+fbd template list --json
 ```
 
 **Examples:**
 
 ```bash
-$ bd template list
+$ fbd template list
 Built-in Templates:
   epic
     Type: epic, Priority: P1
@@ -58,14 +58,14 @@ Built-in Templates:
 Show detailed structure of a specific template.
 
 ```bash
-bd template show <template-name>
-bd template show <template-name> --json
+fbd template show <template-name>
+fbd template show <template-name> --json
 ```
 
 **Examples:**
 
 ```bash
-$ bd template show bug
+$ fbd template show bug
 Template: bug
 Type: bug
 Priority: P1
@@ -85,7 +85,7 @@ Description:
 Create a custom template in `.beads/templates/` directory.
 
 ```bash
-bd template create <template-name>
+fbd template create <template-name>
 ```
 
 This creates a YAML file with default structure that you can edit to customize.
@@ -93,7 +93,7 @@ This creates a YAML file with default structure that you can edit to customize.
 **Examples:**
 
 ```bash
-$ bd template create performance
+$ fbd template create performance
 ✓ Created template: .beads/templates/performance.yaml
 Edit the file to customize your template.
 
@@ -117,44 +117,44 @@ acceptance_criteria: |-
 $ vim .beads/templates/performance.yaml
 ```
 
-## Using Templates with `bd create`
+## Using Templates with `fbd create`
 
 Use the `--from-template` flag to create issues from templates:
 
 ```bash
-bd create --from-template <template-name> "Issue title"
+fbd create --from-template <template-name> "Issue title"
 ```
 
 Template values can be overridden with explicit flags:
 
 ```bash
 # Use bug template but override priority
-bd create --from-template bug "Login crashes on special chars" -p 0
+fbd create --from-template bug "Login crashes on special chars" -p 0
 
 # Use epic template but add extra labels
-bd create --from-template epic "Q4 Infrastructure" -l infrastructure,ops
+fbd create --from-template epic "Q4 Infrastructure" -l infrastructure,ops
 ```
 
 **Examples:**
 
 ```bash
 # Create epic from template
-$ bd create --from-template epic "Phase 3 Features"
+$ fbd create --from-template epic "Phase 3 Features"
 ✓ Created issue: bd-a3f8e9
   Title: Phase 3 Features
   Priority: P1
   Status: open
 
 # Create bug report from template
-$ bd create --from-template bug "Auth token validation fails"
+$ fbd create --from-template bug "Auth token validation fails"
 ✓ Created issue: bd-42bc7a
   Title: Auth token validation fails
   Priority: P1
   Status: open
 
 # Use custom template
-$ bd template create security-audit
-$ bd create --from-template security-audit "Review authentication flow"
+$ fbd template create security-audit
+$ fbd create --from-template security-audit "Review authentication flow"
 ```
 
 ## Template File Format
@@ -251,7 +251,7 @@ Custom templates override built-in templates with the same name. This allows you
 
 ```bash
 # Create custom bug template
-$ bd template create bug
+$ fbd template create bug
 
 # Edit to add project-specific fields
 $ cat > .beads/templates/bug.yaml << 'EOF'
@@ -288,7 +288,7 @@ acceptance_criteria: |
   - [ ] Monitoring added
 EOF
 
-# Now 'bd create --from-template bug' uses your custom template
+# Now 'fbd create --from-template bug' uses your custom template
 ```
 
 ## JSON Output
@@ -296,7 +296,7 @@ EOF
 All template commands support `--json` flag for programmatic use:
 
 ```bash
-$ bd template list --json
+$ fbd template list --json
 [
   {
     "name": "epic",
@@ -309,7 +309,7 @@ $ bd template list --json
   }
 ]
 
-$ bd template show bug --json
+$ fbd template show bug --json
 {
   "name": "bug",
   "description": "## Summary...",
@@ -332,6 +332,6 @@ $ bd template show bug --json
 
 ## See Also
 
-- [bd create](create.md) - Create issues
-- [bd list](list.md) - List issues
+- [fbd create](create.md) - Create issues
+- [fbd list](list.md) - List issues
 - [README](../README.md) - Main documentation

@@ -32,14 +32,14 @@ Remote JSONL (shared across machines)
 Triggers:
 - Any database change
 - After 5 second debounce (batches multiple changes)
-- Manual `bd sync`
+- Manual `fbd sync`
 
 ```bash
 # Force immediate export
-bd sync
+fbd sync
 
 # Check what would be exported
-bd export --dry-run
+fbd export --dry-run
 ```
 
 ### Import (JSONL → SQLite)
@@ -47,14 +47,14 @@ bd export --dry-run
 Triggers:
 - After `git pull` (via git hooks)
 - When JSONL is newer than database
-- Manual `bd import`
+- Manual `fbd import`
 
 ```bash
 # Force import
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 
 # Preview import
-bd import -i .beads/issues.jsonl --dry-run
+fbd import -i .beads/issues.jsonl --dry-run
 ```
 
 ## Git Hooks
@@ -62,7 +62,7 @@ bd import -i .beads/issues.jsonl --dry-run
 Install hooks for seamless sync:
 
 ```bash
-bd hooks install
+fbd hooks install
 ```
 
 Hooks installed:
@@ -74,13 +74,13 @@ Hooks installed:
 
 ```bash
 # Full sync cycle: export + commit + push
-bd sync
+fbd sync
 
 # Just export
-bd export
+fbd export
 
 # Just import
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ## Conflict Resolution
@@ -93,7 +93,7 @@ The beads merge driver handles JSONL conflicts automatically:
 
 ```bash
 # Install merge driver
-bd init  # Prompts for merge driver setup
+fbd init  # Prompts for merge driver setup
 ```
 
 The driver:
@@ -108,8 +108,8 @@ Manual resolution:
 ```bash
 # After merge conflict
 git checkout --ours .beads/issues.jsonl   # or --theirs
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 ```
 
 ## Orphan Handling
@@ -118,16 +118,16 @@ When importing issues with missing parents:
 
 ```bash
 # Configure orphan handling
-bd config set import.orphan_handling allow     # Import anyway (default)
-bd config set import.orphan_handling resurrect # Restore deleted parents
-bd config set import.orphan_handling skip      # Skip orphans
-bd config set import.orphan_handling strict    # Fail on orphans
+fbd config set import.orphan_handling allow     # Import anyway (default)
+fbd config set import.orphan_handling resurrect # Restore deleted parents
+fbd config set import.orphan_handling skip      # Skip orphans
+fbd config set import.orphan_handling strict    # Fail on orphans
 ```
 
 Per-command override:
 
 ```bash
-bd import -i issues.jsonl --orphan-handling resurrect
+fbd import -i issues.jsonl --orphan-handling resurrect
 ```
 
 ## Deletion Tracking
@@ -136,11 +136,11 @@ Deleted issues are tracked in `.beads/deletions.jsonl`:
 
 ```bash
 # Delete issue (records to manifest)
-bd delete bd-42
+fbd delete bd-42
 
 # View deletions
-bd deleted
-bd deleted --since=30d
+fbd deleted
+fbd deleted --since=30d
 
 # Deletions propagate via git
 git pull  # Imports deletions from remote
@@ -152,28 +152,28 @@ git pull  # Imports deletions from remote
 
 ```bash
 # Force full sync
-bd sync
+fbd sync
 
 # Check sync status
-bd info
+fbd info
 ```
 
 ### Import errors
 
 ```bash
 # Check import status
-bd import -i .beads/issues.jsonl --dry-run
+fbd import -i .beads/issues.jsonl --dry-run
 
 # Allow orphans if needed
-bd import -i .beads/issues.jsonl --orphan-handling allow
+fbd import -i .beads/issues.jsonl --orphan-handling allow
 ```
 
 ### Duplicate detection
 
 ```bash
 # Find duplicates after import
-bd duplicates
+fbd duplicates
 
 # Auto-merge duplicates
-bd duplicates --auto-merge
+fbd duplicates --auto-merge
 ```

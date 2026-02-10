@@ -13,7 +13,7 @@ Understanding the issue model in beads.
 Every issue has:
 
 ```bash
-bd show bd-42 --json
+fbd show bd-42 --json
 ```
 
 ```json
@@ -54,18 +54,18 @@ bd show bd-42 --json
 
 ```bash
 # Basic issue
-bd create "Fix login bug" -t bug -p 1
+fbd create "Fix login bug" -t bug -p 1
 
 # With description
-bd create "Add password reset" \
+fbd create "Add password reset" \
   --description="Users need to reset forgotten passwords via email" \
   -t feature -p 2
 
 # With labels
-bd create "Update dependencies" -t chore -l "maintenance,security"
+fbd create "Update dependencies" -t chore -l "maintenance,security"
 
 # JSON output for agents
-bd create "Task" -t task --json
+fbd create "Task" -t task --json
 ```
 
 ## Dependencies
@@ -76,16 +76,16 @@ The `blocks` relationship affects the ready queue:
 
 ```bash
 # Add dependency: bd-2 depends on bd-1
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # View dependencies
-bd dep tree bd-2
+fbd dep tree bd-2
 
 # See blocked issues
-bd blocked
+fbd blocked
 
 # See ready work (not blocked)
-bd ready
+fbd ready
 ```
 
 ### Structural Relationships
@@ -94,14 +94,14 @@ These don't affect the ready queue:
 
 ```bash
 # Parent-child (epic subtasks)
-bd create "Epic" -t epic
-bd create "Subtask" --parent bd-42
+fbd create "Epic" -t epic
+fbd create "Subtask" --parent bd-42
 
 # Discovered-from (found during work)
-bd create "Found bug" --deps discovered-from:bd-42
+fbd create "Found bug" --deps discovered-from:bd-42
 
 # Related (soft link)
-bd relate bd-1 bd-2
+fbd relate bd-1 bd-2
 ```
 
 ### Dependency Types
@@ -119,65 +119,65 @@ For large features, use hierarchical IDs:
 
 ```bash
 # Create epic
-bd create "Auth System" -t epic -p 1
+fbd create "Auth System" -t epic -p 1
 # Returns: bd-a3f8e9
 
 # Child tasks auto-number
-bd create "Design login UI" --parent bd-a3f8e9     # bd-a3f8e9.1
-bd create "Backend validation" --parent bd-a3f8e9  # bd-a3f8e9.2
+fbd create "Design login UI" --parent bd-a3f8e9     # bd-a3f8e9.1
+fbd create "Backend validation" --parent bd-a3f8e9  # bd-a3f8e9.2
 
 # View hierarchy
-bd dep tree bd-a3f8e9
+fbd dep tree bd-a3f8e9
 ```
 
 ## Updating Issues
 
 ```bash
 # Change status
-bd update bd-42 --status in_progress
+fbd update bd-42 --status in_progress
 
 # Change priority
-bd update bd-42 --priority 0
+fbd update bd-42 --priority 0
 
 # Add labels
-bd update bd-42 --add-label urgent
+fbd update bd-42 --add-label urgent
 
 # Multiple changes
-bd update bd-42 --status in_progress --priority 1 --add-label "in-review"
+fbd update bd-42 --status in_progress --priority 1 --add-label "in-review"
 ```
 
 ## Closing Issues
 
 ```bash
 # Simple close
-bd close bd-42
+fbd close bd-42
 
 # With reason
-bd close bd-42 --reason "Implemented in PR #123"
+fbd close bd-42 --reason "Implemented in PR #123"
 
 # JSON output
-bd close bd-42 --json
+fbd close bd-42 --json
 ```
 
 ## Searching and Filtering
 
 ```bash
 # By status
-bd list --status open
-bd list --status in_progress
+fbd list --status open
+fbd list --status in_progress
 
 # By priority
-bd list --priority 1
-bd list --priority 0,1  # Multiple
+fbd list --priority 1
+fbd list --priority 0,1  # Multiple
 
 # By type
-bd list --type bug
-bd list --type feature,task
+fbd list --type bug
+fbd list --type feature,task
 
 # By label
-bd list --label-any urgent,critical
-bd list --label-all backend,security
+fbd list --label-any urgent,critical
+fbd list --label-all backend,security
 
 # Combined filters
-bd list --status open --priority 1 --type bug --json
+fbd list --status open --priority 1 --type bug --json
 ```

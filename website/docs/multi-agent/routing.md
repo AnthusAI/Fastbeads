@@ -52,18 +52,18 @@ Patterns match against:
 
 ```bash
 # Show routing table
-bd routes list
-bd routes list --json
+fbd routes list
+fbd routes list --json
 
 # Test routing
-bd routes test "Fix frontend button"
-bd routes test --label frontend
+fbd routes test "Fix frontend button"
+fbd routes test --label frontend
 
 # Add route
-bd routes add "frontend/**" --target frontend-repo --priority 10
+fbd routes add "frontend/**" --target frontend-repo --priority 10
 
 # Remove route
-bd routes remove "frontend/**"
+fbd routes remove "frontend/**"
 ```
 
 ## Auto-Routing
@@ -71,14 +71,14 @@ bd routes remove "frontend/**"
 When creating issues, beads checks routes:
 
 ```bash
-bd create "Fix frontend button alignment" -t bug
+fbd create "Fix frontend button alignment" -t bug
 # Auto-routed to frontend-repo based on title match
 ```
 
 Override with explicit target:
 
 ```bash
-bd create "Fix button" --repo backend-repo
+fbd create "Fix button" --repo backend-repo
 ```
 
 ## Cross-Repo Dependencies
@@ -87,10 +87,10 @@ Track dependencies across repos:
 
 ```bash
 # In frontend-repo
-bd dep add bd-42 external:backend-repo/bd-100
+fbd dep add bd-42 external:backend-repo/bd-100
 
 # View cross-repo deps
-bd dep tree bd-42 --cross-repo
+fbd dep tree bd-42 --cross-repo
 ```
 
 ## Hydration
@@ -99,13 +99,13 @@ Pull related issues from other repos:
 
 ```bash
 # Hydrate issues from related repos
-bd hydrate
+fbd hydrate
 
 # Preview hydration
-bd hydrate --dry-run
+fbd hydrate --dry-run
 
 # Hydrate specific repo
-bd hydrate --from backend-repo
+fbd hydrate --from backend-repo
 ```
 
 ## Best Practices
@@ -113,4 +113,4 @@ bd hydrate --from backend-repo
 1. **Use specific patterns** - Avoid overly broad matches
 2. **Set priorities** - Ensure specific patterns match first
 3. **Default fallback** - Always have a `*` pattern with lowest priority
-4. **Test routes** - Use `bd routes test` before committing
+4. **Test routes** - Use `fbd routes test` before committing

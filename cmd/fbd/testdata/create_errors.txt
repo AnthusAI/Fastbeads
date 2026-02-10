@@ -1,0 +1,19 @@
+# Test fbd create error cases
+
+fbd init --prefix test
+
+# Create with no title should fail
+! fbd create
+stderr 'title required'
+
+# Create with empty title should fail
+! fbd create ''
+stderr 'title is required'
+
+# Create with invalid type should fail
+! fbd create 'Test' --type invalid-type
+stderr 'invalid issue type'
+
+# Create with invalid priority should fail
+! fbd create 'Test' --priority 99
+stderr 'invalid priority'

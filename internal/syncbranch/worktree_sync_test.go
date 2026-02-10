@@ -47,8 +47,8 @@ func TestCommitToSyncBranch(t *testing.T) {
 		if result.Branch != syncBranch {
 			t.Errorf("CommitToSyncBranch() Branch = %q, want %q", result.Branch, syncBranch)
 		}
-		if !strings.Contains(result.Message, "bd sync:") {
-			t.Errorf("CommitToSyncBranch() Message = %q, want to contain 'bd sync:'", result.Message)
+		if !strings.Contains(result.Message, "fbd sync:") {
+			t.Errorf("CommitToSyncBranch() Message = %q, want to contain 'fbd sync:'", result.Message)
 		}
 	})
 
@@ -213,7 +213,7 @@ func TestPullFromSyncBranch(t *testing.T) {
 }
 
 // TestResetToRemote tests resetting sync branch to remote state
-// Note: Full remote tests are in cmd/bd tests; this tests the basic flow
+// Note: Full remote tests are in cmd/fbd tests; this tests the basic flow
 func TestResetToRemote(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test in short mode")

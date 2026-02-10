@@ -8,7 +8,7 @@
 #
 # To cut a release:
 #
-#   bd mol wisp beads-release --var version=X.Y.Z
+#   fbd mol wisp beads-release --var version=X.Y.Z
 #
 # The molecule will guide you through:
 #   1. Preflight checks (clean git, up to date)
@@ -29,7 +29,7 @@ echo "This script is deprecated."
 echo ""
 echo "Use the release molecule instead:"
 echo ""
-echo "  bd mol wisp beads-release --var version=X.Y.Z"
+echo "  fbd mol wisp beads-release --var version=X.Y.Z"
 echo ""
 echo "For quick local version bumps only:"
 echo ""

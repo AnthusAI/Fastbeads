@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/steveyegge/beads/internal/debug"
-	"github.com/steveyegge/beads/internal/lockfile"
+	"github.com/steveyegge/fastbeads/internal/debug"
+	"github.com/steveyegge/fastbeads/internal/lockfile"
 )
 
 // rpcDebugEnabled returns true if BD_DEBUG_RPC environment variable is set
@@ -27,8 +27,8 @@ func rpcDebugLog(format string, args ...interface{}) {
 }
 
 // ClientVersion is the version of this RPC client
-// This should match the bd CLI version for proper compatibility checks
-// It's set dynamically by main.go from cmd/bd/version.go before making RPC calls
+// This should match the fbd CLI version for proper compatibility checks
+// It's set dynamically by main.go from cmd/fbd/version.go before making RPC calls
 var ClientVersion = "0.0.0" // Placeholder; overridden at startup
 
 // Client represents an RPC client that connects to the daemon

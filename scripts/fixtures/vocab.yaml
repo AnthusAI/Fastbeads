@@ -1,0 +1,17 @@
+titles:
+  - "Improve CI cache reuse"
+  - "Refactor dependency walker"
+  - "Add metrics for load time"
+  - "Simplify hook installation"
+  - "Validate migration rollbacks"
+descriptions:
+  - "Align behavior with spec and reduce surprises for agents."
+  - "Create deterministic fixture generation with realistic patterns."
+  - "Ensure storage adapters share the same in-memory semantics."
+  - "Introduce guardrails to avoid silent data drift."
+labels:
+  - "storage"
+  - "migration"
+  - "bench"
+  - "cli"
+  - "docs"

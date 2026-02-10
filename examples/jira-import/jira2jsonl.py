@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Convert Jira Issues to bd JSONL format.
+Convert Jira Issues to fbd JSONL format.
 
 Supports two input modes:
 1. Jira REST API - Fetch issues directly from Jira Cloud or Server
@@ -13,19 +13,19 @@ ID Modes:
 Usage:
     # From Jira API
     export JIRA_API_TOKEN=your_token_here
-    python jira2jsonl.py --url https://company.atlassian.net --project PROJ | bd import
+    python jira2jsonl.py --url https://company.atlassian.net --project PROJ | fbd import
 
-    # Using bd config (reads jira.url, jira.project, jira.api_token)
-    python jira2jsonl.py --from-config | bd import
+    # Using fbd config (reads jira.url, jira.project, jira.api_token)
+    python jira2jsonl.py --from-config | fbd import
 
     # With JQL query
-    python jira2jsonl.py --url https://company.atlassian.net --jql "project=PROJ AND status!=Done" | bd import
+    python jira2jsonl.py --url https://company.atlassian.net --jql "project=PROJ AND status!=Done" | fbd import
 
-    # Hash-based IDs (matches bd create behavior)
-    python jira2jsonl.py --from-config --id-mode hash | bd import
+    # Hash-based IDs (matches fbd create behavior)
+    python jira2jsonl.py --from-config --id-mode hash | fbd import
 
     # From exported JSON file
-    python jira2jsonl.py --file issues.json | bd import
+    python jira2jsonl.py --file issues.json | fbd import
 
     # Save to file first
     python jira2jsonl.py --from-config > issues.jsonl
@@ -88,12 +88,12 @@ def generate_hash_id(
     nonce: int = 0
 ) -> str:
     """
-    Generate hash-based ID matching bd's algorithm.
+    Generate hash-based ID matching fbd's algorithm.
 
     Matches the Go implementation in internal/storage/sqlite/ids.go:generateHashID
 
     Args:
-        prefix: Issue prefix (e.g., "bd", "myproject")
+        prefix: Issue prefix (e.g., "fbd", "myproject")
         title: Issue title
         description: Issue description/body
         creator: Issue creator username
@@ -192,10 +192,10 @@ def adf_to_text(node: Any) -> str:
 
 
 def get_bd_config(key: str) -> Optional[str]:
-    """Get a configuration value from bd config."""
+    """Get a configuration value from fbd config."""
     try:
         result = subprocess.run(
-            ["bd", "config", "get", "--json", key],
+            ["fbd", "config", "get", "--json", key],
             capture_output=True,
             text=True,
             timeout=10
@@ -210,12 +210,12 @@ def get_bd_config(key: str) -> Optional[str]:
 
 def get_status_mapping() -> Dict[str, str]:
     """
-    Get status mapping from bd config.
+    Get status mapping from fbd config.
 
-    Maps Jira status names (lowercase) to bd status values.
+    Maps Jira status names (lowercase) to fbd status values.
     Falls back to sensible defaults if not configured.
     """
-    # Default mappings (Jira status -> bd status)
+    # Default mappings (Jira status -> fbd status)
     defaults = {
         # Common Jira statuses
         "to do": "open",
@@ -240,11 +240,11 @@ def get_status_mapping() -> Dict[str, str]:
         "cannot reproduce": "closed",
     }
 
-    # Try to read custom mappings from bd config
+    # Try to read custom mappings from fbd config
     # Format: jira.status_map.<jira_status> = <bd_status>
     try:
         result = subprocess.run(
-            ["bd", "config", "list", "--json"],
+            ["fbd", "config", "list", "--json"],
             capture_output=True,
             text=True,
             timeout=10
@@ -263,12 +263,12 @@ def get_status_mapping() -> Dict[str, str]:
 
 def get_type_mapping() -> Dict[str, str]:
     """
-    Get issue type mapping from bd config.
+    Get issue type mapping from fbd config.
 
-    Maps Jira issue type names (lowercase) to bd issue types.
+    Maps Jira issue type names (lowercase) to fbd issue types.
     Falls back to sensible defaults if not configured.
     """
-    # Default mappings (Jira type -> bd type)
+    # Default mappings (Jira type -> fbd type)
     defaults = {
         "bug": "bug",
         "defect": "bug",
@@ -288,10 +288,10 @@ def get_type_mapping() -> Dict[str, str]:
         "chore": "chore",
     }
 
-    # Try to read custom mappings from bd config
+    # Try to read custom mappings from fbd config
     try:
         result = subprocess.run(
-            ["bd", "config", "list", "--json"],
+            ["fbd", "config", "list", "--json"],
             capture_output=True,
             text=True,
             timeout=10
@@ -310,12 +310,12 @@ def get_type_mapping() -> Dict[str, str]:
 
 def get_priority_mapping() -> Dict[str, int]:
     """
-    Get priority mapping from bd config.
+    Get priority mapping from fbd config.
 
-    Maps Jira priority names (lowercase) to bd priority values (0-4).
+    Maps Jira priority names (lowercase) to fbd priority values (0-4).
     Falls back to sensible defaults if not configured.
     """
-    # Default mappings (Jira priority -> bd priority)
+    # Default mappings (Jira priority -> fbd priority)
     defaults = {
         "highest": 0,
         "critical": 0,
@@ -330,10 +330,10 @@ def get_priority_mapping() -> Dict[str, int]:
         "trivial": 4,
     }
 
-    # Try to read custom mappings from bd config
+    # Try to read custom mappings from fbd config
     try:
         result = subprocess.run(
-            ["bd", "config", "list", "--json"],
+            ["fbd", "config", "list", "--json"],
             capture_output=True,
             text=True,
             timeout=10
@@ -354,11 +354,11 @@ def get_priority_mapping() -> Dict[str, int]:
 
 
 class JiraToBeads:
-    """Convert Jira Issues to bd JSONL format."""
+    """Convert Jira Issues to fbd JSONL format."""
 
     def __init__(
         self,
-        prefix: str = "bd",
+        prefix: str = "fbd",
         start_id: int = 1,
         id_mode: str = "sequential",
         hash_length: int = 6
@@ -520,7 +520,7 @@ class JiraToBeads:
             raise ValueError("JSON must be an object or array of issues")
 
     def map_priority(self, jira_priority: Optional[Dict[str, Any]]) -> int:
-        """Map Jira priority to bd priority (0-4)."""
+        """Map Jira priority to fbd priority (0-4)."""
         if not jira_priority:
             return 2  # Default medium
 
@@ -528,7 +528,7 @@ class JiraToBeads:
         return self.priority_map.get(name, 2)
 
     def map_issue_type(self, jira_type: Optional[Dict[str, Any]]) -> str:
-        """Map Jira issue type to bd issue type."""
+        """Map Jira issue type to fbd issue type."""
         if not jira_type:
             return "task"
 
@@ -536,7 +536,7 @@ class JiraToBeads:
         return self.type_map.get(name, "task")
 
     def map_status(self, jira_status: Optional[Dict[str, Any]]) -> str:
-        """Map Jira status to bd status."""
+        """Map Jira status to fbd status."""
         if not jira_status:
             return "open"
 
@@ -585,7 +585,7 @@ class JiraToBeads:
         return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + dt.strftime("%z")[:3] + ":" + dt.strftime("%z")[3:]
 
     def convert_issue(self, jira_issue: Dict[str, Any], jira_url: str) -> Dict[str, Any]:
-        """Convert a single Jira issue to bd format."""
+        """Convert a single Jira issue to fbd format."""
         key = jira_issue["key"]
         fields = jira_issue.get("fields", {})
 
@@ -648,7 +648,7 @@ class JiraToBeads:
         updated_at = self.parse_jira_timestamp(fields.get("updated"))
         resolved_at = self.parse_jira_timestamp(fields.get("resolutiondate"))
 
-        # Build bd issue - convert ADF description to text
+        # Build fbd issue - convert ADF description to text
         raw_desc = fields.get("description")
         desc_text = adf_to_text(raw_desc) if isinstance(raw_desc, dict) else (raw_desc or "")
         issue = {
@@ -753,12 +753,12 @@ class JiraToBeads:
                 linked_bd_id = self.jira_key_to_bd_id.get(linked_key)
                 if linked_bd_id:
                     dependencies.append({
-                        "issue_id": "",  # Will be filled by bd import
+                        "issue_id": "",  # Will be filled by fbd import
                         "depends_on_id": linked_bd_id,
                         "type": link_type
                     })
 
-            # Find the bd issue and add dependencies
+            # Find the fbd issue and add dependencies
             if dependencies:
                 for issue in self.issues:
                     if issue["id"] == bd_id:
@@ -766,7 +766,7 @@ class JiraToBeads:
                         break
 
     def convert(self, jira_issues: List[Dict[str, Any]], jira_url: str):
-        """Convert all Jira issues to bd format."""
+        """Convert all Jira issues to fbd format."""
         # Sort by key for consistent ID assignment
         sorted_issues = sorted(jira_issues, key=lambda x: x["key"])
 
@@ -799,24 +799,24 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Convert Jira Issues to bd JSONL format",
+        description="Convert Jira Issues to fbd JSONL format",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
   # From Jira API (sequential IDs)
   export JIRA_API_TOKEN=your_token
   export JIRA_USERNAME=your_email@company.com
-  python jira2jsonl.py --url https://company.atlassian.net --project PROJ | bd import
+  python jira2jsonl.py --url https://company.atlassian.net --project PROJ | fbd import
 
-  # Using bd config (reads jira.url, jira.project, jira.api_token)
-  python jira2jsonl.py --from-config | bd import
+  # Using fbd config (reads jira.url, jira.project, jira.api_token)
+  python jira2jsonl.py --from-config | fbd import
 
-  # Hash-based IDs (matches bd create behavior)
-  python jira2jsonl.py --from-config --id-mode hash | bd import
+  # Hash-based IDs (matches fbd create behavior)
+  python jira2jsonl.py --from-config --id-mode hash | fbd import
 
   # With JQL query
   python jira2jsonl.py --url https://company.atlassian.net \\
-    --jql "project=PROJ AND status!=Done" | bd import
+    --jql "project=PROJ AND status!=Done" | fbd import
 
   # From JSON file
   python jira2jsonl.py --file issues.json > issues.jsonl
@@ -828,17 +828,17 @@ Examples:
   python jira2jsonl.py --from-config --prefix myproject --id-mode hash
 
 Configuration:
-  Set up bd config for easier usage:
-    bd config set jira.url "https://company.atlassian.net"
-    bd config set jira.project "PROJ"
-    bd config set jira.api_token "YOUR_TOKEN"
-    bd config set jira.username "your_email@company.com"  # For Jira Cloud
+  Set up fbd config for easier usage:
+    fbd config set jira.url "https://company.atlassian.net"
+    fbd config set jira.project "PROJ"
+    fbd config set jira.api_token "YOUR_TOKEN"
+    fbd config set jira.username "your_email@company.com"  # For Jira Cloud
 
   Custom field mappings:
-    bd config set jira.status_map.backlog "open"
-    bd config set jira.status_map.in_review "in_progress"
-    bd config set jira.type_map.story "feature"
-    bd config set jira.priority_map.critical "0"
+    fbd config set jira.status_map.backlog "open"
+    fbd config set jira.status_map.in_review "in_progress"
+    fbd config set jira.type_map.story "feature"
+    fbd config set jira.priority_map.critical "0"
         """
     )
 
@@ -862,7 +862,7 @@ Configuration:
     parser.add_argument(
         "--from-config",
         action="store_true",
-        help="Read Jira settings from bd config"
+        help="Read Jira settings from fbd config"
     )
     parser.add_argument(
         "--username",
@@ -880,8 +880,8 @@ Configuration:
     )
     parser.add_argument(
         "--prefix",
-        default="bd",
-        help="Issue ID prefix (default: bd)"
+        default="fbd",
+        help="Issue ID prefix (default: fbd)"
     )
     parser.add_argument(
         "--start-id",

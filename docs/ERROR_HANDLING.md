@@ -31,9 +31,9 @@ if err := store.CreateIssue(ctx, issue, actor); err != nil {
 - Database/JSONL may be left in partial state (should be transactional)
 
 **Files using this pattern:**
-- `cmd/bd/create.go` (lines 31-32, 46-49, 57-58, 74-75, 107-108, etc.)
-- `cmd/bd/init.go` (lines 77-78, 96-97, 104-105, 112-115, 209-210, 225-227)
-- `cmd/bd/sync.go` (lines 52-54, 59-60, 82-83, etc.)
+- `cmd/fbd/create.go` (lines 31-32, 46-49, 57-58, 74-75, 107-108, etc.)
+- `cmd/fbd/init.go` (lines 77-78, 96-97, 104-105, 112-115, 209-210, 225-227)
+- `cmd/fbd/sync.go` (lines 52-54, 59-60, 82-83, etc.)
 
 ---
 
@@ -60,10 +60,10 @@ if err := createConfigYaml(beadsDir, false); err != nil {
 - Core functionality still works
 
 **Files using this pattern:**
-- `cmd/bd/init.go` (lines 155-157, 161-163, 167-169, 188-190, 236-238, 272-274, etc.)
-- `cmd/bd/sync.go` (lines 156, 257, 281, 329, 335, 720-722, 740, 743, 752, 762)
-- `cmd/bd/create.go` (lines 333-334, 340-341)
-- `cmd/bd/daemon_sync.go` (lines 51)
+- `cmd/fbd/init.go` (lines 155-157, 161-163, 167-169, 188-190, 236-238, 272-274, etc.)
+- `cmd/fbd/sync.go` (lines 156, 257, 281, 329, 335, 720-722, 740, 743, 752, 762)
+- `cmd/fbd/create.go` (lines 333-334, 340-341)
+- `cmd/fbd/daemon_sync.go` (lines 51)
 
 ---
 
@@ -87,9 +87,9 @@ _ = os.Remove(tempPath)
 - Primary error already reported
 
 **Files using this pattern:**
-- `cmd/bd/init.go` (line 209, 326-327)
-- `cmd/bd/sync.go` (lines 696-698)
-- `cmd/bd/daemon_sync.go` (lines 102-105)
+- `cmd/fbd/init.go` (line 209, 326-327)
+- `cmd/fbd/sync.go` (lines 696-698)
+- `cmd/fbd/daemon_sync.go` (lines 102-105)
 - Dozens of other locations throughout the codebase
 
 ---
@@ -236,7 +236,7 @@ if err := installGitHooks(); err != nil {
 if err := installGitHooks(); err != nil {
     yellow := color.New(color.FgYellow).SprintFunc()
     fmt.Fprintf(os.Stderr, "\n%s Failed to install git hooks: %v\n", yellow("⚠"), err)
-    fmt.Fprintf(os.Stderr, "You can try again with: %s\n\n", cyan("bd doctor --fix"))
+    fmt.Fprintf(os.Stderr, "You can try again with: %s\n\n", cyan("fbd doctor --fix"))
 }
 ```
 
@@ -306,7 +306,7 @@ if err := store.SetMetadata(ctx, "last_import_hash", hash); err != nil {
 
 **Rationale:** System degrades gracefully if tracking metadata is unavailable. Core functionality (creating issues, importing data) still works. Failures here might indicate temporary issues (e.g., read-only filesystem) that shouldn't block the entire operation.
 
-**See also:** `cmd/bd/init.go` lines 206-272 for detailed inline documentation of this distinction.
+**See also:** `cmd/fbd/init.go` lines 206-272 for detailed inline documentation of this distinction.
 
 ### File Permission Errors
 
@@ -366,7 +366,7 @@ func WarnError(format string, args ...interface{}) {
 
 ## References
 
-- `cmd/bd/create.go` - Examples of Pattern A for user input validation
-- `cmd/bd/init.go` - Examples of all three patterns
-- `cmd/bd/sync.go` - Examples of Pattern B for metadata operations
-- `cmd/bd/daemon_sync.go` - Examples of Pattern C for cleanup operations
+- `cmd/fbd/create.go` - Examples of Pattern A for user input validation
+- `cmd/fbd/init.go` - Examples of all three patterns
+- `cmd/fbd/sync.go` - Examples of Pattern B for metadata operations
+- `cmd/fbd/daemon_sync.go` - Examples of Pattern C for cleanup operations

@@ -3,8 +3,8 @@ package dolt
 import (
 	"testing"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // TestDoltStoreImplementsVersionedStorage verifies DoltStore implements VersionedStorage.

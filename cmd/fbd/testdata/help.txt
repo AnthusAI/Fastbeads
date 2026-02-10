@@ -1,0 +1,7 @@
+# Test fbd help command
+fbd help
+stdout 'Usage:'
+stdout 'Available Commands:'
+stdout 'create'
+stdout 'list'
+stdout 'show'

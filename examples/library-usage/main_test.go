@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/beads"
 )
 
 // TestExampleCompiles ensures the example code compiles and basic API works

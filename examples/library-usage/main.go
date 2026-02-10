@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/steveyegge/beads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/beads"
 )
 
 func main() {
@@ -19,7 +19,7 @@ func main() {
 	// Find the Beads database (looks for .beads/*.db in current/parent dirs)
 	dbPath := beads.FindDatabasePath()
 	if dbPath == "" {
-		log.Fatal("No Beads database found. Run 'bd init' first.")
+		log.Fatal("No Beads database found. Run 'fbd init' first.")
 	}
 
 	fmt.Printf("Using database: %s\n\n", dbPath)

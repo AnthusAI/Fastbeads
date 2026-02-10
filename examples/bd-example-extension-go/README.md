@@ -1,13 +1,13 @@
 # BD Extension Example (Go)
 
-This example demonstrates how to extend bd with custom tables for application-specific orchestration, following the patterns described in [EXTENDING.md](../../docs/EXTENDING.md).
+This example demonstrates how to extend fbd with custom tables for application-specific orchestration, following the patterns described in [EXTENDING.md](../../docs/EXTENDING.md).
 
 ## What This Example Shows
 
-1. **Schema Extension**: Adding custom tables (`example_executions`, `example_checkpoints`) to bd's SQLite database
-2. **Foreign Key Integration**: Linking extension tables to bd's `issues` table with proper cascading
-3. **Dual-Layer Access**: Using bd's Go API for issue management while directly querying extension tables
-4. **Complex Queries**: Joining bd's issues with extension tables for powerful insights
+1. **Schema Extension**: Adding custom tables (`example_executions`, `example_checkpoints`) to fbd's SQLite database
+2. **Foreign Key Integration**: Linking extension tables to fbd's `issues` table with proper cascading
+3. **Dual-Layer Access**: Using fbd's Go API for issue management while directly querying extension tables
+4. **Complex Queries**: Joining fbd's issues with extension tables for powerful insights
 5. **Execution Tracking**: Implementing agent assignment, checkpointing, and crash recovery patterns
 
 ## Key Patterns Illustrated
@@ -23,7 +23,7 @@ CREATE TABLE example_checkpoints (...)
 
 ### Pattern 2: Foreign Key Relationships
 
-Extension tables link to bd's issues with cascading deletes:
+Extension tables link to fbd's issues with cascading deletes:
 
 ```sql
 FOREIGN KEY (issue_id) REFERENCES issues(id) ON DELETE CASCADE
@@ -40,7 +40,7 @@ CREATE INDEX idx_executions_issue ON example_executions(issue_id);
 
 ### Pattern 4: Layer Separation
 
-- **bd layer**: Issue tracking, dependencies, ready work
+- **fbd layer**: Issue tracking, dependencies, ready work
 - **Extension layer**: Execution state, agent assignments, checkpoints
 
 ### Pattern 5: Join Queries
@@ -60,13 +60,13 @@ GROUP BY i.id, e.id
 ### Prerequisites
 
 - Go 1.24 or later
-- bd initialized in a directory (run `bd init --prefix demo`)
+- fbd initialized in a directory (run `fbd init --prefix demo`)
 
 ### Install
 
 ```bash
 # Install from the repository
-go install github.com/steveyegge/beads/examples/bd-example-extension-go@latest
+go install github.com/steveyegge/fastbeads/examples/bd-example-extension-go@latest
 
 # Or install from local source
 cd examples/bd-example-extension-go
@@ -107,7 +107,7 @@ Status:
 
 Demonstrates:
 1. Auto-discover database (`beads.FindDatabasePath`)
-2. Dual-layer access (bd API + direct SQL)
+2. Dual-layer access (fbd API + direct SQL)
 3. Execution tracking with checkpoints
 4. Complex joined queries across layers
 
@@ -150,18 +150,18 @@ query := `
 `
 ```
 
-## Integration with bd
+## Integration with fbd
 
-### Using bd's Go API
+### Using fbd's Go API
 
 ```go
 // Auto-discover database path
 dbPath := beads.FindDatabasePath()
 if dbPath == "" {
-    log.Fatal("No bd database found")
+    log.Fatal("No fbd database found")
 }
 
-// Open bd storage
+// Open fbd storage
 store, err := beads.NewSQLiteStorage(dbPath)
 
 // Find ready work
@@ -193,16 +193,16 @@ rows, err := db.Query("SELECT * FROM example_executions WHERE status = ?", "runn
 
 ## Testing the Example
 
-1. **Initialize bd:**
+1. **Initialize fbd:**
    ```bash
-   bd init --prefix demo
+   fbd init --prefix demo
    ```
 
 2. **Create some test issues:**
    ```bash
-   bd create "Implement authentication" -p 1 -t feature
-   bd create "Add API documentation" -p 1 -t task
-   bd create "Refactor database layer" -p 2 -t task
+   fbd create "Implement authentication" -p 1 -t feature
+   fbd create "Add API documentation" -p 1 -t task
+   fbd create "Refactor database layer" -p 2 -t task
    ```
 
 3. **Run the demo:**
@@ -212,7 +212,7 @@ rows, err := db.Query("SELECT * FROM example_executions WHERE status = ?", "runn
 
 4. **Check the results:**
    ```bash
-   bd list
+   fbd list
    sqlite3 .beads/demo.db "SELECT * FROM example_executions"
    ```
 
@@ -232,10 +232,10 @@ See [EXTENDING.md](../../EXTENDING.md) for more patterns and the VC implementati
 2. **Implement State Machines**: Use checkpoints for resumable workflows
 3. **Add Metrics**: Track execution times, retry counts, success rates
 4. **Build Dashboards**: Query joined data for visibility
-5. **Integrate with Agents**: Use bd's ready work queue for agent orchestration
+5. **Integrate with Agents**: Use fbd's ready work queue for agent orchestration
 
 ## See Also
 
 - [EXTENDING.md](../../EXTENDING.md) - Complete extension guide
-- [../../README.md](../../README.md) - bd documentation
+- [../../README.md](../../README.md) - fbd documentation
 - [QUICKSTART.md](../../docs/QUICKSTART.md) - Quick start tutorial

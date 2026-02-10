@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // setupSearchLabelsTest creates a store with 3 issues and various labels:

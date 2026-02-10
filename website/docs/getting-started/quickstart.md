@@ -14,22 +14,22 @@ First time in a repository:
 
 ```bash
 # Basic setup
-bd init
+fbd init
 
 # Dolt backend (version-controlled SQL database)
-bd init --backend dolt
+fbd init --backend dolt
 
 # For AI agents (non-interactive)
-bd init --quiet
+fbd init --quiet
 
 # OSS contributor (fork workflow)
-bd init --contributor
+fbd init --contributor
 
 # Team member (branch workflow)
-bd init --team
+fbd init --team
 
 # Protected main branch (GitHub/GitLab)
-bd init --branch beads-sync
+fbd init --branch beads-sync
 ```
 
 The wizard will:
@@ -52,12 +52,12 @@ Notes:
 
 ```bash
 # Create a few issues
-bd create "Set up database" -p 1 -t task
-bd create "Create API" -p 2 -t feature
-bd create "Add authentication" -p 2 -t feature
+fbd create "Set up database" -p 1 -t task
+fbd create "Create API" -p 2 -t feature
+fbd create "Add authentication" -p 2 -t feature
 
 # List them
-bd list
+fbd list
 ```
 
 **Note:** Issue IDs are hash-based (e.g., `bd-a1b2`, `bd-f14c`) to prevent collisions when multiple agents/branches work concurrently.
@@ -68,16 +68,16 @@ For large features, use hierarchical IDs to organize work:
 
 ```bash
 # Create epic (generates parent hash ID)
-bd create "Auth System" -t epic -p 1
+fbd create "Auth System" -t epic -p 1
 # Returns: bd-a3f8e9
 
 # Create child tasks (automatically get .1, .2, .3 suffixes)
-bd create "Design login UI" -p 1       # bd-a3f8e9.1
-bd create "Backend validation" -p 1    # bd-a3f8e9.2
-bd create "Integration tests" -p 1     # bd-a3f8e9.3
+fbd create "Design login UI" -p 1       # bd-a3f8e9.1
+fbd create "Backend validation" -p 1    # bd-a3f8e9.2
+fbd create "Integration tests" -p 1     # bd-a3f8e9.3
 
 # View hierarchy
-bd dep tree bd-a3f8e9
+fbd dep tree bd-a3f8e9
 ```
 
 Output:
@@ -94,13 +94,13 @@ Dependency tree for bd-a3f8e9:
 
 ```bash
 # API depends on database
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # Auth depends on API
-bd dep add bd-3 bd-2
+fbd dep add bd-3 bd-2
 
 # View the tree
-bd dep tree bd-3
+fbd dep tree bd-3
 ```
 
 Output:
@@ -115,7 +115,7 @@ Dependency tree for bd-3:
 ## Find Ready Work
 
 ```bash
-bd ready
+fbd ready
 ```
 
 Output:
@@ -131,13 +131,13 @@ Only bd-1 is ready because bd-2 and bd-3 are blocked!
 
 ```bash
 # Start working on bd-1
-bd update bd-1 --status in_progress
+fbd update bd-1 --status in_progress
 
 # Complete it
-bd close bd-1 --reason "Database setup complete"
+fbd close bd-1 --reason "Database setup complete"
 
 # Check ready work again
-bd ready
+fbd ready
 ```
 
 Now bd-2 is ready!
@@ -146,10 +146,10 @@ Now bd-2 is ready!
 
 ```bash
 # See blocked issues
-bd blocked
+fbd blocked
 
 # View statistics
-bd stats
+fbd stats
 ```
 
 ## Database Location
@@ -160,8 +160,8 @@ The JSONL file `.beads/issues.jsonl` is git-tracked and syncs automatically.
 
 ## Next Steps
 
-- Add labels: `bd create "Task" -l "backend,urgent"`
-- Filter ready work: `bd ready --priority 1`
-- Search issues: `bd list --status open`
-- Detect cycles: `bd dep cycles`
+- Add labels: `fbd create "Task" -l "backend,urgent"`
+- Filter ready work: `fbd ready --priority 1`
+- Search issues: `fbd list --status open`
+- Detect cycles: `fbd dep cycles`
 - See [CLI Reference](/cli-reference) for all commands

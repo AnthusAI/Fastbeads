@@ -9,7 +9,7 @@ Slash command for converting [Claude Code](https://docs.anthropic.com/en/docs/cl
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
 # Install hooks (auto-injects workflow context on session start)
-bd setup claude
+fbd setup claude
 ```
 
 ## Installation
@@ -21,7 +21,7 @@ cp commands/plan-to-beads.md ~/.claude/commands/
 Optionally add to `~/.claude/settings.json` under `permissions.allow`:
 
 ```json
-"Bash(bd:*)"
+"Bash(fbd:*)"
 ```
 
 ## /plan-to-beads
@@ -50,14 +50,14 @@ Epic: Standardize ID Generation (bd-abc)
   └── Update schema (bd-jkl) - blocked by bd-ghi
 
 Total: 4 tasks
-Run `bd ready` to start.
+Run `fbd ready` to start.
 ```
 
 ## Related
 
-- `bd prime` - Workflow context (auto-injected via hooks)
-- `bd setup claude` - Install/manage Claude Code hooks
-- `bd ready` - Find unblocked work
+- `fbd prime` - Workflow context (auto-injected via hooks)
+- `fbd setup claude` - Install/manage Claude Code hooks
+- `fbd ready` - Find unblocked work
 
 ## License
 

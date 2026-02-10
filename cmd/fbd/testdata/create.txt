@@ -1,0 +1,5 @@
+# Test fbd create command
+fbd init --prefix test
+fbd create 'Test issue'
+stdout 'Created issue:'
+stdout 'test-'

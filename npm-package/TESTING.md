@@ -1,6 +1,6 @@
-# Testing the @beads/bd npm Package
+# Testing the @beads/fbd npm Package
 
-This document describes the testing strategy and how to run tests for the @beads/bd npm package.
+This document describes the testing strategy and how to run tests for the @beads/fbd npm package.
 
 ## Test Suites
 
@@ -35,22 +35,22 @@ npm test
 - Verifies binary is downloaded and installed correctly
 
 #### Test 2: Binary Functionality
-- Tests `bd version` command
-- Tests `bd --help` command
+- Tests `fbd version` command
+- Tests `fbd --help` command
 - Verifies native binary works through Node wrapper
 
-#### Test 3: Basic bd Workflow
+#### Test 3: Basic fbd Workflow
 - Creates test project with git
-- Runs `bd init --quiet`
-- Creates an issue with `bd create`
-- Lists issues with `bd list --json`
-- Shows issue details with `bd show`
-- Updates issue status with `bd update`
-- Closes issue with `bd close`
-- Verifies ready work detection with `bd ready`
+- Runs `fbd init --quiet`
+- Creates an issue with `fbd create`
+- Lists issues with `fbd list --json`
+- Shows issue details with `fbd show`
+- Updates issue status with `fbd update`
+- Closes issue with `fbd close`
+- Verifies ready work detection with `fbd ready`
 
 #### Test 4: Claude Code for Web Simulation
-- **Session 1**: Initializes bd, creates an issue
+- **Session 1**: Initializes fbd, creates an issue
 - Verifies JSONL export
 - Deletes database to simulate fresh clone
 - **Session 2**: Re-initializes from JSONL (simulates SessionStart hook)
@@ -110,14 +110,14 @@ Failed: 0
 - ✅ Exit codes propagate
 - ✅ stdio streams work (stdin/stdout/stderr)
 
-### bd Commands
-- ✅ `bd init` creates .beads directory
-- ✅ `bd create` creates issues with hash IDs
-- ✅ `bd list` returns JSON array
-- ✅ `bd show` returns issue details
-- ✅ `bd update` modifies issue status
-- ✅ `bd close` closes issues
-- ✅ `bd ready` finds work with no blockers
+### fbd Commands
+- ✅ `fbd init` creates .beads directory
+- ✅ `fbd create` creates issues with hash IDs
+- ✅ `fbd list` returns JSON array
+- ✅ `fbd show` returns issue details
+- ✅ `fbd update` modifies issue status
+- ✅ `fbd close` closes issues
+- ✅ `fbd ready` finds work with no blockers
 
 ### Claude Code for Web Use Case
 - ✅ Fresh installation works
@@ -149,18 +149,18 @@ npm run test:all
 # 3. Test installation from local tarball
 npm pack
 npm install -g ./beads-bd-X.Y.Z.tgz
-bd version
+fbd version
 
 # 4. Verify in a fresh project
-mkdir /tmp/test-bd
-cd /tmp/test-bd
+mkdir /tmp/test-fbd
+cd /tmp/test-fbd
 git init
-bd init
-bd create "Test" -p 1
-bd list
+fbd init
+fbd create "Test" -p 1
+fbd list
 
 # 5. Cleanup
-npm uninstall -g @beads/bd
+npm uninstall -g @beads/fbd
 ```
 
 ## Continuous Integration
@@ -213,8 +213,8 @@ jobs:
 1. Create `.claude/hooks/session-start.sh`:
    ```bash
    #!/bin/bash
-   npm install -g @beads/bd
-   bd init --quiet
+   npm install -g @beads/fbd
+   fbd init --quiet
    ```
 
 2. Make executable: `chmod +x .claude/hooks/session-start.sh`
@@ -223,52 +223,52 @@ jobs:
 
 4. Verify:
    ```bash
-   bd version  # Should work
-   bd list     # Should show existing issues
+   fbd version  # Should work
+   fbd list     # Should show existing issues
    ```
 
 ### Scenario 2: Global Installation
 
 ```bash
 # Install globally
-npm install -g @beads/bd
+npm install -g @beads/fbd
 
 # Verify
-which bd
-bd version
+which fbd
+fbd version
 
 # Use in any project
 mkdir ~/projects/test
 cd ~/projects/test
 git init
-bd init
-bd create "First issue" -p 1
-bd list
+fbd init
+fbd create "First issue" -p 1
+fbd list
 ```
 
 ### Scenario 3: Project Dependency
 
 ```bash
 # Add to project
-npm install --save-dev @beads/bd
+npm install --save-dev @beads/fbd
 
 # Use via npx
-npx bd version
-npx bd init
-npx bd create "Issue" -p 1
+npx fbd version
+npx fbd init
+npx fbd create "Issue" -p 1
 ```
 
 ### Scenario 4: Offline/Cached Installation
 
 ```bash
 # First install (downloads binary)
-npm install -g @beads/bd
+npm install -g @beads/fbd
 
 # Uninstall
-npm uninstall -g @beads/bd
+npm uninstall -g @beads/fbd
 
 # Reinstall (should use npm cache)
-npm install -g @beads/bd
+npm install -g @beads/fbd
 # Should be faster (no binary download if cached)
 ```
 
@@ -305,7 +305,7 @@ npm install -g @beads/bd
 **Cause**: Database format changed or JSONL format incorrect
 
 **Fix**:
-- Check bd version compatibility
+- Check fbd version compatibility
 - Verify JSONL format matches current schema
 - Update test to use proper operation records
 

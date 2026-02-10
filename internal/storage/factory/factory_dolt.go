@@ -8,10 +8,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/configfile"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/dolt"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/configfile"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage/dolt"
 )
 
 func init() {
@@ -70,7 +70,7 @@ func bootstrapEmbeddedDolt(ctx context.Context, path string, opts Options) error
 	// create a new DB from stale JSONL, diverging from the real dolt-native data.
 	if config.GetSyncMode() == config.SyncModeDoltNative {
 		if !hasDoltSubdir(path) {
-			return fmt.Errorf("dolt database not found at %s (JSONL auto-import is disabled in dolt-native sync mode; run 'bd init --backend=dolt' to create a new database)", path)
+			return fmt.Errorf("dolt database not found at %s (JSONL auto-import is disabled in dolt-native sync mode; run 'fbd init --backend=dolt' to create a new database)", path)
 		}
 		return nil // Dolt exists, no bootstrap needed
 	}

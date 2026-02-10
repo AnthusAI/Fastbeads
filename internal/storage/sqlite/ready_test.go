@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/configfile"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/configfile"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func TestGetReadyWork(t *testing.T) {
@@ -1907,7 +1907,7 @@ func TestIsBlocked(t *testing.T) {
 }
 
 // TestGetReadyWorkExcludesMolSteps tests that molecule steps (IDs containing -mol-) are
-// excluded from bd ready by default, but included when filtering by explicit type.
+// excluded from fbd ready by default, but included when filtering by explicit type.
 func TestGetReadyWorkExcludesMolSteps(t *testing.T) {
 	env := newTestEnv(t)
 

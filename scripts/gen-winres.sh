@@ -1,5 +1,5 @@
 #!/bin/bash
-# gen-winres.sh - Generate Windows PE resource files (.syso) for bd.exe
+# gen-winres.sh - Generate Windows PE resource files (.syso) for fbd.exe
 #
 # Embeds version info, application manifest, and metadata into Windows binaries.
 # This helps reduce antivirus false positives by making the binary look like
@@ -15,17 +15,17 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-WINRES_DIR="$REPO_ROOT/cmd/bd/winres"
-OUT_PREFIX="$REPO_ROOT/cmd/bd/rsrc"
+WINRES_DIR="$REPO_ROOT/cmd/fbd/winres"
+OUT_PREFIX="$REPO_ROOT/cmd/fbd/rsrc"
 
 # Determine version
 if [[ $# -ge 1 ]]; then
     VERSION="$1"
 else
-    VERSION=$(grep 'Version = ' "$REPO_ROOT/cmd/bd/version.go" | sed 's/.*"\(.*\)".*/\1/')
+    VERSION=$(grep 'Version = ' "$REPO_ROOT/cmd/fbd/version.go" | sed 's/.*"\(.*\)".*/\1/')
 fi
 
-echo "[winres] Generating Windows PE resources for bd v${VERSION}"
+echo "[winres] Generating Windows PE resources for fbd v${VERSION}"
 
 # Check for go-winres
 if ! command -v go-winres &> /dev/null; then
@@ -41,4 +41,4 @@ go-winres make \
     --file-version "$VERSION"
 
 echo "[winres] Generated:"
-ls -la "$REPO_ROOT"/cmd/bd/rsrc_windows_*.syso 2>/dev/null || echo "[winres] (no .syso files found - check go-winres output)"
+ls -la "$REPO_ROOT"/cmd/fbd/rsrc_windows_*.syso 2>/dev/null || echo "[winres] (no .syso files found - check go-winres output)"

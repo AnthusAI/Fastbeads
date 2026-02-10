@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/git"
+	"github.com/steveyegge/fastbeads/internal/git"
 )
 
 // TestFindDatabaseInBeadsDir_CanonicalDB tests finding the canonical beads.db file

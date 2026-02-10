@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/steveyegge/beads/internal/configfile"
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/configfile"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/storage/files"
+	"github.com/steveyegge/fastbeads/internal/storage/jsonl"
+	"github.com/steveyegge/fastbeads/internal/storage/sqlite"
 )
 
 // BackendFactory is a function that creates a storage backend
@@ -28,9 +30,9 @@ type Options struct {
 	LockTimeout time.Duration
 
 	// Dolt server mode options (federation)
-	ServerMode bool   // Connect to dolt sql-server instead of embedded
-	ServerHost string // Server host (default: 127.0.0.1)
-	ServerPort int    // Server port (default: 3307)
+	ServerMode  bool          // Connect to dolt sql-server instead of embedded
+	ServerHost  string        // Server host (default: 127.0.0.1)
+	ServerPort  int           // Server port (default: 3307)
 	ServerUser  string        // MySQL user (default: root)
 	Database    string        // Database name for Dolt server mode (default: beads)
 	OpenTimeout time.Duration // Advisory lock timeout for embedded dolt (0 = no lock)
@@ -84,6 +86,25 @@ func NewFromConfigWithOptions(ctx context.Context, beadsDir string, opts Options
 	}
 	if cfg == nil {
 		cfg = configfile.DefaultConfig()
+	}
+
+	mode, err := cfg.ResolveStorageMode(beadsDir)
+	if err != nil {
+		return nil, err
+	}
+	switch mode {
+	case configfile.StorageFiles:
+		store := files.New(cfg.IssuesDirPath(beadsDir))
+		if err := store.LoadFromDir(); err != nil {
+			return nil, fmt.Errorf("loading file store: %w", err)
+		}
+		return store, nil
+	case configfile.StorageJSONL:
+		store := jsonl.New(cfg.JSONLPath(beadsDir))
+		if err := store.LoadFromJSONL(); err != nil {
+			return nil, fmt.Errorf("loading jsonl store: %w", err)
+		}
+		return store, nil
 	}
 
 	backend := cfg.GetBackend()

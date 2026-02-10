@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/steveyegge/fastbeads/internal/env"
 	"golang.org/x/term"
 )
 
@@ -19,14 +20,14 @@ type PagerOptions struct {
 // shouldUsePager determines if output should be piped to a pager.
 // Returns false if:
 // - NoPager option is set
-// - BD_NO_PAGER environment variable is set
+// - FBD_NO_PAGER/BD_NO_PAGER environment variable is set
 // - stdout is not a TTY (e.g., piped to another command)
 func shouldUsePager(opts PagerOptions) bool {
 	if opts.NoPager {
 		return false
 	}
 
-	if os.Getenv("BD_NO_PAGER") != "" {
+	if env.GetEnvAlias("NO_PAGER") != "" {
 		return false
 	}
 
@@ -39,9 +40,9 @@ func shouldUsePager(opts PagerOptions) bool {
 }
 
 // getPagerCommand returns the pager command to use.
-// Checks BD_PAGER, then PAGER, defaults to "less".
+// Checks FBD_PAGER/BD_PAGER, then PAGER, defaults to "less".
 func getPagerCommand() string {
-	if pager := os.Getenv("BD_PAGER"); pager != "" {
+	if pager := env.GetEnvAlias("PAGER"); pager != "" {
 		return pager
 	}
 	if pager := os.Getenv("PAGER"); pager != "" {

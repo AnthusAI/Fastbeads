@@ -10,13 +10,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/steveyegge/beads/internal/storage"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // ServerVersion is the version of this RPC server
-// This should match the bd CLI version for proper compatibility checks
-// It's set dynamically by daemon.go from cmd/bd/version.go before starting the server
+// This should match the fbd CLI version for proper compatibility checks
+// It's set dynamically by daemon.go from cmd/fbd/version.go before starting the server
 var ServerVersion = "0.0.0" // Placeholder; overridden by daemon startup
 
 const (

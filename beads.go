@@ -1,17 +1,17 @@
-// Package beads provides a minimal public API for extending bd with custom orchestration.
+// Package beads provides a minimal public API for extending fbd with custom orchestration.
 //
-// Most extensions should use direct SQL queries against bd's database.
+// Most extensions should use direct SQL queries against fbd's database.
 // This package exports only the essential types and functions needed for
-// Go-based extensions that want to use bd's storage layer programmatically.
+// Go-based extensions that want to use fbd's storage layer programmatically.
 //
-// For detailed guidance on extending bd, see docs/EXTENDING.md.
+// For detailed guidance on extending fbd, see docs/EXTENDING.md.
 package beads
 
 import (
 	"context"
 
-	"github.com/steveyegge/beads/internal/beads"
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // Storage is the interface for beads storage operations

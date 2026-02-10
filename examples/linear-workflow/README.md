@@ -1,13 +1,13 @@
-# Linear Integration for bd
+# Linear Integration for fbd
 
-Bidirectional synchronization between Linear and bd (beads) using the built-in `bd linear` commands.
+Bidirectional synchronization between Linear and fbd (beads) using the built-in `fbd linear` commands.
 
 ## Overview
 
 The Linear integration provides:
 
-- **Pull**: Import issues from Linear into bd
-- **Push**: Export bd issues to Linear
+- **Pull**: Import issues from Linear into fbd
+- **Push**: Export fbd issues to Linear
 - **Bidirectional Sync**: Two-way sync with conflict resolution
 - **Incremental Sync**: Only sync issues changed since last sync
 - **Configurable Mappings**: Customize priority, state, label, and relation mappings
@@ -19,30 +19,30 @@ The Linear integration provides:
 1. **API Key**: Go to Linear → Settings → API → Personal API keys → Create key
 2. **Team ID**: Go to Linear → Settings → General → find the Team ID (UUID format)
 
-### 2. Configure bd
+### 2. Configure fbd
 
 ```bash
 # Set API key (or use LINEAR_API_KEY environment variable)
-bd config set linear.api_key "lin_api_YOUR_API_KEY_HERE"
+fbd config set linear.api_key "lin_api_YOUR_API_KEY_HERE"
 
 # Set team ID
-bd config set linear.team_id "YOUR_TEAM_UUID"
+fbd config set linear.team_id "YOUR_TEAM_UUID"
 ```
 
 ### 3. Sync with Linear
 
 ```bash
 # Check configuration status
-bd linear status
+fbd linear status
 
 # Pull issues from Linear
-bd linear sync --pull
+fbd linear sync --pull
 
 # Push local issues to Linear
-bd linear sync --push
+fbd linear sync --push
 
 # Full bidirectional sync (pull, resolve conflicts, push)
-bd linear sync
+fbd linear sync
 ```
 
 ## Authentication
@@ -55,8 +55,8 @@ Linear uses Personal API Keys for authentication. Create one at:
 Store securely:
 
 ```bash
-# Option 1: bd config (stored in database)
-bd config set linear.api_key "lin_api_..."
+# Option 1: fbd config (stored in database)
+fbd config set linear.api_key "lin_api_..."
 
 # Option 2: Environment variable
 export LINEAR_API_KEY="lin_api_..."
@@ -70,31 +70,31 @@ Find your Team ID in Linear:
 
 ## Sync Modes
 
-### Pull Only (Linear → bd)
+### Pull Only (Linear → fbd)
 
 Import issues from Linear without pushing local changes:
 
 ```bash
-bd linear sync --pull
+fbd linear sync --pull
 
 # Filter by state
-bd linear sync --pull --state open    # Only open issues
-bd linear sync --pull --state closed  # Only closed issues
-bd linear sync --pull --state all     # All issues (default)
+fbd linear sync --pull --state open    # Only open issues
+fbd linear sync --pull --state closed  # Only closed issues
+fbd linear sync --pull --state all     # All issues (default)
 ```
 
-### Push Only (bd → Linear)
+### Push Only (fbd → Linear)
 
 Export local issues to Linear without pulling:
 
 ```bash
-bd linear sync --push
+fbd linear sync --push
 
 # Create only (don't update existing Linear issues)
-bd linear sync --push --create-only
+fbd linear sync --push --create-only
 
 # Disable automatic external_ref update
-bd linear sync --push --update-refs=false
+fbd linear sync --push --update-refs=false
 ```
 
 ### Bidirectional Sync
@@ -103,13 +103,13 @@ Full two-way sync with conflict detection and resolution:
 
 ```bash
 # Default: newer timestamp wins conflicts
-bd linear sync
+fbd linear sync
 
 # Always prefer local version on conflicts
-bd linear sync --prefer-local
+fbd linear sync --prefer-local
 
 # Always prefer Linear version on conflicts
-bd linear sync --prefer-linear
+fbd linear sync --prefer-linear
 ```
 
 ### Dry Run
@@ -117,7 +117,7 @@ bd linear sync --prefer-linear
 Preview what would happen without making changes:
 
 ```bash
-bd linear sync --dry-run
+fbd linear sync --dry-run
 ```
 
 ## Data Mapping
@@ -145,13 +145,13 @@ Linear and Beads use different priority semantics:
 
 ```bash
 # Override default mappings
-bd config set linear.priority_map.0 2    # No priority -> Medium (instead of Backlog)
-bd config set linear.priority_map.1 1    # Urgent -> High (instead of Critical)
+fbd config set linear.priority_map.0 2    # No priority -> Medium (instead of Backlog)
+fbd config set linear.priority_map.1 1    # Urgent -> High (instead of Critical)
 ```
 
 ### State Mapping
 
-Map Linear workflow states to bd statuses:
+Map Linear workflow states to fbd statuses:
 
 | Linear State Type | Beads Status |
 |-------------------|--------------|
@@ -165,19 +165,19 @@ Map Linear workflow states to bd statuses:
 
 ```bash
 # Map by state type
-bd config set linear.state_map.started in_progress
+fbd config set linear.state_map.started in_progress
 
 # Map by state name (for custom workflow states)
-bd config set linear.state_map.in_review in_progress
-bd config set linear.state_map.blocked blocked
-bd config set linear.state_map.on_hold blocked
-bd config set linear.state_map.testing in_progress
-bd config set linear.state_map.deployed closed
+fbd config set linear.state_map.in_review in_progress
+fbd config set linear.state_map.blocked blocked
+fbd config set linear.state_map.on_hold blocked
+fbd config set linear.state_map.testing in_progress
+fbd config set linear.state_map.deployed closed
 ```
 
 ### Label to Issue Type
 
-Infer bd issue type from Linear labels:
+Infer fbd issue type from Linear labels:
 
 | Linear Label | Beads Type |
 |--------------|------------|
@@ -190,15 +190,15 @@ Infer bd issue type from Linear labels:
 **Custom label mappings:**
 
 ```bash
-bd config set linear.label_type_map.incident bug
-bd config set linear.label_type_map.improvement feature
-bd config set linear.label_type_map.tech_debt chore
-bd config set linear.label_type_map.story feature
+fbd config set linear.label_type_map.incident bug
+fbd config set linear.label_type_map.improvement feature
+fbd config set linear.label_type_map.tech_debt chore
+fbd config set linear.label_type_map.story feature
 ```
 
 ### Relation Mapping
 
-Map Linear relations to bd dependencies:
+Map Linear relations to fbd dependencies:
 
 | Linear Relation | Beads Dependency |
 |-----------------|------------------|
@@ -211,8 +211,8 @@ Map Linear relations to bd dependencies:
 **Custom relation mappings:**
 
 ```bash
-bd config set linear.relation_map.causes discovered-from
-bd config set linear.relation_map.duplicate related
+fbd config set linear.relation_map.causes discovered-from
+fbd config set linear.relation_map.duplicate related
 ```
 
 ## Conflict Resolution
@@ -224,15 +224,15 @@ Conflicts occur when both local and Linear versions are modified since the last 
 The newer version wins:
 
 ```bash
-bd linear sync  # Newer timestamp wins
+fbd linear sync  # Newer timestamp wins
 ```
 
 ### Prefer Local
 
-Local bd version always wins:
+Local fbd version always wins:
 
 ```bash
-bd linear sync --prefer-local
+fbd linear sync --prefer-local
 ```
 
 Use when:
@@ -244,7 +244,7 @@ Use when:
 Linear version always wins:
 
 ```bash
-bd linear sync --prefer-linear
+fbd linear sync --prefer-linear
 ```
 
 Use when:
@@ -259,18 +259,18 @@ First-time import of existing Linear issues:
 
 ```bash
 # Configure credentials
-bd config set linear.api_key "lin_api_..."
-bd config set linear.team_id "team-uuid"
+fbd config set linear.api_key "lin_api_..."
+fbd config set linear.team_id "team-uuid"
 
 # Check status
-bd linear status
+fbd linear status
 
 # Import all issues
-bd linear sync --pull
+fbd linear sync --pull
 
 # See what was imported
-bd stats
-bd list --json
+fbd stats
+fbd list --json
 ```
 
 ### Workflow 2: Daily Sync
@@ -279,18 +279,18 @@ Regular synchronization:
 
 ```bash
 # Pull latest from Linear (incremental since last sync)
-bd linear sync --pull
+fbd linear sync --pull
 
 # Do local work
-bd update bd-123 --status in_progress
+fbd update bd-123 --status in_progress
 # ... work ...
-bd close bd-123 --reason "Fixed"
+fbd close bd-123 --reason "Fixed"
 
 # Push changes to Linear
-bd linear sync --push
+fbd linear sync --push
 
 # Or do full bidirectional sync
-bd linear sync
+fbd linear sync
 ```
 
 ### Workflow 3: Create Local Issues, Push to Linear
@@ -299,28 +299,28 @@ Create issues locally and sync to Linear:
 
 ```bash
 # Create issue locally
-bd create "Fix authentication bug" -t bug -p 1
+fbd create "Fix authentication bug" -t bug -p 1
 
 # Push to Linear (creates new Linear issue, updates external_ref)
-bd linear sync --push
+fbd linear sync --push
 
 # Verify
-bd show bd-abc  # Should have external_ref pointing to Linear
+fbd show bd-abc  # Should have external_ref pointing to Linear
 ```
 
-### Workflow 4: Migrate to bd
+### Workflow 4: Migrate to fbd
 
-Full migration from Linear to bd:
+Full migration from Linear to fbd:
 
 ```bash
 # Import all issues
-bd linear sync --pull --state all
+fbd linear sync --pull --state all
 
 # Preview import
-bd stats
+fbd stats
 
-# Continue using bd locally, push updates back to Linear
-bd linear sync  # Regular bidirectional sync
+# Continue using fbd locally, push updates back to Linear
+fbd linear sync  # Regular bidirectional sync
 ```
 
 ### Workflow 5: Read-Only Linear Mirror
@@ -329,10 +329,10 @@ Mirror Linear issues locally without pushing back:
 
 ```bash
 # Only ever pull, never push
-bd linear sync --pull
+fbd linear sync --pull
 
 # Set up a cron job or alias
-alias bd-mirror="bd linear sync --pull"
+alias bd-mirror="fbd linear sync --pull"
 ```
 
 ## Status & Debugging
@@ -340,7 +340,7 @@ alias bd-mirror="bd linear sync --pull"
 ### Check Sync Status
 
 ```bash
-bd linear status
+fbd linear status
 ```
 
 Shows:
@@ -352,8 +352,8 @@ Shows:
 ### JSON Output
 
 ```bash
-bd linear status --json
-bd linear sync --json
+fbd linear status --json
+fbd linear sync --json
 ```
 
 ### Verbose Output
@@ -372,11 +372,11 @@ All configuration keys for Linear integration:
 linear.api_key          # Linear API key (or LINEAR_API_KEY env var)
 linear.team_id          # Linear team UUID
 
-# Automatic (set by bd)
+# Automatic (set by fbd)
 linear.last_sync        # ISO8601 timestamp of last sync
 
 # ID generation (optional)
-linear.id_mode          # hash (default) or db (let bd generate IDs)
+linear.id_mode          # hash (default) or db (let fbd generate IDs)
 linear.hash_length      # Hash length 3-8 (default: 6)
 
 # Priority mapping (Linear 0-4 to Beads 0-4)
@@ -419,7 +419,7 @@ linear.relation_map.related   # (default: related)
 Set the API key:
 
 ```bash
-bd config set linear.api_key "lin_api_YOUR_KEY"
+fbd config set linear.api_key "lin_api_YOUR_KEY"
 # Or
 export LINEAR_API_KEY="lin_api_YOUR_KEY"
 ```
@@ -429,7 +429,7 @@ export LINEAR_API_KEY="lin_api_YOUR_KEY"
 Set the team ID:
 
 ```bash
-bd config set linear.team_id "YOUR_TEAM_UUID"
+fbd config set linear.team_id "YOUR_TEAM_UUID"
 ```
 
 ### "GraphQL errors: Not authorized"
@@ -448,7 +448,7 @@ Linear has API rate limits. The client automatically retries with exponential ba
 
 - Check network connectivity
 - Verify API key permissions
-- Check `bd linear status` for configuration issues
+- Check `fbd linear status` for configuration issues
 
 ### Sync seems slow
 
@@ -456,7 +456,7 @@ For large projects, initial sync fetches all issues. Subsequent syncs are increm
 
 ## Limitations
 
-- **Single team**: Sync is configured per-team (one team_id per bd project)
+- **Single team**: Sync is configured per-team (one team_id per fbd project)
 - **No attachments**: Attachments are not synced
 - **No comments**: Comments are not synced (only description)
 - **Custom fields**: Linear custom fields are not mapped
@@ -475,12 +475,12 @@ For large projects, initial sync fetches all issues. Subsequent syncs are increm
 
 ```bash
 # Initial setup
-$ bd init --quiet
-$ bd config set linear.api_key "lin_api_abc123..."
-$ bd config set linear.team_id "team-uuid-456"
+$ fbd init --quiet
+$ fbd config set linear.api_key "lin_api_abc123..."
+$ fbd config set linear.team_id "team-uuid-456"
 
 # Check status
-$ bd linear status
+$ fbd linear status
 Linear Sync Status
 ==================
 
@@ -493,7 +493,7 @@ With Linear:  0
 Local Only:   0
 
 # Pull from Linear
-$ bd linear sync --pull
+$ fbd linear sync --pull
 → Pulling issues from Linear...
   Full sync (no previous sync timestamp)
 ✓ Pulled 47 issues (47 created, 0 updated)
@@ -501,16 +501,16 @@ $ bd linear sync --pull
 ✓ Linear sync complete
 
 # Check what we got
-$ bd stats
+$ fbd stats
 Issues: 47 (42 open, 5 closed)
 Types:  23 task, 15 bug, 7 feature, 2 epic
 
 # Create a local issue
-$ bd create "New bug from testing" -t bug -p 1
+$ fbd create "New bug from testing" -t bug -p 1
 Created: bd-a1b2c3
 
 # Push to Linear
-$ bd linear sync --push
+$ fbd linear sync --push
 → Pushing issues to Linear...
   Created: bd-a1b2c3 -> TEAM-148
 ✓ Pushed 1 issues (1 created, 0 updated)
@@ -518,7 +518,7 @@ $ bd linear sync --push
 ✓ Linear sync complete
 
 # Full bidirectional sync
-$ bd linear sync
+$ fbd linear sync
 → Pulling issues from Linear...
   Incremental sync since 2025-01-17 10:30:00
 ✓ Pulled 3 issues (0 created, 3 updated)

@@ -7,9 +7,9 @@ Export all issues to JSON Lines format (one JSON object per line).
 
 ## Usage
 
-- **To stdout**: `bd export`
-- **To file**: `bd export -o issues.jsonl`
-- **Filter by status**: `bd export --status open`
+- **To stdout**: `fbd export`
+- **To file**: `fbd export -o issues.jsonl`
+- **Filter by status**: `fbd export --status open`
 
 Issues are sorted by ID for consistent diffs, making git diffs readable.
 

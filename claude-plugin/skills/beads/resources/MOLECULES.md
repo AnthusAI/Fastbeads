@@ -1,10 +1,10 @@
 # Molecules and Wisps Reference
 
-This reference covers bd's molecular chemistry system for reusable work templates and ephemeral workflows.
+This reference covers fbd's molecular chemistry system for reusable work templates and ephemeral workflows.
 
 ## The Chemistry Metaphor
 
-bd v0.34.0 introduces a chemistry-inspired workflow system:
+fbd v0.34.0 introduces a chemistry-inspired workflow system:
 
 | Phase | Name | Storage | Synced? | Use Case |
 |-------|------|---------|---------|----------|
@@ -45,12 +45,12 @@ Protos are epics with the `template` label. Create manually or distill from exis
 
 ```bash
 # Manual creation
-bd create "Release Workflow" --type epic --label template
-bd create "Run tests for {{component}}" --type task
-bd dep add task-id epic-id --type parent-child
+fbd create "Release Workflow" --type epic --label template
+fbd create "Run tests for {{component}}" --type task
+fbd dep add task-id epic-id --type parent-child
 
 # Distill from ad-hoc work (extracts template from existing epic)
-bd mol distill bd-abc123 --as "Release Workflow" --var version=1.0.0
+fbd mol distill bd-abc123 --as "Release Workflow" --var version=1.0.0
 ```
 
 **Proto naming convention:** Use `mol-` prefix for clarity (e.g., `mol-release`, `mol-patrol`).
@@ -58,15 +58,15 @@ bd mol distill bd-abc123 --as "Release Workflow" --var version=1.0.0
 ### Listing Formulas
 
 ```bash
-bd formula list                 # List all formulas (protos)
-bd formula list --json          # Machine-readable
+fbd formula list                 # List all formulas (protos)
+fbd formula list --json          # Machine-readable
 ```
 
 ### Viewing Proto Structure
 
 ```bash
-bd mol show mol-release         # Show template structure and variables
-bd mol show mol-release --json  # Machine-readable
+fbd mol show mol-release         # Show template structure and variables
+fbd mol show mol-release --json  # Machine-readable
 ```
 
 ---
@@ -76,36 +76,36 @@ bd mol show mol-release --json  # Machine-readable
 ### Basic Spawn (Creates Wisp by Default)
 
 ```bash
-bd mol spawn mol-patrol                    # Creates wisp (ephemeral)
-bd mol spawn mol-feature --pour            # Creates mol (persistent)
-bd mol spawn mol-release --var version=2.0 # With variable substitution
+fbd mol spawn mol-patrol                    # Creates wisp (ephemeral)
+fbd mol spawn mol-feature --pour            # Creates mol (persistent)
+fbd mol spawn mol-release --var version=2.0 # With variable substitution
 ```
 
 **Chemistry shortcuts:**
 ```bash
-bd mol pour mol-feature                    # Shortcut for spawn --pour
-bd mol wisp mol-patrol                     # Explicit wisp creation
+fbd mol pour mol-feature                    # Shortcut for spawn --pour
+fbd mol wisp mol-patrol                     # Explicit wisp creation
 ```
 
 ### Spawn with Immediate Execution
 
 ```bash
-bd mol run mol-release --var version=2.0
+fbd mol run mol-release --var version=2.0
 ```
 
-`bd mol run` does three things:
+`fbd mol run` does three things:
 1. Spawns the molecule (persistent)
 2. Assigns root issue to caller
 3. Pins root issue for session recovery
 
-**Use `mol run` when:** Starting durable work that should survive crashes. The pin ensures `bd ready` shows the work after restart.
+**Use `mol run` when:** Starting durable work that should survive crashes. The pin ensures `fbd ready` shows the work after restart.
 
 ### Spawn with Attachments
 
 Attach additional protos in a single command:
 
 ```bash
-bd mol spawn mol-feature --attach mol-testing --var name=auth
+fbd mol spawn mol-feature --attach mol-testing --var name=auth
 # Spawns mol-feature, then spawns mol-testing and bonds them
 ```
 
@@ -115,7 +115,7 @@ bd mol spawn mol-feature --attach mol-testing --var name=auth
 - `conditional` - Attached runs only if primary fails
 
 ```bash
-bd mol spawn mol-deploy --attach mol-rollback --attach-type conditional
+fbd mol spawn mol-deploy --attach mol-rollback --attach-type conditional
 ```
 
 ---
@@ -125,9 +125,9 @@ bd mol spawn mol-deploy --attach mol-rollback --attach-type conditional
 ### Bond Types
 
 ```bash
-bd mol bond A B                    # Sequential: B runs after A
-bd mol bond A B --type parallel    # Parallel: B runs alongside A
-bd mol bond A B --type conditional # Conditional: B runs if A fails
+fbd mol bond A B                    # Sequential: B runs after A
+fbd mol bond A B --type parallel    # Parallel: B runs alongside A
+fbd mol bond A B --type conditional # Conditional: B runs if A fails
 ```
 
 ### Operand Combinations
@@ -145,16 +145,16 @@ By default, spawned protos inherit target's phase. Override with flags:
 
 ```bash
 # Found bug during wisp patrol? Persist it:
-bd mol bond mol-critical-bug wisp-patrol --pour
+fbd mol bond mol-critical-bug wisp-patrol --pour
 
 # Need ephemeral diagnostic on persistent feature?
-bd mol bond mol-temp-check bd-feature --wisp
+fbd mol bond mol-temp-check bd-feature --wisp
 ```
 
 ### Custom Compound Names
 
 ```bash
-bd mol bond mol-feature mol-deploy --as "Feature with Deploy"
+fbd mol bond mol-feature mol-deploy --as "Feature with Deploy"
 ```
 
 ---
@@ -164,33 +164,33 @@ bd mol bond mol-feature mol-deploy --as "Feature with Deploy"
 ### Creating Wisps
 
 ```bash
-bd mol wisp mol-patrol                       # From proto
-bd mol spawn mol-patrol                      # Same (spawn defaults to wisp)
-bd mol spawn mol-check --var target=db       # With variables
+fbd mol wisp mol-patrol                       # From proto
+fbd mol spawn mol-patrol                      # Same (spawn defaults to wisp)
+fbd mol spawn mol-check --var target=db       # With variables
 ```
 
 ### Listing Wisps
 
 ```bash
-bd mol wisp list                     # List all wisps
-bd mol wisp list --json              # Machine-readable
+fbd mol wisp list                     # List all wisps
+fbd mol wisp list --json              # Machine-readable
 ```
 
 ### Ending Wisps
 
 **Option 1: Squash (compress to digest)**
 ```bash
-bd mol squash wisp-abc123                              # Auto-generate summary
-bd mol squash wisp-abc123 --summary "Completed patrol" # Agent-provided summary
-bd mol squash wisp-abc123 --keep-children              # Keep children, just create digest
-bd mol squash wisp-abc123 --dry-run                    # Preview
+fbd mol squash wisp-abc123                              # Auto-generate summary
+fbd mol squash wisp-abc123 --summary "Completed patrol" # Agent-provided summary
+fbd mol squash wisp-abc123 --keep-children              # Keep children, just create digest
+fbd mol squash wisp-abc123 --dry-run                    # Preview
 ```
 
 Squash creates a permanent digest issue summarizing the wisp's work, then deletes the wisp children.
 
 **Option 2: Burn (delete without trace)**
 ```bash
-bd mol burn wisp-abc123                    # Delete wisp, no digest
+fbd mol burn wisp-abc123                    # Delete wisp, no digest
 ```
 
 Use burn for routine work with no archival value.
@@ -198,7 +198,7 @@ Use burn for routine work with no archival value.
 ### Garbage Collection
 
 ```bash
-bd mol wisp gc                       # Clean up orphaned wisps
+fbd mol wisp gc                       # Clean up orphaned wisps
 ```
 
 ---
@@ -208,8 +208,8 @@ bd mol wisp gc                       # Clean up orphaned wisps
 Extract a reusable template from ad-hoc work:
 
 ```bash
-bd mol distill bd-o5xe --as "Release Workflow"
-bd mol distill bd-abc --var feature_name=auth-refactor --var version=1.0.0
+fbd mol distill bd-o5xe --as "Release Workflow"
+fbd mol distill bd-abc --var feature_name=auth-refactor --var version=1.0.0
 ```
 
 **What distill does:**
@@ -238,18 +238,18 @@ Projects can depend on capabilities shipped by other projects:
 
 ```bash
 # Project A ships a capability
-bd ship auth-api                # Marks capability as available
+fbd ship auth-api                # Marks capability as available
 
 # Project B depends on it
-bd dep add bd-123 external:project-a:auth-api
+fbd dep add bd-123 external:project-a:auth-api
 ```
 
 ### Shipping Capabilities
 
 ```bash
-bd ship <capability>            # Ship capability (requires closed issue)
-bd ship <capability> --force    # Ship even if issue not closed
-bd ship <capability> --dry-run  # Preview
+fbd ship <capability>            # Ship capability (requires closed issue)
+fbd ship <capability> --force    # Ship even if issue not closed
+fbd ship <capability> --dry-run  # Preview
 ```
 
 **How it works:**
@@ -260,12 +260,12 @@ bd ship <capability> --dry-run  # Preview
 ### Depending on External Capabilities
 
 ```bash
-bd dep add <issue> external:<project>:<capability>
+fbd dep add <issue> external:<project>:<capability>
 ```
 
 The dependency is satisfied when the external project has a closed issue with `provides:<capability>` label.
 
-**`bd ready` respects external deps:** Issues blocked by unsatisfied external dependencies won't appear in ready list.
+**`fbd ready` respects external deps:** Issues blocked by unsatisfied external dependencies won't appear in ready list.
 
 ---
 
@@ -275,32 +275,32 @@ The dependency is satisfied when the external project has a closed issue with `p
 
 ```bash
 # Create proto
-bd create "Weekly Review" --type epic --label template
-bd create "Review open issues" --type task
-bd create "Update priorities" --type task
-bd create "Archive stale work" --type task
+fbd create "Weekly Review" --type epic --label template
+fbd create "Review open issues" --type task
+fbd create "Update priorities" --type task
+fbd create "Archive stale work" --type task
 # Link as children...
 
 # Use each week
-bd mol spawn mol-weekly-review --pour
+fbd mol spawn mol-weekly-review --pour
 ```
 
 ### Pattern: Ephemeral Patrol Cycle
 
 ```bash
 # Patrol proto exists
-bd mol wisp mol-patrol
+fbd mol wisp mol-patrol
 
 # Execute patrol work...
 
 # End patrol
-bd mol squash wisp-abc123 --summary "Patrol complete: 3 issues found, 2 resolved"
+fbd mol squash wisp-abc123 --summary "Patrol complete: 3 issues found, 2 resolved"
 ```
 
 ### Pattern: Feature with Rollback
 
 ```bash
-bd mol spawn mol-deploy --attach mol-rollback --attach-type conditional
+fbd mol spawn mol-deploy --attach mol-rollback --attach-type conditional
 # If deploy fails, rollback automatically becomes unblocked
 ```
 
@@ -308,8 +308,8 @@ bd mol spawn mol-deploy --attach mol-rollback --attach-type conditional
 
 ```bash
 # After completing a good workflow organically
-bd mol distill bd-release-epic --as "Release Process" --var version=X.Y.Z
-# Now team can: bd mol spawn mol-release-process --var version=2.0.0
+fbd mol distill bd-release-epic --as "Release Process" --var version=X.Y.Z
+# Now team can: fbd mol spawn mol-release-process --var version=2.0.0
 ```
 
 ---
@@ -318,37 +318,37 @@ bd mol distill bd-release-epic --as "Release Process" --var version=X.Y.Z
 
 | Command | Purpose |
 |---------|---------|
-| `bd formula list` | List available formulas/protos |
-| `bd mol show <id>` | Show proto/mol structure |
-| `bd mol spawn <proto>` | Create wisp from proto (default) |
-| `bd mol spawn <proto> --pour` | Create persistent mol from proto |
-| `bd mol run <proto>` | Spawn + assign + pin (durable execution) |
-| `bd mol bond <A> <B>` | Combine protos or molecules |
-| `bd mol distill <epic>` | Extract proto from ad-hoc work |
-| `bd mol squash <mol>` | Compress wisp children to digest |
-| `bd mol burn <wisp>` | Delete wisp without trace |
-| `bd mol pour <proto>` | Shortcut for `spawn --pour` |
-| `bd mol wisp <proto>` | Create ephemeral wisp |
-| `bd mol wisp list` | List all wisps |
-| `bd mol wisp gc` | Garbage collect orphaned wisps |
-| `bd ship <capability>` | Publish capability for cross-project deps |
+| `fbd formula list` | List available formulas/protos |
+| `fbd mol show <id>` | Show proto/mol structure |
+| `fbd mol spawn <proto>` | Create wisp from proto (default) |
+| `fbd mol spawn <proto> --pour` | Create persistent mol from proto |
+| `fbd mol run <proto>` | Spawn + assign + pin (durable execution) |
+| `fbd mol bond <A> <B>` | Combine protos or molecules |
+| `fbd mol distill <epic>` | Extract proto from ad-hoc work |
+| `fbd mol squash <mol>` | Compress wisp children to digest |
+| `fbd mol burn <wisp>` | Delete wisp without trace |
+| `fbd mol pour <proto>` | Shortcut for `spawn --pour` |
+| `fbd mol wisp <proto>` | Create ephemeral wisp |
+| `fbd mol wisp list` | List all wisps |
+| `fbd mol wisp gc` | Garbage collect orphaned wisps |
+| `fbd ship <capability>` | Publish capability for cross-project deps |
 
 ---
 
 ## Troubleshooting
 
 **"Proto not found"**
-- Check `bd formula list` for available formulas/protos
+- Check `fbd formula list` for available formulas/protos
 - Protos need `template` label on the epic
 
 **"Variable not substituted"**
 - Use `--var key=value` syntax
-- Check proto for `{{key}}` placeholders with `bd mol show`
+- Check proto for `{{key}}` placeholders with `fbd mol show`
 
 **"Wisp commands fail"**
 - Wisps stored in `.beads-wisp/` (separate from `.beads/`)
-- Check `bd mol wisp list` for active wisps
+- Check `fbd mol wisp list` for active wisps
 
 **"External dependency not satisfied"**
 - Target project must have closed issue with `provides:<capability>` label
-- Use `bd ship <capability>` in target project first
+- Use `fbd ship <capability>` in target project first

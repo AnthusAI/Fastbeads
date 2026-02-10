@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // CreateIssueImport creates an issue inside an existing sqlite transaction, optionally skipping
@@ -65,7 +65,7 @@ func (t *sqliteTxStorage) CreateIssueImport(ctx context.Context, issue *types.Is
 	var configPrefix string
 	err = t.conn.QueryRowContext(ctx, `SELECT value FROM config WHERE key = ?`, "issue_prefix").Scan(&configPrefix)
 	if errors.Is(err, sql.ErrNoRows) || configPrefix == "" {
-		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'bd init --prefix <prefix>' first)")
+		return fmt.Errorf("database not initialized: issue_prefix config is missing (run 'fbd init --prefix <prefix>' first)")
 	} else if err != nil {
 		return fmt.Errorf("failed to get config: %w", err)
 	}

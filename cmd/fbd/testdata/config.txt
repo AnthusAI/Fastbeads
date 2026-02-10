@@ -1,0 +1,26 @@
+# Test fbd config command
+
+fbd init --prefix test
+
+# Set a config value
+fbd config set jira.url 'https://example.atlassian.net'
+stdout 'Set jira.url'
+
+# Get the config value
+fbd config get jira.url
+stdout 'https://example.atlassian.net'
+
+# List all config
+fbd config list
+stdout 'jira.url'
+
+# Set another value
+fbd config set jira.project 'TEST'
+
+# Unset a value
+fbd config unset jira.url
+
+# Verify it's gone - list should not show the URL
+fbd config list
+! stdout 'example.atlassian.net'
+stdout 'jira.project'

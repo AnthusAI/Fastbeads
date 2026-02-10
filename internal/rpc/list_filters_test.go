@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	sqlitestorage "github.com/steveyegge/beads/internal/storage/sqlite"
-	"github.com/steveyegge/beads/internal/types"
+	sqlitestorage "github.com/steveyegge/fastbeads/internal/storage/sqlite"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // setupTestServerWithStore creates a test server and returns the store for direct access

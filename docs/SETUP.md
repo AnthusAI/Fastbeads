@@ -5,7 +5,7 @@
 
 ## Overview
 
-The `bd setup` command uses a **recipe-based architecture** to configure beads integration with AI coding tools. Recipes define where workflow instructions are written—built-in recipes handle popular tools, and you can add custom recipes for any tool.
+The `fbd setup` command uses a **recipe-based architecture** to configure beads integration with AI coding tools. Recipes define where workflow instructions are written—built-in recipes handle popular tools, and you can add custom recipes for any tool.
 
 ### Built-in Recipes
 
@@ -25,31 +25,31 @@ The `bd setup` command uses a **recipe-based architecture** to configure beads i
 
 ```bash
 # List all available recipes
-bd setup --list
+fbd setup --list
 
 # Install integration for your tool
-bd setup cursor     # Cursor IDE
-bd setup windsurf   # Windsurf
-bd setup kilocode   # Kilo Code
-bd setup claude     # Claude Code
-bd setup gemini     # Gemini CLI
-bd setup factory    # Factory.ai Droid
-bd setup codex      # Codex CLI
-bd setup aider      # Aider
+fbd setup cursor     # Cursor IDE
+fbd setup windsurf   # Windsurf
+fbd setup kilocode   # Kilo Code
+fbd setup claude     # Claude Code
+fbd setup gemini     # Gemini CLI
+fbd setup factory    # Factory.ai Droid
+fbd setup codex      # Codex CLI
+fbd setup aider      # Aider
 
 # Verify installation
-bd setup cursor --check
-bd setup claude --check
+fbd setup cursor --check
+fbd setup claude --check
 
 # Print template to stdout (for inspection)
-bd setup --print
+fbd setup --print
 
 # Write template to custom path
-bd setup -o .my-editor/rules.md
+fbd setup -o .my-editor/rules.md
 
 # Add a custom recipe
-bd setup --add myeditor .myeditor/rules.md
-bd setup myeditor  # Now you can use it
+fbd setup --add myeditor .myeditor/rules.md
+fbd setup myeditor  # Now you can use it
 ```
 
 ## Factory.ai (Droid)
@@ -60,7 +60,7 @@ Factory.ai Droid integration uses the AGENTS.md standard, which is compatible wi
 
 ```bash
 # Create or update AGENTS.md with beads integration
-bd setup factory
+fbd setup factory
 ```
 
 ### What Gets Installed
@@ -99,12 +99,12 @@ Using AGENTS.md means one configuration file works across your entire AI tool ec
 
 ```bash
 # Check if beads section is in AGENTS.md
-bd setup factory --check
+fbd setup factory --check
 # Output: ✓ Factory.ai integration installed: AGENTS.md
 #         Beads section found in AGENTS.md
 
 # Remove beads section
-bd setup factory --remove
+fbd setup factory --remove
 ```
 
 ### How It Works
@@ -115,15 +115,15 @@ Factory Droid and other AGENTS.md-compatible tools automatically read `AGENTS.md
 3. Personal override (`~/.factory/AGENTS.md`)
 
 The beads section teaches AI agents:
-- To use `bd ready` for finding work
-- To use `bd create` for tracking new issues
-- To use `bd sync` at session end
+- To use `fbd ready` for finding work
+- To use `fbd create` for tracking new issues
+- To use `fbd sync` at session end
 - The complete workflow pattern and best practices
 
 ### Updating Existing AGENTS.md
 
 If you already have an AGENTS.md file with other project instructions:
-- `bd setup factory` will **append** the beads section
+- `fbd setup factory` will **append** the beads section
 - Re-running it will **update** the existing beads section (idempotent)
 - The markers (`<!-- BEGIN/END BEADS INTEGRATION -->`) ensure safe updates
 
@@ -136,7 +136,7 @@ If you already have an AGENTS.md file with other project instructions:
 - ✅ Your team uses multiple AI coding assistants
 
 **Use other integrations when:**
-- ✅ You only use Claude Code → `bd setup claude` (hooks are more dynamic)
+- ✅ You only use Claude Code → `fbd setup claude` (hooks are more dynamic)
 - ✅ You need tool-specific features (like Claude's stealth mode)
 
 You can use multiple integrations simultaneously - they complement each other!
@@ -148,7 +148,7 @@ Codex reads `AGENTS.md` instructions at the start of each run/session. Adding th
 ### Installation
 
 ```bash
-bd setup codex
+fbd setup codex
 ```
 
 ### What Gets Installed
@@ -167,20 +167,20 @@ Claude Code integration uses hooks to automatically inject beads workflow contex
 
 ```bash
 # Global installation (recommended)
-bd setup claude
+fbd setup claude
 
 # Project-only installation
-bd setup claude --project
+fbd setup claude --project
 
 # With stealth mode (flush only, no git operations)
-bd setup claude --stealth
+fbd setup claude --stealth
 ```
 
 ### What Gets Installed
 
 **Global installation** (`~/.claude/settings.json`):
-- `SessionStart` hook: Runs `bd prime` when a new session starts
-- `PreCompact` hook: Runs `bd prime` before context compaction
+- `SessionStart` hook: Runs `fbd prime` when a new session starts
+- `PreCompact` hook: Runs `fbd prime` before context compaction
 
 **Project installation** (`.claude/settings.local.json`):
 - Same hooks, but only active for this project
@@ -192,25 +192,25 @@ bd setup claude --stealth
 | `--check` | Check if integration is installed |
 | `--remove` | Remove beads hooks |
 | `--project` | Install for this project only (not globally) |
-| `--stealth` | Use `bd prime --stealth` (flush only, no git operations) |
+| `--stealth` | Use `fbd prime --stealth` (flush only, no git operations) |
 
 ### Examples
 
 ```bash
 # Check if hooks are installed
-bd setup claude --check
+fbd setup claude --check
 # Output: ✓ Global hooks installed: /Users/you/.claude/settings.json
 
 # Remove hooks
-bd setup claude --remove
+fbd setup claude --remove
 
 # Install project-specific hooks with stealth mode
-bd setup claude --project --stealth
+fbd setup claude --project --stealth
 ```
 
 ### How It Works
 
-The hooks call `bd prime` which:
+The hooks call `fbd prime` which:
 1. Outputs workflow context for Claude to read
 2. Syncs any pending changes
 3. Ensures Claude always knows how to use beads
@@ -225,20 +225,20 @@ Gemini CLI integration uses hooks to automatically inject beads workflow context
 
 ```bash
 # Global installation (recommended)
-bd setup gemini
+fbd setup gemini
 
 # Project-only installation
-bd setup gemini --project
+fbd setup gemini --project
 
 # With stealth mode (flush only, no git operations)
-bd setup gemini --stealth
+fbd setup gemini --stealth
 ```
 
 ### What Gets Installed
 
 **Global installation** (`~/.gemini/settings.json`):
-- `SessionStart` hook: Runs `bd prime` when a new session starts
-- `PreCompress` hook: Runs `bd prime` before context compression
+- `SessionStart` hook: Runs `fbd prime` when a new session starts
+- `PreCompress` hook: Runs `fbd prime` before context compression
 
 **Project installation** (`.gemini/settings.json`):
 - Same hooks, but only active for this project
@@ -250,25 +250,25 @@ bd setup gemini --stealth
 | `--check` | Check if integration is installed |
 | `--remove` | Remove beads hooks |
 | `--project` | Install for this project only (not globally) |
-| `--stealth` | Use `bd prime --stealth` (flush only, no git operations) |
+| `--stealth` | Use `fbd prime --stealth` (flush only, no git operations) |
 
 ### Examples
 
 ```bash
 # Check if hooks are installed
-bd setup gemini --check
+fbd setup gemini --check
 # Output: ✓ Global hooks installed: /Users/you/.gemini/settings.json
 
 # Remove hooks
-bd setup gemini --remove
+fbd setup gemini --remove
 
 # Install project-specific hooks with stealth mode
-bd setup gemini --project --stealth
+fbd setup gemini --project --stealth
 ```
 
 ### How It Works
 
-The hooks call `bd prime` which:
+The hooks call `fbd prime` which:
 1. Outputs workflow context for Gemini to read
 2. Syncs any pending changes
 3. Ensures Gemini always knows how to use beads
@@ -282,13 +282,13 @@ Cursor integration creates a rules file that provides beads workflow context to 
 ### Installation
 
 ```bash
-bd setup cursor
+fbd setup cursor
 ```
 
 ### What Gets Installed
 
 Creates `.cursor/rules/beads.mdc` with:
-- Core workflow rules (track work in bd, not markdown TODOs)
+- Core workflow rules (track work in fbd, not markdown TODOs)
 - Quick command reference
 - Workflow pattern (ready → claim → work → close → sync)
 - Context loading instructions
@@ -304,19 +304,19 @@ Creates `.cursor/rules/beads.mdc` with:
 
 ```bash
 # Check if rules are installed
-bd setup cursor --check
+fbd setup cursor --check
 # Output: ✓ Cursor integration installed: .cursor/rules/beads.mdc
 
 # Remove rules
-bd setup cursor --remove
+fbd setup cursor --remove
 ```
 
 ### How It Works
 
 Cursor reads `.cursor/rules/*.mdc` files and includes them in the AI's context. The beads rules file teaches the AI:
-- To use `bd ready` for finding work
-- To use `bd create` for tracking new issues
-- To use `bd sync` at session end
+- To use `fbd ready` for finding work
+- To use `fbd create` for tracking new issues
+- To use `fbd sync` at session end
 - The basic workflow pattern
 
 ## Aider
@@ -326,7 +326,7 @@ Aider integration creates configuration files that teach the AI about beads, whi
 ### Installation
 
 ```bash
-bd setup aider
+fbd setup aider
 ```
 
 ### What Gets Installed
@@ -348,27 +348,27 @@ bd setup aider
 
 ```bash
 # Check if config is installed
-bd setup aider --check
+fbd setup aider --check
 # Output: ✓ Aider integration installed: .aider.conf.yml
 
 # Remove configuration
-bd setup aider --remove
+fbd setup aider --remove
 ```
 
 ### How It Works
 
-Unlike Claude Code, Aider requires explicit command execution. The AI will **suggest** bd commands, which the user runs via `/run`:
+Unlike Claude Code, Aider requires explicit command execution. The AI will **suggest** fbd commands, which the user runs via `/run`:
 
 ```
 You: What issues are ready to work on?
 
 Aider: Let me check. Run:
-/run bd ready
+/run fbd ready
 
 You: [runs the command]
 
 Aider: Great! To claim bd-42, run:
-/run bd update bd-42 --status in_progress
+/run fbd update bd-42 --status in_progress
 ```
 
 This respects Aider's philosophy of keeping humans in control while still leveraging beads for issue tracking.
@@ -388,20 +388,20 @@ This respects Aider's philosophy of keeping humans in control while still levera
 
 1. **Start with Factory integration** - Creates AGENTS.md which works across multiple AI tools:
    ```bash
-   bd setup factory
+   fbd setup factory
    ```
 
 2. **Add tool-specific integrations as needed** - Claude hooks, Cursor rules, or Aider config for tool-specific features
 
 3. **Install globally for Claude Code or Gemini CLI** - You'll get beads context in every project automatically
 
-4. **Use stealth mode in CI/CD** - `bd setup claude --stealth` or `bd setup gemini --stealth` avoids git operations that might fail in automated environments
+4. **Use stealth mode in CI/CD** - `fbd setup claude --stealth` or `fbd setup gemini --stealth` avoids git operations that might fail in automated environments
 
 5. **Commit AGENTS.md to git** - This ensures all team members and AI tools get the same instructions
 
-6. **Run `bd doctor` after setup** - Verifies the integration is working:
+6. **Run `fbd doctor` after setup** - Verifies the integration is working:
    ```bash
-   bd doctor | grep -iE "claude|gemini"
+   fbd doctor | grep -iE "claude|gemini"
    # Claude Integration: Hooks installed (CLI mode)
    # Gemini CLI Integration: Hooks installed
    ```
@@ -411,14 +411,14 @@ This respects Aider's philosophy of keeping humans in control while still levera
 ### "Hooks not working"
 
 1. Restart your AI tool after installation
-2. Verify with `bd setup <tool> --check`
-3. Check `bd doctor` output for integration status
+2. Verify with `fbd setup <tool> --check`
+3. Check `fbd doctor` output for integration status
 
 ### "Context not appearing"
 
-For Claude Code, ensure `bd prime` works standalone:
+For Claude Code, ensure `fbd prime` works standalone:
 ```bash
-bd prime
+fbd prime
 ```
 
 If this fails, fix the underlying beads issue first.
@@ -427,10 +427,10 @@ If this fails, fix the underlying beads issue first.
 
 ```bash
 # Remove global hooks
-bd setup claude --remove
+fbd setup claude --remove
 
 # Install project hooks
-bd setup claude --project
+fbd setup claude --project
 ```
 
 ## Custom Recipes
@@ -441,16 +441,16 @@ You can add custom recipes for editors/tools not included in the built-in list.
 
 ```bash
 # Add a recipe that writes to a specific path
-bd setup --add myeditor .myeditor/rules.md
+fbd setup --add myeditor .myeditor/rules.md
 
 # Install it
-bd setup myeditor
+fbd setup myeditor
 
 # Check it
-bd setup myeditor --check
+fbd setup myeditor --check
 
 # Remove it
-bd setup myeditor --remove
+fbd setup myeditor --remove
 ```
 
 ### User Recipes File
@@ -470,10 +470,10 @@ For one-off installs without saving a recipe:
 
 ```bash
 # Write template to any path
-bd setup -o .my-custom-location/beads.md
+fbd setup -o .my-custom-location/beads.md
 
 # Inspect the template first
-bd setup --print
+fbd setup --print
 ```
 
 ### Recipe Types

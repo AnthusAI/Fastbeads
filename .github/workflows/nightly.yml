@@ -24,7 +24,7 @@ jobs:
           git config --global user.email "ci@beads.test"
 
       - name: Build
-        run: go build -v ./cmd/bd
+        run: go build -v ./cmd/fbd
 
       - name: Full Test Suite (including integration tests)
         run: go test -v -race -tags=integration -coverprofile=coverage.out -timeout=30m ./...

@@ -35,10 +35,10 @@ async def main():
         print(f"  repo1: {repo1}")
         print(f"  repo2: {repo2}\n")
         
-        # Initialize bd in both repos
+        # Initialize fbd in both repos
         print("Initializing beads in both repos...")
-        subprocess.run(["bd", "init", "--prefix", "r1"], cwd=repo1, check=True, capture_output=True)
-        subprocess.run(["bd", "init", "--prefix", "r2"], cwd=repo2, check=True, capture_output=True)
+        subprocess.run(["fbd", "init", "--prefix", "r1"], cwd=repo1, check=True, capture_output=True)
+        subprocess.run(["fbd", "init", "--prefix", "r2"], cwd=repo2, check=True, capture_output=True)
         print("✅ Initialized\n")
         
         # Find or start daemon in beads project
@@ -48,7 +48,7 @@ async def main():
         print("Checking daemon status...")
         if not beads_socket.exists():
             print("Starting daemon in beads project...")
-            subprocess.run(["bd", "daemon", "start"], cwd=beads_project, check=True, capture_output=True)
+            subprocess.run(["fbd", "daemon", "start"], cwd=beads_project, check=True, capture_output=True)
             await asyncio.sleep(1)  # Give daemon time to start
             print("✅ Daemon started\n")
         else:

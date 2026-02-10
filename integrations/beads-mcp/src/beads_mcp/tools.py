@@ -300,7 +300,7 @@ async def _get_client() -> BdClientBase:
         Configured BdClientBase instance for the current workspace
 
     Raises:
-        BdError: If no workspace found, or bd is not installed, or version is incompatible
+        BdError: If no workspace found, or fbd is not installed, or version is incompatible
     """
     # Determine workspace using standard search order (matches Go CLI)
     workspace = current_workspace.get() or os.environ.get("BEADS_WORKING_DIR")
@@ -580,9 +580,9 @@ async def beads_add_dependency(
 
 
 async def beads_quickstart() -> str:
-    """Get bd quickstart guide.
+    """Get fbd quickstart guide.
 
-    Read this first to understand how to use beads (bd) commands.
+    Read this first to understand how to use beads (fbd) commands.
     """
     client = await _get_client()
     return await client.quickstart()
@@ -694,7 +694,7 @@ async def beads_validate(
 async def beads_init(
     prefix: Annotated[str | None, "Issue prefix (e.g., 'myproject' for myproject-1, myproject-2)"] = None,
 ) -> str:
-    """Initialize bd in current directory.
+    """Initialize fbd in current directory.
 
     Creates .beads/ directory and database file with optional custom prefix.
     """

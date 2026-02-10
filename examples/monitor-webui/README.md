@@ -20,14 +20,14 @@ The Monitor WebUI demonstrates how to build custom interfaces on top of beads us
 - **RPC Protocol**: Connects to the daemon's Unix socket for database operations
 - **WebSocket Broadcasting**: Polls mutation events and broadcasts to connected clients
 - **Embedded Web Assets**: HTML, CSS, and JavaScript served from the binary
-- **Standalone Binary**: Runs independently from the `bd` CLI
+- **Standalone Binary**: Runs independently from the `fbd` CLI
 
 ## Prerequisites
 
 Before running the monitor, you must have:
 
-1. A beads database initialized (run `bd init` in your project)
-2. The beads daemon running (run `bd daemon`)
+1. A beads database initialized (run `fbd init` in your project)
+2. The beads daemon running (run `fbd daemon`)
 
 ## Building
 
@@ -224,14 +224,14 @@ server {
 
 ### "No beads database found"
 
-Make sure you've initialized a beads database with `bd init` or specify the database path with `-db`.
+Make sure you've initialized a beads database with `fbd init` or specify the database path with `-db`.
 
 ### "Daemon is not running"
 
 The monitor requires the daemon to avoid SQLite locking conflicts. Start the daemon first:
 
 ```bash
-bd daemon start
+fbd daemon start
 ```
 
 ### WebSocket disconnects frequently

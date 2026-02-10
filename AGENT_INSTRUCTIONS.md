@@ -17,7 +17,7 @@ This document contains detailed operational instructions for AI agents working o
 
 ```
 beads/
-├── cmd/bd/              # CLI commands
+├── cmd/fbd/              # CLI commands
 ├── internal/
 │   ├── types/           # Core data types
 │   └── storage/         # Storage layer
@@ -34,11 +34,11 @@ beads/
 
 ```bash
 # Create test issues in isolated database
-BEADS_DB=/tmp/test.db ./bd init --quiet --prefix test
-BEADS_DB=/tmp/test.db ./bd create "Test issue" -p 1
+BEADS_DB=/tmp/test.db ./fbd init --quiet --prefix test
+BEADS_DB=/tmp/test.db ./fbd create "Test issue" -p 1
 
 # Or for quick testing
-BEADS_DB=/tmp/test.db ./bd create "Test feature" -p 1
+BEADS_DB=/tmp/test.db ./fbd create "Test feature" -p 1
 ```
 
 **For automated tests**, use `t.TempDir()` in Go tests:
@@ -52,7 +52,7 @@ func TestMyFeature(t *testing.T) {
 }
 ```
 
-**Warning:** bd will warn you when creating issues with "Test" prefix in the production database. Always use `BEADS_DB` for manual testing.
+**Warning:** fbd will warn you when creating issues with "Test" prefix in the production database. Always use `BEADS_DB` for manual testing.
 
 ### Before Committing
 
@@ -70,11 +70,11 @@ git commit -m "Fix auth validation bug (bd-abc)"
 git commit -m "Add retry logic for database locks (bd-xyz)"
 ```
 
-This enables `bd doctor` to detect **orphaned issues** - work that was committed but the issue wasn't closed. The doctor check cross-references open issues against git history to find these orphans.
+This enables `fbd doctor` to detect **orphaned issues** - work that was committed but the issue wasn't closed. The doctor check cross-references open issues against git history to find these orphans.
 
 ### Git Workflow
 
-**Auto-sync provides batching!** bd automatically:
+**Auto-sync provides batching!** fbd automatically:
 
 - **Exports** to JSONL after CRUD operations (30-second debounce for batching)
 - **Imports** from JSONL when it's newer than DB (e.g., after `git pull`)
@@ -84,13 +84,13 @@ The 30-second debounce provides a **transaction window** for batch operations - 
 
 ### Git Integration
 
-**Auto-sync**: bd automatically exports to JSONL (30s debounce), imports after `git pull`, and optionally commits/pushes.
+**Auto-sync**: fbd automatically exports to JSONL (30s debounce), imports after `git pull`, and optionally commits/pushes.
 
-**Protected branches**: Use `bd init --branch beads-metadata` to commit to separate branch. See [docs/PROTECTED_BRANCHES.md](docs/PROTECTED_BRANCHES.md).
+**Protected branches**: Use `fbd init --branch beads-metadata` to commit to separate branch. See [docs/PROTECTED_BRANCHES.md](docs/PROTECTED_BRANCHES.md).
 
-**Git worktrees**: Enhanced support with shared database architecture. Use `bd --no-daemon` if daemon warnings appear. See [docs/GIT_INTEGRATION.md](docs/GIT_INTEGRATION.md).
+**Git worktrees**: Enhanced support with shared database architecture. Use `fbd --no-daemon` if daemon warnings appear. See [docs/GIT_INTEGRATION.md](docs/GIT_INTEGRATION.md).
 
-**Merge conflicts**: Rare with hash IDs. If conflicts occur, use `git checkout --theirs/.beads/issues.jsonl` and `bd import`. See [docs/GIT_INTEGRATION.md](docs/GIT_INTEGRATION.md).
+**Merge conflicts**: Rare with hash IDs. If conflicts occur, use `git checkout --theirs/.beads/issues.jsonl` and `fbd import`. See [docs/GIT_INTEGRATION.md](docs/GIT_INTEGRATION.md).
 
 ## Landing the Plane
 
@@ -111,11 +111,11 @@ The 30-second debounce provides a **transaction window** for batch operations - 
 
    # If conflicts in .beads/issues.jsonl, resolve thoughtfully:
    #   - git checkout --theirs .beads/issues.jsonl (accept remote)
-   #   - bd import -i .beads/issues.jsonl (re-import)
+   #   - fbd import -i .beads/issues.jsonl (re-import)
    #   - Or manual merge, then import
 
    # Sync the database (exports to JSONL, commits)
-   bd sync
+   fbd sync
 
    # MANDATORY: Push everything to remote
    # DO NOT STOP BEFORE THIS COMMAND COMPLETES
@@ -148,22 +148,22 @@ The 30-second debounce provides a **transaction window** for batch operations - 
 
 ```bash
 # 1. File remaining work
-bd create "Add integration tests for sync" -t task -p 2 --json
+fbd create "Add integration tests for sync" -t task -p 2 --json
 
 # 2. Run quality gates (only if code changes were made)
 go test -short ./...
 golangci-lint run ./...
 
 # 3. Close finished issues
-bd close bd-42 bd-43 --reason "Completed" --json
+fbd close bd-42 bd-43 --reason "Completed" --json
 
 # 4. PUSH TO REMOTE - MANDATORY, NO STOPPING BEFORE THIS IS DONE
 git pull --rebase
 # If conflicts in .beads/issues.jsonl, resolve thoughtfully:
 #   - git checkout --theirs .beads/issues.jsonl (accept remote)
-#   - bd import -i .beads/issues.jsonl (re-import)
+#   - fbd import -i .beads/issues.jsonl (re-import)
 #   - Or manual merge, then import
-bd sync        # Export/import/commit
+fbd sync        # Export/import/commit
 git push       # MANDATORY - THE PLANE IS STILL IN THE AIR UNTIL THIS SUCCEEDS
 git status     # MUST verify "up to date with origin/main"
 
@@ -175,8 +175,8 @@ git remote prune origin
 git status
 
 # 7. Choose next work
-bd ready --json
-bd show bd-44 --json
+fbd ready --json
+fbd show bd-44 --json
 ```
 
 **Then provide the user with:**
@@ -191,19 +191,19 @@ bd show bd-44 --json
 
 ## Agent Session Workflow
 
-**WARNING: DO NOT use `bd edit`** - it opens an interactive editor ($EDITOR) which AI agents cannot use. Use `bd update` with flags instead:
+**WARNING: DO NOT use `fbd edit`** - it opens an interactive editor ($EDITOR) which AI agents cannot use. Use `fbd update` with flags instead:
 ```bash
-bd update <id> --description "new description"
-bd update <id> --title "new title"
-bd update <id> --design "design notes"
-bd update <id> --notes "additional notes"
-bd update <id> --acceptance "acceptance criteria"
+fbd update <id> --description "new description"
+fbd update <id> --title "new title"
+fbd update <id> --design "design notes"
+fbd update <id> --notes "additional notes"
+fbd update <id> --acceptance "acceptance criteria"
 ```
 
 **IMPORTANT for AI agents:** When you finish making issue changes, always run:
 
 ```bash
-bd sync
+fbd sync
 ```
 
 This immediately:
@@ -218,28 +218,28 @@ This immediately:
 
 ```bash
 # Make multiple changes (batched in 30-second window)
-bd create "Fix bug" -p 1
-bd create "Add tests" -p 1
-bd update bd-42 --status in_progress
-bd close bd-40 --reason "Completed"
+fbd create "Fix bug" -p 1
+fbd create "Add tests" -p 1
+fbd update bd-42 --status in_progress
+fbd close bd-40 --reason "Completed"
 
 # Force immediate sync at end of session
-bd sync
+fbd sync
 
 # Now safe to end session - everything is committed and pushed
 ```
 
 **Why this matters:**
 
-- Without `bd sync`, changes sit in 30-second debounce window
+- Without `fbd sync`, changes sit in 30-second debounce window
 - User might think you pushed but JSONL is still dirty
-- `bd sync` forces immediate flush/commit/push
+- `fbd sync` forces immediate flush/commit/push
 
 **STRONGLY RECOMMENDED: Install git hooks for automatic sync** (prevents stale JSONL problems):
 
 ```bash
 # One-time setup - run this in each beads workspace
-bd hooks install
+fbd hooks install
 ```
 
 This installs:
@@ -252,7 +252,7 @@ This installs:
 **Why git hooks matter:**
 Without the pre-push hook, you can have database changes committed locally but stale JSONL pushed to remote, causing multi-workspace divergence. The hooks guarantee DB ↔ JSONL consistency.
 
-**Note:** Hooks are embedded in the bd binary and work for all bd users (not just source repo users).
+**Note:** Hooks are embedded in the fbd binary and work for all fbd users (not just source repo users).
 
 ## Common Development Tasks
 
@@ -260,23 +260,23 @@ Without the pre-push hook, you can have database changes committed locally but s
 
 **Minimize cognitive overload.** Every new command, flag, or option adds cognitive burden for users. Before adding anything:
 
-1. **Recovery/fix operations → `bd doctor --fix`**: Don't create separate commands like `bd recover` or `bd repair`. Doctor already detects problems - let `--fix` handle remediation. This keeps all health-related operations in one discoverable place.
+1. **Recovery/fix operations → `fbd doctor --fix`**: Don't create separate commands like `fbd recover` or `fbd repair`. Doctor already detects problems - let `--fix` handle remediation. This keeps all health-related operations in one discoverable place.
 
-2. **Prefer flags on existing commands**: Before creating a new command, ask: "Can this be a flag on an existing command?" Example: `bd list --stale` instead of `bd stale`.
+2. **Prefer flags on existing commands**: Before creating a new command, ask: "Can this be a flag on an existing command?" Example: `fbd list --stale` instead of `fbd stale`.
 
-3. **Consolidate related operations**: Related operations should live together. Daemon management uses `bd daemons {list,health,killall}`, not separate top-level commands.
+3. **Consolidate related operations**: Related operations should live together. Daemon management uses `fbd daemons {list,health,killall}`, not separate top-level commands.
 
-4. **Count the commands**: Run `bd --help` and count. If we're approaching 30+ commands, we have a discoverability problem. Consider subcommand grouping.
+4. **Count the commands**: Run `fbd --help` and count. If we're approaching 30+ commands, we have a discoverability problem. Consider subcommand grouping.
 
 5. **New commands need strong justification**: A new command should represent a fundamentally different operation, not just a convenience wrapper.
 
 ### Adding a New Command
 
-1. Create file in `cmd/bd/`
-2. Add to root command in `cmd/bd/main.go`
+1. Create file in `cmd/fbd/`
+2. Add to root command in `cmd/fbd/main.go`
 3. Implement with Cobra framework
 4. Add `--json` flag for agent use
-5. Add tests in `cmd/bd/*_test.go`
+5. Add tests in `cmd/fbd/*_test.go`
 6. Document in README.md
 
 ### Adding Storage Features
@@ -286,7 +286,7 @@ Without the pre-push hook, you can have database changes committed locally but s
 3. Update `internal/types/types.go` if new types
 4. Implement in `internal/storage/sqlite/sqlite.go`
 5. Add tests
-6. Update export/import in `cmd/bd/export.go` and `cmd/bd/import.go`
+6. Update export/import in `cmd/fbd/export.go` and `cmd/fbd/import.go`
 
 ### Adding Examples
 
@@ -300,7 +300,7 @@ Without the pre-push hook, you can have database changes committed locally but s
 
 ```bash
 # Build
-go build -o bd ./cmd/bd
+go build -o fbd ./cmd/fbd
 
 # Test (short - for local development)
 go test -short ./...
@@ -310,9 +310,9 @@ go test -coverprofile=coverage.out ./...
 go tool cover -html=coverage.out
 
 # Run locally
-./bd init --prefix test
-./bd create "Test issue" -p 1
-./bd ready
+./fbd init --prefix test
+./fbd create "Test issue" -p 1
+./fbd ready
 ```
 
 ## Version Management
@@ -351,7 +351,7 @@ git push origin main
 
 **Files updated automatically:**
 
-- `cmd/bd/version.go` - CLI version
+- `cmd/fbd/version.go` - CLI version
 - `claude-plugin/.claude-plugin/plugin.json` - Plugin version
 - `.claude-plugin/marketplace.json` - Marketplace version
 - `integrations/beads-mcp/pyproject.toml` - MCP server version
@@ -381,7 +381,7 @@ This handles the entire release workflow automatically, including waiting ~5 min
 4. Push version bump: `git push origin main`
 5. Tag release: `git tag v<version> && git push origin v<version>`
 6. Update Homebrew: `./scripts/update-homebrew.sh <version>` (waits for GitHub Actions)
-7. Verify: `brew update && brew upgrade beads && bd version`
+7. Verify: `brew update && brew upgrade beads && fbd version`
 
 See [docs/RELEASING.md](docs/RELEASING.md) for complete manual instructions.
 
@@ -420,10 +420,10 @@ gh issue view 201
 
 ## Questions?
 
-- Check existing issues: `bd list`
+- Check existing issues: `fbd list`
 - Look at recent commits: `git log --oneline -20`
 - Read the docs: README.md, ADVANCED.md, EXTENDING.md
-- Create an issue if unsure: `bd create "Question: ..." -t task -p 2`
+- Create an issue if unsure: `fbd create "Question: ..." -t task -p 2`
 
 ## Important Files
 

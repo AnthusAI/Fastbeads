@@ -4,6 +4,7 @@ package ui
 import (
 	"os"
 
+	"github.com/steveyegge/fastbeads/internal/env"
 	"golang.org/x/term"
 )
 
@@ -40,10 +41,10 @@ func ShouldUseColor() bool {
 
 // ShouldUseEmoji determines if emoji decorations should be used.
 // Disabled in non-TTY mode to keep output machine-readable.
-// Can be controlled with BD_NO_EMOJI environment variable.
+// Can be controlled with FBD_NO_EMOJI/BD_NO_EMOJI environment variable.
 func ShouldUseEmoji() bool {
 	// Explicit disable
-	if os.Getenv("BD_NO_EMOJI") != "" {
+	if env.GetEnvAlias("NO_EMOJI") != "" {
 		return false
 	}
 

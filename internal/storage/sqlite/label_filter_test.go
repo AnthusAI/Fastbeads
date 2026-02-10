@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 // Helper to get a pointer to Status

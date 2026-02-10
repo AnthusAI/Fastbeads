@@ -1,0 +1,5 @@
+# Test fbd ready command
+fbd init --prefix test
+fbd create 'Ready issue'
+fbd ready
+stdout 'Ready'

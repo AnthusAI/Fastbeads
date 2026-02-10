@@ -32,7 +32,7 @@ contributor-working-on-beads/
 
 When a contributor:
 1. Forks/clones the beads repository
-2. Uses `bd create "My TODO: fix tests before lunch"` to track their work
+2. Uses `fbd create "My TODO: fix tests before lunch"` to track their work
 3. Creates a PR
 
 The PR diff includes their personal issues in `.beads/issues.jsonl`.
@@ -136,9 +136,9 @@ accordingly:
    func DetermineTargetRepo(config *RoutingConfig, userRole UserRole, repoPath string)
    ```
 
-4. **Contributor Setup Wizard** (`cmd/bd/init_contributor.go`):
+4. **Contributor Setup Wizard** (`cmd/fbd/init_contributor.go`):
    ```bash
-   bd init --contributor
+   fbd init --contributor
    ```
    Creates `~/.beads-planning/` and configures routing.
 
@@ -148,9 +148,9 @@ accordingly:
 
 ### What's NOT Implemented (Gaps)
 
-1. **Actual Routing in `bd create`** (bd-6x6g):
+1. **Actual Routing in `fbd create`** (bd-6x6g):
    ```go
-   // cmd/bd/create.go:181
+   // cmd/fbd/create.go:181
    // TODO(bd-6x6g): Switch to target repo for multi-repo support
    // For now, we just log the target repo in debug mode
    if repoPath != "." {
@@ -163,16 +163,16 @@ accordingly:
    No way to detect if personal issues are in the PR diff.
 
 3. **First-Time Contributor Warning**:
-   No prompt when a contributor first runs `bd create` without setup.
+   No prompt when a contributor first runs `fbd create` without setup.
 
 ## Recommended Implementation Plan
 
 ### Phase 1: Complete Auto-Routing (bd-6x6g)
 
-Make `bd create` actually route to the target repo:
+Make `fbd create` actually route to the target repo:
 
 ```go
-// In cmd/bd/create.go, after DetermineTargetRepo()
+// In cmd/fbd/create.go, after DetermineTargetRepo()
 if repoPath != "." {
     // Switch store to target repo
     targetBeadsDir := expandPath(repoPath)
@@ -189,7 +189,7 @@ if repoPath != "." {
 
 ### Phase 2: First-Time Setup Prompt
 
-When a contributor runs `bd create` without routing configured:
+When a contributor runs `fbd create` without routing configured:
 
 ```
 → Detected fork/contributor setup
@@ -207,7 +207,7 @@ Choice [1]:
 
 ### Phase 3: Pollution Detection (for bd-lfak)
 
-Add check in `bd preflight --check`:
+Add check in `fbd preflight --check`:
 
 ```go
 func checkBeadsPollution(ctx context.Context) (CheckResult, error) {
@@ -250,8 +250,8 @@ Allow promoting a personal issue to a project issue:
 
 ```bash
 # Move from personal to project database
-bd migrate plan-42 --to . --dry-run
-bd migrate plan-42 --to .
+fbd migrate plan-42 --to . --dry-run
+fbd migrate plan-42 --to .
 ```
 
 This creates a new issue in the target repo with a reference to the original.
@@ -282,7 +282,7 @@ Contributor routing works independently of the project repo's sync configuration
 
 ```bash
 # One-time setup
-bd init --contributor
+fbd init --contributor
 
 # This configures:
 # - Creates ~/.beads-planning/ with its own database
@@ -290,8 +290,8 @@ bd init --contributor
 # - Sets routing.contributor=~/.beads-planning
 
 # Verify
-bd config get routing.mode        # → auto
-bd config get routing.contributor # → ~/.beads-planning
+fbd config get routing.mode        # → auto
+fbd config get routing.contributor # → ~/.beads-planning
 ```
 
 ### Explicit Role Override
@@ -308,23 +308,23 @@ git config beads.role contributor
 
 ```bash
 # Per-command override
-BEADS_DIR=~/.beads-planning bd create "My task" -p 1
+BEADS_DIR=~/.beads-planning fbd create "My task" -p 1
 
 # Or per-shell session
 export BEADS_DIR=~/.beads-planning
-bd create "My task" -p 1
+fbd create "My task" -p 1
 ```
 
-**Note**: `bd init` and `bd doctor` also respect `BEADS_DIR`:
+**Note**: `fbd init` and `fbd doctor` also respect `BEADS_DIR`:
 
 ```bash
 # Initialize directly at BEADS_DIR location (no need to cd)
 mkdir -p ~/.beads-planning/.beads
 export BEADS_DIR=~/.beads-planning/.beads
-bd init --prefix planning    # Creates database at $BEADS_DIR
+fbd init --prefix planning    # Creates database at $BEADS_DIR
 
 # Doctor checks BEADS_DIR location (not CWD)
-bd doctor                    # Diagnoses database at $BEADS_DIR
+fbd doctor                    # Diagnoses database at $BEADS_DIR
 ```
 
 ## Troubleshooting
@@ -336,8 +336,8 @@ bd doctor                    # Diagnoses database at $BEADS_DIR
 **Diagnosis**:
 ```bash
 # Check routing configuration
-bd config get routing.mode
-bd config get routing.contributor
+fbd config get routing.mode
+fbd config get routing.contributor
 
 # Check detected role
 git config beads.role  # If set, this overrides auto-detection
@@ -359,7 +359,7 @@ git remote get-url --push origin  # Should show HTTPS for contributors
 **Solutions**:
 1. **Unset BEADS_DIR** if you want routing to work: `unset BEADS_DIR`
 2. **Keep BEADS_DIR** and ignore routing config (BEADS_DIR will be used)
-3. **Use explicit --repo flag** to override both: `bd create "task" -p 1 --repo /path/to/repo`
+3. **Use explicit --repo flag** to override both: `fbd create "task" -p 1 --repo /path/to/repo`
 
 ### Planning Repo Not Initialized
 
@@ -373,7 +373,7 @@ ls -la ~/.beads-planning/.beads/  # Should exist
 **Solution**:
 ```bash
 # Reinitialize planning repo
-bd init --contributor  # Wizard will recreate if missing
+fbd init --contributor  # Wizard will recreate if missing
 ```
 
 ### Prefix Mismatch Between Repos
@@ -386,7 +386,7 @@ bd init --contributor  # Wizard will recreate if missing
 ```bash
 # Configure planning repo prefix
 cd ~/.beads-planning
-bd config set db.prefix plan  # Use "plan-" prefix for planning issues
+fbd config set db.prefix plan  # Use "plan-" prefix for planning issues
 cd -  # Return to project repo
 ```
 
@@ -402,17 +402,17 @@ cd -  # Return to project repo
 
 ```bash
 # Old (deprecated but still works)
-bd config set contributor.auto_route true
-bd config set contributor.planning_repo ~/.beads-planning
+fbd config set contributor.auto_route true
+fbd config set contributor.planning_repo ~/.beads-planning
 
 # New (preferred)
-bd config set routing.mode auto
-bd config set routing.contributor ~/.beads-planning
+fbd config set routing.mode auto
+fbd config set routing.contributor ~/.beads-planning
 ```
 
 ## Pollution Detection Heuristics
 
-For `bd preflight`, we can detect pollution by checking:
+For `fbd preflight`, we can detect pollution by checking:
 
 1. **Source Repo Mismatch**: Issue has `source_repo != "."` but is in `./.beads/`
 2. **Creator Check**: Issue `created_by` doesn't match known maintainers
@@ -434,19 +434,19 @@ Use `--type` to distinguish:
 
 This design enables:
 - **bd-lfak**: PR preflight checks (pollution detection)
-- **bd-6x6g**: Multi-repo target switching in `bd create`
+- **bd-6x6g**: Multi-repo target switching in `fbd create`
 
 ## Success Criteria
 
 1. Contributors can use beads without polluting upstream PRs
 2. Zero-friction default: auto-routing based on role detection
 3. Explicit override available when needed
-4. `bd preflight` can detect and warn about pollution
+4. `fbd preflight` can detect and warn about pollution
 5. Clear upgrade path to "graduate" personal issues to project issues
 
 ## Open Questions
 
-1. **Should we warn on first `bd create` without setup?**
+1. **Should we warn on first `fbd create` without setup?**
    - Pro: Prevents accidental pollution
    - Con: Friction for new users who may be maintainers
 

@@ -1,12 +1,12 @@
 # Markdown to JSONL Converter
 
-Convert markdown planning documents into `bd` issues.
+Convert markdown planning documents into `fbd` issues.
 
 ## Overview
 
-This example shows how to bridge the gap between markdown planning docs and tracked issues, without adding complexity to the `bd` core tool.
+This example shows how to bridge the gap between markdown planning docs and tracked issues, without adding complexity to the `fbd` core tool.
 
-The converter script (`md2jsonl.py`) parses markdown files and outputs JSONL that can be imported into `bd`.
+The converter script (`md2jsonl.py`) parses markdown files and outputs JSONL that can be imported into `fbd`.
 
 ## Features
 
@@ -21,14 +21,14 @@ The converter script (`md2jsonl.py`) parses markdown files and outputs JSONL tha
 ### Basic conversion
 
 ```bash
-python md2jsonl.py feature.md | bd import
+python md2jsonl.py feature.md | fbd import
 ```
 
 ### Save to file first
 
 ```bash
 python md2jsonl.py feature.md > issues.jsonl
-bd import -i issues.jsonl
+fbd import -i issues.jsonl
 ```
 
 ### Preview before importing
@@ -108,8 +108,8 @@ python md2jsonl.py example-feature.md > example-issues.jsonl
 # View the output
 cat example-issues.jsonl | jq .
 
-# Import into bd
-bd import -i example-issues.jsonl
+# Import into fbd
+fbd import -i example-issues.jsonl
 ```
 
 ## Customization
@@ -141,12 +141,12 @@ For production use, you might want to:
 
 This example demonstrates the **lightweight extension pattern**:
 
-- ✅ Keep `bd` core focused and minimal
+- ✅ Keep `fbd` core focused and minimal
 - ✅ Let users customize for their workflows
 - ✅ Use existing import infrastructure
 - ✅ Easy to understand and modify
 
-Rather than adding markdown support to `bd` core (800+ LOC + dependencies + maintenance), we provide a simple converter that users can adapt.
+Rather than adding markdown support to `fbd` core (800+ LOC + dependencies + maintenance), we provide a simple converter that users can adapt.
 
 ## Contributing
 
@@ -160,6 +160,6 @@ Consider:
 
 ## See Also
 
-- [bd README](../../README.md) - Main documentation
+- [fbd README](../../README.md) - Main documentation
 - [Python Agent Example](../python-agent/) - Full agent workflow
-- [JSONL Format](../../TEXT_FORMATS.md) - Understanding bd's JSONL structure
+- [JSONL Format](../../TEXT_FORMATS.md) - Understanding fbd's JSONL structure

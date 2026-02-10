@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/steveyegge/beads/internal/types"
+	"github.com/steveyegge/fastbeads/internal/types"
 )
 
 func TestChildCountersTableExists(t *testing.T) {

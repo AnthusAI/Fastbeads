@@ -4,7 +4,7 @@ Beads supports messaging as a first-class issue type, enabling inter-agent and h
 
 ## Architecture
 
-Mail commands (`bd mail`) delegate to an external mail provider (typically `gt mail` in Gas Town). Beads stores messages as issues with `type: message`, threading via `replies_to` dependencies, and ephemeral lifecycle via the `ephemeral` flag.
+Mail commands (`fbd mail`) delegate to an external mail provider (typically `gt mail` in Gas Town). Beads stores messages as issues with `type: message`, threading via `replies_to` dependencies, and ephemeral lifecycle via the `ephemeral` flag.
 
 This design separates concerns:
 - **Beads** = data plane (stores messages as issues)
@@ -19,23 +19,23 @@ Configure the mail delegate (one-time):
 export BEADS_MAIL_DELEGATE="gt mail"
 
 # Or per-project config
-bd config set mail.delegate "gt mail"
+fbd config set mail.delegate "gt mail"
 ```
 
 ## Sending and Receiving
 
 ```bash
 # Send mail (delegates to gt mail)
-bd mail send worker/ -s "Review needed" -m "Please review bd-abc"
+fbd mail send worker/ -s "Review needed" -m "Please review bd-abc"
 
 # Check inbox
-bd mail inbox
+fbd mail inbox
 
 # Read a message
-bd mail read msg-123
+fbd mail read msg-123
 
 # Reply to a thread
-bd mail reply msg-123 -m "Reviewed and approved"
+fbd mail reply msg-123 -m "Reviewed and approved"
 ```
 
 ## Message Issue Type
@@ -57,7 +57,7 @@ Messages are issues with `type: message`:
 Messages form threads via `replies_to` dependencies. View a full thread:
 
 ```bash
-bd show msg-123 --thread
+fbd show msg-123 --thread
 ```
 
 This traces the `replies_to` chain to find the root message, then collects all replies via BFS, displaying the conversation with proper indentation.
@@ -74,17 +74,17 @@ Messages marked `ephemeral: true` are transient - they can be bulk-deleted after
 
 ```bash
 # Clean up closed ephemeral messages
-bd cleanup --ephemeral --force
+fbd cleanup --ephemeral --force
 
 # Preview what would be deleted
-bd cleanup --ephemeral --dry-run
+fbd cleanup --ephemeral --dry-run
 
 # Only delete ephemeral messages older than 7 days
-bd cleanup --ephemeral --older-than 7 --force
+fbd cleanup --ephemeral --older-than 7 --force
 ```
 
 Ephemeral messages are:
-- Excluded from `bd ready` by default
+- Excluded from `fbd ready` by default
 - Not exported to JSONL (transient)
 - Eligible for bulk deletion when closed
 
@@ -105,9 +105,9 @@ Scripts in `.beads/hooks/` run after certain events:
 
 | Hook | Trigger |
 |------|---------|
-| `on_create` | After `bd create` |
-| `on_update` | After `bd update` |
-| `on_close` | After `bd close` |
+| `on_create` | After `fbd create` |
+| `on_update` | After `fbd update` |
+| `on_close` | After `fbd close` |
 
 Hooks receive event data as JSON on stdin. This enables orchestrator integration (e.g., notifying daemons of new messages) without beads knowing about the orchestrator.
 

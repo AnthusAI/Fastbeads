@@ -118,7 +118,7 @@ if os.environ.get("BEADS_MCP_PREVIEW_COUNT"):
 mcp = FastMCP(
     name="Beads",
     instructions="""
-We track work in Beads (bd) instead of Markdown.
+We track work in Beads (fbd) instead of Markdown.
 Check the resource beads://quickstart to see how.
 
 CONTEXT OPTIMIZATION: Use discover_tools() to see available tools (names only),
@@ -295,9 +295,9 @@ def _resolve_workspace_root(path: str) -> str:
 # Register quickstart resource
 @mcp.resource("beads://quickstart", name="Beads Quickstart Guide")
 async def get_quickstart() -> str:
-    """Get beads (bd) quickstart guide.
+    """Get beads (fbd) quickstart guide.
 
-    Read this first to understand how to use beads (bd) commands.
+    Read this first to understand how to use beads (fbd) commands.
     """
     return await beads_quickstart()
 

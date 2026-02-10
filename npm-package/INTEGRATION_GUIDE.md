@@ -1,10 +1,10 @@
-# Complete Integration Guide: @beads/bd + Claude Code for Web
+# Complete Integration Guide: @beads/fbd + Claude Code for Web
 
-This guide shows the complete end-to-end setup for using bd (beads) in Claude Code for Web via the npm package.
+This guide shows the complete end-to-end setup for using fbd (beads) in Claude Code for Web via the npm package.
 
 ## 🎯 Goal
 
-Enable automatic issue tracking with bd in every Claude Code for Web session with zero manual setup.
+Enable automatic issue tracking with fbd in every Claude Code for Web session with zero manual setup.
 
 ## 📋 Prerequisites
 
@@ -19,20 +19,20 @@ Create the file `.claude/hooks/session-start.sh` in your repository:
 
 ```bash
 #!/bin/bash
-# Auto-install bd in every Claude Code for Web session
+# Auto-install fbd in every Claude Code for Web session
 
-# Install bd globally from npm
-npm install -g @beads/bd
+# Install fbd globally from npm
+npm install -g @beads/fbd
 
-# Initialize bd if not already done
+# Initialize fbd if not already done
 if [ ! -d .beads ]; then
-  bd init --quiet
+  fbd init --quiet
 fi
 
 # Show current work
 echo ""
 echo "📋 Ready work:"
-bd ready --limit 5 || echo "No ready work found"
+fbd ready --limit 5 || echo "No ready work found"
 ```
 
 ### Step 2: Make Hook Executable
@@ -43,61 +43,61 @@ chmod +x .claude/hooks/session-start.sh
 
 ### Step 3: Update AGENTS.md
 
-Add bd usage instructions to your AGENTS.md file:
+Add fbd usage instructions to your AGENTS.md file:
 
 ```markdown
-## Issue Tracking with bd
+## Issue Tracking with fbd
 
-This project uses bd (beads) for issue tracking. It's automatically installed in each session via SessionStart hook.
+This project uses fbd (beads) for issue tracking. It's automatically installed in each session via SessionStart hook.
 
 ### Finding Work
 
 ```bash
 # See what's ready to work on
-bd ready --json | jq '.[0]'
+fbd ready --json | jq '.[0]'
 
 # Get issue details
-bd show <issue-id> --json
+fbd show <issue-id> --json
 ```
 
 ### Creating Issues
 
 ```bash
 # Create a new issue
-bd create "Task description" -t task -p 1 --json
+fbd create "Task description" -t task -p 1 --json
 
 # Create a bug
-bd create "Bug description" -t bug -p 0 --json
+fbd create "Bug description" -t bug -p 0 --json
 ```
 
 ### Working on Issues
 
 ```bash
 # Update status to in_progress
-bd update <issue-id> --status in_progress
+fbd update <issue-id> --status in_progress
 
 # Add a comment
-bd comments add <issue-id> "Progress update"
+fbd comments add <issue-id> "Progress update"
 
 # Close when done
-bd close <issue-id> --reason "Description of what was done"
+fbd close <issue-id> --reason "Description of what was done"
 ```
 
 ### Managing Dependencies
 
 ```bash
 # Issue A blocks issue B
-bd dep add <issue-b> <issue-a>
+fbd dep add <issue-b> <issue-a>
 
 # Show dependency tree
-bd dep tree <issue-id>
+fbd dep tree <issue-id>
 ```
 
 ### Best Practices
 
 1. **Always use --json**: Makes output easy to parse programmatically
 2. **Create issues proactively**: When you notice work, file it immediately
-3. **Link discovered work**: Use `bd dep add --type discovered-from`
+3. **Link discovered work**: Use `fbd dep add --type discovered-from`
 4. **Close with context**: Always provide --reason when closing
 5. **Commit .beads/**: The .beads/issues.jsonl file should be committed to git
 ```
@@ -106,7 +106,7 @@ bd dep tree <issue-id>
 
 ```bash
 git add .claude/hooks/session-start.sh AGENTS.md
-git commit -m "Add bd auto-install for Claude Code for Web"
+git commit -m "Add fbd auto-install for Claude Code for Web"
 git push
 ```
 
@@ -116,10 +116,10 @@ git push
 
 1. **Session starts** → Claude Code for Web creates fresh Linux VM
 2. **Hook runs** → `.claude/hooks/session-start.sh` executes automatically
-3. **npm install** → Downloads @beads/bd package from npm
-4. **Postinstall** → Downloads native bd binary for platform (~17MB)
-5. **bd init** → Imports existing issues from `.beads/issues.jsonl` in git
-6. **Ready** → `bd` command is available, shows ready work
+3. **npm install** → Downloads @beads/fbd package from npm
+4. **Postinstall** → Downloads native fbd binary for platform (~17MB)
+5. **fbd init** → Imports existing issues from `.beads/issues.jsonl` in git
+6. **Ready** → `fbd` command is available, shows ready work
 
 **Time: ~5-10 seconds**
 
@@ -127,7 +127,7 @@ git push
 
 Same process, but:
 - Git clone pulls existing `.beads/issues.jsonl`
-- `bd init --quiet` imports all existing issues
+- `fbd init --quiet` imports all existing issues
 - Agent picks up right where it left off
 
 **Time: ~5-10 seconds**
@@ -139,24 +139,24 @@ Same process, but:
 ```
 Agent: Starting new session...
 System: Running SessionStart hook...
-System: Installing bd v0.21.5...
-System: ✓ bd installed successfully
+System: Installing fbd v0.21.5...
+System: ✓ fbd installed successfully
 System:
 System: 📋 Ready work:
 System: bd-a1b2 [P1] Fix authentication bug
 System: bd-f14c [P1] Add user profile page
 System:
 Agent: I can see there are 2 ready tasks. Let me work on bd-a1b2 (Fix authentication bug).
-Agent: [runs] bd update bd-a1b2 --status in_progress
+Agent: [runs] fbd update bd-a1b2 --status in_progress
 ```
 
 ### Pattern 2: Discovering New Work
 
 ```
 Agent: While fixing bd-a1b2, I noticed the password reset flow is also broken.
-Agent: [runs] bd create "Fix password reset flow" -t bug -p 1 --json
+Agent: [runs] fbd create "Fix password reset flow" -t bug -p 1 --json
 System: {"id": "bd-3e7a", ...}
-Agent: [runs] bd dep add bd-3e7a bd-a1b2 --type discovered-from
+Agent: [runs] fbd dep add bd-3e7a bd-a1b2 --type discovered-from
 Agent: I've filed bd-3e7a for the password reset issue and linked it to the current work.
 ```
 
@@ -164,7 +164,7 @@ Agent: I've filed bd-3e7a for the password reset issue and linked it to the curr
 
 ```
 Agent: I've fixed the authentication bug. Tests are passing.
-Agent: [runs] bd close bd-a1b2 --reason "Fixed session validation logic. Added tests."
+Agent: [runs] fbd close bd-a1b2 --reason "Fixed session validation logic. Added tests."
 Agent: [runs] git add . && git commit -m "Fix authentication bug (bd-a1b2)"
 Agent: Work completed. Ready for next task.
 ```
@@ -180,12 +180,12 @@ Install to project instead of global:
 # .claude/hooks/session-start.sh
 
 # Install as project dependency
-npm install --save-dev @beads/bd
+npm install --save-dev @beads/fbd
 
 # Use via npx
-npx bd init --quiet
+npx fbd init --quiet
 
-echo "Use 'npx bd' for all bd commands"
+echo "Use 'npx fbd' for all fbd commands"
 ```
 
 ### Conditional Installation
@@ -196,11 +196,11 @@ Only install if not already present:
 #!/bin/bash
 # .claude/hooks/session-start.sh
 
-if ! command -v bd &> /dev/null; then
-    echo "Installing bd..."
-    npm install -g @beads/bd
+if ! command -v fbd &> /dev/null; then
+    echo "Installing fbd..."
+    npm install -g @beads/fbd
 else
-    echo "bd already available: $(bd version)"
+    echo "fbd already available: $(fbd version)"
 fi
 
 # Rest of setup...
@@ -214,8 +214,8 @@ Minimal output for cleaner logs:
 #!/bin/bash
 # .claude/hooks/session-start.sh
 
-npm install -g @beads/bd --silent 2>&1 | grep -v "npm WARN"
-bd init --quiet 2>&1 | grep -v "already initialized"
+npm install -g @beads/fbd --silent 2>&1 | grep -v "npm WARN"
+fbd init --quiet 2>&1 | grep -v "already initialized"
 ```
 
 ## 📊 Benefits
@@ -226,7 +226,7 @@ bd init --quiet 2>&1 | grep -v "already initialized"
 - ✅ **Structured planning**: Dependencies create clear work order
 - ✅ **Automatic setup**: No manual intervention needed
 - ✅ **Git-backed**: All issues are version controlled
-- ✅ **Fast queries**: `bd ready` finds work instantly
+- ✅ **Fast queries**: `fbd ready` finds work instantly
 
 ### For Humans
 
@@ -238,7 +238,7 @@ bd init --quiet 2>&1 | grep -v "already initialized"
 
 ### vs Markdown TODOs
 
-| Feature | bd Issues | Markdown TODOs |
+| Feature | fbd Issues | Markdown TODOs |
 |---------|-----------|----------------|
 | Dependencies | ✅ 4 types | ❌ None |
 | Ready work detection | ✅ Automatic | ❌ Manual |
@@ -250,26 +250,26 @@ bd init --quiet 2>&1 | grep -v "already initialized"
 
 ## 🐛 Troubleshooting
 
-### "bd: command not found"
+### "fbd: command not found"
 
 **Cause**: SessionStart hook didn't run or installation failed
 
 **Fix**:
 ```bash
 # Manually install
-npm install -g @beads/bd
+npm install -g @beads/fbd
 
 # Verify
-bd version
+fbd version
 ```
 
 ### "Database not found"
 
-**Cause**: `bd init` wasn't run
+**Cause**: `fbd init` wasn't run
 
 **Fix**:
 ```bash
-bd init
+fbd init
 ```
 
 ### "Issues.jsonl merge conflict"
@@ -288,20 +288,20 @@ bd init
 npm config set cache ~/.npm-cache
 
 # Or install as dependency (cached by package-lock.json)
-npm install --save-dev @beads/bd
+npm install --save-dev @beads/fbd
 ```
 
 ## 📚 Next Steps
 
-1. **Read the full docs**: https://github.com/steveyegge/beads
-2. **Try the quickstart**: `bd quickstart` (interactive tutorial)
+1. **Read the full docs**: https://github.com/steveyegge/fastbeads
+2. **Try the quickstart**: `fbd quickstart` (interactive tutorial)
 3. **Set up MCP**: For local Claude Desktop integration
-4. **Explore examples**: https://github.com/steveyegge/beads/tree/main/examples
+4. **Explore examples**: https://github.com/steveyegge/fastbeads/tree/main/examples
 
 ## 🔗 Resources
 
-- [beads GitHub](https://github.com/steveyegge/beads)
-- [npm package](https://www.npmjs.com/package/@beads/bd)
+- [beads GitHub](https://github.com/steveyegge/fastbeads)
+- [npm package](https://www.npmjs.com/package/@beads/fbd)
 - [Claude Code docs](https://docs.claude.com/claude-code)
 - [SessionStart hooks](https://docs.claude.com/claude-code/hooks)
 
@@ -310,16 +310,16 @@ npm install --save-dev @beads/bd
 Add this to your project's system prompt or AGENTS.md:
 
 ```
-You have access to bd (beads) for issue tracking. It's automatically installed in each session.
+You have access to fbd (beads) for issue tracking. It's automatically installed in each session.
 
 WORKFLOW:
-1. Start each session: Check `bd ready --json` for available work
+1. Start each session: Check `fbd ready --json` for available work
 2. Choose a task: Pick highest priority with no blockers
-3. Update status: `bd update <id> --status in_progress`
+3. Update status: `fbd update <id> --status in_progress`
 4. Work on it: Implement, test, document
 5. File new issues: Create issues for any work discovered
-6. Link issues: Use `bd dep add` to track relationships
-7. Close when done: `bd close <id> --reason "what you did"`
+6. Link issues: Use `fbd dep add` to track relationships
+7. Close when done: `fbd close <id> --reason "what you did"`
 8. Commit changes: Include .beads/issues.jsonl in commits
 
 ALWAYS:
@@ -330,8 +330,8 @@ ALWAYS:
 - Commit .beads/issues.jsonl with code changes
 
 NEVER:
-- Use markdown TODOs (use bd instead)
-- Work on blocked issues (check `bd show <id>` for blockers)
+- Use markdown TODOs (use fbd instead)
+- Work on blocked issues (check `fbd show <id>` for blockers)
 - Close issues without --reason
 - Forget to commit .beads/issues.jsonl
 ```
@@ -340,14 +340,14 @@ NEVER:
 
 After setup, you should see:
 
-✅ New sessions automatically have `bd` available
-✅ Agents use `bd` for all issue tracking
+✅ New sessions automatically have `fbd` available
+✅ Agents use `fbd` for all issue tracking
 ✅ Issues persist across sessions via git
 ✅ Multiple agents can collaborate on same issues
 ✅ No manual installation required
 
 ## 🆘 Support
 
-- [File an issue](https://github.com/steveyegge/beads/issues)
-- [Read the FAQ](https://github.com/steveyegge/beads/blob/main/FAQ.md)
-- [Check troubleshooting](https://github.com/steveyegge/beads/blob/main/TROUBLESHOOTING.md)
+- [File an issue](https://github.com/steveyegge/fastbeads/issues)
+- [Read the FAQ](https://github.com/steveyegge/fastbeads/blob/main/FAQ.md)
+- [Check troubleshooting](https://github.com/steveyegge/fastbeads/blob/main/TROUBLESHOOTING.md)

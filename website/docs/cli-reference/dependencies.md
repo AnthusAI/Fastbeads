@@ -8,12 +8,12 @@ sidebar_position: 4
 
 Commands for managing issue dependencies.
 
-## bd dep add
+## fbd dep add
 
 Add a dependency between issues.
 
 ```bash
-bd dep add <dependent> <dependency> [flags]
+fbd dep add <dependent> <dependency> [flags]
 ```
 
 **Semantics:** `<dependent>` depends on `<dependency>` (dependency blocks dependent).
@@ -27,35 +27,35 @@ bd dep add <dependent> <dependency> [flags]
 **Examples:**
 ```bash
 # bd-2 depends on bd-1 (bd-1 blocks bd-2)
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # Soft relationship
-bd dep add bd-2 bd-1 --type related
+fbd dep add bd-2 bd-1 --type related
 
 # JSON output
-bd dep add bd-2 bd-1 --json
+fbd dep add bd-2 bd-1 --json
 ```
 
-## bd dep remove
+## fbd dep remove
 
 Remove a dependency.
 
 ```bash
-bd dep remove <dependent> <dependency> [flags]
+fbd dep remove <dependent> <dependency> [flags]
 ```
 
 **Examples:**
 ```bash
-bd dep remove bd-2 bd-1
-bd dep remove bd-2 bd-1 --json
+fbd dep remove bd-2 bd-1
+fbd dep remove bd-2 bd-1 --json
 ```
 
-## bd dep tree
+## fbd dep tree
 
 Display dependency tree.
 
 ```bash
-bd dep tree <id> [flags]
+fbd dep tree <id> [flags]
 ```
 
 **Flags:**
@@ -66,9 +66,9 @@ bd dep tree <id> [flags]
 
 **Examples:**
 ```bash
-bd dep tree bd-42
-bd dep tree bd-42 --depth 3
-bd dep tree bd-42 --json
+fbd dep tree bd-42
+fbd dep tree bd-42 --depth 3
+fbd dep tree bd-42 --json
 ```
 
 **Output:**
@@ -80,12 +80,12 @@ Dependency tree for bd-42:
     > bd-40: Set up database [P1] (closed)
 ```
 
-## bd dep cycles
+## fbd dep cycles
 
 Detect circular dependencies.
 
 ```bash
-bd dep cycles [flags]
+fbd dep cycles [flags]
 ```
 
 **Flags:**
@@ -95,16 +95,16 @@ bd dep cycles [flags]
 
 **Examples:**
 ```bash
-bd dep cycles
-bd dep cycles --json
+fbd dep cycles
+fbd dep cycles --json
 ```
 
-## bd ready
+## fbd ready
 
 Show issues with no blockers.
 
 ```bash
-bd ready [flags]
+fbd ready [flags]
 ```
 
 **Flags:**
@@ -117,10 +117,10 @@ bd ready [flags]
 
 **Examples:**
 ```bash
-bd ready
-bd ready --priority 1
-bd ready --type bug
-bd ready --json
+fbd ready
+fbd ready --priority 1
+fbd ready --type bug
+fbd ready --json
 ```
 
 **Output:**
@@ -132,12 +132,12 @@ Ready work (3 issues with no blockers):
 3. [P3] bd-46: Update docs
 ```
 
-## bd blocked
+## fbd blocked
 
 Show blocked issues and their blockers.
 
 ```bash
-bd blocked [flags]
+fbd blocked [flags]
 ```
 
 **Flags:**
@@ -147,8 +147,8 @@ bd blocked [flags]
 
 **Examples:**
 ```bash
-bd blocked
-bd blocked --json
+fbd blocked
+fbd blocked --json
 ```
 
 **Output:**
@@ -162,46 +162,46 @@ bd-41: Create API
   Blocked by: bd-40 (in_progress)
 ```
 
-## bd relate
+## fbd relate
 
 Create a soft relationship between issues.
 
 ```bash
-bd relate <id1> <id2> [flags]
+fbd relate <id1> <id2> [flags]
 ```
 
 **Examples:**
 ```bash
-bd relate bd-42 bd-43
-bd relate bd-42 bd-43 --json
+fbd relate bd-42 bd-43
+fbd relate bd-42 bd-43 --json
 ```
 
-## bd duplicate
+## fbd duplicate
 
 Mark an issue as duplicate.
 
 ```bash
-bd duplicate <id> --of <canonical> [flags]
+fbd duplicate <id> --of <canonical> [flags]
 ```
 
 **Examples:**
 ```bash
-bd duplicate bd-43 --of bd-42
-bd duplicate bd-43 --of bd-42 --json
+fbd duplicate bd-43 --of bd-42
+fbd duplicate bd-43 --of bd-42 --json
 ```
 
-## bd supersede
+## fbd supersede
 
 Mark an issue as superseding another.
 
 ```bash
-bd supersede <old> --with <new> [flags]
+fbd supersede <old> --with <new> [flags]
 ```
 
 **Examples:**
 ```bash
-bd supersede bd-42 --with bd-50
-bd supersede bd-42 --with bd-50 --json
+fbd supersede bd-42 --with bd-50
+fbd supersede bd-42 --with bd-50 --json
 ```
 
 ## Understanding Dependencies
@@ -222,19 +222,19 @@ bd supersede bd-42 --with bd-50 --json
 ```bash
 # bd-2 depends on bd-1
 # Meaning: bd-1 must complete before bd-2 can start
-bd dep add bd-2 bd-1
+fbd dep add bd-2 bd-1
 
 # After bd-1 closes:
-bd close bd-1
-bd ready  # bd-2 now appears
+fbd close bd-1
+fbd ready  # bd-2 now appears
 ```
 
 ### Avoiding Cycles
 
 ```bash
 # Check before adding complex dependencies
-bd dep cycles
+fbd dep cycles
 
 # If cycle detected, remove one dependency
-bd dep remove bd-A bd-B
+fbd dep remove bd-A bd-B
 ```

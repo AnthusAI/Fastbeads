@@ -293,7 +293,7 @@ func MigrateRepoMtimesTable(db *sql.DB) error {
 ## Troubleshooting
 
 **Hydration not working?**
-1. Check config: `bd config list` should show `repos.primary` or `repos.additional`
+1. Check config: `fbd config list` should show `repos.primary` or `repos.additional`
 2. Verify JSONL exists: `ls -la /path/to/repo/.beads/issues.jsonl`
 3. Check logs: Set `BD_DEBUG=1` to see hydration debug output
 
@@ -311,4 +311,4 @@ func MigrateRepoMtimesTable(db *sql.DB) error {
 
 - [CONFIG.md](CONFIG.md) - Configuration system documentation
 - [EXTENDING.md](EXTENDING.md) - Database schema extension guide
-- [bd-307](https://github.com/steveyegge/beads/issues/307) - Original multi-repo feature request
+- [bd-307](https://github.com/steveyegge/fastbeads/issues/307) - Original multi-repo feature request

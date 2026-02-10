@@ -7,9 +7,10 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/steveyegge/beads/internal/beads"
-	"github.com/steveyegge/beads/internal/config"
-	"github.com/steveyegge/beads/internal/storage"
+	"github.com/steveyegge/fastbeads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/config"
+	"github.com/steveyegge/fastbeads/internal/env"
+	"github.com/steveyegge/fastbeads/internal/storage"
 
 	// Import SQLite driver (same as used by storage/sqlite)
 	_ "github.com/ncruces/go-sqlite3/driver"
@@ -23,7 +24,7 @@ const (
 	// ConfigYAMLKey is the config.yaml key for sync branch
 	ConfigYAMLKey = "sync-branch"
 
-	// EnvVar is the environment variable for sync branch
+	// EnvVar is the canonical environment variable for sync branch (legacy)
 	EnvVar = "BEADS_SYNC_BRANCH"
 )
 
@@ -83,15 +84,15 @@ func ValidateSyncBranchName(name string) error {
 }
 
 // Get retrieves the sync branch configuration with the following precedence:
-// 1. BEADS_SYNC_BRANCH environment variable
+// 1. FBD_SYNC_BRANCH / BEADS_SYNC_BRANCH environment variable
 // 2. sync-branch from config.yaml (version controlled, shared across clones)
 // 3. sync.branch from database config (legacy, for backward compatibility)
 // 4. Empty string (meaning use current branch)
 func Get(ctx context.Context, store storage.Storage) (string, error) {
 	// Check environment variable first (highest priority)
-	if envBranch := os.Getenv(EnvVar); envBranch != "" {
+	if envBranch := env.GetEnvAlias("SYNC_BRANCH"); envBranch != "" {
 		if err := ValidateBranchName(envBranch); err != nil {
-			return "", fmt.Errorf("invalid %s: %w", EnvVar, err)
+			return "", fmt.Errorf("invalid FBD_SYNC_BRANCH/BEADS_SYNC_BRANCH: %w", err)
 		}
 		return envBranch, nil
 	}
@@ -125,7 +126,7 @@ func Get(ctx context.Context, store storage.Storage) (string, error) {
 // in the version-controlled config without database access.
 func GetFromYAML() string {
 	// Check environment variable first
-	if envBranch := os.Getenv(EnvVar); envBranch != "" {
+	if envBranch := env.GetEnvAlias("SYNC_BRANCH"); envBranch != "" {
 		return envBranch
 	}
 	return config.GetString(ConfigYAMLKey)
@@ -138,7 +139,7 @@ func IsConfigured() bool {
 }
 
 // IsConfiguredWithDB returns true if sync-branch is configured in any source:
-// 1. BEADS_SYNC_BRANCH environment variable
+// 1. FBD_SYNC_BRANCH / BEADS_SYNC_BRANCH environment variable
 // 2. sync-branch in config.yaml
 // 3. sync.branch in database config
 //
@@ -197,7 +198,7 @@ func getConfigFromDB(dbPath string, key string) string {
 // GH#909: Writing to both ensures bd doctor and migrate detection work correctly.
 //
 // Config precedence on read (from Get function):
-//  1. BEADS_SYNC_BRANCH env var
+//  1. FBD_SYNC_BRANCH / BEADS_SYNC_BRANCH env var
 //  2. sync-branch in config.yaml (recommended, version controlled)
 //  3. sync.branch in database (legacy, for backward compatibility)
 func Set(ctx context.Context, store storage.Storage, branch string) error {

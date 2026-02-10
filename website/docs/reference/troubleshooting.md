@@ -10,32 +10,32 @@ Common issues and solutions.
 
 ## Installation Issues
 
-### `bd: command not found`
+### `fbd: command not found`
 
 ```bash
 # Check if installed
-which bd
-go list -f {{.Target}} github.com/steveyegge/beads/cmd/bd
+which fbd
+go list -f {{.Target}} github.com/steveyegge/fastbeads/cmd/fbd
 
 # Add Go bin to PATH
 export PATH="$PATH:$(go env GOPATH)/bin"
 
 # Or reinstall
-go install github.com/steveyegge/beads/cmd/bd@latest
+go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
-### `zsh: killed bd` on macOS
+### `zsh: killed fbd` on macOS
 
 CGO/SQLite compatibility issue:
 
 ```bash
-CGO_ENABLED=1 go install github.com/steveyegge/beads/cmd/bd@latest
+CGO_ENABLED=1 go install github.com/steveyegge/fastbeads/cmd/fbd@latest
 ```
 
 ### Permission denied
 
 ```bash
-chmod +x $(which bd)
+chmod +x $(which fbd)
 ```
 
 ## Database Issues
@@ -44,20 +44,20 @@ chmod +x $(which bd)
 
 ```bash
 # Initialize beads
-bd init --quiet
+fbd init --quiet
 
 # Or specify database
-bd --db .beads/beads.db list
+fbd --db .beads/beads.db list
 ```
 
 ### Database locked
 
 ```bash
 # Stop daemon
-bd daemons killall
+fbd daemons killall
 
 # Try again
-bd list
+fbd list
 ```
 
 ### Corrupted database
@@ -65,7 +65,7 @@ bd list
 ```bash
 # Restore from JSONL
 rm .beads/beads.db
-bd import -i .beads/issues.jsonl
+fbd import -i .beads/issues.jsonl
 ```
 
 ## Daemon Issues
@@ -74,23 +74,23 @@ bd import -i .beads/issues.jsonl
 
 ```bash
 # Check status
-bd info
+fbd info
 
 # Remove stale socket
-rm -f .beads/bd.sock
+rm -f .beads/fbd.sock
 
 # Restart
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### Version mismatch
 
-After upgrading bd:
+After upgrading fbd:
 
 ```bash
-bd daemons killall
-bd info
+fbd daemons killall
+fbd info
 ```
 
 ### High CPU usage
@@ -98,7 +98,7 @@ bd info
 ```bash
 # Switch to event-driven mode
 export BEADS_DAEMON_MODE=events
-bd daemons killall
+fbd daemons killall
 ```
 
 ## Sync Issues
@@ -107,35 +107,35 @@ bd daemons killall
 
 ```bash
 # Force sync
-bd sync
+fbd sync
 
 # Check daemon
-bd info | grep daemon
+fbd info | grep daemon
 
 # Check hooks
-bd hooks status
+fbd hooks status
 ```
 
 ### Import errors
 
 ```bash
 # Allow orphans
-bd import -i .beads/issues.jsonl --orphan-handling allow
+fbd import -i .beads/issues.jsonl --orphan-handling allow
 
 # Check for duplicates after
-bd duplicates
+fbd duplicates
 ```
 
 ### Merge conflicts
 
 ```bash
 # Use merge driver
-bd init  # Setup merge driver
+fbd init  # Setup merge driver
 
 # Or manual resolution
 git checkout --ours .beads/issues.jsonl
-bd import -i .beads/issues.jsonl
-bd sync
+fbd import -i .beads/issues.jsonl
+fbd sync
 ```
 
 ## Git Hook Issues
@@ -147,7 +147,7 @@ bd sync
 ls -la .git/hooks/
 
 # Reinstall
-bd hooks install
+fbd hooks install
 ```
 
 ### Hook errors
@@ -166,20 +166,20 @@ cat .git/hooks/pre-commit
 
 ```bash
 # Detect cycles
-bd dep cycles
+fbd dep cycles
 
 # Remove one dependency
-bd dep remove bd-A bd-B
+fbd dep remove bd-A bd-B
 ```
 
 ### Missing dependencies
 
 ```bash
 # Check orphan handling
-bd config get import.orphan_handling
+fbd config get import.orphan_handling
 
 # Allow orphans
-bd config set import.orphan_handling allow
+fbd config set import.orphan_handling allow
 ```
 
 ## Performance Issues
@@ -191,14 +191,14 @@ bd config set import.orphan_handling allow
 ls -lh .beads/beads.db
 
 # Compact if large
-bd admin compact --analyze
+fbd admin compact --analyze
 ```
 
 ### High memory usage
 
 ```bash
 # Reduce cache
-bd config set database.cache_size 1000
+fbd config set database.cache_size 1000
 ```
 
 ## Getting Help
@@ -206,28 +206,28 @@ bd config set database.cache_size 1000
 ### Debug output
 
 ```bash
-bd --verbose list
+fbd --verbose list
 ```
 
 ### Logs
 
 ```bash
-bd daemons logs . -n 100
+fbd daemons logs . -n 100
 ```
 
 ### System info
 
 ```bash
-bd info --json
+fbd info --json
 ```
 
 ### File an issue
 
 ```bash
 # Include this info
-bd version
-bd info --json
+fbd version
+fbd info --json
 uname -a
 ```
 
-Report at: https://github.com/steveyegge/beads/issues
+Report at: https://github.com/steveyegge/fastbeads/issues

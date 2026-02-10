@@ -220,7 +220,7 @@ func NewWithTimeout(ctx context.Context, path string, busyTimeout time.Duration)
 		// Probe again after retry
 		if err := verifySchemaCompatibility(db); err != nil {
 			// Still failing - return fatal error with clear message
-			return nil, fmt.Errorf("schema probe failed after migration retry: %w. Database may be corrupted or from incompatible version. Run 'bd doctor' to diagnose", err)
+			return nil, fmt.Errorf("schema probe failed after migration retry: %w. Database may be corrupted or from incompatible version. Run 'fbd doctor' to diagnose", err)
 		}
 	}
 

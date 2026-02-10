@@ -6,7 +6,7 @@
 
 ## What This Provides
 
-An MCP server that exposes bd functionality to Claude Desktop and other MCP clients, allowing Claude to:
+An MCP server that exposes fbd functionality to Claude Desktop and other MCP clients, allowing Claude to:
 - Query ready work
 - Create and update issues
 - Manage dependencies
@@ -105,7 +105,7 @@ See the [beads-mcp README](../../integrations/beads-mcp/README.md) for:
 ## How It Would Work
 
 1. Install the MCP server for Claude Desktop
-2. Claude gains access to bd commands
+2. Claude gains access to fbd commands
 3. During coding sessions, Claude can:
    - Check for ready work: "What should I work on next?"
    - Create issues: "I found a bug, let me track it"
@@ -154,7 +154,7 @@ To implement this MCP server:
 
 1. Create a Node.js/TypeScript project
 2. Use the MCP SDK: `npm install @anthropic/mcp-sdk`
-3. Implement tool handlers that call `bd` commands via child_process
+3. Implement tool handlers that call `fbd` commands via child_process
 4. Register with Claude Desktop's config
 
 Example skeleton:
@@ -174,7 +174,7 @@ const server = new Server({
 // Register ready work tool
 server.tool("beads_ready_work", async (params) => {
   const { stdout } = await execAsync(
-    `bd ready --json --limit ${params.limit || 10}`
+    `fbd ready --json --limit ${params.limit || 10}`
   );
   return JSON.parse(stdout);
 });
@@ -182,7 +182,7 @@ server.tool("beads_ready_work", async (params) => {
 // Register create issue tool
 server.tool("beads_create_issue", async (params) => {
   const { stdout } = await execAsync(
-    `bd create "${params.title}" -d "${params.description}" -p ${params.priority} -t ${params.type} --json`
+    `fbd create "${params.title}" -d "${params.description}" -p ${params.priority} -t ${params.type} --json`
   );
   return JSON.parse(stdout);
 });
@@ -212,22 +212,22 @@ npm install -g beads-mcp-server
 # Restart Claude Desktop
 ```
 
-## Alternative: Direct bd Usage
+## Alternative: Direct fbd Usage
 
-Until the MCP server is available, you can instruct Claude to use bd directly:
+Until the MCP server is available, you can instruct Claude to use fbd directly:
 
 ```markdown
 # In your CLAUDE.md or project instructions:
 
-We use Beads (bd) for issue tracking. Available commands:
+We use Beads (fbd) for issue tracking. Available commands:
 
-- `bd ready --json` - Find ready work
-- `bd create "title" -p 1 -t bug --json` - Create issue
-- `bd update bd-1 --status in_progress --json` - Update status
-- `bd dep add bd-2 bd-1 --type discovered-from` - Link issues
-- `bd close bd-1 --reason "Done" --json` - Complete work
+- `fbd ready --json` - Find ready work
+- `fbd create "title" -p 1 -t bug --json` - Create issue
+- `fbd update bd-1 --status in_progress --json` - Update status
+- `fbd dep add bd-2 bd-1 --type discovered-from` - Link issues
+- `fbd close bd-1 --reason "Done" --json` - Complete work
 
-All commands support --json for parsing. Please use bd to track work during our sessions.
+All commands support --json for parsing. Please use fbd to track work during our sessions.
 ```
 
 ## Contributing

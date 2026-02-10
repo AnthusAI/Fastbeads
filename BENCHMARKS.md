@@ -9,6 +9,18 @@ This document describes the performance benchmarks available in the beads projec
 go test -tags=bench -bench=. -benchmem ./internal/storage/sqlite/...
 ```
 
+### Load Benchmarks (JSONL vs YAML)
+```bash
+# Generate fixture JSONL + manifest
+go run ./scripts/gen_fixture.go -count 1000
+
+# Convert JSONL -> YAML files and validate manifest
+fbd --no-db --no-daemon fixture-harness --count 1000
+
+# Run load benchmarks (set BEADS_FIXTURE_COUNT to match fixture size)
+BEADS_FIXTURE_COUNT=1000 go test -tags=bench -bench=BenchmarkLoad -benchmem ./bench
+```
+
 ### Specific Benchmark
 ```bash
 go test -tags=bench -bench=BenchmarkGetReadyWork_Large -benchmem ./internal/storage/sqlite/...

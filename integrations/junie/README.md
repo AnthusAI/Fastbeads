@@ -9,13 +9,13 @@ Integration for [Junie](https://www.jetbrains.com/junie/) (JetBrains AI Agent) w
 curl -fsSL https://raw.githubusercontent.com/steveyegge/beads/main/scripts/install.sh | bash
 
 # Initialize beads in your project
-bd init
+fbd init
 ```
 
 ## Installation
 
 ```bash
-bd setup junie
+fbd setup junie
 ```
 
 This creates:
@@ -28,7 +28,7 @@ This creates:
 
 Junie automatically reads this file on session start. It contains:
 - Core workflow rules for using beads
-- Command reference for the `bd` CLI
+- Command reference for the `fbd` CLI
 - Issue types and priorities
 - MCP tool documentation
 
@@ -40,7 +40,7 @@ Configures the beads MCP server so Junie can use beads tools directly:
 {
   "mcpServers": {
     "beads": {
-      "command": "bd",
+      "command": "fbd",
       "args": ["mcp"]
     }
   }
@@ -52,7 +52,7 @@ Configures the beads MCP server so Junie can use beads tools directly:
 Once installed, Junie will:
 1. Read workflow instructions from `.junie/guidelines.md`
 2. Have access to beads MCP tools for direct issue management
-3. Be able to use `bd` CLI commands
+3. Be able to use `fbd` CLI commands
 
 ### MCP Tools Available
 
@@ -69,20 +69,20 @@ Once installed, Junie will:
 ## Verification
 
 ```bash
-bd setup junie --check
+fbd setup junie --check
 ```
 
 ## Removal
 
 ```bash
-bd setup junie --remove
+fbd setup junie --remove
 ```
 
 ## Related
 
-- `bd prime` - Get full workflow context
-- `bd ready` - Find unblocked work
-- `bd sync` - Sync changes to git (run at session end)
+- `fbd prime` - Get full workflow context
+- `fbd ready` - Find unblocked work
+- `fbd sync` - Sync changes to git (run at session end)
 
 ## License
 

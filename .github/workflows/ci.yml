@@ -89,7 +89,7 @@ jobs:
           git config --global user.email "ci@beads.test"
 
       - name: Build
-        run: go build -v ./cmd/bd
+        run: go build -v ./cmd/fbd
 
       - name: Test
         run: go test ${{ matrix.test-flags }} ./...
@@ -143,21 +143,21 @@ jobs:
       - name: Build (no CGO, pure Go)
         run: |
           $env:CGO_ENABLED="0"
-          go build -v -tags gms_pure_go -o bd.exe ./cmd/bd
+          go build -v -tags gms_pure_go -o fbd.exe ./cmd/fbd
 
       - name: Smoke test - version
-        run: ./bd.exe version
+        run: ./fbd.exe version
 
       - name: Smoke test - init and CRUD
         run: |
-          ./bd.exe init --quiet --prefix smoke
-          $output = ./bd.exe create --title "Windows smoke test" --type task
+          ./fbd.exe init --quiet --prefix smoke
+          $output = ./fbd.exe create --title "Windows smoke test" --type task
           $id = ($output | Select-String -Pattern "smoke-\w+").Matches.Value
           echo "Created issue: $id"
-          ./bd.exe list
-          ./bd.exe show $id
-          ./bd.exe update $id --status in_progress
-          ./bd.exe close $id
+          ./fbd.exe list
+          ./fbd.exe show $id
+          ./fbd.exe update $id --status in_progress
+          ./fbd.exe close $id
           echo "All smoke tests passed!"
 
   fmt-check:
@@ -207,7 +207,7 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-unstable
-      - name: Run bd help via Nix
+      - name: Run fbd help via Nix
         run: |
           export BEADS_DB="$PWD/.ci-beads/beads.db"
           mkdir -p "$(dirname "$BEADS_DB")"
