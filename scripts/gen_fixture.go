@@ -59,7 +59,7 @@ func main() {
 
 	epicCount := int(float64(*count) * *epicRatio)
 	for i := 0; i < *count; i++ {
-		id := fmt.Sprintf("bd-%06d", i+1)
+		id := fmt.Sprintf("fbd-%06d", i+1)
 		issueType := types.TypeTask
 		if i < epicCount {
 			issueType = types.TypeEpic
