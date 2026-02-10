@@ -4,10 +4,16 @@ import (
 	"context"
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/steveyegge/fastbeads/internal/beads"
+	"github.com/steveyegge/fastbeads/internal/config"
 	"github.com/steveyegge/fastbeads/internal/debug"
+	"github.com/steveyegge/fastbeads/internal/storage"
 	"github.com/steveyegge/fastbeads/internal/storage/factory"
+	"github.com/steveyegge/fastbeads/internal/storage/files"
+	"github.com/steveyegge/fastbeads/internal/storage/jsonl"
+	"github.com/steveyegge/fastbeads/internal/storage/memory"
 	"github.com/steveyegge/fastbeads/internal/syncbranch"
 )
 
@@ -61,6 +67,8 @@ func ensureStoreActive() error {
 		setDBPath(dbPath)
 	}
 
+	applyConfigToStore(beadsDir, store)
+
 	lockStore()
 	setStore(store)
 	setStoreActive(true)
@@ -71,4 +79,42 @@ func ensureStoreActive() error {
 	}
 
 	return nil
+}
+
+func applyConfigToStore(beadsDir string, store storage.Storage) {
+	if store == nil {
+		return
+	}
+
+	// Apply custom types/statuses from config.yaml for file/jsonl backends.
+	if customTypes := config.GetCustomTypesFromYAML(); len(customTypes) > 0 {
+		_ = store.SetConfig(rootCtx, "types.custom", strings.Join(customTypes, ","))
+	}
+	if customStatuses := config.GetCustomStatusesFromYAML(); len(customStatuses) > 0 {
+		_ = store.SetConfig(rootCtx, "status.custom", strings.Join(customStatuses, ","))
+	}
+
+	prefix := config.GetString("issue-prefix")
+	if prefix == "" {
+		if mem := memoryFromStore(store); mem != nil {
+			detected, err := detectPrefix(beadsDir, mem)
+			if err == nil {
+				prefix = detected
+			}
+		}
+	}
+	if prefix != "" {
+		_ = store.SetConfig(rootCtx, "issue_prefix", prefix)
+	}
+}
+
+func memoryFromStore(store storage.Storage) *memory.MemoryStorage {
+	switch s := store.(type) {
+	case *files.Store:
+		return s.MemoryStorage
+	case *jsonl.Store:
+		return s.MemoryStorage
+	default:
+		return nil
+	}
 }

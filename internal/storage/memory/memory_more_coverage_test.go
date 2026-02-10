@@ -121,26 +121,26 @@ func TestMemoryStorage_CreateIssues_DefaultPrefix_DuplicateExisting_ExternalRef(
 	defer store.Close()
 	ctx := context.Background()
 
-	// Default prefix should be "bd" when unset.
+	// Default prefix should be "fbd" when unset.
 	issues := []*types.Issue{{Title: "A", Status: types.StatusOpen, Priority: 1, IssueType: types.TypeTask}}
 	if err := store.CreateIssues(ctx, issues, "actor"); err != nil {
 		t.Fatalf("CreateIssues: %v", err)
 	}
-	if issues[0].ID != "bd-1" {
-		t.Fatalf("expected bd-1, got %q", issues[0].ID)
+	if issues[0].ID != "fbd-1" {
+		t.Fatalf("expected fbd-1, got %q", issues[0].ID)
 	}
 
 	ext := "ext"
-	batch := []*types.Issue{{ID: "bd-x", Title: "B", Status: types.StatusOpen, Priority: 1, IssueType: types.TypeTask, ExternalRef: &ext}}
+	batch := []*types.Issue{{ID: "fbd-x", Title: "B", Status: types.StatusOpen, Priority: 1, IssueType: types.TypeTask, ExternalRef: &ext}}
 	if err := store.CreateIssues(ctx, batch, "actor"); err != nil {
 		t.Fatalf("CreateIssues: %v", err)
 	}
-	if got, _ := store.GetIssueByExternalRef(ctx, "ext"); got == nil || got.ID != "bd-x" {
+	if got, _ := store.GetIssueByExternalRef(ctx, "ext"); got == nil || got.ID != "fbd-x" {
 		t.Fatalf("expected external ref indexed")
 	}
 
 	// Duplicate existing issue ID branch.
-	dup := []*types.Issue{{ID: "bd-x", Title: "Dup", Status: types.StatusOpen, Priority: 1, IssueType: types.TypeTask}}
+	dup := []*types.Issue{{ID: "fbd-x", Title: "Dup", Status: types.StatusOpen, Priority: 1, IssueType: types.TypeTask}}
 	if err := store.CreateIssues(ctx, dup, "actor"); err == nil {
 		t.Fatalf("expected duplicate existing issue error")
 	}
