@@ -13,6 +13,33 @@ The beads performance testing framework provides:
 
 Performance issues typically only manifest at scale (10K+ issues), so benchmarks focus on large databases.
 
+## Load Benchmarks (JSONL vs Files)
+
+To compare cold load times for JSONL versus YAML-per-issue storage:
+
+```bash
+# Run JSONL and files load benchmarks (1k/5k/10k issues)
+go test -bench=BenchmarkLoad -benchtime=1s -run=^$ ./internal/storage
+```
+
+These benchmarks generate fixtures on the fly, convert JSONL to files, and measure load+index time.
+
+## Fixture Generation + Conversion Harness
+
+Generate deterministic JSONL fixtures and validate JSONL → files conversion:
+
+```bash
+# Generate JSONL fixtures + manifest
+go run scripts/gen_fixture.go --count 5000 --seed 42 --out /tmp/beads-bench-cache/fixtures
+
+# Validate conversion against manifest
+fbd fixture-harness --count 5000 --out /tmp/beads-bench-cache/fixtures
+```
+
+The fixture generator produces:
+- `issues-<count>.jsonl`
+- `issues-<count>.manifest.json`
+
 ## Running Benchmarks
 
 ### Full Benchmark Suite
